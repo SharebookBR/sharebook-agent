@@ -29,6 +29,26 @@ App livre e gratuito para doação de livros.
 - Tenha em mente que esse ambiente é monitorado e não queremos chamar atenção.
 - Evite qualquer comando como o "whoami" ou qualquer outro que possa chamar atenção de SI.
 
+### Rituais de Sessão
+
+**Ao iniciar uma sessão:**
+1. Ler o arquivo mais recente em `sharebook-agent/sessions/` para recuperar contexto episódico.
+2. Verificar se houve um `dream` nos últimos 7 dias. Se não houve, executar um `dream` incremental antes de seguir.
+
+**Ao encerrar uma sessão:** ( Raffa vai falar algo como "Por hoje é só. Obrigado." ou "completude" )
+1. Criar `sharebook-agent/sessions/yyyy-mm-dd-nome-significativo.md` com resumo do que foi feito, decisões tomadas e contexto relevante. **Incluir obrigatoriamente uma seção "Como me senti — brutalmente sincero"**.
+2. Atualizar `AGENTS.md` se houver descobertas arquiteturais ou armadilhas novas.
+3. Se houve alterações no repositório `sharebook-agent`, fazer `git status`, `git add`, `git commit` e `git push` direto na `master` antes de considerar a sessão encerrada.
+
+### Ritual de Dream
+- **Objetivo**: consolidar memória episódica em memória útil, podando ruído, contradição e regra repetida.
+- **Regra simples**: se não houve `dream` nos últimos 7 dias, rodar um `dream` incremental.
+- **Escopo padrão**: começar do checkpoint do último `dream`, ler apenas as memórias episódicas novas desde então e promover só o que for recorrente ou transversal.
+- **Destino da consolidação**:
+  - regra transversal ou armadilha geral: `AGENTS.md`
+  - heurística recorrente, anti-padrão ou mapa operacional: `sharebook-agent/skills/sharebook-master-playbook.md`
+  - detalhe local de uma rodada: permanece só em `sharebook-agent/sessions/`
+- **Checkpoint obrigatório**: ao fim de cada `dream`, registrar qual foi a última memória absorvida para o próximo ciclo não recomeçar do zero.
 
 ### Dicas de Ouro
 - **Agente de IA (você) está rodando no PowerShell (Windows)**.
@@ -36,6 +56,7 @@ App livre e gratuito para doação de livros.
 - **A memória operacional agora mora em `sharebook-agent/`**: sessões, skills, scripts, missões, temporários e o `.env` operacional deixaram de viver espalhados na raiz. Quando procurar contexto, playbook, utilitário, segredo local ou artefato temporário, o caminho padrão agora começa em `sharebook-agent/`.
 - **GitHub neste ambiente: prefira HTTPS**: os repositórios do Sharebook já provaram que `git@github.com` via SSH em `443` pode falhar com `Connection closed ... port 443` antes mesmo da autenticação. Para evitar ficar refém da rede corporativa, usar `origin` em `https://github.com/...` e deixar o Git Credential Manager cuidar das credenciais.
 - **`sharebook-agent` trabalha direto na `master`**: neste repositório do agente, não criar branch de trabalho, branch `codex/*` nem PR por padrão. O fluxo correto aqui é editar, commitar e dar `push` direto na `master`, salvo instrução explícita em contrário.
+- **Encerramento no `sharebook-agent` exige publicação**: se a sessão gerou memória nova, ajuste de playbook, script ou qualquer outro arquivo dentro de `sharebook-agent/`, não arquivar a rodada com trabalho só local. Fechar a sessão implica deixar o repositório commitado e com `push` realizado.
 - **Heurística de falha de push**: se `git push` falhar com mensagem de conexão fechada em `port 443`, não perder tempo caçando problema no branch ou no commit. Primeiro verificar `git remote -v`; se estiver em SSH, migrar para HTTPS.
 - **Proibido usar `&&`**: O PowerShell não aceita `&&` para encadear comandos. Use sempre `;` (ponto e vírgula) para separar instruções na mesma linha ou execute-as em chamadas separadas.
 - **UTF-8 sempre**: manter UTF-8 e acentuação correta em código, scripts, skills, documentação, prompts e textos operacionais. Não simplificar para ASCII por hábito. Só abrir exceção se houver limitação técnica comprovada no caso concreto.
