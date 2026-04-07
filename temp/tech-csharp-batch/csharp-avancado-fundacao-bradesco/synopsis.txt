@@ -1,0 +1,5 @@
+Se você já passou pelo básico e quer escrever código com mais precisão, estrutura e repertório, este material da Fundação Bradesco leva o C# para um patamar mais interessante. Em vez de ficar preso ao trivial, o livro entra no terreno em que a linguagem começa a mostrar força de verdade: organização, reaproveitamento, abstração e expressividade.
+
+Ao longo dos módulos, a leitura percorre classes, métodos, construtores, elementos estáticos, parâmetros, enumerações, herança, polimorfismo, abstração, delegates, expressões lambda e LINQ. O conteúdo combina explicação objetiva e exemplos práticos para ajudar o leitor a entender não só o recurso isolado, mas também como ele aparece no desenvolvimento real.
+
+Linguagem de Programação C# Avançado é um bom próximo passo para quem quer sair do nível introdutório e programar com mais segurança, clareza e poder de composição. É aquele tipo de material que ajuda a destravar conceitos importantes e deixa o programador mais perto de escrever soluções elegantes em vez de apenas fazer o código funcionar.

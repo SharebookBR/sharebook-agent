@@ -1,0 +1,1 @@
+docker exec fgsgwsckccgk8sccc4gg0gg0 sh -lc 'psql -U "$POSTGRES_USER" -d sharebook -c "select \"CreationDate\", \"Name\" from \"Users\" order by \"CreationDate\" desc limit 10;"'

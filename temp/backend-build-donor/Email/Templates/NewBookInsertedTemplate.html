@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Novo livro cadastrado - Sharebook</title>
+</head>
+<body>
+    <p>
+        Olá Administrador(a),
+    </p>
+    <p>
+        Um novo livro foi cadastrado. Veja mais informações abaixo:
+    </p>
+
+    <ul>
+        <li><strong>Livro: </strong>{Book.Title}</li>
+        <li><strong>Autor: </strong>{Book.Author}</li>
+        <li><strong>Usuário: </strong>{Book.User.Name}</li>
+    </ul>
+
+    <p>
+        Informações sobre o usuário:
+    </p>
+
+    <ul>
+        <li><strong>Data de Cadastro: </strong>{UserStats.CreationDate}</li>
+        <li><strong>Total doações concluídas: </strong>{UserStats.TotalOk}</li>
+        <li><strong>Total doações canceladas: </strong>{UserStats.TotalCanceled}</li>
+        <li><strong>Total doações em atraso: </strong>{UserStats.TotalLate}</li>
+        <li><strong>Total de doações aguardando aprovação: </strong>{UserStats.TotalWaitingApproval}</li>
+        <li><strong>Total doações na vitrine: </strong>{UserStats.TotalAvailable}</li>
+    </ul>
+
+    <p>
+        Use este link para revisar e aprovar: <a href="https://www.sharebook.com.br/book/form/{Book.Id}">https://www.sharebook.com.br/book/form/{Book.Id}</a>
+    </p>
+
+    <p>
+        <strong>Atenção:</strong> em contas novas, recomendamos aprovar inicialmente apenas um livro. Após a primeira doação concluída, avalie liberar os próximos livros.
+    </p>
+
+
+    <p>Equipe Sharebook</p>
+</body>
+</html>  

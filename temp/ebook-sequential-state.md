@@ -1,0 +1,63 @@
+- [pending] 01. Lucíola | https://livrosdominiopublico.com.br/luciola/
+- [pending] 02. Iracema | https://livrosdominiopublico.com.br/iracema/
+- [done] 03. Cinco Minutos | https://livrosdominiopublico.com.br/cinco-minutos/
+- [done] 04. A Viuvinha | https://livrosdominiopublico.com.br/a-viuvinha/
+- [done] 05. As Viagens de Gulliver | https://livrosdominiopublico.com.br/as-viagens-de-gulliver/
+- [pending] 06. Fausto | https://livrosdominiopublico.com.br/fausto/
+- [done] 07. O Abolicionismo | https://livrosdominiopublico.com.br/o-abolicionismo/
+- [done] 08. As Vítimas-Algozes | https://livrosdominiopublico.com.br/as-vitimas-algozes/
+- [done] 09. A Moreninha | https://livrosdominiopublico.com.br/a-moreninha/
+- [done] 10. As Religiões no Rio | https://livrosdominiopublico.com.br/as-religioes-no-rio/
+- [done] 11. Alma Encantadora das Ruas | https://livrosdominiopublico.com.br/alma-encantadora-das-ruas/
+- [pending] 12. O Elixir da Longa Vida | https://livrosdominiopublico.com.br/o-elixir-da-longa-vida/
+- [done] 13. A Desobediência Civil | https://livrosdominiopublico.com.br/a-desobediencia-civil/
+- [pending] 14. Auto da Barca do Inferno | https://livrosdominiopublico.com.br/auto-da-barca-do-inferno/
+- [done] 15. A Volta ao Mundo em 80 Dias | https://livrosdominiopublico.com.br/a-volta-ao-mundo-em-80-dias/
+- [pending] 16. A Metamorfose | https://livrosdominiopublico.com.br/a-metamorfose/
+- [pending] 17. Livro de Mágoas | https://livrosdominiopublico.com.br/livro-de-magoas/
+- [done] 18. A Mensageira das Violetas | https://livrosdominiopublico.com.br/a-mensageira-das-violetas/
+- [pending] 19. Primeiro Fausto | https://livrosdominiopublico.com.br/primeiro-fausto/
+- [done] 20. Poesias Inéditas | https://livrosdominiopublico.com.br/poesias-ineditas/
+- [pending] 21. Poemas de Ricardo Reis | https://livrosdominiopublico.com.br/poemas-de-ricardo-reis/
+- [pending] 22. Poemas de Álvaro de Campos | https://livrosdominiopublico.com.br/poemas-de-alvaro-de-campos/
+- [pending] 23. O Pastor Amoroso | https://livrosdominiopublico.com.br/o-pastor-amoroso/
+- [pending] 24. O Guardador de Rebanhos | https://livrosdominiopublico.com.br/o-guardador-de-rebanhos/
+- [pending] 25. O Eu Profundo e Outros Eus | https://livrosdominiopublico.com.br/o-eu-profundo-e-outros-eus/
+- [pending] 26. O Banqueiro Anarquista | https://livrosdominiopublico.com.br/o-banqueiro-anarquista/
+- [pending] 27. Mensagem | https://livrosdominiopublico.com.br/mensagem/
+- [pending] 28. Livro do Desassossego | https://livrosdominiopublico.com.br/livro-do-desassossego/
+- [pending] 29. Cancioneiro | https://livrosdominiopublico.com.br/cancioneiro/
+- [pending] 30. Os Sertōes | https://livrosdominiopublico.com.br/os-sertoes/
+- [pending] 31. Os Maias | https://livrosdominiopublico.com.br/os-maias/
+- [pending] 32. O Primo Basílio | https://livrosdominiopublico.com.br/o-primo-basilio/
+- [pending] 33. O Crime do Padre Amaro | https://livrosdominiopublico.com.br/o-crime-do-padre-amaro/
+- [pending] 34. Contos | https://livrosdominiopublico.com.br/contos/
+- [pending] 35. Cartas de Amor | https://livrosdominiopublico.com.br/cartas-de-amor/
+- [done] 36. A Ilustre Casa de Ramires | https://livrosdominiopublico.com.br/a-ilustre-casa-de-ramires/
+- [source_blocked] 37. A Cidade e as Serras | https://livrosdominiopublico.com.br/a-cidade-e-as-serras/
+- [pending] 38. Purgatório | https://livrosdominiopublico.com.br/purgatorio/
+- [pending] 39. Paraíso | https://livrosdominiopublico.com.br/paraiso/
+- [pending] 40. Inferno | https://livrosdominiopublico.com.br/inferno/
+- [pending] 41. O Navio Negreiro | https://livrosdominiopublico.com.br/o-navio-negreiro/
+- [done] 42. As Primaveras | https://livrosdominiopublico.com.br/as-primaveras/
+- [pending] 43. Amor de Perdição | https://livrosdominiopublico.com.br/amor-de-perdicao/
+- [pending] 44. Sonetos e Outros Poemas | https://livrosdominiopublico.com.br/sonetos-e-outros-poemas/
+- [pending] 45. A Escrava Isaura | https://livrosdominiopublico.com.br/a-escrava-isaura/
+- [pending] 46. Eu | https://livrosdominiopublico.com.br/eu/
+- [pending] 47. Eu e Outras Poesias | https://livrosdominiopublico.com.br/eu-e-outras-poesias/
+- [done] 48. Arte Poética | https://livrosdominiopublico.com.br/arte-poetica/
+- [pending] 49. A Harpa do Crente | https://livrosdominiopublico.com.br/a-harpa-do-crente/
+- [pending] 50. A Dama das Camélias | https://livrosdominiopublico.com.br/a-dama-das-camelias/
+- [pending] 51. O Livro da Lei | https://livrosdominiopublico.com.br/o-livro-da-lei/
+- [pending] 52. O Cemitério dos Vivos | https://livrosdominiopublico.com.br/o-cemiterio-dos-vivos/
+- [pending] 53. Diário Íntimo | https://livrosdominiopublico.com.br/diario-intimo/
+- [done] 54. Bom Crioulo | https://livrosdominiopublico.com.br/bom-crioulo/
+- [pending] 55. Bíblia Sagrada | https://livrosdominiopublico.com.br/biblia-sagrada/
+- [pending] 56. Hamlet | https://livrosdominiopublico.com.br/hamlet/
+- [pending] 57. Romeu e Julieta | https://livrosdominiopublico.com.br/romeu-e-julieta/
+- [pending] 58. O Cortiço | https://livrosdominiopublico.com.br/o-cortico/
+- [done] 59. As Aventuras de Tom Sawyer | https://livrosdominiopublico.com.br/as-aventuras-de-tom-sawyer/
+- [pending] 60. Esau e Jacó | https://livrosdominiopublico.com.br/esau-e-jacob/
+- [done] 61. Orgulho e Preconceito | https://livrosdominiopublico.com.br/orgulho-e-preconceito/
+- [done] 62. Dom Casmurro | https://livrosdominiopublico.com.br/dom-casmurro/
+- [pending] 63. A Divina Comédia | https://livrosdominiopublico.com.br/a-divina-comedia/

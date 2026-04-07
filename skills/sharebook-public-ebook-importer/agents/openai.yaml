@@ -1,0 +1,7 @@
+interface:
+  display_name: "Sharebook Public Ebook Importer"
+  short_description: "Importa ebooks públicos com capa autoral."
+  default_prompt: "Use $sharebook-public-ebook-importer para importar um ebook público ou gratuito para o Sharebook com fonte aprovada, capa autoral e cadastro em produção."
+
+policy:
+  allow_implicit_invocation: true

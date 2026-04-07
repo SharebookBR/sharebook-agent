@@ -1,0 +1,380 @@
+[
+  {
+    "index": 1,
+    "title": "Lucíola",
+    "url": "https://livrosdominiopublico.com.br/luciola/",
+    "status": "pending"
+  },
+  {
+    "index": 2,
+    "title": "Iracema",
+    "url": "https://livrosdominiopublico.com.br/iracema/",
+    "status": "pending"
+  },
+  {
+    "index": 3,
+    "title": "Cinco Minutos",
+    "url": "https://livrosdominiopublico.com.br/cinco-minutos/",
+    "status": "done"
+  },
+  {
+    "index": 4,
+    "title": "A Viuvinha",
+    "url": "https://livrosdominiopublico.com.br/a-viuvinha/",
+    "status": "done"
+  },
+  {
+    "index": 5,
+    "title": "As Viagens de Gulliver",
+    "url": "https://livrosdominiopublico.com.br/as-viagens-de-gulliver/",
+    "status": "done"
+  },
+  {
+    "index": 6,
+    "title": "Fausto",
+    "url": "https://livrosdominiopublico.com.br/fausto/",
+    "status": "pending"
+  },
+  {
+    "index": 7,
+    "title": "O Abolicionismo",
+    "url": "https://livrosdominiopublico.com.br/o-abolicionismo/",
+    "status": "done"
+  },
+  {
+    "index": 8,
+    "title": "As Vítimas-Algozes",
+    "url": "https://livrosdominiopublico.com.br/as-vitimas-algozes/",
+    "status": "done"
+  },
+  {
+    "index": 9,
+    "title": "A Moreninha",
+    "url": "https://livrosdominiopublico.com.br/a-moreninha/",
+    "status": "done"
+  },
+  {
+    "index": 10,
+    "title": "As Religiões no Rio",
+    "url": "https://livrosdominiopublico.com.br/as-religioes-no-rio/",
+    "status": "done"
+  },
+  {
+    "index": 11,
+    "title": "Alma Encantadora das Ruas",
+    "url": "https://livrosdominiopublico.com.br/alma-encantadora-das-ruas/",
+    "status": "done"
+  },
+  {
+    "index": 12,
+    "title": "O Elixir da Longa Vida",
+    "url": "https://livrosdominiopublico.com.br/o-elixir-da-longa-vida/",
+    "status": "pending"
+  },
+  {
+    "index": 13,
+    "title": "A Desobediência Civil",
+    "url": "https://livrosdominiopublico.com.br/a-desobediencia-civil/",
+    "status": "done"
+  },
+  {
+    "index": 14,
+    "title": "Auto da Barca do Inferno",
+    "url": "https://livrosdominiopublico.com.br/auto-da-barca-do-inferno/",
+    "status": "pending"
+  },
+  {
+    "index": 15,
+    "title": "A Volta ao Mundo em 80 Dias",
+    "url": "https://livrosdominiopublico.com.br/a-volta-ao-mundo-em-80-dias/",
+    "status": "done"
+  },
+  {
+    "index": 16,
+    "title": "A Metamorfose",
+    "url": "https://livrosdominiopublico.com.br/a-metamorfose/",
+    "status": "pending"
+  },
+  {
+    "index": 17,
+    "title": "Livro de Mágoas",
+    "url": "https://livrosdominiopublico.com.br/livro-de-magoas/",
+    "status": "pending"
+  },
+  {
+    "index": 18,
+    "title": "A Mensageira das Violetas",
+    "url": "https://livrosdominiopublico.com.br/a-mensageira-das-violetas/",
+    "status": "done"
+  },
+  {
+    "index": 19,
+    "title": "Primeiro Fausto",
+    "url": "https://livrosdominiopublico.com.br/primeiro-fausto/",
+    "status": "pending"
+  },
+  {
+    "index": 20,
+    "title": "Poesias Inéditas",
+    "url": "https://livrosdominiopublico.com.br/poesias-ineditas/",
+    "status": "done"
+  },
+  {
+    "index": 21,
+    "title": "Poemas de Ricardo Reis",
+    "url": "https://livrosdominiopublico.com.br/poemas-de-ricardo-reis/",
+    "status": "pending"
+  },
+  {
+    "index": 22,
+    "title": "Poemas de Álvaro de Campos",
+    "url": "https://livrosdominiopublico.com.br/poemas-de-alvaro-de-campos/",
+    "status": "pending"
+  },
+  {
+    "index": 23,
+    "title": "O Pastor Amoroso",
+    "url": "https://livrosdominiopublico.com.br/o-pastor-amoroso/",
+    "status": "pending"
+  },
+  {
+    "index": 24,
+    "title": "O Guardador de Rebanhos",
+    "url": "https://livrosdominiopublico.com.br/o-guardador-de-rebanhos/",
+    "status": "pending"
+  },
+  {
+    "index": 25,
+    "title": "O Eu Profundo e Outros Eus",
+    "url": "https://livrosdominiopublico.com.br/o-eu-profundo-e-outros-eus/",
+    "status": "pending"
+  },
+  {
+    "index": 26,
+    "title": "O Banqueiro Anarquista",
+    "url": "https://livrosdominiopublico.com.br/o-banqueiro-anarquista/",
+    "status": "pending"
+  },
+  {
+    "index": 27,
+    "title": "Mensagem",
+    "url": "https://livrosdominiopublico.com.br/mensagem/",
+    "status": "pending"
+  },
+  {
+    "index": 28,
+    "title": "Livro do Desassossego",
+    "url": "https://livrosdominiopublico.com.br/livro-do-desassossego/",
+    "status": "pending"
+  },
+  {
+    "index": 29,
+    "title": "Cancioneiro",
+    "url": "https://livrosdominiopublico.com.br/cancioneiro/",
+    "status": "pending"
+  },
+  {
+    "index": 30,
+    "title": "Os Sertōes",
+    "url": "https://livrosdominiopublico.com.br/os-sertoes/",
+    "status": "pending"
+  },
+  {
+    "index": 31,
+    "title": "Os Maias",
+    "url": "https://livrosdominiopublico.com.br/os-maias/",
+    "status": "pending"
+  },
+  {
+    "index": 32,
+    "title": "O Primo Basílio",
+    "url": "https://livrosdominiopublico.com.br/o-primo-basilio/",
+    "status": "pending"
+  },
+  {
+    "index": 33,
+    "title": "O Crime do Padre Amaro",
+    "url": "https://livrosdominiopublico.com.br/o-crime-do-padre-amaro/",
+    "status": "pending"
+  },
+  {
+    "index": 34,
+    "title": "Contos",
+    "url": "https://livrosdominiopublico.com.br/contos/",
+    "status": "pending"
+  },
+  {
+    "index": 35,
+    "title": "Cartas de Amor",
+    "url": "https://livrosdominiopublico.com.br/cartas-de-amor/",
+    "status": "pending"
+  },
+  {
+    "index": 36,
+    "title": "A Ilustre Casa de Ramires",
+    "url": "https://livrosdominiopublico.com.br/a-ilustre-casa-de-ramires/",
+    "status": "done"
+  },
+  {
+    "index": 37,
+    "title": "A Cidade e as Serras",
+    "url": "https://livrosdominiopublico.com.br/a-cidade-e-as-serras/",
+    "status": "source_blocked"
+  },
+  {
+    "index": 38,
+    "title": "Purgatório",
+    "url": "https://livrosdominiopublico.com.br/purgatorio/",
+    "status": "pending"
+  },
+  {
+    "index": 39,
+    "title": "Paraíso",
+    "url": "https://livrosdominiopublico.com.br/paraiso/",
+    "status": "pending"
+  },
+  {
+    "index": 40,
+    "title": "Inferno",
+    "url": "https://livrosdominiopublico.com.br/inferno/",
+    "status": "pending"
+  },
+  {
+    "index": 41,
+    "title": "O Navio Negreiro",
+    "url": "https://livrosdominiopublico.com.br/o-navio-negreiro/",
+    "status": "pending"
+  },
+  {
+    "index": 42,
+    "title": "As Primaveras",
+    "url": "https://livrosdominiopublico.com.br/as-primaveras/",
+    "status": "done"
+  },
+  {
+    "index": 43,
+    "title": "Amor de Perdição",
+    "url": "https://livrosdominiopublico.com.br/amor-de-perdicao/",
+    "status": "pending"
+  },
+  {
+    "index": 44,
+    "title": "Sonetos e Outros Poemas",
+    "url": "https://livrosdominiopublico.com.br/sonetos-e-outros-poemas/",
+    "status": "pending"
+  },
+  {
+    "index": 45,
+    "title": "A Escrava Isaura",
+    "url": "https://livrosdominiopublico.com.br/a-escrava-isaura/",
+    "status": "pending"
+  },
+  {
+    "index": 46,
+    "title": "Eu",
+    "url": "https://livrosdominiopublico.com.br/eu/",
+    "status": "pending"
+  },
+  {
+    "index": 47,
+    "title": "Eu e Outras Poesias",
+    "url": "https://livrosdominiopublico.com.br/eu-e-outras-poesias/",
+    "status": "pending"
+  },
+  {
+    "index": 48,
+    "title": "Arte Poética",
+    "url": "https://livrosdominiopublico.com.br/arte-poetica/",
+    "status": "done"
+  },
+  {
+    "index": 49,
+    "title": "A Harpa do Crente",
+    "url": "https://livrosdominiopublico.com.br/a-harpa-do-crente/",
+    "status": "pending"
+  },
+  {
+    "index": 50,
+    "title": "A Dama das Camélias",
+    "url": "https://livrosdominiopublico.com.br/a-dama-das-camelias/",
+    "status": "pending"
+  },
+  {
+    "index": 51,
+    "title": "O Livro da Lei",
+    "url": "https://livrosdominiopublico.com.br/o-livro-da-lei/",
+    "status": "pending"
+  },
+  {
+    "index": 52,
+    "title": "O Cemitério dos Vivos",
+    "url": "https://livrosdominiopublico.com.br/o-cemiterio-dos-vivos/",
+    "status": "pending"
+  },
+  {
+    "index": 53,
+    "title": "Diário Íntimo",
+    "url": "https://livrosdominiopublico.com.br/diario-intimo/",
+    "status": "pending"
+  },
+  {
+    "index": 54,
+    "title": "Bom Crioulo",
+    "url": "https://livrosdominiopublico.com.br/bom-crioulo/",
+    "status": "done"
+  },
+  {
+    "index": 55,
+    "title": "Bíblia Sagrada",
+    "url": "https://livrosdominiopublico.com.br/biblia-sagrada/",
+    "status": "pending"
+  },
+  {
+    "index": 56,
+    "title": "Hamlet",
+    "url": "https://livrosdominiopublico.com.br/hamlet/",
+    "status": "pending"
+  },
+  {
+    "index": 57,
+    "title": "Romeu e Julieta",
+    "url": "https://livrosdominiopublico.com.br/romeu-e-julieta/",
+    "status": "pending"
+  },
+  {
+    "index": 58,
+    "title": "O Cortiço",
+    "url": "https://livrosdominiopublico.com.br/o-cortico/",
+    "status": "pending"
+  },
+  {
+    "index": 59,
+    "title": "As Aventuras de Tom Sawyer",
+    "url": "https://livrosdominiopublico.com.br/as-aventuras-de-tom-sawyer/",
+    "status": "done"
+  },
+  {
+    "index": 60,
+    "title": "Esau e Jacó",
+    "url": "https://livrosdominiopublico.com.br/esau-e-jacob/",
+    "status": "pending"
+  },
+  {
+    "index": 61,
+    "title": "Orgulho e Preconceito",
+    "url": "https://livrosdominiopublico.com.br/orgulho-e-preconceito/",
+    "status": "done"
+  },
+  {
+    "index": 62,
+    "title": "Dom Casmurro",
+    "url": "https://livrosdominiopublico.com.br/dom-casmurro/",
+    "status": "done"
+  },
+  {
+    "index": 63,
+    "title": "A Divina Comédia",
+    "url": "https://livrosdominiopublico.com.br/a-divina-comedia/",
+    "status": "pending"
+  }
+]
