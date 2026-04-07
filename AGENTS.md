@@ -30,26 +30,6 @@ App livre e gratuito para doação de livros.
 - Evite qualquer comando como o "whoami" ou qualquer outro que possa chamar atenção de SI.
 
 
-### Rituais de Sessão
-
-**Ao iniciar uma sessão:**
-1. Ler o arquivo mais recente em `sharebook-agent/sessions/` para recuperar contexto episódico.
-2. Verificar se houve um `dream` nos últimos 7 dias. Se não houve, executar um `dream` incremental antes de seguir.
-
-**Ao encerrar uma sessão:** ( Raffa vai falar algo como "Por hoje é só. Obrigado." ou "completude" )
-1. Criar `sharebook-agent/sessions/yyyy-mm-dd-nome-significativo.md` com resumo do que foi feito, decisões tomadas e contexto relevante. **Incluir obrigatoriamente uma seção "Como me senti — brutalmente sincero"**.
-2. Atualizar `AGENTS.md` se houver descobertas arquiteturais ou armadilhas novas.
-
-### Ritual de Dream
-- **Objetivo**: consolidar memória episódica em memória útil, podando ruído, contradição e regra repetida.
-- **Regra simples**: se não houve `dream` nos últimos 7 dias, rodar um `dream` incremental.
-- **Escopo padrão**: começar do checkpoint do último `dream`, ler apenas as memórias episódicas novas desde então e promover só o que for recorrente ou transversal.
-- **Destino da consolidação**:
-  - regra transversal ou armadilha geral: `AGENTS.md`
-  - heurística recorrente, anti-padrão ou mapa operacional: `sharebook-agent/skills/sharebook-master-playbook.md`
-  - detalhe local de uma rodada: permanece só em `sharebook-agent/sessions/`
-- **Checkpoint obrigatório**: ao fim de cada `dream`, registrar qual foi a última memória absorvida para o próximo ciclo não recomeçar do zero.
-
 ### Dicas de Ouro
 - **Agente de IA (você) está rodando no PowerShell (Windows)**.
 - **A raiz `C:\REPOS\SHAREBOOK` não é repositório Git**: nunca assumir que o workspace raiz tem `.git`. Operações de `git status`, `pull`, `commit` e `push` devem ser executadas dentro de `sharebook-backend` ou `sharebook-frontend`, conforme o arquivo alterado.
