@@ -1,6 +1,6 @@
 ---
 name: sharebook-public-ebook-importer
-description: Importa livros digitais de domínio público ou gratuitos para o Sharebook usando fontes aprovadas, capa autoral e API de produção. Use quando for espelhar catálogos públicos, cadastrar ebooks no Sharebook, validar duplicidade, gerar capa própria para evitar risco de copyright, aprovar livros e preparar o acervo para o mailing semanal.
+description: Importa livros digitais de domínio público ou gratuitos para o Sharebook usando fontes aprovadas e API de produção. Use quando for espelhar catálogos públicos, cadastrar ebooks no Sharebook, validar duplicidade, reutilizar capa existente quando adequada, gerar capa autoral quando necessário, aprovar livros e preparar o acervo para o mailing semanal.
 ---
 
 # Sharebook Public Ebook Importer
@@ -14,7 +14,10 @@ Importar pouco e bem. Esta skill existe para transformar um livro público/gratu
 3. Escolher sempre o primeiro item marcado como `pending` em [`source-queue.md`](source-queue.md).
 3. Extrair metadados com [workflow.md](references/workflow.md) e `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_source_extract.py`.
 4. Se a fonte estiver quebrada, o PDF vier errado ou o cadastro já existir em produção, marcar o item com o status correto na memória e seguir imediatamente para o próximo `pending`.
-5. Tratar a capa como autoral e vendável. Antes de escrever o prompt, escolher deliberadamente uma família visual, uma paleta dominante, um nível de luminosidade e um enquadramento que não repitam a solução dominante das últimas rodadas. A meta não é “parecer livro sério”; a meta é parecer desejável, magnético, quase com sex appeal visual de cartaz de cinema, sem cair em clichê barato. Gerar com `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_openai_cover.py`, preferindo `--prompt-file` em UTF-8 no Windows.
+5. Tratar a capa como ativo de vitrine e otimização de custo.
+   - **Padrão econômico:** reutilizar capa existente da internet quando houver imagem boa, legível em miniatura e com risco jurídico aceitável para o contexto.
+   - **Fallback premium:** gerar capa autoral quando não houver capa adequada (qualidade baixa, resolução ruim, visual fraco, ou incerteza de uso).
+   - Se optar por capa autoral, manter a disciplina visual: escolher deliberadamente família visual, paleta dominante, luminosidade e enquadramento para evitar repetição entre rodadas. Gerar com `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_openai_cover.py`, preferindo `--prompt-file` em UTF-8 no Windows.
 6. Em sessão manual de PowerShell, se for fazer várias operações seguidas, carregar um token reutilizável com `. C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_login.ps1`.
 7. Checar duplicidade com `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_book.py find --type Eletronic`.
 8. Revalidar o candidato escolhido com um `find` imediatamente antes do `create`; produção não respeita sua expectativa de exclusividade.
@@ -248,7 +251,7 @@ Famílias visuais recomendadas para rodízio:
 - Usar `livrosdominiopublico.com.br` como fonte principal no MVP.
 - A ordem do sitemap vira ordem oficial da fila; não reordenar por gosto pessoal enquanto houver item `pending` antes dele.
 - Aceitar a afirmação de domínio público/gratuito da fonte como suficiente no MVP.
-- Nunca assumir que capa de terceiros pode ser reutilizada.
+- Reuso de capa de terceiros é permitido quando a fonte for confiável e o risco jurídico for considerado aceitável para o contexto operacional atual.
 - Preferir desistir do título a entrar em novela de PDF, metadata ou capa.
 - Não voltar a triar do zero a cada execução; a memória sequencial existe justamente para impedir essa perda de tempo.
 - Para o acervo do Sharebook, fazer esforço real para priorizar livros em português quando a obra permitir. Isso inclui procurar fonte alternativa, tradução em domínio público ou edição gratuita confiável antes de se conformar com inglês.
