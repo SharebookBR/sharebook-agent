@@ -93,6 +93,17 @@ Regras consolidadas:
 - Painel admin deve refletir o comportamento real do backend, não inventar leitura bonitinha.
 - Quando o ajuste correto é estrutural no backend, não maquiar no frontend.
 
+### 6. Criação de livro e PDF
+
+Consulte primeiro:
+- [`C:/REPOS/SHAREBOOK/sharebook-agent/skills/create-book.md`](C:/REPOS/SHAREBOOK/sharebook-agent/skills/create-book.md)
+
+Regras consolidadas:
+- consolidar o manuscrito antes de diagramar
+- tratar a capa como ativo premium; quando a qualidade importar de verdade, preferir prompt + ChatGPT web + meio de campo do Raffa
+- não enfiar infográfico por vaidade; melhor sem do que com peça bonita e errada
+- PDF saudável do Sharebook nasce de HTML/CSS bonito + Chrome headless sem header/footer automático
+
 ## Armadilhas recorrentes do projeto
 
 ### PowerShell
