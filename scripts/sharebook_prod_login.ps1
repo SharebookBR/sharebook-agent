@@ -7,7 +7,7 @@ $currentToken = [Environment]::GetEnvironmentVariable($tokenVar, "Process")
 
 if (-not $Force -and $currentToken) {
     Write-Output "$tokenVar ja esta carregado na sessao atual."
-    Write-Output "Se quiser renovar, rode: . .\\codex-scripts\\sharebook_prod_login.ps1 -Force"
+    Write-Output "Se quiser renovar, rode: . .\\scripts\\sharebook_prod_login.ps1 -Force"
     return
 }
 
@@ -15,8 +15,8 @@ $script = @'
 import sys
 from pathlib import Path
 
-repo_root = Path(r"C:/REPOS/SHAREBOOK")
-scripts_dir = repo_root / "codex-scripts"
+repo_root = Path(r"C:/REPOS/SHAREBOOK/sharebook-agent")
+scripts_dir = repo_root / "scripts"
 sys.path.insert(0, str(scripts_dir))
 
 from sharebook_prod_auth import get_token, load_env, save_env_value
@@ -34,4 +34,4 @@ if (-not $token) {
 
 $env:SHAREBOOK_PROD_ACCESS_TOKEN = $token.Trim()
 Write-Output "$tokenVar carregado na sessao atual e salvo no .env."
-Write-Output "Use dot-source para renovar e reaproveitar o token: . .\\codex-scripts\\sharebook_prod_login.ps1 -Force"
+Write-Output "Use dot-source para renovar e reaproveitar o token: . .\\scripts\\sharebook_prod_login.ps1 -Force"
