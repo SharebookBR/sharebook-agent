@@ -1,1 +1,0 @@
-Mais do que um manual, "Learning Python" é um guia completo para quem quer dominar a linguagem com profundidade. Mark Lutz conduz o leitor do básico ao avançado com exemplos claros, exercícios práticos e explicações que conectam teoria e uso real. Ideal para quem deseja evoluir de scripts simples para desenvolvimento profissional com Python.
