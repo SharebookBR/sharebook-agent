@@ -21,10 +21,11 @@ Importar pouco e bem. Esta skill existe para transformar um livro público/gratu
 6. Em sessão manual de PowerShell, se for fazer várias operações seguidas, carregar um token reutilizável com `. C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_login.ps1`.
 7. Checar duplicidade com `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_book.py find --type Eletronic`.
 8. Revalidar o candidato escolhido com um `find` imediatamente antes do `create`; produção não respeita sua expectativa de exclusividade.
-9. Para poesia, usar `Artes` como categoria no Sharebook; `Poesia` não existe hoje no produto.
-10. Escrever uma sinopse final de vitrine com 3 parágrafos, tom envolvente e gancho forte de leitura.
-11. Cadastrar e aprovar com `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_book.py create --approve`, preferindo `--synopsis-file` em UTF-8 para evitar caracteres quebrados no Windows.
-12. Atualizar a memória da automação na mesma rodada:
+9. Antes do `create`, listar os livros da categoria-alvo (`/api/book/1/9999` filtrando `categoryId`) e fazer um check rápido anti-duplicidade por título-base/slug parecido. Se houver candidato muito próximo, parar e decidir conscientemente entre `update`, pular ou seguir.
+10. Para poesia, usar `Artes` como categoria no Sharebook; `Poesia` não existe hoje no produto.
+11. Escrever uma sinopse final de vitrine com 3 parágrafos, tom envolvente e gancho forte de leitura.
+12. Cadastrar e aprovar com `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_book.py create --approve`, preferindo `--synopsis-file` em UTF-8 para evitar caracteres quebrados no Windows.
+13. Atualizar a memória da automação na mesma rodada:
     - item publicado vira `done`
     - duplicata vira `done` se o livro já existir em produção
     - problema da fonte vira `source_blocked`
