@@ -24,14 +24,19 @@ Importar pouco e bem. Esta skill existe para transformar um livro público/gratu
 9. Antes do `create`, listar os livros da categoria-alvo (`/api/book/1/9999` filtrando `categoryId`) e fazer um check rápido anti-duplicidade por título-base/slug parecido. Se houver candidato muito próximo, parar e decidir conscientemente entre `update`, pular ou seguir.
 10. Para poesia, usar `Artes` como categoria no Sharebook; `Poesia` não existe hoje no produto.
 11. Escrever uma sinopse final de vitrine com 3 parágrafos, tom envolvente e gancho forte de leitura.
-12. Cadastrar e aprovar com `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_book.py create --approve`, preferindo `--synopsis-file` em UTF-8 para evitar caracteres quebrados no Windows.
-13. Atualizar a memória da automação na mesma rodada:
+12. Aplicar gate obrigatório de idioma antes do cadastro:
+    - padrão editorial do Sharebook: **publicar em português (pt-BR/pt-PT)**
+    - inglês só entra como **exceção formal** com aprovação explícita do Raffa para aquele título
+    - sem aprovação explícita, não cadastrar nem aprovar título em inglês
+13. Cadastrar e aprovar com `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_book.py create --approve`, preferindo `--synopsis-file` em UTF-8 para evitar caracteres quebrados no Windows.
+14. Atualizar a memória da automação na mesma rodada:
     - item publicado vira `done`
     - duplicata vira `done` se o livro já existir em produção
     - problema da fonte vira `source_blocked`
+    - bloqueio por idioma vira `language_blocked`
     - problema local temporário vira `retry_later`
     - se o `create` cair duas vezes seguidas com aborto de conexão durante upload de PDF grande (ex.: `WinError 10053`), marcar `retry_later` com nota curta e seguir para o próximo `pending`
-13. Ler o rastro da execução e transformar qualquer dor recorrente em melhoria concreta da skill ou dos scripts.
+15. Ler o rastro da execução e transformar qualquer dor recorrente em melhoria concreta da skill ou dos scripts.
 
 ## Regra de variedade visual e apelo visual
 
@@ -255,8 +260,9 @@ Famílias visuais recomendadas para rodízio:
 - Reuso de capa de terceiros é permitido quando a fonte for confiável e o risco jurídico for considerado aceitável para o contexto operacional atual.
 - Preferir desistir do título a entrar em novela de PDF, metadata ou capa.
 - Não voltar a triar do zero a cada execução; a memória sequencial existe justamente para impedir essa perda de tempo.
-- Para o acervo do Sharebook, fazer esforço real para priorizar livros em português quando a obra permitir. Isso inclui procurar fonte alternativa, tradução em domínio público ou edição gratuita confiável antes de se conformar com inglês.
-- Inglês é fallback aceitável, não padrão desejado. Se depois de um esforço razoável não houver versão boa em português, seguir com a versão em inglês sem travar a categoria.
+- Regra editorial obrigatória: para livro digital no Sharebook, o padrão é publicar apenas em português (pt-BR/pt-PT).
+- Inglês não é fallback automático: só pode entrar por exceção com aprovação explícita do Raffa para o título específico.
+- Sem aprovação explícita, registrar como bloqueio de idioma (`language_blocked`) e seguir para o próximo candidato em vez de publicar em inglês.
 - Para esta automação, não ler a última sessão em `codex-sessions/`; esse custo não está pagando valor prático.
 - Se a automação perder a corrida para outro cadastro entre a triagem e o `create`, pular para o próximo candidato em vez de forçar `delete-existing` sem necessidade.
 - Livro físico existente com o mesmo título/autor não bloqueia cadastro de ebook; a duplicidade relevante neste fluxo é ebook contra ebook.
