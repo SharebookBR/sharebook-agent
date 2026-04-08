@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Cloud para Devs</title>
+<style>
+  @page { size: A5; margin: 20mm 18mm 20mm 18mm; }
+  body { font-family: "Georgia", "Times New Roman", serif; color:#111827; line-height:1.72; }
+  .cover { page-break-after: always; min-height: 95vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; background:linear-gradient(160deg,#0b1020,#171f3b 45%,#243b6b); color:#e5e7eb; border-radius:12px; padding:36px; }
+  .cover h1 { font-family: "Inter", "Arial", sans-serif; font-size:34px; margin:0 0 8px; color:#fff; letter-spacing:.2px; }
+  .cover h2 { font-family: "Inter", "Arial", sans-serif; font-size:17px; margin:0; font-weight:500; color:#c7d2fe; }
+  .cover .author { margin-top:22px; font-family:"Inter","Arial",sans-serif; color:#93c5fd; font-size:14px; text-transform:uppercase; letter-spacing:1px; }
+  h1 { font-size: 24px; line-height:1.2; margin: 0 0 10px; page-break-before: always; }
+  h1:first-of-type { page-break-before: auto; }
+  h2 { font-size: 20px; margin: 24px 0 10px; line-height:1.3; }
+  h3 { font-size: 17px; margin: 20px 0 10px; }
+  p { margin: 0 0 12px; font-size: 14.8px; }
+  ul { margin: 0 0 12px 20px; }
+  li { margin: 0 0 8px; font-size: 14.8px; }
+  hr { border:0; border-top:1px solid #e5e7eb; margin:16px 0; }
+  .sp { margin:0; height:4px; }
+</style>
+</head>
+<body>
+<section class="cover">
+  <h1>Cloud para Devs</h1>
+  <h2>fundamentos sem enrolação</h2>
+  <div class="author">Sharebook</div>
+</section>
+<h1>Cloud para Devs: fundamentos sem enrolação</h1>
+<p class="sp"></p>
+<p>**Subtítulo:** Como sair do deploy no susto para um sistema previsível, observável e escalável</p>
+<p>**Versão:** v1</p>
+<p>**Público:** dev iniciante/intermediário que já codou app web/API e quer dominar os fundamentos de cloud</p>
+<p class="sp"></p>
+<hr/>
+<p class="sp"></p>
+<h2>Sumário</h2>
+<p class="sp"></p>
+<p><strong>1. Por que cloud parece mais difícil do que é</strong></p>
+<p><strong>2. O mapa mental mínimo de cloud</strong></p>
+<p><strong>3. Compute: onde seu código realmente roda</strong></p>
+<p><strong>4. Dados e estado: o coração da arquitetura</strong></p>
+<p><strong>5. Rede e segurança sem misticismo</strong></p>
+<p><strong>6. Deploy sem drama: CI/CD e ambientes</strong></p>
+<p><strong>7. Observabilidade: enxergar antes de quebrar</strong></p>
+<p><strong>8. Escala e custo: performance com responsabilidade</strong></p>
+<p><strong>9. Arquitetura de referência para produto real</strong></p>
+<p>10. Plano de 30 dias para virar dev cloud confiável</p>
+<p class="sp"></p>
+<hr/>
+<p class="sp"></p>
+<h2>1) Por que cloud parece mais difícil do que é</h2>
+<p class="sp"></p>
+<p>Se você já trabalhou com software, cloud não é um universo alienígena. É o mesmo jogo de sempre, só com mais peças e mais responsabilidade operacional.</p>
+<p class="sp"></p>
+<p>O que assusta no começo:</p>
+<p class="sp"></p>
+<ul>
+<li>muitos serviços com nomes diferentes</li>
+<li>dashboard gigante com 200 botões</li>
+<li>medo de custo inesperado</li>
+<li>medo de “abrir sem querer” uma porta de segurança</li>
+</ul>
+<p class="sp"></p>
+<p>A real: você não precisa dominar tudo para entregar valor.</p>
+<p class="sp"></p>
+<p>Cloud bem feita é sobre responder cinco perguntas com clareza:</p>
+<p class="sp"></p>
+<p><strong>1. Onde meu código roda?</strong></p>
+<p><strong>2. Onde meus dados ficam?</strong></p>
+<p><strong>3. Quem pode acessar o quê?</strong></p>
+<p><strong>4. Como eu publico sem derrubar?</strong></p>
+<p><strong>5. Como eu descubro rápido quando algo dá ruim?</strong></p>
+<p class="sp"></p>
+<p>Se você souber responder isso de forma consistente, já está na frente de muito time.</p>
+<p class="sp"></p>
+<h3>O erro clássico de quem começa</h3>
+<p class="sp"></p>
+<p>Querer aprender por catálogo de serviço.</p>
+<p class="sp"></p>
+<p>“Hoje vou estudar 17 serviços da AWS.”</p>
+<p class="sp"></p>
+<p>Isso dá sensação de progresso e zero capacidade de decisão.</p>
+<p class="sp"></p>
+<p>Aprenda por problema real:</p>
+<p class="sp"></p>
+<ul>
+<li>preciso servir tráfego web</li>
+<li>preciso salvar dados</li>
+<li>preciso autenticar</li>
+<li>preciso deploy contínuo</li>
+<li>preciso monitorar</li>
+</ul>
+<p class="sp"></p>
+<p>Cloud não é prova de memorização. É engenharia de trade-off.</p>
+<p class="sp"></p>
+<hr/>
+<p class="sp"></p>
+<h2>2) O mapa mental mínimo de cloud</h2>
+<p class="sp"></p>
+<p>Antes de discutir ferramenta, grava esse mapa:</p>
+<p class="sp"></p>
+<ul>
+<li>**Compute**: executa sua aplicação</li>
+<li>**Storage/Database**: guarda estado</li>
+<li>**Network**: conecta e controla tráfego</li>
+<li>**Identity/Security**: define quem pode fazer o quê</li>
+<li>**Observability**: mede saúde do sistema</li>
+<li>**Delivery**: publica mudanças com segurança</li>
+</ul>
+<p class="sp"></p>
+<p>Todo projeto sério em cloud é combinação desses blocos.</p>
+<p class="sp"></p>
+<h3>Camadas que importam no dia a dia</h3>
+<p class="sp"></p>
+<p><strong>1. **Produto**: regra de negócio</strong></p>
+<p><strong>2. **Aplicação**: API/frontend/jobs</strong></p>
+<p><strong>3. **Infra**: runtime, banco, rede, permissões</strong></p>
+<p><strong>4. **Operação**: deploy, monitoramento, incidentes</strong></p>
+<p class="sp"></p>
+<p>Quando dá problema, quase sempre é falha de alinhamento entre camadas.</p>
+<p class="sp"></p>
+<p>Exemplo clássico:</p>
+<p class="sp"></p>
+<ul>
+<li>app ótima localmente</li>
+<li>deploy em produção sem variáveis corretas</li>
+<li>app sobe mas quebra na primeira query</li>
+</ul>
+<p class="sp"></p>
+<p>Não era bug de negócio. Era bug de operação.</p>
+<p class="sp"></p>
+<h3>Regra prática</h3>
+<p class="sp"></p>
+<p>Sempre versionar três coisas juntas:</p>
+<p class="sp"></p>
+<ul>
+<li>código</li>
+<li>configuração</li>
+<li>infraestrutura</li>
+</ul>
+<p class="sp"></p>
+<p>Sem isso, sua produção vira “artesanato”.</p>
+<p class="sp"></p>
+<hr/>
+<p class="sp"></p>
+<h2>3) Compute: onde seu código realmente roda</h2>
+<p class="sp"></p>
+<p>Você tem três modelos principais para começar:</p>
+<p class="sp"></p>
+<p><strong>1. **VM (máquina virtual)**</strong></p>
+<p><strong>2. **Container**</strong></p>
+<p><strong>3. **Serverless**</strong></p>
+<p class="sp"></p>
+<h3>VM</h3>
+<p class="sp"></p>
+<p>Prós:</p>
+<p class="sp"></p>
+<ul>
+<li>controle total</li>
+<li>fácil de entender para quem veio de servidor tradicional</li>
+</ul>
+<p class="sp"></p>
+<p>Contras:</p>
+<p class="sp"></p>
+<ul>
+<li>mais responsabilidade de patch, hardening, automação</li>
+<li>escala geralmente manual no início</li>
+</ul>
+<p class="sp"></p>
+<p>Use quando:</p>
+<p class="sp"></p>
+<ul>
+<li>time pequeno</li>
+<li>stack simples</li>
+<li>precisa de previsibilidade e controle direto</li>
+</ul>
+<p class="sp"></p>
+<h3>Container</h3>
+<p class="sp"></p>
+<p>Prós:</p>
+<p class="sp"></p>
+<ul>
+<li>empacota runtime + dependências</li>
+<li>reduz “na minha máquina funciona”</li>
+<li>facilita padronização de deploy</li>
+</ul>
+<p class="sp"></p>
+<p>Contras:</p>
+<p class="sp"></p>
+<ul>
+<li>ainda exige orquestração/ops</li>
+<li>pode virar complexidade cedo demais se você for direto para Kubernetes sem maturidade</li>
+</ul>
+<p class="sp"></p>
+<p>Use quando:</p>
+<p class="sp"></p>
+<ul>
+<li>quer consistência entre ambientes</li>
+<li>tem múltiplos serviços</li>
+<li>precisa escalar com mais organização</li>
+</ul>
+<p class="sp"></p>
+<h3>Serverless</h3>
+<p class="sp"></p>
+<p>Prós:</p>
+<p class="sp"></p>
+<ul>
+<li>menos infra para operar</li>
+<li>escala automática por padrão</li>
+<li>ótimo para workloads event-driven</li>
+</ul>
+<p class="sp"></p>
+<p>Contras:</p>
+<p class="sp"></p>
+<ul>
+<li>lock-in de provedor pode aumentar</li>
+<li>cold starts e limites de execução</li>
+<li>observabilidade às vezes mais chatinha</li>
+</ul>
+<p class="sp"></p>
+<p>Use quando:</p>
+<p class="sp"></p>
+<ul>
+<li>eventos, webhooks, automações, jobs</li>
+<li>tráfego variável</li>
+<li>time quer velocidade com menos gestão de servidor</li>
+</ul>
+<p class="sp"></p>
+<h3>Decisão simples para não travar</h3>
+<p class="sp"></p>
+<ul>
+<li>app monolito inicial + poucos acessos: VM ou container simples</li>
+<li>API com crescimento previsível: container</li>
+<li>automações/eventos pontuais: serverless</li>
+</ul>
+<p class="sp"></p>
+<p>A pior decisão não é escolher “errado”. É ficar meses sem escolher.</p>
+<p class="sp"></p>
+<hr/>
+<p class="sp"></p>
+<h2>4) Dados e estado: o coração da arquitetura</h2>
+<p class="sp"></p>
+<p>Compute pode morrer e renascer. Dado não.</p>
+<p class="sp"></p>
+<p>Quem trata banco como detalhe paga caro depois.</p>
+<p class="sp"></p>
+<h3>Tipos de armazenamento</h3>
+<p class="sp"></p>
+<ul>
+<li>**Relacional** (PostgreSQL, MySQL): consistência, transação, modelagem clara</li>
+<li>**NoSQL** (documento/chave-valor): flexibilidade e escala para certos padrões</li>
+<li>**Objeto** (S3/GCS/Azure Blob): arquivos, imagens, PDFs, backups</li>
+<li>**Cache** (Redis): performance e redução de carga em banco primário</li>
+</ul>
+<p class="sp"></p>
+<h3>Princípios que evitam tragédia</h3>
+<p class="sp"></p>
+<p><strong>1. **Backup testado** > backup “configurado”</strong></p>
+<p><strong>2. **Migração versionada** sempre</strong></p>
+<p><strong>3. **Segredo fora do código**</strong></p>
+<p><strong>4. **Privilégio mínimo no acesso ao banco**</strong></p>
+<p><strong>5. **Ambiente de staging parecido com produção**</strong></p>
+<p class="sp"></p>
+<h3>Sobre migrations</h3>
+<p class="sp"></p>
+<p>Se sua migration está divergindo do banco real, não esconda warning no startup.</p>
+<p class="sp"></p>
+<p>Conserta a origem:</p>
+<p class="sp"></p>
+<ul>
+<li>snapshot</li>
+<li>migration</li>
+<li>provider de runtime/design-time</li>
+<li>estado real do banco</li>
+</ul>
+<p class="sp"></p>
+<p>Ignorar warning é adiar incidente.</p>
+<p class="sp"></p>
+<h3>Estratégia simples de dados para MVP sério</h3>
+<p class="sp"></p>
+<ul>
+<li>banco relacional gerenciado</li>
+<li>storage de objeto para arquivos</li>
+<li>backup diário com retenção definida</li>
+<li>restore testado mensalmente</li>
+</ul>
+<p class="sp"></p>
+<p>Isso já te coloca em um nível profissional com esforço acessível.</p>
+<p class="sp"></p>
+<hr/>
+<p class="sp"></p>
+<h2>5) Rede e segurança sem misticismo</h2>
+<p class="sp"></p>
+<p>Segurança em cloud não é comprar ferramenta cara. É remover exposição desnecessária.</p>
+<p class="sp"></p>
+<h3>Checklist de base</h3>
+<p class="sp"></p>
+<ul>
+<li>TLS obrigatório</li>
+<li>portas públicas mínimas</li>
+<li>acesso administrativo restrito por origem</li>
+<li>secrets em vault/env seguro (não no repositório)</li>
+<li>logs de acesso habilitados</li>
+<li>rotação periódica de credenciais críticas</li>
+</ul>
+<p class="sp"></p>
+<h3>Modelo mental de rede</h3>
+<p class="sp"></p>
+<p>Pensa em três zonas:</p>
+<p class="sp"></p>
+<p><strong>1. **Pública**: o que realmente precisa internet</strong></p>
+<p><strong>2. **Privada de aplicação**: serviços internos</strong></p>
+<p><strong>3. **Privada de dados**: banco e componentes sensíveis</strong></p>
+<p class="sp"></p>
+<p>Banco aberto para internet “porque facilita” é dívida com juros.</p>
+<p class="sp"></p>
+<h3>IAM (identidade e acesso)</h3>
+<p class="sp"></p>
+<p>Erros mais comuns:</p>
+<p class="sp"></p>
+<ul>
+<li>usar credencial root para rotina</li>
+<li>permissões amplas (“*” em tudo)</li>
+<li>credencial compartilhada entre pessoas</li>
+</ul>
+<p class="sp"></p>
+<p>Prática saudável:</p>
+<p class="sp"></p>
+<ul>
+<li>usuário/role por contexto</li>
+<li>auditoria de acesso</li>
+<li>política menor possível para cada serviço</li>
+</ul>
+<p class="sp"></p>
+<h3>Segurança como processo</h3>
+<p class="sp"></p>
+<p>Não existe estado “100% seguro”.</p>
+<p class="sp"></p>
+<p>Existe rotina:</p>
+<p class="sp"></p>
+<ul>
+<li>patch</li>
+<li>revisão de permissão</li>
+<li>hardening básico</li>
+<li>resposta a incidente</li>
+</ul>
+<p class="sp"></p>
+<p>Consistência vence heroísmo.</p>
+<p class="sp"></p>
+<hr/>
+<p class="sp"></p>
+<h2>6) Deploy sem drama: CI/CD e ambientes</h2>
+<p class="sp"></p>
+<p>Deploy manual por SSH até funciona. Até o dia que não funciona.</p>
+<p class="sp"></p>
+<h3>Pipeline mínimo decente</h3>
+<p class="sp"></p>
+<p><strong>1. push no repositório</strong></p>
+<p><strong>2. build</strong></p>
+<p><strong>3. testes</strong></p>
+<p><strong>4. artefato versionado</strong></p>
+<p><strong>5. deploy em staging</strong></p>
+<p><strong>6. validação</strong></p>
+<p><strong>7. deploy em produção</strong></p>
+<p class="sp"></p>
+<h3>Ambientes</h3>
+<p class="sp"></p>
+<p>No mínimo:</p>
+<p class="sp"></p>
+<ul>
+<li>**dev/local**</li>
+<li>**staging**</li>
+<li>**prod**</li>
+</ul>
+<p class="sp"></p>
+<p>Se staging não se parece com prod, staging vira teatro.</p>
+<p class="sp"></p>
+<h3>Estratégias de deploy</h3>
+<p class="sp"></p>
+<ul>
+<li>**Rolling**: atualiza aos poucos</li>
+<li>**Blue/Green**: ambiente novo pronto antes de virar tráfego</li>
+<li>**Canary**: pequena fatia de usuários primeiro</li>
+</ul>
+<p class="sp"></p>
+<p>Para time pequeno, rolling com rollback claro já resolve muito.</p>
+<p class="sp"></p>
+<h3>Regra de ouro</h3>
+<p class="sp"></p>
+<p>Rollback precisa ser parte do plano, não improviso pós-caos.</p>
+<p class="sp"></p>
+<p>Pergunta obrigatória antes de deploy:</p>
+<p class="sp"></p>
+<p>> Se quebrar, volto em quanto tempo e como?</p>
+<p class="sp"></p>
+<p>Se a resposta for “a gente vê na hora”, você não está pronto.</p>
+<p class="sp"></p>
+<hr/>
+<p class="sp"></p>
+<h2>7) Observabilidade: enxergar antes de quebrar</h2>
+<p class="sp"></p>
+<p>Sem observabilidade, produção vira adivinhação.</p>
+<p class="sp"></p>
+<p>Você precisa de três pilares:</p>
+<p class="sp"></p>
+<ul>
+<li>**Logs** (o que aconteceu)</li>
+<li>**Métricas** (como está o sistema)</li>
+<li>**Traces** (onde está lento/quebrando no fluxo)</li>
+</ul>
+<p class="sp"></p>
+<h3>Logs que prestam</h3>
+<p class="sp"></p>
+<ul>
+<li>estruturados (json quando possível)</li>
+<li>com correlação por request</li>
+<li>sem vazar dado sensível</li>
+<li>retenção definida</li>
+</ul>
+<p class="sp"></p>
+<h3>Métricas essenciais para começar</h3>
+<p class="sp"></p>
+<ul>
+<li>latência p95/p99</li>
+<li>taxa de erro</li>
+<li>throughput</li>
+<li>uso de CPU/memória</li>
+<li>conexões de banco</li>
+</ul>
+<p class="sp"></p>
+<h3>Alertas úteis</h3>
+<p class="sp"></p>
+<p>Alerta bom é acionável.</p>
+<p class="sp"></p>
+<p>Ruim:</p>
+<p class="sp"></p>
+<ul>
+<li>“CPU > 50% por 1 min” sem contexto</li>
+</ul>
+<p class="sp"></p>
+<p>Bom:</p>
+<p class="sp"></p>
+<ul>
+<li>“erro 5xx > 3% por 5 min no endpoint crítico”</li>
+</ul>
+<p class="sp"></p>
+<h3>SLO/SLI na prática</h3>
+<p class="sp"></p>
+<p>Não precisa virar Google no dia 1.</p>
+<p class="sp"></p>
+<p>Começa simples:</p>
+<p class="sp"></p>
+<ul>
+<li>SLI: % de requests com sucesso</li>
+<li>SLO: 99,5% mês</li>
+</ul>
+<p class="sp"></p>
+<p>Com isso, você alinha produto e engenharia sobre qualidade.</p>
+<p class="sp"></p>
+<hr/>
+<p class="sp"></p>
+<h2>8) Escala e custo: performance com responsabilidade</h2>
+<p class="sp"></p>
+<p>Escalar sem olhar custo é fácil. Difícil é escalar com margem saudável.</p>
+<p class="sp"></p>
+<h3>5 vazamentos comuns de custo</h3>
+<p class="sp"></p>
+<p><strong>1. ambiente esquecido ligado</strong></p>
+<p><strong>2. storage sem lifecycle</strong></p>
+<p><strong>3. logs infinitos sem retenção</strong></p>
+<p><strong>4. overprovision de banco/compute</strong></p>
+<p><strong>5. tráfego de saída ignorado</strong></p>
+<p class="sp"></p>
+<h3>FinOps básico para time pequeno</h3>
+<p class="sp"></p>
+<ul>
+<li>tag por serviço/projeto</li>
+<li>orçamento com alerta</li>
+<li>revisão semanal de custo</li>
+<li>right-sizing mensal</li>
+</ul>
+<p class="sp"></p>
+<h3>Escala inteligente</h3>
+<p class="sp"></p>
+<p>Escalar vertical (máquina maior) é rápido no começo.</p>
+<p class="sp"></p>
+<p>Escalar horizontal (mais instâncias) exige mais maturidade, mas melhora resiliência.</p>
+<p class="sp"></p>
+<p>A ordem normal:</p>
+<p class="sp"></p>
+<p><strong>1. corrigir gargalo óbvio</strong></p>
+<p><strong>2. cache onde faz sentido</strong></p>
+<p><strong>3. otimizar query</strong></p>
+<p><strong>4. só então adicionar mais infra</strong></p>
+<p class="sp"></p>
+<p>Hardware não corrige arquitetura ruim para sempre.</p>
+<p class="sp"></p>
+<hr/>
+<p class="sp"></p>
+<h2>9) Arquitetura de referência para produto real</h2>
+<p class="sp"></p>
+<p>Vamos desenhar uma arquitetura pragmática para um app de catálogo + download de ebook:</p>
+<p class="sp"></p>
+<h3>Componentes</h3>
+<p class="sp"></p>
+<ul>
+<li>frontend web</li>
+<li>API backend</li>
+<li>banco relacional gerenciado</li>
+<li>storage de objetos para PDFs/imagens</li>
+<li>cache para leitura frequente</li>
+<li>fila para tarefas assíncronas (email, processamento)</li>
+<li>observabilidade centralizada</li>
+</ul>
+<p class="sp"></p>
+<h3>Fluxo simplificado</h3>
+<p class="sp"></p>
+<p><strong>1. usuário acessa frontend</strong></p>
+<p><strong>2. frontend chama API</strong></p>
+<p><strong>3. API lê banco/cache</strong></p>
+<p><strong>4. download usa URL controlada para storage</strong></p>
+<p><strong>5. eventos importantes vão para fila</strong></p>
+<p><strong>6. workers processam assíncrono</strong></p>
+<p class="sp"></p>
+<h3>Segurança nesse desenho</h3>
+<p class="sp"></p>
+<ul>
+<li>API atrás de TLS</li>
+<li>banco sem exposição pública</li>
+<li>acesso ao storage por permissão mínima</li>
+<li>audit log de ações administrativas</li>
+</ul>
+<p class="sp"></p>
+<h3>Escalabilidade nesse desenho</h3>
+<p class="sp"></p>
+<ul>
+<li>frontend e API com auto scaling básico</li>
+<li>cache reduz carga de leitura</li>
+<li>workers desacoplam pico de tarefas</li>
+</ul>
+<p class="sp"></p>
+<h3>Operação nesse desenho</h3>
+<p class="sp"></p>
+<ul>
+<li>deploy com pipeline</li>
+<li>rollback simples</li>
+<li>dashboards de latência/erro</li>
+<li>alertas por SLO</li>
+</ul>
+<p class="sp"></p>
+<p>Esse setup atende muita operação real sem overengineering.</p>
+<p class="sp"></p>
+<hr/>
+<p class="sp"></p>
+<h2>10) Plano de 30 dias para virar dev cloud confiável</h2>
+<p class="sp"></p>
+<h3>Semana 1 — Base sólida</h3>
+<p class="sp"></p>
+<ul>
+<li>subir app simples em ambiente cloud</li>
+<li>configurar domínio + TLS</li>
+<li>armazenar segredo em env/vault</li>
+<li>criar checklist de segurança mínima</li>
+</ul>
+<p class="sp"></p>
+<h3>Semana 2 — Entrega contínua</h3>
+<p class="sp"></p>
+<ul>
+<li>pipeline com build + teste + deploy staging</li>
+<li>deploy em produção com rollback documentado</li>
+<li>separar config por ambiente</li>
+</ul>
+<p class="sp"></p>
+<h3>Semana 3 — Dados e observabilidade</h3>
+<p class="sp"></p>
+<ul>
+<li>backup automático + teste de restore</li>
+<li>logs estruturados</li>
+<li>dashboard com latência, erro e throughput</li>
+<li>alertas para endpoint crítico</li>
+</ul>
+<p class="sp"></p>
+<h3>Semana 4 — Escala e custo</h3>
+<p class="sp"></p>
+<ul>
+<li>revisar gargalos reais</li>
+<li>aplicar cache em ponto de dor</li>
+<li>configurar orçamento e alertas de custo</li>
+<li>documentar arquitetura alvo e próximos passos</li>
+</ul>
+<p class="sp"></p>
+<p>Se você executar isso com disciplina, já vira referência no time para operação confiável.</p>
+<p class="sp"></p>
+<hr/>
+<p class="sp"></p>
+<h2>Apêndice A — Checklist de produção (versão curta)</h2>
+<p class="sp"></p>
+<h3>Segurança</h3>
+<p class="sp"></p>
+<ul>
+<li>[ ] TLS ativo</li>
+<li>[ ] portas mínimas expostas</li>
+<li>[ ] segredo fora do código</li>
+<li>[ ] IAM por privilégio mínimo</li>
+<li>[ ] logs de acesso habilitados</li>
+</ul>
+<p class="sp"></p>
+<h3>Deploy</h3>
+<p class="sp"></p>
+<ul>
+<li>[ ] pipeline com teste</li>
+<li>[ ] staging funcional</li>
+<li>[ ] rollback testado</li>
+<li>[ ] changelog de release</li>
+</ul>
+<p class="sp"></p>
+<h3>Dados</h3>
+<p class="sp"></p>
+<ul>
+<li>[ ] backup automático</li>
+<li>[ ] restore testado</li>
+<li>[ ] migration versionada</li>
+<li>[ ] acesso ao banco restrito</li>
+</ul>
+<p class="sp"></p>
+<h3>Observabilidade</h3>
+<p class="sp"></p>
+<ul>
+<li>[ ] logs estruturados</li>
+<li>[ ] métricas de latência/erro</li>
+<li>[ ] alertas acionáveis</li>
+<li>[ ] dashboard de saúde</li>
+</ul>
+<p class="sp"></p>
+<h3>Custo</h3>
+<p class="sp"></p>
+<ul>
+<li>[ ] tags por serviço</li>
+<li>[ ] orçamento com alerta</li>
+<li>[ ] rotina de revisão semanal</li>
+<li>[ ] lifecycle em storage/logs</li>
+</ul>
+<p class="sp"></p>
+<hr/>
+<p class="sp"></p>
+<h2>Apêndice B — Glossário sem complicação</h2>
+<p class="sp"></p>
+<ul>
+<li>**IaaS**: infraestrutura como serviço (você gerencia mais coisa)</li>
+<li>**PaaS**: plataforma gerenciada (menos operação manual)</li>
+<li>**Serverless**: execução sob demanda sem gerenciar servidor diretamente</li>
+<li>**SLA**: compromisso de disponibilidade do provedor</li>
+<li>**SLO**: meta de confiabilidade do seu serviço</li>
+<li>**SLI**: métrica usada para medir o SLO</li>
+<li>**RTO**: tempo alvo para voltar após incidente</li>
+<li>**RPO**: quanto dado você aceita perder em pior cenário</li>
+</ul>
+<p class="sp"></p>
+<hr/>
+<p class="sp"></p>
+<h2>Fechamento</h2>
+<p class="sp"></p>
+<p>Cloud deixa de ser assustadora quando você troca “catálogo de serviços” por “decisões de arquitetura”.</p>
+<p class="sp"></p>
+<p>Você não precisa saber tudo.</p>
+<p>Precisa saber o suficiente para entregar com segurança, previsibilidade e velocidade.</p>
+<p class="sp"></p>
+<p>A mentalidade certa é:</p>
+<p class="sp"></p>
+<ul>
+<li>simplicidade primeiro</li>
+<li>automação onde dói</li>
+<li>observabilidade desde cedo</li>
+<li>qualidade operacional como parte do produto</li>
+</ul>
+<p class="sp"></p>
+<p>Se fizer isso, você não vira só um dev que “sobe aplicação”.</p>
+<p>Vira um dev que constrói sistemas que aguentam o mundo real.</p>
+<p class="sp"></p>
+<hr/>
+<p class="sp"></p>
+<p>**Fim da versão v1**</p>
+</body>
+</html>
