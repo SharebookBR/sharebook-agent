@@ -1,0 +1,23 @@
+Design a premium, modern, sexy book cover for a short technical ebook in Portuguese.
+
+Title: Cloud para Devs
+Subtitle: fundamentos sem enrolação
+Author: Sharebook
+
+Art direction:
+- elegant, high-end, contemporary technology aesthetic
+- dark background (deep navy / graphite)
+- neon accents (cyan + violet)
+- abstract cloud + network topology shapes, subtle data flow lines
+- minimal composition, strong hierarchy, clean negative space
+
+Typography:
+- title must be dominant and highly legible in thumbnail
+- subtitle smaller but readable
+- avoid clutter, avoid generic robot imagery, avoid childish icons
+
+Format and quality:
+- portrait book cover, 2:3 ratio
+- bookstore-ready polish
+- high contrast, crisp details
+- no watermark, no logos, no extra random words, no misspellings
