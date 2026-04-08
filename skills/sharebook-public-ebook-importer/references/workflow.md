@@ -18,6 +18,7 @@
 - Reutilizar capa de terceiros é permitido quando a imagem for boa e o uso for considerado seguro no contexto; gerar capa autoral quando faltar qualidade ou houver dúvida de uso.
 - Não confiar só no slug ou no texto da página: validar se o PDF baixado realmente corresponde ao título escolhido. A fonte às vezes aponta para o arquivo de outro livro; se isso acontecer, abortar o candidato sem drama.
 - Se PDF, texto ou licença estiverem chatos demais, desistir do título e pular para o próximo.
+- Regra anti-bloqueio: se a categoria-alvo ficar travada sem fonte premium viável na rodada, acionar fallback com `skills/create-book.md` e publicar 1 mini livro premium da própria categoria em vez de encerrar sem cadastro.
 - Minimizar logins repetidos em produção para evitar bloqueio temporário de 30 segundos; `find-many` existe exatamente para isso.
 - Quando fizer sentido em sessão manual, reaproveitar `SHAREBOOK_PROD_ACCESS_TOKEN` via `sharebook_prod_login.ps1` em vez de relogar a cada comando.
 - O único lugar permitido para cachear o token do Sharebook é o `.env`. Não copiar o valor para memória operacional, logs, documentação ou arquivos temporários.
