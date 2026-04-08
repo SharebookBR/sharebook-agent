@@ -1,0 +1,82 @@
+# Fila Canônica da Fonte
+
+- Última sincronização: `2026-04-08`
+- Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
+- Total canônico: `59` livros
+- Status atual:
+- `1` como `done`
+- `58` como `pending`
+- `0` como `source_blocked`
+- `0` como `retry_later`
+- Próximo item: `O Ventre De Napoles`
+
+## Regras
+
+- Este arquivo é a fonte da verdade para a fila sequencial da automação de ebook.
+- Cada execução deve começar do primeiro item com status `pending`.
+- Se o título já existir no Sharebook, mudar para `done`.
+- Se a fonte estiver quebrada, mudar para `source_blocked`.
+- Se o problema for temporário, usar `retry_later` com nota curta no fim da linha.
+- Não reordenar a fila por gosto pessoal.
+
+## Fila
+
+- [done] 01. Contos Da Selva | https://www.baixelivros.com.br/literatura-estrangeira/contos-da-selva/ | ebook publicado em 2026-04-08; id `019d6f6f-2b6b-72bb-9b2c-9ad2ffec2e9d`
+- [pending] 02. O Ventre De Napoles | https://www.baixelivros.com.br/literatura-estrangeira/o-ventre-de-napoles/
+- [pending] 03. Sonho De Uma Noite De Verao | https://www.baixelivros.com.br/literatura-estrangeira/sonho-de-uma-noite-de-verao/
+- [pending] 04. Rei Lear | https://www.baixelivros.com.br/literatura-estrangeira/rei-lear/
+- [pending] 05. Otelo | https://www.baixelivros.com.br/literatura-estrangeira/otelo/
+- [pending] 06. Os Tres Mosqueteiros | https://www.baixelivros.com.br/literatura-estrangeira/os-tres-mosqueteiros/
+- [pending] 07. O Retorno | https://www.baixelivros.com.br/literatura-estrangeira/o-retorno/
+- [pending] 08. De Quanta Terra Um Homem Precisa | https://www.baixelivros.com.br/literatura-estrangeira/de-quanta-terra-um-homem-precisa/
+- [pending] 09. Oliver Twist | https://www.baixelivros.com.br/literatura-estrangeira/oliver-twist/
+- [pending] 10. Livro De Magoas | https://www.baixelivros.com.br/literatura-estrangeira/livro-de-magoas/
+- [pending] 11. A Fada Melusina | https://www.baixelivros.com.br/literatura-estrangeira/a-fada-melusina/
+- [pending] 12. Dom Quixote | https://www.baixelivros.com.br/literatura-estrangeira/dom-quixote/
+- [pending] 13. Faetonte | https://www.baixelivros.com.br/literatura-estrangeira/faetonte/
+- [pending] 14. O Rei Creso | https://www.baixelivros.com.br/literatura-estrangeira/o-rei-creso/
+- [pending] 15. A Caixa De Pandora | https://www.baixelivros.com.br/literatura-estrangeira/a-caixa-de-pandora/
+- [pending] 16. Coracao De Cachorro | https://www.baixelivros.com.br/literatura-estrangeira/coracao-de-cachorro/
+- [pending] 17. A Ilha Do Tesouro Ed Bilingue | https://www.baixelivros.com.br/literatura-estrangeira/a-ilha-do-tesouro-ed-bilingue/
+- [pending] 18. Coracao Das Trevas | https://www.baixelivros.com.br/literatura-estrangeira/coracao-das-trevas/
+- [pending] 19. As Roupas Fazem As Pessoas | https://www.baixelivros.com.br/literatura-estrangeira/as-roupas-fazem-as-pessoas/
+- [pending] 20. Os Miseraveis Aljahiz | https://www.baixelivros.com.br/literatura-estrangeira/os-miseraveis-aljahiz/
+- [pending] 21. O Jardim Secreto | https://www.baixelivros.com.br/literatura-estrangeira/o-jardim-secreto/
+- [pending] 22. O Sinaleiro | https://www.baixelivros.com.br/literatura-estrangeira/o-sinaleiro/
+- [pending] 23. 1984 | https://www.baixelivros.com.br/literatura-estrangeira/1984/
+- [pending] 24. Fausto | https://www.baixelivros.com.br/literatura-estrangeira/fausto/
+- [pending] 25. Utopia | https://www.baixelivros.com.br/literatura-estrangeira/utopia/
+- [pending] 26. Crime E Castigo | https://www.baixelivros.com.br/literatura-estrangeira/crime-e-castigo/
+- [pending] 27. Paraiso Perdido John Milton | https://www.baixelivros.com.br/literatura-estrangeira/paraiso-perdido-john-milton/
+- [pending] 28. A Carta Roubada | https://www.baixelivros.com.br/literatura-estrangeira/a-carta-roubada/
+- [pending] 29. Um Conto De Natal | https://www.baixelivros.com.br/literatura-estrangeira/um-conto-de-natal/
+- [pending] 30. Guia Para Os Classicos Moby Dick | https://www.baixelivros.com.br/literatura-estrangeira/guia-para-os-classicos-moby-dick/
+- [pending] 31. Guia Para Os Classicos A Divina Comedia | https://www.baixelivros.com.br/literatura-estrangeira/guia-para-os-classicos-a-divina-comedia/
+- [pending] 32. A Ilha Do Dr Moreau | https://www.baixelivros.com.br/literatura-estrangeira/a-ilha-do-dr-moreau/
+- [pending] 33. A Comedia Dos Erros | https://www.baixelivros.com.br/literatura-estrangeira/a-comedia-dos-erros/
+- [pending] 34. Porco E Porco Ed Bilingue | https://www.baixelivros.com.br/literatura-estrangeira/porco-e-porco-ed-bilingue/
+- [pending] 35. Iliada | https://www.baixelivros.com.br/literatura-estrangeira/iliada/
+- [pending] 36. Hamlet | https://www.baixelivros.com.br/literatura-estrangeira/hamlet/
+- [pending] 37. A Dama Da Camelias | https://www.baixelivros.com.br/literatura-estrangeira/a-dama-da-camelias/
+- [pending] 38. O Conde De Monte Cristo | https://www.baixelivros.com.br/literatura-estrangeira/o-conde-de-monte-cristo/
+- [pending] 39. Odisseia | https://www.baixelivros.com.br/literatura-estrangeira/odisseia/
+- [pending] 40. As Pupilas Do Senhor Reitor | https://www.baixelivros.com.br/literatura-estrangeira/as-pupilas-do-senhor-reitor/
+- [pending] 41. A Metamorfose | https://www.baixelivros.com.br/literatura-estrangeira/a-metamorfose/
+- [pending] 42. O Processo | https://www.baixelivros.com.br/literatura-estrangeira/o-processo/
+- [pending] 43. Alice No Pais Das Maravilhas | https://www.baixelivros.com.br/literatura-estrangeira/alice-no-pais-das-maravilhas/
+- [pending] 44. Conto De Inverno | https://www.baixelivros.com.br/literatura-estrangeira/conto-de-inverno/
+- [pending] 45. A Divina Comedia Paraiso | https://www.baixelivros.com.br/literatura-estrangeira/a-divina-comedia-paraiso/
+- [pending] 46. A Divina Comedia Inferno | https://www.baixelivros.com.br/literatura-estrangeira/a-divina-comedia-inferno/
+- [pending] 47. A Divina Comedia Purgatorio | https://www.baixelivros.com.br/literatura-estrangeira/a-divina-comedia-purgatorio/
+- [pending] 48. O Livro Da Selva | https://www.baixelivros.com.br/literatura-estrangeira/o-livro-da-selva/
+- [pending] 49. Peter Pan E Wendy | https://www.baixelivros.com.br/literatura-estrangeira/peter-pan-e-wendy/
+- [pending] 50. A Ilha Do Tesouro | https://www.baixelivros.com.br/literatura-estrangeira/a-ilha-do-tesouro/
+- [pending] 51. A Revolucao Dos Bichos | https://www.baixelivros.com.br/literatura-estrangeira/a-revolucao-dos-bichos/
+- [pending] 52. A Arte Da Guerra | https://www.baixelivros.com.br/literatura-estrangeira/a-arte-da-guerra/
+- [pending] 53. As Viagens De Gulliver | https://www.baixelivros.com.br/literatura-estrangeira/as-viagens-de-gulliver/
+- [pending] 54. O Mercador De Veneza | https://www.baixelivros.com.br/literatura-estrangeira/o-mercador-de-veneza/
+- [pending] 55. Cidadela | https://www.baixelivros.com.br/literatura-estrangeira/cidadela/
+- [pending] 56. Dracula Pdf | https://www.baixelivros.com.br/literatura-estrangeira/dracula-pdf/
+- [pending] 57. Eneida Pdf | https://www.baixelivros.com.br/literatura-estrangeira/eneida-pdf/
+- [pending] 58. Romeu E Julieta | https://www.baixelivros.com.br/literatura-estrangeira/romeu-e-julieta/
+- [pending] 59. A Divina Comedia | https://www.baixelivros.com.br/literatura-estrangeira/a-divina-comedia/
