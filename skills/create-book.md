@@ -145,6 +145,29 @@ Checklist pós-geração (rápido):
 - validar que o PDF não contém `file:///` no texto extraído (`pdftotext ... | grep file:///`)
 - abrir páginas de início/meio/fim para confirmar ausência de header/footer automático
 
+### 6.1 Hardening de layout (lições aprendidas em produção)
+
+Se não quiser perder tempo em ciclos de teste, já começar com estas regras:
+
+- **Nunca deixar markdown cru no HTML final** (`**texto**`, `#`, etc.).
+  - Antes de gerar PDF, garantir que o HTML não tem `**` residual.
+- **Não usar `vh` em blocos principais de páginas impressas** (`min-height: 95vh`, etc.).
+  - Em print/PDF isso costuma gerar página fantasma ou overflow imprevisível.
+- **Capa com limite de altura real para A5**:
+  - usar `body { margin: 0; }`
+  - e na imagem: `max-height` compatível com a área útil (ex.: ~`172mm`), `max-width: 100%`.
+- **Quebra de página explícita e simples**:
+  - capa com `page-break-after: always`
+  - folha de rosto/sumário sem combinações agressivas de `break-before/after` em cascata.
+- **Evitar fundo/borda no container que quebra página inteira**.
+  - Preferir um `div` interno (card) para fundo cinza/borda, evitando “vazamento visual” entre páginas.
+- **Validação mínima obrigatória antes de upload**:
+  1. thumbnail: capa aparece na página 1 (sem página em branco inicial)
+  2. início do miolo: sem marcadores editoriais acidentais
+  3. trecho de transição de página: sem fundo vazando
+
+Se algum desses itens falhar, corrigir HTML/CSS antes de cadastrar em produção.
+
 ### 7. Validar o PDF como produto, não só como arquivo
 
 Checklist mínimo:
