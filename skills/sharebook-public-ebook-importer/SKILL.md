@@ -10,8 +10,8 @@ Importar pouco e bem. Esta skill existe para transformar um livro público/gratu
 ## Workflow
 
 1. Tratar a fonte como fila sequencial, não como caça ao tesouro.
-2. Ler [`source-queue.md`](source-queue.md), que é a fonte da verdade da fila sequencial; não reler a última sessão episódica para esse fluxo.
-3. Escolher sempre o primeiro item marcado como `pending` em [`source-queue.md`](source-queue.md).
+2. Ler [`baixelivros.md`](fontes/baixelivros.md), que é a fonte da verdade da fila sequencial; não reler a última sessão episódica para esse fluxo.
+3. Escolher sempre o primeiro item marcado como `pending` em [`baixelivros.md`](fontes/baixelivros.md).
 3. Extrair metadados com [workflow.md](references/workflow.md) e `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_source_extract.py`.
 4. Se a fonte estiver quebrada, o PDF vier errado ou o cadastro já existir em produção, marcar o item com o status correto na memória e seguir imediatamente para o próximo `pending`.
 5. Tratar a capa como ativo de vitrine e otimização de custo.
@@ -288,7 +288,7 @@ Famílias visuais recomendadas para rodízio:
 - Para cadastro em Windows, preferir sinopse via arquivo UTF-8 com `--synopsis-file`; passar texto longo com acentos direto na CLI tende a virar bagunça.
 - Se estiver em PowerShell interativo e for chamar a API várias vezes, dot-source `sharebook_prod_login.ps1` para renovar o token e salvá-lo no `.env`, além de reaproveitá-lo na sessão atual.
 - O cache permitido do token do Sharebook é o `.env` do projeto. Não registrar o valor em memória operacional, logs, skills ou documentação.
-- [`source-queue.md`](source-queue.md) é a fonte da verdade da fila; a memória da automação vira apoio resumido, não inventário principal.
+- [`baixelivros.md`](fontes/baixelivros.md) é a fonte da verdade da fila; a memória da automação vira apoio resumido, não inventário principal.
 - Não criar memória episódica em `codex-sessions/` ao fim de cada rodada automática; para esse fluxo, a memória durável relevante é a da automação.
 - Não validar a capa com `HEAD` público depois do cadastro; esse passo já se mostrou estável e virou fricção desnecessária.
 - Fazer self improvement deliberado: se a execução mostrou um atrito real, registrar a dor e endurecer a skill antes da próxima rodada.
