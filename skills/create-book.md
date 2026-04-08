@@ -132,6 +132,19 @@ Regra:
 - preferir gerar PDF via DevTools do Chrome com `displayHeaderFooter: false`
 - não confiar só em flags de CLI se o rodapé lixo continuar aparecendo
 
+Rota operacional recomendada no `sharebook-agent`:
+
+```bash
+node scripts/print_pdf_devtools.mjs \
+  /data/workspace/sharebook-agent/missions/escrever-livros/<livro>-book.html \
+  /data/workspace/sharebook-agent/missions/escrever-livros/<livro>-book-vX.pdf
+```
+
+Checklist pós-geração (rápido):
+
+- validar que o PDF não contém `file:///` no texto extraído (`pdftotext ... | grep file:///`)
+- abrir páginas de início/meio/fim para confirmar ausência de header/footer automático
+
 ### 7. Validar o PDF como produto, não só como arquivo
 
 Checklist mínimo:
