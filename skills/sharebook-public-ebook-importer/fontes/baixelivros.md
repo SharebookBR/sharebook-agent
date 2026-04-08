@@ -4,11 +4,11 @@
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
 - Total canônico: `59` livros
 - Status atual:
-- `1` como `done`
-- `58` como `pending`
+- `2` como `done`
+- `57` como `pending`
 - `0` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `O Ventre De Napoles`
+- Próximo item: `Sonho De Uma Noite De Verao`
 
 ## Regras
 
@@ -22,7 +22,7 @@
 ## Fila
 
 - [done] 01. Contos Da Selva | https://www.baixelivros.com.br/literatura-estrangeira/contos-da-selva/ | ebook publicado em 2026-04-08; id `019d6f6f-2b6b-72bb-9b2c-9ad2ffec2e9d`
-- [pending] 02. O Ventre De Napoles | https://www.baixelivros.com.br/literatura-estrangeira/o-ventre-de-napoles/
+- [done] 02. O Ventre De Napoles | https://www.baixelivros.com.br/literatura-estrangeira/o-ventre-de-napoles/ | ebook publicado em 2026-04-08; id `019d6f70-8a08-787d-a8f8-3b105ed43773`
 - [pending] 03. Sonho De Uma Noite De Verao | https://www.baixelivros.com.br/literatura-estrangeira/sonho-de-uma-noite-de-verao/
 - [pending] 04. Rei Lear | https://www.baixelivros.com.br/literatura-estrangeira/rei-lear/
 - [pending] 05. Otelo | https://www.baixelivros.com.br/literatura-estrangeira/otelo/
