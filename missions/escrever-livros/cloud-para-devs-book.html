@@ -5,33 +5,75 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Cloud para Devs</title>
 <style>
-  @page { size: A5; margin: 20mm 18mm 20mm 18mm; }
-  body { font-family: "Georgia", "Times New Roman", serif; color:#111827; line-height:1.72; }
-  .cover { page-break-after: always; min-height: 95vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
-  .image-cover img { width: 100%; max-width: 100%; border-radius: 10px; box-shadow: 0 12px 28px rgba(0,0,0,.22); }
-  h1 { font-size: 24px; line-height:1.2; margin: 0 0 10px; page-break-before: always; }
-  h1:first-of-type { page-break-before: auto; }
-  h2 { font-size: 20px; margin: 24px 0 10px; line-height:1.3; }
-  h3 { font-size: 17px; margin: 20px 0 10px; }
-  p { margin: 0 0 12px; font-size: 14.8px; }
-  ul { margin: 0 0 12px 20px; }
-  li { margin: 0 0 8px; font-size: 14.8px; }
-  hr { border:0; border-top:1px solid #e5e7eb; margin:16px 0; }
-  .sp { margin:0; height:4px; }
+  @page { size: A5; margin: 16mm 14mm 18mm 14mm; }
+  body {
+    margin: 0;
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+    color:#0f172a;
+    line-height:1.66;
+    letter-spacing: .01px;
+  }
+  .cover {
+    break-after: page;
+    page-break-after: always;
+    text-align:center;
+  }
+  .image-cover img {
+    display:block;
+    margin: 0 auto;
+    width: auto;
+    max-width: 100%;
+    max-height: 172mm;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 14px 30px rgba(2,8,23,.24);
+  }
+
+  .title-page {
+    break-before: page;
+    page-break-before: always;
+    break-after: page;
+    page-break-after: always;
+    padding: 0;
+  }
+  .title-card {
+    border: 1px solid #e5e7eb;
+    background: #fafafa;
+    padding: 22mm 12mm 14mm;
+  }
+  .title-page h1 {
+    font-size: 21px;
+    line-height: 1.28;
+    margin: 0 0 10mm;
+    color: #0b132b;
+  }
+  .title-page p {
+    font-size: 13.7px;
+    margin: 0 0 4mm;
+  }
+  .title-page .muted { color: #374151; }
+
+  h2 { font-size: 20px; margin: 22px 0 10px; line-height:1.3; color:#0b132b; }
+  h3 { font-size: 16.5px; margin: 18px 0 8px; color:#172554; }
+  p { margin: 0 0 11px; font-size: 14.2px; }
+  ul { margin: 0 0 11px 20px; }
+  li { margin: 0 0 7px; font-size: 14.2px; }
+  hr { border:0; border-top:1px solid #e5e7eb; margin:14px 0; }
+  .sp { margin:0; height:3px; }
 </style>
 </head>
 <body>
 <section class="cover image-cover">
   <img src="assets/cloud-para-devs-capa-v1.jpg" alt="Capa Cloud para Devs" />
 </section>
-<h1>Cloud para Devs: fundamentos sem enrolação</h1>
-<p class="sp"></p>
-<p>**Subtítulo:** Como sair do deploy no susto para um sistema previsível, observável e escalável</p>
-<p>**Versão:** v1</p>
-<p>**Público:** dev iniciante/intermediário que já codou app web/API e quer dominar os fundamentos de cloud</p>
-<p class="sp"></p>
-<hr/>
-<p class="sp"></p>
+<section class="title-page">
+  <div class="title-card">
+    <h1>Cloud para Devs: fundamentos sem enrolação</h1>
+    <p><strong>Subtítulo:</strong> Como sair do deploy no susto para um sistema previsível, observável e escalável</p>
+    <p class="muted"><strong>Público:</strong> dev iniciante/intermediário que já codou app web/API</p>
+    <p class="muted"><strong>Editora:</strong> Sharebook</p>
+  </div>
+</section>
 <h2>Sumário</h2>
 <p class="sp"></p>
 <p><strong>1. Por que cloud parece mais difícil do que é</strong></p>
@@ -99,22 +141,22 @@
 <p>Antes de discutir ferramenta, grava esse mapa:</p>
 <p class="sp"></p>
 <ul>
-<li>**Compute**: executa sua aplicação</li>
-<li>**Storage/Database**: guarda estado</li>
-<li>**Network**: conecta e controla tráfego</li>
-<li>**Identity/Security**: define quem pode fazer o quê</li>
-<li>**Observability**: mede saúde do sistema</li>
-<li>**Delivery**: publica mudanças com segurança</li>
+<li>Compute: executa sua aplicação</li>
+<li>Storage/Database: guarda estado</li>
+<li>Network: conecta e controla tráfego</li>
+<li>Identity/Security: define quem pode fazer o quê</li>
+<li>Observability: mede saúde do sistema</li>
+<li>Delivery: publica mudanças com segurança</li>
 </ul>
 <p class="sp"></p>
 <p>Todo projeto sério em cloud é combinação desses blocos.</p>
 <p class="sp"></p>
 <h3>Camadas que importam no dia a dia</h3>
 <p class="sp"></p>
-<p><strong>1. **Produto**: regra de negócio</strong></p>
-<p><strong>2. **Aplicação**: API/frontend/jobs</strong></p>
-<p><strong>3. **Infra**: runtime, banco, rede, permissões</strong></p>
-<p><strong>4. **Operação**: deploy, monitoramento, incidentes</strong></p>
+<p><strong>1. Produto: regra de negócio</strong></p>
+<p><strong>2. Aplicação: API/frontend/jobs</strong></p>
+<p><strong>3. Infra: runtime, banco, rede, permissões</strong></p>
+<p><strong>4. Operação: deploy, monitoramento, incidentes</strong></p>
 <p class="sp"></p>
 <p>Quando dá problema, quase sempre é falha de alinhamento entre camadas.</p>
 <p class="sp"></p>
@@ -146,9 +188,9 @@
 <p class="sp"></p>
 <p>Você tem três modelos principais para começar:</p>
 <p class="sp"></p>
-<p><strong>1. **VM (máquina virtual)**</strong></p>
-<p><strong>2. **Container**</strong></p>
-<p><strong>3. **Serverless**</strong></p>
+<p><strong>1. VM (máquina virtual)</strong></p>
+<p><strong>2. Container</strong></p>
+<p><strong>3. Serverless</strong></p>
 <p class="sp"></p>
 <h3>VM</h3>
 <p class="sp"></p>
@@ -246,19 +288,19 @@
 <h3>Tipos de armazenamento</h3>
 <p class="sp"></p>
 <ul>
-<li>**Relacional** (PostgreSQL, MySQL): consistência, transação, modelagem clara</li>
-<li>**NoSQL** (documento/chave-valor): flexibilidade e escala para certos padrões</li>
-<li>**Objeto** (S3/GCS/Azure Blob): arquivos, imagens, PDFs, backups</li>
-<li>**Cache** (Redis): performance e redução de carga em banco primário</li>
+<li>Relacional (PostgreSQL, MySQL): consistência, transação, modelagem clara</li>
+<li>NoSQL (documento/chave-valor): flexibilidade e escala para certos padrões</li>
+<li>Objeto (S3/GCS/Azure Blob): arquivos, imagens, PDFs, backups</li>
+<li>Cache (Redis): performance e redução de carga em banco primário</li>
 </ul>
 <p class="sp"></p>
 <h3>Princípios que evitam tragédia</h3>
 <p class="sp"></p>
-<p><strong>1. **Backup testado** > backup “configurado”</strong></p>
-<p><strong>2. **Migração versionada** sempre</strong></p>
-<p><strong>3. **Segredo fora do código**</strong></p>
-<p><strong>4. **Privilégio mínimo no acesso ao banco**</strong></p>
-<p><strong>5. **Ambiente de staging parecido com produção**</strong></p>
+<p><strong>1. Backup testado > backup “configurado”</strong></p>
+<p><strong>2. Migração versionada sempre</strong></p>
+<p><strong>3. Segredo fora do código</strong></p>
+<p><strong>4. Privilégio mínimo no acesso ao banco</strong></p>
+<p><strong>5. Ambiente de staging parecido com produção</strong></p>
 <p class="sp"></p>
 <h3>Sobre migrations</h3>
 <p class="sp"></p>
@@ -307,9 +349,9 @@
 <p class="sp"></p>
 <p>Pensa em três zonas:</p>
 <p class="sp"></p>
-<p><strong>1. **Pública**: o que realmente precisa internet</strong></p>
-<p><strong>2. **Privada de aplicação**: serviços internos</strong></p>
-<p><strong>3. **Privada de dados**: banco e componentes sensíveis</strong></p>
+<p><strong>1. Pública: o que realmente precisa internet</strong></p>
+<p><strong>2. Privada de aplicação: serviços internos</strong></p>
+<p><strong>3. Privada de dados: banco e componentes sensíveis</strong></p>
 <p class="sp"></p>
 <p>Banco aberto para internet “porque facilita” é dívida com juros.</p>
 <p class="sp"></p>
@@ -367,9 +409,9 @@
 <p>No mínimo:</p>
 <p class="sp"></p>
 <ul>
-<li>**dev/local**</li>
-<li>**staging**</li>
-<li>**prod**</li>
+<li>dev/local</li>
+<li>staging</li>
+<li>prod</li>
 </ul>
 <p class="sp"></p>
 <p>Se staging não se parece com prod, staging vira teatro.</p>
@@ -377,9 +419,9 @@
 <h3>Estratégias de deploy</h3>
 <p class="sp"></p>
 <ul>
-<li>**Rolling**: atualiza aos poucos</li>
-<li>**Blue/Green**: ambiente novo pronto antes de virar tráfego</li>
-<li>**Canary**: pequena fatia de usuários primeiro</li>
+<li>Rolling: atualiza aos poucos</li>
+<li>Blue/Green: ambiente novo pronto antes de virar tráfego</li>
+<li>Canary: pequena fatia de usuários primeiro</li>
 </ul>
 <p class="sp"></p>
 <p>Para time pequeno, rolling com rollback claro já resolve muito.</p>
@@ -403,9 +445,9 @@
 <p>Você precisa de três pilares:</p>
 <p class="sp"></p>
 <ul>
-<li>**Logs** (o que aconteceu)</li>
-<li>**Métricas** (como está o sistema)</li>
-<li>**Traces** (onde está lento/quebrando no fluxo)</li>
+<li>Logs (o que aconteceu)</li>
+<li>Métricas (como está o sistema)</li>
+<li>Traces (onde está lento/quebrando no fluxo)</li>
 </ul>
 <p class="sp"></p>
 <h3>Logs que prestam</h3>
@@ -645,14 +687,14 @@
 <h2>Apêndice B — Glossário sem complicação</h2>
 <p class="sp"></p>
 <ul>
-<li>**IaaS**: infraestrutura como serviço (você gerencia mais coisa)</li>
-<li>**PaaS**: plataforma gerenciada (menos operação manual)</li>
-<li>**Serverless**: execução sob demanda sem gerenciar servidor diretamente</li>
-<li>**SLA**: compromisso de disponibilidade do provedor</li>
-<li>**SLO**: meta de confiabilidade do seu serviço</li>
-<li>**SLI**: métrica usada para medir o SLO</li>
-<li>**RTO**: tempo alvo para voltar após incidente</li>
-<li>**RPO**: quanto dado você aceita perder em pior cenário</li>
+<li>IaaS: infraestrutura como serviço (você gerencia mais coisa)</li>
+<li>PaaS: plataforma gerenciada (menos operação manual)</li>
+<li>Serverless: execução sob demanda sem gerenciar servidor diretamente</li>
+<li>SLA: compromisso de disponibilidade do provedor</li>
+<li>SLO: meta de confiabilidade do seu serviço</li>
+<li>SLI: métrica usada para medir o SLO</li>
+<li>RTO: tempo alvo para voltar após incidente</li>
+<li>RPO: quanto dado você aceita perder em pior cenário</li>
 </ul>
 <p class="sp"></p>
 <hr/>
@@ -678,6 +720,6 @@
 <p class="sp"></p>
 <hr/>
 <p class="sp"></p>
-<p>**Fim da versão v1**</p>
+<p>Fim da versão v1</p>
 </body>
 </html>
