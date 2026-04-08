@@ -5,10 +5,10 @@
 - Total canônico: `59` livros
 - Status atual:
 - `2` como `done`
-- `57` como `pending`
-- `0` como `source_blocked`
+- `54` como `pending`
+- `3` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `Sonho De Uma Noite De Verao`
+- Próximo item: `Os Tres Mosqueteiros`
 
 ## Regras
 
@@ -23,9 +23,9 @@
 
 - [done] 01. Contos Da Selva | https://www.baixelivros.com.br/literatura-estrangeira/contos-da-selva/ | ebook publicado em 2026-04-08; id `019d6f6f-2b6b-72bb-9b2c-9ad2ffec2e9d`
 - [done] 02. O Ventre De Napoles | https://www.baixelivros.com.br/literatura-estrangeira/o-ventre-de-napoles/ | ebook publicado em 2026-04-08; id `019d6f70-8a08-787d-a8f8-3b105ed43773`
-- [pending] 03. Sonho De Uma Noite De Verao | https://www.baixelivros.com.br/literatura-estrangeira/sonho-de-uma-noite-de-verao/
-- [pending] 04. Rei Lear | https://www.baixelivros.com.br/literatura-estrangeira/rei-lear/
-- [pending] 05. Otelo | https://www.baixelivros.com.br/literatura-estrangeira/otelo/
+- [source_blocked] 03. Sonho De Uma Noite De Verao | https://www.baixelivros.com.br/literatura-estrangeira/sonho-de-uma-noite-de-verao/ | extractor sem endpoint wp-json + link PDF aponta para HTML da Creative Commons
+- [source_blocked] 04. Rei Lear | https://www.baixelivros.com.br/literatura-estrangeira/rei-lear/ | extractor sem endpoint wp-json + link PDF aponta para HTML da Creative Commons
+- [source_blocked] 05. Otelo | https://www.baixelivros.com.br/literatura-estrangeira/otelo/ | extractor sem endpoint wp-json + link PDF aponta para HTML da Creative Commons
 - [pending] 06. Os Tres Mosqueteiros | https://www.baixelivros.com.br/literatura-estrangeira/os-tres-mosqueteiros/
 - [pending] 07. O Retorno | https://www.baixelivros.com.br/literatura-estrangeira/o-retorno/
 - [pending] 08. De Quanta Terra Um Homem Precisa | https://www.baixelivros.com.br/literatura-estrangeira/de-quanta-terra-um-homem-precisa/
