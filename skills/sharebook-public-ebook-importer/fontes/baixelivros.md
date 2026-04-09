@@ -4,11 +4,11 @@
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
 - Total canônico: `59` livros
 - Status atual:
-- `8` como `done`
-- `51` como `pending`
+- `9` como `done`
+- `50` como `pending`
 - `0` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `Oliver Twist`
+- Próximo item: `Livro De Magoas`
 
 ## Regras
 
@@ -29,7 +29,7 @@
 - [done] 06. Os Tres Mosqueteiros | https://www.baixelivros.com.br/literatura-estrangeira/os-tres-mosqueteiros/ | ebook publicado em 2026-04-09; id `019d6fa3-0b2c-7eac-8617-b5e8a68b98ce`
 - [done] 07. O Retorno | https://www.baixelivros.com.br/literatura-estrangeira/o-retorno/ | ebook publicado em 2026-04-09; id `019d6fab-5390-7503-ba35-78a688e2b94d`
 - [done] 08. De Quanta Terra Um Homem Precisa | https://www.baixelivros.com.br/literatura-estrangeira/de-quanta-terra-um-homem-precisa/ | ebook publicado em 2026-04-09; id `019d701c-0679-7835-97ff-947da7860cdd`
-- [pending] 09. Oliver Twist | https://www.baixelivros.com.br/literatura-estrangeira/oliver-twist/
+- [done] 09. Oliver Twist | https://www.baixelivros.com.br/literatura-estrangeira/oliver-twist/ | ebook publicado em 2026-04-09; id `019d708c-4fc2-7e85-80e2-65a2c3562540`
 - [pending] 10. Livro De Magoas | https://www.baixelivros.com.br/literatura-estrangeira/livro-de-magoas/
 - [pending] 11. A Fada Melusina | https://www.baixelivros.com.br/literatura-estrangeira/a-fada-melusina/
 - [pending] 12. Dom Quixote | https://www.baixelivros.com.br/literatura-estrangeira/dom-quixote/
