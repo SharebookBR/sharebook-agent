@@ -4,11 +4,11 @@
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
 - Total canônico: `59` livros
 - Status atual:
-- `19` como `done`
-- `40` como `pending`
+- `20` como `done`
+- `39` como `pending`
 - `0` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `Os Miseraveis Aljahiz`
+- Próximo item: `O Jardim Secreto`
 
 ## Regras
 
@@ -40,7 +40,7 @@
 - [done] 17. A Ilha Do Tesouro Ed Bilingue | https://www.baixelivros.com.br/literatura-estrangeira/a-ilha-do-tesouro-ed-bilingue/ | ebook publicado em 2026-04-09; id `019d73a0-3eee-786b-a237-648d99ac75fe`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 18. Coracao Das Trevas | https://www.baixelivros.com.br/literatura-estrangeira/coracao-das-trevas/ | ebook publicado em 2026-04-09; id `019d73e5-a206-7571-b9a6-086772e02b84`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 19. As Roupas Fazem As Pessoas | https://www.baixelivros.com.br/literatura-estrangeira/as-roupas-fazem-as-pessoas/ | ebook publicado em 2026-04-09; id `019d744b-f74c-7940-9c20-dddde0c528b6`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
-- [pending] 20. Os Miseraveis Aljahiz | https://www.baixelivros.com.br/literatura-estrangeira/os-miseraveis-aljahiz/
+- [done] 20. Os Miseraveis Aljahiz | https://www.baixelivros.com.br/literatura-estrangeira/os-miseraveis-aljahiz/ | ebook publicado em 2026-04-09; id `019d745b-d71a-7587-acfe-db1f57096210`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [pending] 21. O Jardim Secreto | https://www.baixelivros.com.br/literatura-estrangeira/o-jardim-secreto/
 - [pending] 22. O Sinaleiro | https://www.baixelivros.com.br/literatura-estrangeira/o-sinaleiro/
 - [pending] 23. 1984 | https://www.baixelivros.com.br/literatura-estrangeira/1984/
