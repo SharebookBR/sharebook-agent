@@ -4,11 +4,11 @@
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
 - Total canônico: `59` livros
 - Status atual:
-- `6` como `done`
-- `53` como `pending`
+- `7` como `done`
+- `52` como `pending`
 - `0` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `O Retorno`
+- Próximo item: `De Quanta Terra Um Homem Precisa`
 
 ## Regras
 
@@ -27,7 +27,7 @@
 - [done] 04. Rei Lear | https://www.baixelivros.com.br/literatura-estrangeira/rei-lear/ | ebook publicado em 2026-04-09; id `019d6f96-fc17-7174-aeba-b03a1f0fa2d7`
 - [done] 05. Otelo | https://www.baixelivros.com.br/literatura-estrangeira/otelo/ | ebook publicado em 2026-04-09; id `019d6f9f-4510-74fa-a944-f2ff9d4ca6f5`
 - [done] 06. Os Tres Mosqueteiros | https://www.baixelivros.com.br/literatura-estrangeira/os-tres-mosqueteiros/ | ebook publicado em 2026-04-09; id `019d6fa3-0b2c-7eac-8617-b5e8a68b98ce`
-- [pending] 07. O Retorno | https://www.baixelivros.com.br/literatura-estrangeira/o-retorno/
+- [done] 07. O Retorno | https://www.baixelivros.com.br/literatura-estrangeira/o-retorno/ | ebook publicado em 2026-04-09; id `019d6fab-5390-7503-ba35-78a688e2b94d`
 - [pending] 08. De Quanta Terra Um Homem Precisa | https://www.baixelivros.com.br/literatura-estrangeira/de-quanta-terra-um-homem-precisa/
 - [pending] 09. Oliver Twist | https://www.baixelivros.com.br/literatura-estrangeira/oliver-twist/
 - [pending] 10. Livro De Magoas | https://www.baixelivros.com.br/literatura-estrangeira/livro-de-magoas/
