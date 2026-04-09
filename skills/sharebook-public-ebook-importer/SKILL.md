@@ -28,20 +28,21 @@ Importar pouco e bem. Esta skill existe para transformar um livro público/gratu
 10. Revalidar o candidato escolhido com um `find` imediatamente antes do `create`; produção não respeita sua expectativa de exclusividade.
 11. Antes do `create`, listar os livros da categoria-alvo (`/api/book/1/9999` filtrando `categoryId`) e fazer um check rápido anti-duplicidade por título-base/slug parecido. Se houver candidato muito próximo, parar e decidir conscientemente entre `update`, pular ou seguir.
 12. Para poesia, usar `Artes` como categoria no Sharebook; `Poesia` não existe hoje no produto.
-13. Escrever uma sinopse final de vitrine com 3 parágrafos, tom envolvente e gancho forte de leitura.
-14. Aplicar gate obrigatório de idioma antes do cadastro:
+13. Gate obrigatório de categoria folha: nunca cadastrar ebook em categoria-pai. `Ficção` e `Tecnologia` são proibidas como categoria final; escolher e usar sempre uma subcategoria (folha) coerente.
+14. Escrever uma sinopse final de vitrine com 3 parágrafos, tom envolvente e gancho forte de leitura.
+15. Aplicar gate obrigatório de idioma antes do cadastro:
     - padrão editorial do Sharebook: **publicar em português (pt-BR/pt-PT)**
     - inglês só entra como **exceção formal** com aprovação explícita do Raffa para aquele título
     - sem aprovação explícita, não cadastrar nem aprovar título em inglês
-15. Cadastrar e aprovar com `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_book.py create --approve`, preferindo `--synopsis-file` em UTF-8 para evitar caracteres quebrados no Windows.
-16. Atualizar a memória da automação na mesma rodada:
+16. Cadastrar e aprovar com `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_book.py create --approve`, preferindo `--synopsis-file` em UTF-8 para evitar caracteres quebrados no Windows.
+17. Atualizar a memória da automação na mesma rodada:
     - item publicado vira `done`
     - duplicata vira `done` se o livro já existir em produção
     - problema da fonte vira `source_blocked`
     - bloqueio por idioma vira `language_blocked`
     - problema local temporário vira `retry_later`
     - se o `create` cair duas vezes seguidas com aborto de conexão durante upload de PDF grande (ex.: `WinError 10053`), marcar `retry_later` com nota curta e seguir para o próximo `pending`
-17. Ler o rastro da execução e transformar qualquer dor recorrente em melhoria concreta da skill ou dos scripts.
+18. Ler o rastro da execução e transformar qualquer dor recorrente em melhoria concreta da skill ou dos scripts.
 
 ## Regra de variedade visual e apelo visual
 
@@ -274,6 +275,7 @@ Famílias visuais recomendadas para rodízio:
 - Se a automação perder a corrida para outro cadastro entre a triagem e o `create`, pular para o próximo candidato em vez de forçar `delete-existing` sem necessidade.
 - Livro físico existente com o mesmo título/autor não bloqueia cadastro de ebook; a duplicidade relevante neste fluxo é ebook contra ebook.
 - Para acervo de poesia, mapear `Poesia` para `Artes` ao cadastrar; é a categoria disponível no produto hoje.
+- Gate de categoria obrigatório: não cadastrar em categoria-pai quando houver subcategorias. `Ficção` e `Tecnologia` são proibidas como destino final; sempre escolher subcategoria (folha).
 - Se um PDF muito grande derrubar o upload duas vezes seguidas com erro de conexão local/API, tratar como `retry_later` e preservar a rodada para outro título em vez de insistir até desperdiçar a execução inteira.
 - Preferir `update` quando a mudança for editorial ou incremental: categoria, sinopse, autor, título, capa sem troca estrutural do registro ou ajustes pequenos de metadata.
 - Preferir `delete` + `create` só quando a troca principal realmente justificar recriação do ebook, como correção estrutural ruim de cadastro, slug muito comprometido ou quando o `update` não preservar bem o resultado esperado.
