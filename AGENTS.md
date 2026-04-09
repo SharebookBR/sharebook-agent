@@ -114,6 +114,8 @@ Scripts já validados nesta pasta:
 - `sharebook_prod_login.ps1`: renova e reaproveita `SHAREBOOK_PROD_ACCESS_TOKEN` no PowerShell.
 - `sharebook_source_extract.py`: extrai metadados e PDF de fontes públicas no fluxo de ebook.
 - `sharebook_openai_cover.py`: gera capa autoral para ebook.
+- `sharebook_prod_pg_ro_query_direct.py`: query read-only direta no Postgres de produção (padrão do dia a dia, sem SSH).
+- `sharebook_prod_pg_ro_query.py`: query read-only no Postgres via SSH (fallback quando o caminho direto não estiver disponível).
 - `vps_ssh.py`: acesso operacional ao VPS via `.env`, preferindo leitura e diagnóstico.
 
 Heurística prática:
