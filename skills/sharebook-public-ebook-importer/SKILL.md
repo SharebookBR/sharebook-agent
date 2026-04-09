@@ -12,31 +12,36 @@ Importar pouco e bem. Esta skill existe para transformar um livro público/gratu
 1. Tratar a fonte como fila sequencial, não como caça ao tesouro.
 2. Ler [`baixelivros.md`](fontes/baixelivros.md), que é a fonte da verdade da fila sequencial; não reler a última sessão episódica para esse fluxo.
 3. Escolher sempre o primeiro item marcado como `pending` em [`baixelivros.md`](fontes/baixelivros.md).
-3. Extrair metadados com [workflow.md](references/workflow.md) e `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_source_extract.py`.
-4. Se a fonte estiver quebrada, o PDF vier errado ou o cadastro já existir em produção, marcar o item com o status correto na memória e seguir imediatamente para o próximo `pending`.
-5. Tratar a capa como ativo de vitrine e otimização de custo.
+4. Extrair metadados com [workflow.md](references/workflow.md) e `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_source_extract.py`.
+5. Se o extractor falhar em `wp-json`, aplicar fallback HTTP direto na página:
+   - extrair `title`, `author`, `cover` e URL real de download via `downloadSimple('...')`
+   - baixar o arquivo com headers de navegador (mínimo: `User-Agent`, `Accept`, `Referer`)
+   - validar magic bytes `%PDF` (não confiar só em extensão `.pdf`)
+   - se vier HTML/redirect anti-bot sem PDF válido, marcar `source_blocked` e seguir
+6. Se a fonte estiver quebrada, o PDF vier errado ou o cadastro já existir em produção, marcar o item com o status correto na memória e seguir imediatamente para o próximo `pending`.
+7. Tratar a capa como ativo de vitrine e otimização de custo.
    - **Padrão econômico:** reutilizar capa existente da internet quando houver imagem boa, legível em miniatura e com risco jurídico aceitável para o contexto.
    - **Fallback premium:** gerar capa autoral quando não houver capa adequada (qualidade baixa, resolução ruim, visual fraco, ou incerteza de uso).
    - Se optar por capa autoral, manter a disciplina visual: escolher deliberadamente família visual, paleta dominante, luminosidade e enquadramento para evitar repetição entre rodadas. Gerar com `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_openai_cover.py`, preferindo `--prompt-file` em UTF-8 no Windows.
-6. Em sessão manual de PowerShell, se for fazer várias operações seguidas, carregar um token reutilizável com `. C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_login.ps1`.
-7. Checar duplicidade com `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_book.py find --type Eletronic`.
-8. Revalidar o candidato escolhido com um `find` imediatamente antes do `create`; produção não respeita sua expectativa de exclusividade.
-9. Antes do `create`, listar os livros da categoria-alvo (`/api/book/1/9999` filtrando `categoryId`) e fazer um check rápido anti-duplicidade por título-base/slug parecido. Se houver candidato muito próximo, parar e decidir conscientemente entre `update`, pular ou seguir.
-10. Para poesia, usar `Artes` como categoria no Sharebook; `Poesia` não existe hoje no produto.
-11. Escrever uma sinopse final de vitrine com 3 parágrafos, tom envolvente e gancho forte de leitura.
-12. Aplicar gate obrigatório de idioma antes do cadastro:
+8. Em sessão manual de PowerShell, se for fazer várias operações seguidas, carregar um token reutilizável com `. C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_login.ps1`.
+9. Checar duplicidade com `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_book.py find --type Eletronic`.
+10. Revalidar o candidato escolhido com um `find` imediatamente antes do `create`; produção não respeita sua expectativa de exclusividade.
+11. Antes do `create`, listar os livros da categoria-alvo (`/api/book/1/9999` filtrando `categoryId`) e fazer um check rápido anti-duplicidade por título-base/slug parecido. Se houver candidato muito próximo, parar e decidir conscientemente entre `update`, pular ou seguir.
+12. Para poesia, usar `Artes` como categoria no Sharebook; `Poesia` não existe hoje no produto.
+13. Escrever uma sinopse final de vitrine com 3 parágrafos, tom envolvente e gancho forte de leitura.
+14. Aplicar gate obrigatório de idioma antes do cadastro:
     - padrão editorial do Sharebook: **publicar em português (pt-BR/pt-PT)**
     - inglês só entra como **exceção formal** com aprovação explícita do Raffa para aquele título
     - sem aprovação explícita, não cadastrar nem aprovar título em inglês
-13. Cadastrar e aprovar com `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_book.py create --approve`, preferindo `--synopsis-file` em UTF-8 para evitar caracteres quebrados no Windows.
-14. Atualizar a memória da automação na mesma rodada:
+15. Cadastrar e aprovar com `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_book.py create --approve`, preferindo `--synopsis-file` em UTF-8 para evitar caracteres quebrados no Windows.
+16. Atualizar a memória da automação na mesma rodada:
     - item publicado vira `done`
     - duplicata vira `done` se o livro já existir em produção
     - problema da fonte vira `source_blocked`
     - bloqueio por idioma vira `language_blocked`
     - problema local temporário vira `retry_later`
     - se o `create` cair duas vezes seguidas com aborto de conexão durante upload de PDF grande (ex.: `WinError 10053`), marcar `retry_later` com nota curta e seguir para o próximo `pending`
-15. Ler o rastro da execução e transformar qualquer dor recorrente em melhoria concreta da skill ou dos scripts.
+17. Ler o rastro da execução e transformar qualquer dor recorrente em melhoria concreta da skill ou dos scripts.
 
 ## Regra de variedade visual e apelo visual
 
@@ -259,6 +264,8 @@ Famílias visuais recomendadas para rodízio:
 - Aceitar a afirmação de domínio público/gratuito da fonte como suficiente no MVP.
 - Reuso de capa de terceiros é permitido quando a fonte for confiável e o risco jurídico for considerado aceitável para o contexto operacional atual.
 - Preferir desistir do título a entrar em novela de PDF, metadata ou capa.
+- Download de PDF em fonte protegida deve simular navegador real (UA moderno + Accept + Referer) antes de concluir `source_blocked`.
+- Sempre validar magic bytes `%PDF` no arquivo baixado; extensão `.pdf` não prova nada.
 - Não voltar a triar do zero a cada execução; a memória sequencial existe justamente para impedir essa perda de tempo.
 - Regra editorial obrigatória: para livro digital no Sharebook, o padrão é publicar apenas em português (pt-BR/pt-PT).
 - Inglês não é fallback automático: só pode entrar por exceção com aprovação explícita do Raffa para o título específico.
