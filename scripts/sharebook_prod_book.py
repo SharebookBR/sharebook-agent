@@ -4,8 +4,11 @@ from __future__ import annotations
 import argparse
 import base64
 import json
+import re
+import unicodedata
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 from sharebook_prod_auth import (
     API_BASE,
@@ -81,22 +84,72 @@ def normalize_match_text(value: str | None) -> str:
     return " ".join((value or "").strip().casefold().split())
 
 
+def normalize_loose_title(value: str | None) -> str:
+    text = normalize_match_text(value)
+    text = re.sub(r"\([^)]*\)", " ", text)
+    text = unicodedata.normalize("NFKD", text)
+    text = "".join(ch for ch in text if not unicodedata.combining(ch))
+    text = re.sub(r"[^a-z0-9]+", " ", text)
+    return " ".join(text.split())
+
+
+def full_search_books(criteria: str, page: int = 1, items: int = 100) -> list[dict[str, Any]]:
+    encoded_criteria = quote(criteria, safe="")
+    payload = request_json(f"{API_BASE}/Book/FullSearch/{encoded_criteria}/{page}/{items}")
+    return payload.get("items") or []
+
+
+def _is_title_variant(title_a: str | None, title_b: str | None) -> bool:
+    loose_a = normalize_loose_title(title_a)
+    loose_b = normalize_loose_title(title_b)
+    if not loose_a or not loose_b:
+        return False
+    if loose_a == loose_b:
+        return True
+    if len(loose_a) >= 8 and len(loose_b) >= 8 and (loose_a in loose_b or loose_b in loose_a):
+        return True
+    return False
+
+
 def find_exact_book(
     token: str, title: str, author: str, book_type: str | None = None
 ) -> dict[str, Any] | None:
+    del token  # token mantido na assinatura por compatibilidade com chamadas existentes.
     normalized_title = normalize_match_text(title)
     normalized_author = normalize_match_text(author)
-    matches = [
+
+    candidates = full_search_books(title, page=1, items=100)
+    if not candidates:
+        candidates = full_search_books(author, page=1, items=100)
+
+    exact_matches = [
         item
-        for item in get_books(token)
-        if normalize_match_text(item["title"]) == normalized_title
-        and normalize_match_text(item["author"]) == normalized_author
+        for item in candidates
+        if normalize_match_text(item.get("title")) == normalized_title
+        and normalize_match_text(item.get("author")) == normalized_author
         and (book_type is None or item.get("type") == book_type)
     ]
-    if not matches:
+    if exact_matches:
+        exact_matches.sort(key=lambda item: item["creationDate"], reverse=True)
+        return infer_image_url(exact_matches[0])
+
+    similar_matches = [
+        item
+        for item in candidates
+        if normalize_match_text(item.get("author")) == normalized_author
+        and (book_type is None or item.get("type") == book_type)
+        and _is_title_variant(item.get("title"), title)
+    ]
+    if not similar_matches:
         return None
-    matches.sort(key=lambda item: item["creationDate"], reverse=True)
-    return infer_image_url(matches[0])
+
+    similar_matches.sort(key=lambda item: item["creationDate"], reverse=True)
+    match = infer_image_url(similar_matches[0])
+    if match is None:
+        return None
+    enriched = dict(match)
+    enriched["matchKind"] = "similar"
+    return enriched
 
 
 def delete_book(token: str, book_id: str) -> Any:
@@ -136,8 +189,10 @@ def create_book(args: argparse.Namespace, token: str) -> dict[str, Any]:
         existing = None
 
     if existing:
+        match_kind = existing.get("matchKind")
+        reason = "titulo/autor e tipo" if match_kind != "similar" else "titulo similar + mesmo autor e tipo"
         raise SystemExit(
-            "Livro ja existe com este titulo/autor e tipo. "
+            f"Livro ja existe com {reason}. "
             f"Use --delete-existing para recriar. ID: {existing['id']}"
         )
 
@@ -235,22 +290,11 @@ def update_book(args: argparse.Namespace, token: str) -> dict[str, Any]:
 
 
 def find_many_books(token: str, pairs: list[dict[str, str]]) -> list[dict[str, Any]]:
-    books = get_books(token)
     results: list[dict[str, Any]] = []
     for pair in pairs:
         title = (pair.get("title") or "").strip()
         author = (pair.get("author") or "").strip()
-        normalized_title = normalize_match_text(title)
-        normalized_author = normalize_match_text(author)
-        match = next(
-            (
-                item
-                for item in sorted(books, key=lambda book: book["creationDate"], reverse=True)
-                if normalize_match_text(item["title"]) == normalized_title
-                and normalize_match_text(item["author"]) == normalized_author
-            ),
-            None,
-        )
+        match = find_exact_book(token, title, author)
         results.append({"title": title, "author": author, "book": infer_image_url(match)})
     return results
 
