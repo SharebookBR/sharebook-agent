@@ -133,6 +133,7 @@ Heurística prática:
 - Importação de ebook -> `skills/sharebook-public-ebook-importer/SKILL.md`.
 - Importação de livro físico -> `skills/sharebook-physical-book-importer/SKILL.md`.
 - Review de UX/tela -> `skills/sharebook-ux-reviewer/SKILL.md`.
+- Organização/reestruturação de categorias -> `skills/sharebook-category-organizer/SKILL.md`.
 
 ## 🧠 Índice de Skills (`sharebook-agent/skills/`)
 
@@ -144,6 +145,7 @@ Heurística prática:
 - `sharebook-physical-book-importer/`: fluxo oficial para cadastro de livros físicos em produção.
 - `sharebook-ux-reviewer/`: revisão crítica de UX do Sharebook com foco em clareza, atrito e descoberta.
 - `web-design-reviewer/`: revisão visual e estrutural de interfaces web quando a análise for mais ampla que o contexto específico do Sharebook.
+- `sharebook-category-organizer/`: organização de categorias/subcategorias com proposta editorial, distribuição e plano de migração em lote.
 
 Heurística prática:
 - Se existir skill específica para o tipo de trabalho, começar por ela em vez de improvisar fluxo.
