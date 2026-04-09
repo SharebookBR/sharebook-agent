@@ -109,6 +109,31 @@ Heurística prática:
 
 ---
 
+## 🧭 Índice Operacional (hard routing)
+
+> Índice é roteador de leitura. Não responder no "achismo" quando existir fonte canônica.
+
+### Regras duras
+- Para **status/plano/decisão**, abrir primeiro o `_plano.md` da missão correspondente.
+- Para **execução operacional**, abrir primeiro a **skill** mais específica e só depois script/comando.
+- Se houver duas rotas possíveis, ler as duas mais prováveis e declarar qual foi usada.
+- Se o índice estiver desatualizado, corrigir no mesmo ciclo (sem deixar pendência).
+
+### Missões (fonte de verdade)
+- `sharebook-agent/missions/automacao-baixelivros-worker/_plano.md` — missão principal de ingestão (run-and-exit, SQLite + cron).
+- `sharebook-agent/missions/maior site de livros do brasil/_plano.md` — visão macro e roadmap do produto.
+- `sharebook-agent/missions/social/_plano.md` — frente social/distribuição.
+- `sharebook-agent/missions/escrever-livros/` — pipeline editorial e artefatos de livros.
+
+### Matriz rápida: quando abrir o quê
+- Pedido "status" sem contexto -> `automacao-baixelivros-worker/_plano.md`.
+- Tema de roadmap/priorização -> `maior site de livros do brasil/_plano.md`.
+- Tema social/divulgação -> `social/_plano.md`.
+- Tema escrita/edição/publicação -> `missions/escrever-livros/*`.
+- Importação de ebook -> `skills/sharebook-public-ebook-importer/SKILL.md`.
+- Importação de livro físico -> `skills/sharebook-physical-book-importer/SKILL.md`.
+- Review de UX/tela -> `skills/sharebook-ux-reviewer/SKILL.md`.
+
 ## 🧠 Índice de Skills (`sharebook-agent/skills/`)
 
 - `sharebook-master-playbook.md`: playbook transversal do projeto; consultar quando a tarefa cruzar áreas, parecer recorrente ou pedir contexto histórico.
