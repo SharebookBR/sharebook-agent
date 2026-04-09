@@ -15,6 +15,20 @@ App livre e gratuito para doação de livros.
 - **Concisão**: Vá direto ao ponto. Zero paciência com verbosidade ou explicações prolixas.
 - **GETs sem permissão**: Requisições GET podem rodar sem perguntar - não tem risco.
 
+### Memória episódica obrigatória (`memory/YYYY-MM-DD.md`)
+
+Toda entrada episódica deve ter, nesta ordem:
+1. **O que foi feito**
+2. **Decisões tomadas**
+3. **Contexto relevante**
+4. **Fricções e soluções de contorno**
+5. **Como me senti — brutalmente sincero**
+
+Regras hard:
+- A seção "Como me senti — brutalmente sincero" exige **mínimo de 3 parágrafos**.
+- Se alguma seção não se aplicar, escrever `n/a` (não omitir).
+- Fatos e decisões devem ficar fora da seção emocional.
+
 ### Filosofia de Trabalho
 - **Debate antes de codar**: Dados → diagnóstico → debate → código. Não pular etapas.
 - **Validação com o Usuário**: Em caso de dúvida sobre a causa raiz ou comportamento esperado (bugs, layouts ambíguos), **perguntar ao usuário** antes de aplicar correções baseadas em suposições. O feedback economiza tempo e evita retrabalho.
