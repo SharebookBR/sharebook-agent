@@ -4,11 +4,11 @@
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
 - Total canônico: `59` livros
 - Status atual:
-- `15` como `done`
-- `44` como `pending`
+- `16` como `done`
+- `43` como `pending`
 - `0` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `Coracao De Cachorro`
+- Próximo item: `A Ilha Do Tesouro Ed Bilingue`
 
 ## Regras
 
@@ -36,7 +36,7 @@
 - [done] 13. Faetonte | https://www.baixelivros.com.br/literatura-estrangeira/faetonte/ | ebook publicado em 2026-04-09; id `019d71de-7c41-773c-8895-3eb90795123c`
 - [done] 14. O Rei Creso | https://www.baixelivros.com.br/literatura-estrangeira/o-rei-creso/ | ebook publicado em 2026-04-09; id `019d724f-94af-7379-a2e0-817e22403d02`
 - [done] 15. A Caixa De Pandora | https://www.baixelivros.com.br/literatura-estrangeira/a-caixa-de-pandora/ | ebook publicado em 2026-04-09; id `019d72c0-0c18-7ee1-8611-21649dd612b4`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
-- [pending] 16. Coracao De Cachorro | https://www.baixelivros.com.br/literatura-estrangeira/coracao-de-cachorro/
+- [done] 16. Coracao De Cachorro | https://www.baixelivros.com.br/literatura-estrangeira/coracao-de-cachorro/ | ebook publicado em 2026-04-09; id `019d7330-2629-7ed2-988e-ff7731cbf493`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [pending] 17. A Ilha Do Tesouro Ed Bilingue | https://www.baixelivros.com.br/literatura-estrangeira/a-ilha-do-tesouro-ed-bilingue/
 - [pending] 18. Coracao Das Trevas | https://www.baixelivros.com.br/literatura-estrangeira/coracao-das-trevas/
 - [pending] 19. As Roupas Fazem As Pessoas | https://www.baixelivros.com.br/literatura-estrangeira/as-roupas-fazem-as-pessoas/
