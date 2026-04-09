@@ -4,11 +4,11 @@
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
 - Total canônico: `59` livros
 - Status atual:
-- `11` como `done`
-- `48` como `pending`
+- `13` como `done`
+- `46` como `pending`
 - `0` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `Dom Quixote`
+- Próximo item: `O Rei Creso`
 
 ## Regras
 
@@ -32,8 +32,8 @@
 - [done] 09. Oliver Twist | https://www.baixelivros.com.br/literatura-estrangeira/oliver-twist/ | ebook publicado em 2026-04-09; id `019d708c-4fc2-7e85-80e2-65a2c3562540`
 - [done] 10. Livro De Magoas | https://www.baixelivros.com.br/literatura-estrangeira/livro-de-magoas/ | ebook já existia em produção; id `019d43c5-3ee7-7cdf-879c-1e6688936eeb`
 - [done] 11. A Fada Melusina | https://www.baixelivros.com.br/literatura-estrangeira/a-fada-melusina/ | ebook publicado em 2026-04-09; id `019d70fd-1641-7da6-bfaf-3f33f6fa79b4`
-- [pending] 12. Dom Quixote | https://www.baixelivros.com.br/literatura-estrangeira/dom-quixote/
-- [pending] 13. Faetonte | https://www.baixelivros.com.br/literatura-estrangeira/faetonte/
+- [done] 12. Dom Quixote | https://www.baixelivros.com.br/literatura-estrangeira/dom-quixote/ | ebook publicado em 2026-04-09; id `019d716e-06a3-7c9d-b6a7-9ae8e2194ab7`
+- [done] 13. Faetonte | https://www.baixelivros.com.br/literatura-estrangeira/faetonte/ | ebook publicado em 2026-04-09; id `019d71de-7c41-773c-8895-3eb90795123c`
 - [pending] 14. O Rei Creso | https://www.baixelivros.com.br/literatura-estrangeira/o-rei-creso/
 - [pending] 15. A Caixa De Pandora | https://www.baixelivros.com.br/literatura-estrangeira/a-caixa-de-pandora/
 - [pending] 16. Coracao De Cachorro | https://www.baixelivros.com.br/literatura-estrangeira/coracao-de-cachorro/
