@@ -4,11 +4,11 @@
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
 - Total canônico: `59` livros
 - Status atual:
-- `20` como `done`
-- `39` como `pending`
+- `21` como `done`
+- `38` como `pending`
 - `0` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `O Jardim Secreto`
+- Próximo item: `O Sinaleiro`
 
 ## Regras
 
@@ -41,7 +41,7 @@
 - [done] 18. Coracao Das Trevas | https://www.baixelivros.com.br/literatura-estrangeira/coracao-das-trevas/ | ebook publicado em 2026-04-09; id `019d73e5-a206-7571-b9a6-086772e02b84`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 19. As Roupas Fazem As Pessoas | https://www.baixelivros.com.br/literatura-estrangeira/as-roupas-fazem-as-pessoas/ | ebook publicado em 2026-04-09; id `019d744b-f74c-7940-9c20-dddde0c528b6`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 20. Os Miseraveis Aljahiz | https://www.baixelivros.com.br/literatura-estrangeira/os-miseraveis-aljahiz/ | ebook publicado em 2026-04-09; id `019d745b-d71a-7587-acfe-db1f57096210`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
-- [pending] 21. O Jardim Secreto | https://www.baixelivros.com.br/literatura-estrangeira/o-jardim-secreto/
+- [done] 21. O Jardim Secreto | https://www.baixelivros.com.br/literatura-estrangeira/o-jardim-secreto/ | ebook publicado em 2026-04-09; id `019d745f-3a50-7a98-ae6e-6fed58bc1b09`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [pending] 22. O Sinaleiro | https://www.baixelivros.com.br/literatura-estrangeira/o-sinaleiro/
 - [pending] 23. 1984 | https://www.baixelivros.com.br/literatura-estrangeira/1984/
 - [pending] 24. Fausto | https://www.baixelivros.com.br/literatura-estrangeira/fausto/
