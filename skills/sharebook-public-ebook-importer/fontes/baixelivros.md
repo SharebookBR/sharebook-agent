@@ -4,11 +4,11 @@
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
 - Total canônico: `59` livros
 - Status atual:
-- `17` como `done`
-- `42` como `pending`
+- `18` como `done`
+- `41` como `pending`
 - `0` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `Coracao Das Trevas`
+- Próximo item: `As Roupas Fazem As Pessoas`
 
 ## Regras
 
@@ -38,7 +38,7 @@
 - [done] 15. A Caixa De Pandora | https://www.baixelivros.com.br/literatura-estrangeira/a-caixa-de-pandora/ | ebook publicado em 2026-04-09; id `019d72c0-0c18-7ee1-8611-21649dd612b4`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 16. Coracao De Cachorro | https://www.baixelivros.com.br/literatura-estrangeira/coracao-de-cachorro/ | ebook publicado em 2026-04-09; id `019d7330-2629-7ed2-988e-ff7731cbf493`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 17. A Ilha Do Tesouro Ed Bilingue | https://www.baixelivros.com.br/literatura-estrangeira/a-ilha-do-tesouro-ed-bilingue/ | ebook publicado em 2026-04-09; id `019d73a0-3eee-786b-a237-648d99ac75fe`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
-- [pending] 18. Coracao Das Trevas | https://www.baixelivros.com.br/literatura-estrangeira/coracao-das-trevas/
+- [done] 18. Coracao Das Trevas | https://www.baixelivros.com.br/literatura-estrangeira/coracao-das-trevas/ | ebook publicado em 2026-04-09; id `019d73e5-a206-7571-b9a6-086772e02b84`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [pending] 19. As Roupas Fazem As Pessoas | https://www.baixelivros.com.br/literatura-estrangeira/as-roupas-fazem-as-pessoas/
 - [pending] 20. Os Miseraveis Aljahiz | https://www.baixelivros.com.br/literatura-estrangeira/os-miseraveis-aljahiz/
 - [pending] 21. O Jardim Secreto | https://www.baixelivros.com.br/literatura-estrangeira/o-jardim-secreto/
