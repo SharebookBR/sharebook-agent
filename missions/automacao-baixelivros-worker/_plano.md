@@ -8,8 +8,9 @@ Automatizar a ingestão de ebooks do BaixeLivros para o Sharebook com segurança
 - 1 livro processado por execução
 - Fonte inicial: `Literatura Estrangeira`
 - Controle de fila em SQLite
-- Worker Python rodando em container dedicado
-- Agendamento via cron
+- Worker Python em container dedicado no modo **run-and-exit**
+- Agendamento via cron no host
+- Limites de recursos por execução (`CPU` e `RAM`) para proteção da VPS
 
 ---
 
@@ -25,9 +26,10 @@ Automatizar a ingestão de ebooks do BaixeLivros para o Sharebook com segurança
 
 ## Arquitetura proposta
 - Código: repositório `sharebook-agent`
-- Runtime: container isolado
+- Runtime: container isolado (execução pontual via `docker run --rm`)
 - Persistência: volume Docker para `sqlite.db` + diretório de logs
-- Scheduler: cron no host chamando worker
+- Scheduler: cron no host chamando worker com lock (`flock`)
+- Orquestração: **sem Coolify neste estágio** (manter operação simples)
 
 ### Tabelas SQLite (mínimo)
 - `sources` (id, name, url, enabled)
@@ -40,6 +42,12 @@ Status de `queue_items`:
 - `done`
 - `source_blocked`
 - `retry_later`
+
+## Decisões registradas
+- Modelo operacional inicial: **run-and-exit** (container só consome CPU/RAM durante a execução)
+- Execução agendada por cron no host, com `flock` para evitar concorrência
+- Sem dependência de Coolify para este worker no MVP
+- Estratégia de evolução: manter core idempotente (`run-once`) para facilitar migração futura para scheduler central (ex.: Hangfire ou equivalente)
 
 ---
 
@@ -70,8 +78,9 @@ Status de `queue_items`:
 ## Fase 1 — MVP funcional
 - Schema SQLite
 - Worker `run-once`
-- Dockerfile + compose service
-- Cron horário
+- Dockerfile + comando de execução `docker run --rm`
+- Cron horário com `flock`
+- Limites de recurso por execução (`--cpus`, `--memory`)
 - Teste real com 2 itens em ambiente controlado
 
 ## Fase 2 — Hardening
@@ -85,6 +94,7 @@ Status de `queue_items`:
 - Cadência ajustável por fonte
 - Alertas em falha recorrente
 - Painel simples de progresso
+- Avaliar migração para scheduler central (ex.: Hangfire ou equivalente) quando houver muitos workers concorrentes
 
 ---
 
