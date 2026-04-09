@@ -4,11 +4,11 @@
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
 - Total canônico: `59` livros
 - Status atual:
-- `18` como `done`
-- `41` como `pending`
+- `19` como `done`
+- `40` como `pending`
 - `0` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `As Roupas Fazem As Pessoas`
+- Próximo item: `Os Miseraveis Aljahiz`
 
 ## Regras
 
@@ -39,7 +39,7 @@
 - [done] 16. Coracao De Cachorro | https://www.baixelivros.com.br/literatura-estrangeira/coracao-de-cachorro/ | ebook publicado em 2026-04-09; id `019d7330-2629-7ed2-988e-ff7731cbf493`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 17. A Ilha Do Tesouro Ed Bilingue | https://www.baixelivros.com.br/literatura-estrangeira/a-ilha-do-tesouro-ed-bilingue/ | ebook publicado em 2026-04-09; id `019d73a0-3eee-786b-a237-648d99ac75fe`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 18. Coracao Das Trevas | https://www.baixelivros.com.br/literatura-estrangeira/coracao-das-trevas/ | ebook publicado em 2026-04-09; id `019d73e5-a206-7571-b9a6-086772e02b84`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
-- [pending] 19. As Roupas Fazem As Pessoas | https://www.baixelivros.com.br/literatura-estrangeira/as-roupas-fazem-as-pessoas/
+- [done] 19. As Roupas Fazem As Pessoas | https://www.baixelivros.com.br/literatura-estrangeira/as-roupas-fazem-as-pessoas/ | ebook publicado em 2026-04-09; id `019d744b-f74c-7940-9c20-dddde0c528b6`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [pending] 20. Os Miseraveis Aljahiz | https://www.baixelivros.com.br/literatura-estrangeira/os-miseraveis-aljahiz/
 - [pending] 21. O Jardim Secreto | https://www.baixelivros.com.br/literatura-estrangeira/o-jardim-secreto/
 - [pending] 22. O Sinaleiro | https://www.baixelivros.com.br/literatura-estrangeira/o-sinaleiro/
