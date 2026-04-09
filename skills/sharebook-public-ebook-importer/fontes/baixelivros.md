@@ -4,11 +4,11 @@
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
 - Total canônico: `59` livros
 - Status atual:
-- `4` como `done`
-- `55` como `pending`
+- `5` como `done`
+- `54` como `pending`
 - `0` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `Otelo`
+- Próximo item: `Os Tres Mosqueteiros`
 
 ## Regras
 
@@ -25,7 +25,7 @@
 - [done] 02. O Ventre De Napoles | https://www.baixelivros.com.br/literatura-estrangeira/o-ventre-de-napoles/ | ebook publicado em 2026-04-08; id `019d6f70-8a08-787d-a8f8-3b105ed43773`
 - [done] 03. Sonho De Uma Noite De Verao | https://www.baixelivros.com.br/literatura-estrangeira/sonho-de-uma-noite-de-verao/ | ebook publicado em 2026-04-09; id `019d6f8a-1ef7-7113-a84a-54ebc40cff07`
 - [done] 04. Rei Lear | https://www.baixelivros.com.br/literatura-estrangeira/rei-lear/ | ebook publicado em 2026-04-09; id `019d6f96-fc17-7174-aeba-b03a1f0fa2d7`
-- [pending] 05. Otelo | https://www.baixelivros.com.br/literatura-estrangeira/otelo/
+- [done] 05. Otelo | https://www.baixelivros.com.br/literatura-estrangeira/otelo/ | ebook publicado em 2026-04-09; id `019d6f9f-4510-74fa-a944-f2ff9d4ca6f5`
 - [pending] 06. Os Tres Mosqueteiros | https://www.baixelivros.com.br/literatura-estrangeira/os-tres-mosqueteiros/
 - [pending] 07. O Retorno | https://www.baixelivros.com.br/literatura-estrangeira/o-retorno/
 - [pending] 08. De Quanta Terra Um Homem Precisa | https://www.baixelivros.com.br/literatura-estrangeira/de-quanta-terra-um-homem-precisa/
