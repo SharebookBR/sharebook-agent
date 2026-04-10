@@ -20,8 +20,8 @@ Formato preferido:
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
 - Total canônico: `59` livros
 - Status atual:
-- `21` como `done`
-- `38` como `pending`
+- `22` como `done`
+- `37` como `pending`
 - `0` como `source_blocked`
 - `0` como `retry_later`
 - Próximo item: `O Sinaleiro`
@@ -92,7 +92,7 @@ Formato preferido:
 - [pending] 53. As Viagens De Gulliver | https://www.baixelivros.com.br/literatura-estrangeira/as-viagens-de-gulliver/
 - [pending] 54. O Mercador De Veneza | https://www.baixelivros.com.br/literatura-estrangeira/o-mercador-de-veneza/
 - [pending] 55. Cidadela | https://www.baixelivros.com.br/literatura-estrangeira/cidadela/
-- [pending] 56. Dracula Pdf | https://www.baixelivros.com.br/literatura-estrangeira/dracula-pdf/
+- [done] 56. Dracula Pdf | https://www.baixelivros.com.br/literatura-estrangeira/dracula-pdf/ | ebook publicado em 2026-04-10; id `019d752c-dad8-7d5f-9cc3-bc070b162e3f`; exceção manual fora da ordem sequencial por pedido do Raffa
 - [pending] 57. Eneida Pdf | https://www.baixelivros.com.br/literatura-estrangeira/eneida-pdf/
 - [pending] 58. Romeu E Julieta | https://www.baixelivros.com.br/literatura-estrangeira/romeu-e-julieta/
 - [pending] 59. A Divina Comedia | https://www.baixelivros.com.br/literatura-estrangeira/a-divina-comedia/
