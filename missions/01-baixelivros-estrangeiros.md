@@ -20,11 +20,11 @@ Formato preferido:
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
 - Total canônico: `59` livros
 - Status atual:
-- `32` como `done`
-- `27` como `pending`
+- `33` como `done`
+- `26` como `pending`
 - `0` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `A Ilha Do Dr Moreau`
+- Próximo item: `A Comedia Dos Erros`
 
 ## Regras
 
@@ -68,7 +68,7 @@ Formato preferido:
 - [done] 29. Um Conto De Natal | https://www.baixelivros.com.br/literatura-estrangeira/um-conto-de-natal/ | ebook publicado em 2026-04-10; id `019d7766-66ad-7b0e-9489-64980763757a`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 30. Guia Para Os Classicos Moby Dick | https://www.baixelivros.com.br/literatura-estrangeira/guia-para-os-classicos-moby-dick/ | ebook publicado em 2026-04-10; id `019d77d6-7264-7323-9e0b-2295e0a1ca91`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 31. Guia Para Os Classicos A Divina Comedia | https://www.baixelivros.com.br/literatura-estrangeira/guia-para-os-classicos-a-divina-comedia/ | ebook publicado em 2026-04-10; id `019d7846-f49e-7874-96a9-311db6f145d7`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
-- [pending] 32. A Ilha Do Dr Moreau | https://www.baixelivros.com.br/literatura-estrangeira/a-ilha-do-dr-moreau/
+- [done] 32. A Ilha Do Dr Moreau | https://www.baixelivros.com.br/literatura-estrangeira/a-ilha-do-dr-moreau/ | ebook publicado em 2026-04-10; id `019d78b6-c314-793b-9d96-36ca9d844016`; categoria `Ficção > Ficção científica`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [pending] 33. A Comedia Dos Erros | https://www.baixelivros.com.br/literatura-estrangeira/a-comedia-dos-erros/
 - [pending] 34. Porco E Porco Ed Bilingue | https://www.baixelivros.com.br/literatura-estrangeira/porco-e-porco-ed-bilingue/
 - [pending] 35. Iliada | https://www.baixelivros.com.br/literatura-estrangeira/iliada/
