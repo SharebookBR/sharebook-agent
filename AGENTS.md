@@ -137,13 +137,13 @@ Heurística prática:
 
 ### Missões (fonte de verdade)
 - `sharebook-agent/missions/01-baixelivros-estrangeiros.md` — missão principal de ingestão (BaixeLivros, categoria estrangeiros).
-- `sharebook-agent/missions/maior site de livros do brasil/_plano.md` — visão macro e roadmap do produto.
+- `sharebook-agent/ROADMAP.md` — visão macro e roadmap do produto.
 - `sharebook-agent/missions/social/_plano.md` — frente social/distribuição.
 - `sharebook-agent/missions/escrever-livros/` — pipeline editorial e artefatos de livros.
 
 ### Matriz rápida: quando abrir o quê
 - Pedido "status" sem contexto -> `01-baixelivros-estrangeiros.md`.
-- Tema de roadmap/priorização -> `maior site de livros do brasil/_plano.md`.
+- Tema de roadmap/priorização -> `ROADMAP.md`.
 - Tema social/divulgação -> `social/_plano.md`.
 - Tema escrita/edição/publicação -> `missions/escrever-livros/*`.
 - Importação de ebook -> `skills/sharebook-public-ebook-importer/SKILL.md`.
