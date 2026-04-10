@@ -1,4 +1,4 @@
-# 📚 Sharebook — Product Roadmap
+# 📚 Sharebook
 
 ## 🎯 Visão de longo prazo
 
@@ -23,11 +23,6 @@ Ser "o maior" aqui não significa despejar PDF aos montes. Significa construir o
 - ao clicar no doador, abrir o linkedin/ rede social dele ............ ok
 - físicos devem aparecer antes de digitais na tela da categoria ...... ok
 
-## Notas operacionais recentes
-- [2026-04-09] Corrigido bug no backend ao atualizar capa com troca de extensão (ex.: `.jpg` -> `.png`).
-  - Causa raiz: upload usava `savedBook.ImageSlug` (slug antigo) em vez do novo slug gerado.
-  - Fix: upload passou a usar `entity.ImageSlug` + limpeza do arquivo antigo quando slug muda.
-  - Evidência: teste unitário específico adicionado e validado (`BookServiceTests.UpdateBook_WhenCoverExtensionChanges_ShouldUploadUsingNewSlugAndDeleteOldFile`).
 
 ---
 
