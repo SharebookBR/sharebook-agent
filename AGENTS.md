@@ -136,13 +136,13 @@ Heurística prática:
 - Se o índice estiver desatualizado, corrigir no mesmo ciclo (sem deixar pendência).
 
 ### Missões (fonte de verdade)
-- `sharebook-agent/missions/automacao-baixelivros-worker/_plano.md` — missão principal de ingestão (run-and-exit, SQLite + cron).
+- `sharebook-agent/missions/01-baixelivros-estrangeiros.md` — missão principal de ingestão (BaixeLivros, categoria estrangeiros).
 - `sharebook-agent/missions/maior site de livros do brasil/_plano.md` — visão macro e roadmap do produto.
 - `sharebook-agent/missions/social/_plano.md` — frente social/distribuição.
 - `sharebook-agent/missions/escrever-livros/` — pipeline editorial e artefatos de livros.
 
 ### Matriz rápida: quando abrir o quê
-- Pedido "status" sem contexto -> `automacao-baixelivros-worker/_plano.md`.
+- Pedido "status" sem contexto -> `01-baixelivros-estrangeiros.md`.
 - Tema de roadmap/priorização -> `maior site de livros do brasil/_plano.md`.
 - Tema social/divulgação -> `social/_plano.md`.
 - Tema escrita/edição/publicação -> `missions/escrever-livros/*`.
