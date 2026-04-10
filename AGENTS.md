@@ -162,6 +162,7 @@ Heurística prática:
 - `sharebook-ux-reviewer/`: revisão crítica de UX do Sharebook com foco em clareza, atrito e descoberta.
 - `web-design-reviewer/`: revisão visual e estrutural de interfaces web quando a análise for mais ampla que o contexto específico do Sharebook.
 - `sharebook-category-organizer/`: organização de categorias/subcategorias com proposta editorial, distribuição e plano de migração em lote.
+- `sharebook-postgres-ro/`: consultas read-only no Postgres de produção (métricas, tops, schema, jobs) com caminho direto e fallback SSH.
 
 Heurística prática:
 - Se existir skill específica para o tipo de trabalho, começar por ela em vez de improvisar fluxo.
