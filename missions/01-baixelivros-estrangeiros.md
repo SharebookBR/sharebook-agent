@@ -20,11 +20,11 @@ Formato preferido:
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
 - Total canônico: `59` livros
 - Status atual:
-- `29` como `done`
-- `30` como `pending`
+- `30` como `done`
+- `29` como `pending`
 - `0` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `Um Conto De Natal`
+- Próximo item: `Guia Para Os Classicos Moby Dick`
 
 ## Regras
 
@@ -65,7 +65,7 @@ Formato preferido:
 - [done] 26. Crime E Castigo | https://www.baixelivros.com.br/literatura-estrangeira/crime-e-castigo/ | ebook publicado em 2026-04-10; id `019d75d3-6985-70e5-b8f4-7214ef1fc24d`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 27. Paraiso Perdido John Milton | https://www.baixelivros.com.br/literatura-estrangeira/paraiso-perdido-john-milton/ | ebook publicado em 2026-04-10; id `019d7685-e964-7631-8089-43f182189ce9`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 28. A Carta Roubada | https://www.baixelivros.com.br/literatura-estrangeira/a-carta-roubada/ | ebook publicado em 2026-04-10; id `019d76f6-1396-7ce9-8d0c-69a4abe2d2ff`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
-- [pending] 29. Um Conto De Natal | https://www.baixelivros.com.br/literatura-estrangeira/um-conto-de-natal/
+- [done] 29. Um Conto De Natal | https://www.baixelivros.com.br/literatura-estrangeira/um-conto-de-natal/ | ebook publicado em 2026-04-10; id `019d7766-66ad-7b0e-9489-64980763757a`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [pending] 30. Guia Para Os Classicos Moby Dick | https://www.baixelivros.com.br/literatura-estrangeira/guia-para-os-classicos-moby-dick/
 - [pending] 31. Guia Para Os Classicos A Divina Comedia | https://www.baixelivros.com.br/literatura-estrangeira/guia-para-os-classicos-a-divina-comedia/
 - [pending] 32. A Ilha Do Dr Moreau | https://www.baixelivros.com.br/literatura-estrangeira/a-ilha-do-dr-moreau/
