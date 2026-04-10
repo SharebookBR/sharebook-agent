@@ -29,20 +29,23 @@ Importar pouco e bem. Esta skill existe para transformar um livro público/gratu
 11. Antes do `create`, listar os livros da categoria-alvo (`/api/book/1/9999` filtrando `categoryId`) e fazer um check rápido anti-duplicidade por título-base/slug parecido. Se houver candidato muito próximo, parar e decidir conscientemente entre `update`, pular ou seguir.
 12. Para poesia, usar `Artes` como categoria no Sharebook; `Poesia` não existe hoje no produto.
 13. Gate obrigatório de categoria folha: nunca cadastrar ebook em categoria-pai. `Ficção` e `Tecnologia` são proibidas como categoria final; escolher e usar sempre uma subcategoria (folha) coerente.
-14. Escrever uma sinopse final de vitrine com 3 parágrafos, tom envolvente e gancho forte de leitura.
-15. Aplicar gate obrigatório de idioma antes do cadastro:
+14. Gate obrigatório de árvore de categorias (anti-erro): antes de `create`/`update`, consultar `GET /api/Category` e inspecionar explicitamente `children`.
+15. Se houver homônimo entre raiz e subcategoria (ex.: `Aventura`), é proibido usar `--category-name`; usar sempre `--category-id` da categoria folha correta.
+16. Se existir subcategoria coerente (ex.: `Ficção > Terror`), é proibido cair na raiz por conveniência operacional.
+17. Escrever uma sinopse final de vitrine com 3 parágrafos, tom envolvente e gancho forte de leitura.
+18. Aplicar gate obrigatório de idioma antes do cadastro:
     - padrão editorial do Sharebook: **publicar em português (pt-BR/pt-PT)**
     - inglês só entra como **exceção formal** com aprovação explícita do Raffa para aquele título
     - sem aprovação explícita, não cadastrar nem aprovar título em inglês
-16. Cadastrar e aprovar com `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_book.py create --approve`, preferindo `--synopsis-file` em UTF-8 para evitar caracteres quebrados no Windows.
-17. Atualizar a memória da automação na mesma rodada:
+19. Cadastrar e aprovar com `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_book.py create --approve`, preferindo `--synopsis-file` em UTF-8 para evitar caracteres quebrados no Windows.
+20. Atualizar a memória da automação na mesma rodada:
     - item publicado vira `done`
     - duplicata vira `done` se o livro já existir em produção
     - problema da fonte vira `source_blocked`
     - bloqueio por idioma vira `language_blocked`
     - problema local temporário vira `retry_later`
     - se o `create` cair duas vezes seguidas com aborto de conexão durante upload de PDF grande (ex.: `WinError 10053`), marcar `retry_later` com nota curta e seguir para o próximo `pending`
-18. Ler o rastro da execução e transformar qualquer dor recorrente em melhoria concreta da skill ou dos scripts.
+21. Ler o rastro da execução e transformar qualquer dor recorrente em melhoria concreta da skill ou dos scripts.
 
 ## Regra de variedade visual e apelo visual
 
