@@ -20,8 +20,8 @@ Formato preferido:
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
 - Total canônico: `59` livros
 - Status atual:
-- `22` como `done`
-- `37` como `pending`
+- `23` como `done`
+- `36` como `pending`
 - `0` como `source_blocked`
 - `0` como `retry_later`
 - Próximo item: `O Sinaleiro`
@@ -59,7 +59,7 @@ Formato preferido:
 - [done] 20. Os Miseraveis Aljahiz | https://www.baixelivros.com.br/literatura-estrangeira/os-miseraveis-aljahiz/ | ebook publicado em 2026-04-09; id `019d745b-d71a-7587-acfe-db1f57096210`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 21. O Jardim Secreto | https://www.baixelivros.com.br/literatura-estrangeira/o-jardim-secreto/ | ebook publicado em 2026-04-09; id `019d745f-3a50-7a98-ae6e-6fed58bc1b09`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [pending] 22. O Sinaleiro | https://www.baixelivros.com.br/literatura-estrangeira/o-sinaleiro/
-- [pending] 23. 1984 | https://www.baixelivros.com.br/literatura-estrangeira/1984/
+- [done] 23. 1984 | https://www.baixelivros.com.br/literatura-estrangeira/1984/ | ebook publicado em 2026-04-10; id `019d755f-165d-7fff-952c-fa2d58f8cfac`; categoria `Ficção > Ficção científica`; exceção manual fora da ordem sequencial por pedido do Raffa
 - [pending] 24. Fausto | https://www.baixelivros.com.br/literatura-estrangeira/fausto/
 - [pending] 25. Utopia | https://www.baixelivros.com.br/literatura-estrangeira/utopia/
 - [pending] 26. Crime E Castigo | https://www.baixelivros.com.br/literatura-estrangeira/crime-e-castigo/
