@@ -20,11 +20,11 @@ Formato preferido:
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
 - Total canônico: `59` livros
 - Status atual:
-- `27` como `done`
-- `32` como `pending`
+- `28` como `done`
+- `31` como `pending`
 - `0` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `Paraiso Perdido John Milton`
+- Próximo item: `A Carta Roubada`
 
 ## Regras
 
@@ -63,7 +63,7 @@ Formato preferido:
 - [done] 24. Fausto | https://www.baixelivros.com.br/literatura-estrangeira/fausto/ | ebook já existia em produção; id `019d4090-e19b-7049-b94d-e75c0fd3ffd6`
 - [done] 25. Utopia | https://www.baixelivros.com.br/literatura-estrangeira/utopia/ | ebook publicado em 2026-04-10; id `019d7563-b594-78b7-9330-d51e5f25fe69`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 26. Crime E Castigo | https://www.baixelivros.com.br/literatura-estrangeira/crime-e-castigo/ | ebook publicado em 2026-04-10; id `019d75d3-6985-70e5-b8f4-7214ef1fc24d`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
-- [pending] 27. Paraiso Perdido John Milton | https://www.baixelivros.com.br/literatura-estrangeira/paraiso-perdido-john-milton/
+- [done] 27. Paraiso Perdido John Milton | https://www.baixelivros.com.br/literatura-estrangeira/paraiso-perdido-john-milton/ | ebook publicado em 2026-04-10; id `019d7685-e964-7631-8089-43f182189ce9`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [pending] 28. A Carta Roubada | https://www.baixelivros.com.br/literatura-estrangeira/a-carta-roubada/
 - [pending] 29. Um Conto De Natal | https://www.baixelivros.com.br/literatura-estrangeira/um-conto-de-natal/
 - [pending] 30. Guia Para Os Classicos Moby Dick | https://www.baixelivros.com.br/literatura-estrangeira/guia-para-os-classicos-moby-dick/
