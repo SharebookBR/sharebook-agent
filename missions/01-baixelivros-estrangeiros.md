@@ -20,11 +20,11 @@ Formato preferido:
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
 - Total canônico: `59` livros
 - Status atual:
-- `33` como `done`
-- `26` como `pending`
+- `34` como `done`
+- `25` como `pending`
 - `0` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `A Comedia Dos Erros`
+- Próximo item: `Porco E Porco Ed Bilingue`
 
 ## Regras
 
@@ -69,7 +69,7 @@ Formato preferido:
 - [done] 30. Guia Para Os Classicos Moby Dick | https://www.baixelivros.com.br/literatura-estrangeira/guia-para-os-classicos-moby-dick/ | ebook publicado em 2026-04-10; id `019d77d6-7264-7323-9e0b-2295e0a1ca91`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 31. Guia Para Os Classicos A Divina Comedia | https://www.baixelivros.com.br/literatura-estrangeira/guia-para-os-classicos-a-divina-comedia/ | ebook publicado em 2026-04-10; id `019d7846-f49e-7874-96a9-311db6f145d7`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 32. A Ilha Do Dr Moreau | https://www.baixelivros.com.br/literatura-estrangeira/a-ilha-do-dr-moreau/ | ebook publicado em 2026-04-10; id `019d78b6-c314-793b-9d96-36ca9d844016`; categoria `Ficção > Ficção científica`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
-- [pending] 33. A Comedia Dos Erros | https://www.baixelivros.com.br/literatura-estrangeira/a-comedia-dos-erros/
+- [done] 33. A Comedia Dos Erros | https://www.baixelivros.com.br/literatura-estrangeira/a-comedia-dos-erros/ | ebook publicado em 2026-04-11; id `019d7a7c-e17a-759d-b32c-34b53bf55e0f`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [pending] 34. Porco E Porco Ed Bilingue | https://www.baixelivros.com.br/literatura-estrangeira/porco-e-porco-ed-bilingue/
 - [pending] 35. Iliada | https://www.baixelivros.com.br/literatura-estrangeira/iliada/
 - [pending] 36. Hamlet | https://www.baixelivros.com.br/literatura-estrangeira/hamlet/
