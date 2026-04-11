@@ -20,11 +20,11 @@ Formato preferido:
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
 - Total canônico: `59` livros
 - Status atual:
-- `45` como `done`
-- `14` como `pending`
-- `0` como `source_blocked`
+- `47` como `done`
+- `10` como `pending`
+- `2` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `A Divina Comedia Paraiso`
+- Próximo item: `Peter Pan E Wendy`
 
 ## Regras
 
@@ -81,10 +81,10 @@ Formato preferido:
 - [done] 42. O Processo | https://www.baixelivros.com.br/literatura-estrangeira/o-processo/ | ebook publicado em 2026-04-11; id `019d7b3d-f658-7b0f-87f3-6a101299d5f9`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 43. Alice No Pais Das Maravilhas | https://www.baixelivros.com.br/literatura-estrangeira/alice-no-pais-das-maravilhas/ | ebook publicado em 2026-04-11; id `019d7b58-763d-70a5-ac66-acea818d2eaa`; categoria `Infantil/Juvenil`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 44. Conto De Inverno | https://www.baixelivros.com.br/literatura-estrangeira/conto-de-inverno/ | ebook publicado em 2026-04-11; id `019d7b74-1753-7e3a-8dc3-92637212807c`; categoria `Ficção > Drama`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
-- [pending] 45. A Divina Comedia Paraiso | https://www.baixelivros.com.br/literatura-estrangeira/a-divina-comedia-paraiso/
-- [pending] 46. A Divina Comedia Inferno | https://www.baixelivros.com.br/literatura-estrangeira/a-divina-comedia-inferno/
-- [pending] 47. A Divina Comedia Purgatorio | https://www.baixelivros.com.br/literatura-estrangeira/a-divina-comedia-purgatorio/
-- [pending] 48. O Livro Da Selva | https://www.baixelivros.com.br/literatura-estrangeira/o-livro-da-selva/
+- [source_blocked] 45. A Divina Comedia Paraiso | https://www.baixelivros.com.br/literatura-estrangeira/a-divina-comedia-paraiso/ | download da fonte retorna HTML/404 (ebooksbrasil `paraiso.pdf` indisponível) em 2026-04-11
+- [source_blocked] 46. A Divina Comedia Inferno | https://www.baixelivros.com.br/literatura-estrangeira/a-divina-comedia-inferno/ | download da fonte retorna HTML/404 (ebooksbrasil `inferno.pdf` indisponível) em 2026-04-11
+- [done] 47. A Divina Comedia Purgatorio | https://www.baixelivros.com.br/literatura-estrangeira/a-divina-comedia-purgatorio/ | ebook já existia em produção; id `019d49c9-e709-719f-9f03-f079bee6dc4c`
+- [done] 48. O Livro Da Selva | https://www.baixelivros.com.br/literatura-estrangeira/o-livro-da-selva/ | ebook publicado em 2026-04-11; id `019d7b91-d7ec-787c-ab81-be5f4001adeb`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [pending] 49. Peter Pan E Wendy | https://www.baixelivros.com.br/literatura-estrangeira/peter-pan-e-wendy/
 - [pending] 50. A Ilha Do Tesouro | https://www.baixelivros.com.br/literatura-estrangeira/a-ilha-do-tesouro/
 - [pending] 51. A Revolucao Dos Bichos | https://www.baixelivros.com.br/literatura-estrangeira/a-revolucao-dos-bichos/
