@@ -20,11 +20,11 @@ Formato preferido:
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
 - Total canônico: `59` livros
 - Status atual:
-- `43` como `done`
-- `16` como `pending`
+- `44` como `done`
+- `15` como `pending`
 - `0` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `Alice No Pais Das Maravilhas`
+- Próximo item: `Conto De Inverno`
 
 ## Regras
 
@@ -79,7 +79,7 @@ Formato preferido:
 - [done] 40. As Pupilas Do Senhor Reitor | https://www.baixelivros.com.br/literatura-estrangeira/as-pupilas-do-senhor-reitor/ | ebook publicado em 2026-04-11; id `019d7b21-9641-71de-9b7e-fc1eaa1571b5`; categoria `Amor`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 41. A Metamorfose | https://www.baixelivros.com.br/literatura-estrangeira/a-metamorfose/ | ebook já existia em produção; id `019d4134-4609-7dab-9bb6-6e9aca380c2a`
 - [done] 42. O Processo | https://www.baixelivros.com.br/literatura-estrangeira/o-processo/ | ebook publicado em 2026-04-11; id `019d7b3d-f658-7b0f-87f3-6a101299d5f9`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
-- [pending] 43. Alice No Pais Das Maravilhas | https://www.baixelivros.com.br/literatura-estrangeira/alice-no-pais-das-maravilhas/
+- [done] 43. Alice No Pais Das Maravilhas | https://www.baixelivros.com.br/literatura-estrangeira/alice-no-pais-das-maravilhas/ | ebook publicado em 2026-04-11; id `019d7b58-763d-70a5-ac66-acea818d2eaa`; categoria `Infantil/Juvenil`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [pending] 44. Conto De Inverno | https://www.baixelivros.com.br/literatura-estrangeira/conto-de-inverno/
 - [pending] 45. A Divina Comedia Paraiso | https://www.baixelivros.com.br/literatura-estrangeira/a-divina-comedia-paraiso/
 - [pending] 46. A Divina Comedia Inferno | https://www.baixelivros.com.br/literatura-estrangeira/a-divina-comedia-inferno/
