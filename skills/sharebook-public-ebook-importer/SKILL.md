@@ -28,10 +28,10 @@ Importar pouco e bem. Esta skill existe para transformar um livro público/gratu
 10. Revalidar o candidato escolhido com um `find` imediatamente antes do `create`; produção não respeita sua expectativa de exclusividade.
 11. Antes do `create`, listar os livros da categoria-alvo (`/api/book/1/9999` filtrando `categoryId`) e fazer um check rápido anti-duplicidade por título-base/slug parecido. Se houver candidato muito próximo, parar e decidir conscientemente entre `update`, pular ou seguir.
 12. Para poesia, usar `Artes` como categoria no Sharebook; `Poesia` não existe hoje no produto.
-13. Gate obrigatório de categoria folha: nunca cadastrar ebook em categoria-pai. `Ficção` e `Tecnologia` são proibidas como categoria final; escolher e usar sempre uma subcategoria (folha) coerente.
+13. Gate obrigatório de categoria folha: nunca cadastrar ebook em categoria-pai. Se a categoria tiver `children`, ela é proibida como destino final; escolher e usar sempre uma subcategoria (folha) coerente.
 14. Gate obrigatório de árvore de categorias (anti-erro): antes de `create`/`update`, consultar `GET /api/Category` e inspecionar explicitamente `children`.
-15. Se houver homônimo entre raiz e subcategoria (ex.: `Aventura`), é proibido usar `--category-name`; usar sempre `--category-id` da categoria folha correta.
-16. Se existir subcategoria coerente (ex.: `Ficção > Terror`), é proibido cair na raiz por conveniência operacional.
+15. Se houver homônimo entre raiz e subcategoria (ex.: `Aventura` / `Drama`), é proibido usar `--category-name`; usar sempre `--category-id` da categoria folha correta.
+16. Se existir subcategoria coerente (ex.: `Ficção > Terror`, `Drama > Drama de Crítica Social`, `Tecnologia > Backend`), é proibido cair na raiz por conveniência operacional.
 17. Escrever uma sinopse final de vitrine com 3 parágrafos, tom envolvente e gancho forte de leitura.
 18. Aplicar gate obrigatório de idioma antes do cadastro:
     - padrão editorial do Sharebook: **publicar em português (pt-BR/pt-PT)**
@@ -278,7 +278,8 @@ Famílias visuais recomendadas para rodízio:
 - Se a automação perder a corrida para outro cadastro entre a triagem e o `create`, pular para o próximo candidato em vez de forçar `delete-existing` sem necessidade.
 - Livro físico existente com o mesmo título/autor não bloqueia cadastro de ebook; a duplicidade relevante neste fluxo é ebook contra ebook.
 - Para acervo de poesia, mapear `Poesia` para `Artes` ao cadastrar; é a categoria disponível no produto hoje.
-- Gate de categoria obrigatório: não cadastrar em categoria-pai quando houver subcategorias. `Ficção` e `Tecnologia` são proibidas como destino final; sempre escolher subcategoria (folha).
+- Gate de categoria obrigatório: não cadastrar em categoria-pai quando houver subcategorias; sempre escolher categoria folha.
+- No estado atual do catálogo, tratar `Ficção`, `Tecnologia` e `Drama` como categorias-pai (não usar como destino final de cadastro).
 - Se um PDF muito grande derrubar o upload duas vezes seguidas com erro de conexão local/API, tratar como `retry_later` e preservar a rodada para outro título em vez de insistir até desperdiçar a execução inteira.
 - Preferir `update` quando a mudança for editorial ou incremental: categoria, sinopse, autor, título, capa sem troca estrutural do registro ou ajustes pequenos de metadata.
 - Preferir `delete` + `create` só quando a troca principal realmente justificar recriação do ebook, como correção estrutural ruim de cadastro, slug muito comprometido ou quando o `update` não preservar bem o resultado esperado.

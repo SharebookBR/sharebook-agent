@@ -13,9 +13,10 @@ Cadastrar livro físico é parecido com ebook, mas não igual. Esta skill existe
 2. Pesquisar contexto público confiável antes de escrever a sinopse. Priorizar páginas de editora, livraria, acervo ou resenha claramente atribuída.
 3. Escrever sinopse de vitrine com no mínimo 3 parágrafos, sexy, tom envolvente e sem inventar fatos que a pesquisa não sustenta.
 4. Em sessão manual de PowerShell, se houver vários cadastros seguidos, dot-source `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_login.ps1` para renovar o token, salvá-lo no `.env` e reaproveitá-lo na sessão atual.
-5. Cadastrar com `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_book.py create --type Printed --freight-option ... --approve`, preferindo `--synopsis-file` em UTF-8.
-6. Validar o retorno publicado com `find-many` ou pelo próprio payload do script.
-7. Reflita sobre as fricções nessa sessão e fique a vontade pra melhorar essa skill ou scripts.
+5. Antes de cadastrar, consultar `GET /api/Category` e confirmar que a categoria escolhida é folha (`children` vazio). Em caso de homônimo, usar sempre `--category-id`.
+6. Cadastrar com `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_book.py create --type Printed --freight-option ... --approve`, preferindo `--synopsis-file` em UTF-8.
+7. Validar o retorno publicado com `find-many` ou pelo próprio payload do script.
+8. Reflita sobre as fricções nessa sessão e fique a vontade pra melhorar essa skill ou scripts.
 
 ## Regras
 
@@ -23,6 +24,8 @@ Cadastrar livro físico é parecido com ebook, mas não igual. Esta skill existe
 - Usar a própria foto da capa do livro como imagem, salvo orientação contrária do usuário.
 - Livro físico exige `--freight-option`. Se o usuário disser que paga para todo o Brasil, usar `Country`.
 - Não exigir PDF nem tentar forçar o fluxo de ebook em livro impresso.
+- Gate de categoria obrigatório: não cadastrar físico em categoria-pai quando houver subcategorias; usar sempre categoria folha (`--category-id`), especialmente em árvores com homônimo (`Drama`, `Aventura` etc.).
+- No estado atual do catálogo, tratar `Ficção`, `Tecnologia` e `Drama` como categorias-pai (proibidas como destino final).
 - A sinopse final deve ter no mínimo 3 parágrafos e vender a leitura sem virar fanfic.
 - Quando o contexto público for fraco, segurar a mão: apoiar-se no subtítulo, orelha, quarta capa ou dados objetivos visíveis, sem completar lacuna no chute.
 - Em Windows, preferir `--synopsis-file` em UTF-8 para evitar texto quebrado na CLI.
@@ -51,7 +54,7 @@ python C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_book.py create `
   --type Printed `
   --title "Manual da Destruição" `
   --author "Alexandre Dal Farra" `
-  --category-name "Ficção" `
+  --category-id "<ID_CATEGORIA_FOLHA>" `
   --freight-option Country `
   --synopsis-file C:\REPOS\SHAREBOOK\codex-temp\manual-da-destruicao\synopsis.txt `
   --image-path "C:\Users\brnra019\Downloads\manual-da-destruicao.jpeg" `
