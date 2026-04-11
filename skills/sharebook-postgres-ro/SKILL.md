@@ -58,3 +58,8 @@ Para consultas recorrentes, ler: `references/queries.md`.
 - Antes de qualquer `UPDATE/DELETE`, rodar `SELECT COUNT(*)` com o mesmo `WHERE` para validar escopo.
 - Preferir transação explícita (`BEGIN ... COMMIT`) e registrar query executada + contagem afetada.
 - Após escrita, validar com query de verificação read-only e reportar antes/depois.
+- Script recomendado para RW controlado: `sharebook-agent/scripts/sharebook_prod_pg_rw_exec.py`.
+  - Exemplo seguro (com transação automática):
+    - `python3 sharebook-agent/scripts/sharebook_prod_pg_rw_exec.py --sql-file /tmp/migracao.sql --yes`
+  - Exemplo de verificação imediata:
+    - `python3 sharebook-agent/scripts/sharebook_prod_pg_rw_exec.py --sql "SELECT count(*) FROM \"Books\";" --yes --csv`
