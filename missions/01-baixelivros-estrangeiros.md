@@ -20,11 +20,11 @@ Formato preferido:
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
 - Total canônico: `59` livros
 - Status atual:
-- `36` como `done`
-- `23` como `pending`
+- `37` como `done`
+- `22` como `pending`
 - `0` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `Hamlet`
+- Próximo item: `A Dama Da Camelias`
 
 ## Regras
 
@@ -72,7 +72,7 @@ Formato preferido:
 - [done] 33. A Comedia Dos Erros | https://www.baixelivros.com.br/literatura-estrangeira/a-comedia-dos-erros/ | ebook publicado em 2026-04-11; id `019d7a7c-e17a-759d-b32c-34b53bf55e0f`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 34. Porco E Porco Ed Bilingue | https://www.baixelivros.com.br/literatura-estrangeira/porco-e-porco-ed-bilingue/ | ebook publicado em 2026-04-11; id `019d7a98-83fc-77fe-9263-204d6be3bf1f`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 35. Iliada | https://www.baixelivros.com.br/literatura-estrangeira/iliada/ | ebook publicado em 2026-04-11; id `019d7ab3-a897-7f2f-b5df-3fa34b5a7088`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
-- [pending] 36. Hamlet | https://www.baixelivros.com.br/literatura-estrangeira/hamlet/
+- [done] 36. Hamlet | https://www.baixelivros.com.br/literatura-estrangeira/hamlet/ | ebook publicado em 2026-04-11; id `019d7acf-3b01-7053-aada-6edf37a252a4`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [pending] 37. A Dama Da Camelias | https://www.baixelivros.com.br/literatura-estrangeira/a-dama-da-camelias/
 - [pending] 38. O Conde De Monte Cristo | https://www.baixelivros.com.br/literatura-estrangeira/o-conde-de-monte-cristo/
 - [pending] 39. Odisseia | https://www.baixelivros.com.br/literatura-estrangeira/odisseia/
