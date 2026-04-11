@@ -43,3 +43,18 @@ python3 sharebook-agent/scripts/sharebook_prod_pg_ro_query_direct.py --csv --sql
 ## Receitas prontas
 
 Para consultas recorrentes, ler: `references/queries.md`.
+
+## Dicas operacionais (RW, somente quando explicitamente autorizado)
+
+> Esta skill é RO por padrão. Escrita em produção só com autorização explícita do usuário.
+
+- Credenciais RW dedicadas no `.env`:
+  - `SHAREBOOK_PROD_PG_RW_HOST`
+  - `SHAREBOOK_PROD_PG_RW_PORT`
+  - `SHAREBOOK_PROD_PG_RW_DATABASE`
+  - `SHAREBOOK_PROD_PG_RW_USER`
+  - `SHAREBOOK_PROD_PG_RW_PASSWORD`
+  - `SHAREBOOK_PROD_PG_RW_SSLMODE`
+- Antes de qualquer `UPDATE/DELETE`, rodar `SELECT COUNT(*)` com o mesmo `WHERE` para validar escopo.
+- Preferir transação explícita (`BEGIN ... COMMIT`) e registrar query executada + contagem afetada.
+- Após escrita, validar com query de verificação read-only e reportar antes/depois.
