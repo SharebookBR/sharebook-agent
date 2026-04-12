@@ -22,11 +22,11 @@ Formato preferido:
 - Critério de ordenação canônica: página crescente (1→12), mantendo a ordem de aparição na página (topo→baixo)
 - Total canônico: `133` livros
 - Status atual:
-- `0` como `done`
-- `133` como `pending`
+- `2` como `done`
+- `131` como `pending`
 - `0` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `001. Historia Da Literatura Brasileira`
+- Próximo item: `002. Ao Correr Da Pena`
 
 ## Regras
 
@@ -39,7 +39,7 @@ Formato preferido:
 
 ## Fila
 
-- [pending] 001. Historia Da Literatura Brasileira | https://www.baixelivros.com.br/literatura-brasileira/historia-da-literatura-brasileira
+- [done] 001. Historia Da Literatura Brasileira | https://www.baixelivros.com.br/literatura-brasileira/historia-da-literatura-brasileira | ebook publicado em 2026-04-12; id `019d8048-404d-7713-b057-5fed6454b2cf`; categoria `Conhecimento & Carreira`; família visual `foto realista encenada` (reuso de capa original ajustada para 600x900); macrofamília `foto realista`
 - [pending] 002. Ao Correr Da Pena | https://www.baixelivros.com.br/literatura-brasileira/ao-correr-da-pena
 - [pending] 003. O Relogio De Ouro | https://www.baixelivros.com.br/literatura-brasileira/o-relogio-de-ouro
 - [pending] 004. Missa Do Galo | https://www.baixelivros.com.br/literatura-brasileira/missa-do-galo
@@ -158,7 +158,7 @@ Formato preferido:
 - [pending] 117. Um Paraiso Perdido | https://www.baixelivros.com.br/literatura-brasileira/um-paraiso-perdido
 - [pending] 118. Canudos E Outros Temas | https://www.baixelivros.com.br/literatura-brasileira/canudos-e-outros-temas
 - [pending] 119. A Margem Da Historia | https://www.baixelivros.com.br/literatura-brasileira/a-margem-da-historia
-- [pending] 120. Luzia Homem | https://www.baixelivros.com.br/literatura-brasileira/luzia-homem
+- [done] 120. Luzia Homem | https://www.baixelivros.com.br/literatura-brasileira/luzia-homem | ebook publicado em 2026-04-12; id `019d8054-e99a-7339-b410-c9b36c23920f`; categoria `Drama > Drama de Crítica Social`; família visual `foto realista encenada` (capa autoral 2:3); macrofamília `foto realista`; exceção manual fora da ordem sequencial por acionamento de cron
 - [pending] 121. O Velho Senado | https://www.baixelivros.com.br/literatura-brasileira/o-velho-senado
 - [pending] 122. Legado De Sangue | https://www.baixelivros.com.br/literatura-brasileira/legado-de-sangue
 - [pending] 123. Esau E Jaco Pdf | https://www.baixelivros.com.br/literatura-brasileira/esau-e-jaco-pdf
