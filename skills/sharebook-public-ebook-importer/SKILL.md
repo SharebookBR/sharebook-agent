@@ -9,8 +9,8 @@ Importar pouco e bem. Esta skill existe para transformar um livro público/gratu
 
 ## Missão principal ativa (BaixeLivros)
 
-- Missão principal nova: `sharebook-agent/missions/02-baixelivros-literatura-brasileira.md`.
-- A missão anterior (`sharebook-agent/missions/01-baixelivros-estrangeiros.md`) segue como referência histórica/concluída.
+- Missão principal única desta automação: `sharebook-agent/missions/02-baixelivros-literatura-brasileira.md`.
+- Regra operacional: não usar nenhuma outra missão como referência durante a execução desta skill.
 
 ## Workflow
 
