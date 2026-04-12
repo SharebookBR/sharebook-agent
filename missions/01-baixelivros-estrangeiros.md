@@ -20,11 +20,11 @@ Formato preferido:
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
 - Total canônico: `59` livros
 - Status atual:
-- `49` como `done`
-- `9` como `pending`
+- `50` como `done`
+- `8` como `pending`
 - `1` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `A Ilha Do Tesouro`
+- Próximo item: `A Revolucao Dos Bichos`
 
 ## Regras
 
@@ -86,7 +86,7 @@ Formato preferido:
 - [done] 47. A Divina Comedia Purgatorio | https://www.baixelivros.com.br/literatura-estrangeira/a-divina-comedia-purgatorio/ | ebook já existia em produção; id `019d49c9-e709-719f-9f03-f079bee6dc4c`
 - [done] 48. O Livro Da Selva | https://www.baixelivros.com.br/literatura-estrangeira/o-livro-da-selva/ | ebook publicado em 2026-04-11; id `019d7b91-d7ec-787c-ab81-be5f4001adeb`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 49. Peter Pan E Wendy | https://www.baixelivros.com.br/literatura-estrangeira/peter-pan-e-wendy/ | ebook publicado em 2026-04-11; id `019d7baa-da30-725c-af15-38889946a4d0`; categoria `Infantil/Juvenil`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
-- [pending] 50. A Ilha Do Tesouro | https://www.baixelivros.com.br/literatura-estrangeira/a-ilha-do-tesouro/
+- [done] 50. A Ilha Do Tesouro | https://www.baixelivros.com.br/literatura-estrangeira/a-ilha-do-tesouro/ | duplicata de ebook já existente em produção (`A Ilha do Tesouro (Ed. Bilíngue)`); id `019d73a0-3eee-786b-a237-648d99ac75fe`; validação + bloqueio de create em 2026-04-12
 - [pending] 51. A Revolucao Dos Bichos | https://www.baixelivros.com.br/literatura-estrangeira/a-revolucao-dos-bichos/
 - [pending] 52. A Arte Da Guerra | https://www.baixelivros.com.br/literatura-estrangeira/a-arte-da-guerra/
 - [pending] 53. As Viagens De Gulliver | https://www.baixelivros.com.br/literatura-estrangeira/as-viagens-de-gulliver/
