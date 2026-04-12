@@ -7,6 +7,11 @@ description: Importa livros digitais de domínio público ou gratuitos para o Sh
 
 Importar pouco e bem. Esta skill existe para transformar um livro público/gratuito em um ebook aprovado no Sharebook sem improvisar em produção.
 
+## Missão principal ativa (BaixeLivros)
+
+- Missão principal nova: `sharebook-agent/missions/02-baixelivros-literatura-brasileira.md`.
+- A missão anterior (`sharebook-agent/missions/01-baixelivros-estrangeiros.md`) segue como referência histórica/concluída.
+
 ## Workflow
 
 1. Tratar a fonte como fila sequencial, não como caça ao tesouro.
