@@ -20,11 +20,11 @@ Formato preferido:
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
 - Total canônico: `59` livros
 - Status atual:
-- `54` como `done`
-- `4` como `pending`
+- `55` como `done`
+- `3` como `pending`
 - `1` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `Cidadela`
+- Próximo item: `Eneida Pdf`
 
 ## Regras
 
@@ -91,7 +91,7 @@ Formato preferido:
 - [done] 52. A Arte Da Guerra | https://www.baixelivros.com.br/literatura-estrangeira/a-arte-da-guerra/ | duplicata de ebook já existente em produção; id `019d6f60-3388-7a40-810b-0a9cde382ede`; validação + bloqueio de create em 2026-04-12
 - [done] 53. As Viagens De Gulliver | https://www.baixelivros.com.br/literatura-estrangeira/as-viagens-de-gulliver/ | duplicata de ebook já existente em produção; id `019d2b1f-58fa-764a-83f5-1783e3269bab`; validação + bloqueio de create em 2026-04-12
 - [done] 54. O Mercador De Veneza | https://www.baixelivros.com.br/literatura-estrangeira/o-mercador-de-veneza/ | ebook publicado em 2026-04-12; id `019d7fbe-f97e-70e8-b4be-b57255d65540`; categoria `Ficção > Comédia dramática`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
-- [pending] 55. Cidadela | https://www.baixelivros.com.br/literatura-estrangeira/cidadela/
+- [done] 55. Cidadela | https://www.baixelivros.com.br/literatura-estrangeira/cidadela/ | ebook publicado em 2026-04-12; id `019d7fda-ea1b-759c-b053-47603b22be7a`; categoria `Drama > Drama Psicológico/Moral`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 56. Dracula Pdf | https://www.baixelivros.com.br/literatura-estrangeira/dracula-pdf/ | ebook publicado em 2026-04-10; id `019d752c-dad8-7d5f-9cc3-bc070b162e3f`; exceção manual fora da ordem sequencial por pedido do Raffa
 - [pending] 57. Eneida Pdf | https://www.baixelivros.com.br/literatura-estrangeira/eneida-pdf/
 - [pending] 58. Romeu E Julieta | https://www.baixelivros.com.br/literatura-estrangeira/romeu-e-julieta/
