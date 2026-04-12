@@ -20,11 +20,11 @@ Formato preferido:
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-estrangeira`
 - Total canônico: `59` livros
 - Status atual:
-- `55` como `done`
-- `3` como `pending`
+- `56` como `done`
+- `2` como `pending`
 - `1` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `Eneida Pdf`
+- Próximo item: `Romeu E Julieta`
 
 ## Regras
 
@@ -93,6 +93,6 @@ Formato preferido:
 - [done] 54. O Mercador De Veneza | https://www.baixelivros.com.br/literatura-estrangeira/o-mercador-de-veneza/ | ebook publicado em 2026-04-12; id `019d7fbe-f97e-70e8-b4be-b57255d65540`; categoria `Ficção > Comédia dramática`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 55. Cidadela | https://www.baixelivros.com.br/literatura-estrangeira/cidadela/ | ebook publicado em 2026-04-12; id `019d7fda-ea1b-759c-b053-47603b22be7a`; categoria `Drama > Drama Psicológico/Moral`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [done] 56. Dracula Pdf | https://www.baixelivros.com.br/literatura-estrangeira/dracula-pdf/ | ebook publicado em 2026-04-10; id `019d752c-dad8-7d5f-9cc3-bc070b162e3f`; exceção manual fora da ordem sequencial por pedido do Raffa
-- [pending] 57. Eneida Pdf | https://www.baixelivros.com.br/literatura-estrangeira/eneida-pdf/
+- [done] 57. Eneida Pdf | https://www.baixelivros.com.br/literatura-estrangeira/eneida-pdf/ | ebook publicado em 2026-04-12; id `019d7ff5-c7b6-70a4-968e-1615e71314cb`; categoria `Ficção > Aventura`; família visual `foto realista encenada` (reuso de capa original); macrofamília `foto realista`
 - [pending] 58. Romeu E Julieta | https://www.baixelivros.com.br/literatura-estrangeira/romeu-e-julieta/
 - [pending] 59. A Divina Comedia | https://www.baixelivros.com.br/literatura-estrangeira/a-divina-comedia/
