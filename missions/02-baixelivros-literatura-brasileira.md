@@ -22,11 +22,11 @@ Formato preferido:
 - Critério de ordenação canônica: página crescente (1→12), mantendo a ordem de aparição na página (topo→baixo)
 - Total canônico: `133` livros
 - Status atual:
-- `6` como `done`
-- `127` como `pending`
+- `7` como `done`
+- `126` como `pending`
 - `0` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `006. O Moleque`
+- Próximo item: `007. Poesia Completa`
 
 ## Regras
 
@@ -44,7 +44,7 @@ Formato preferido:
 - [done] 003. O Relogio De Ouro | https://www.baixelivros.com.br/literatura-brasileira/o-relogio-de-ouro | ebook publicado em 2026-04-12; id `019d807f-2e0a-72ef-a190-1b99df297e3b`; categoria `Drama > Drama em Narrativas Curtas`; família visual `foto realista encenada` (reuso de capa original ajustada para 600x900); macrofamília `foto realista`
 - [done] 004. Missa Do Galo | https://www.baixelivros.com.br/literatura-brasileira/missa-do-galo | ebook publicado em 2026-04-12; id `019d809a-c369-72ae-aada-04ff4ffc4f60`; categoria `Drama > Drama em Narrativas Curtas`; família visual `foto realista encenada` (reuso de capa original ajustada para 600x900); macrofamília `foto realista`
 - [done] 005. O Guarani | https://www.baixelivros.com.br/literatura-brasileira/o-guarani | ebook publicado em 2026-04-12; id `019d80b6-1170-709f-8235-38b9536a80f6`; categoria `Ficção > Aventura`; família visual `foto realista encenada` (reuso de capa original ajustada para 600x900); macrofamília `foto realista`
-- [pending] 006. O Moleque | https://www.baixelivros.com.br/literatura-brasileira/o-moleque
+- [done] 006. O Moleque | https://www.baixelivros.com.br/literatura-brasileira/o-moleque | ebook publicado em 2026-04-12; id `019d80d1-55b8-76d2-9816-5ca6f30aa093`; categoria `Drama > Drama de Crítica Social`; família visual `foto realista encenada` (reuso de capa original ajustada para 600x900); macrofamília `foto realista`; extractor `wp-json` falhou e houve fallback HTTP com downloadSimple + validação `%PDF`
 - [pending] 007. Poesia Completa | https://www.baixelivros.com.br/literatura-brasileira/poesia-completa
 - [pending] 008. Grandeza | https://www.baixelivros.com.br/literatura-brasileira/grandeza
 - [pending] 009. A Filha Do Barao | https://www.baixelivros.com.br/literatura-brasileira/a-filha-do-barao
