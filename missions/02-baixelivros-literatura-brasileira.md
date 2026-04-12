@@ -16,10 +16,11 @@ Formato preferido:
 
 - Última sincronização: `2026-04-12`
 - Fonte oficial: `https://www.baixelivros.com.br/biblioteca/literatura-brasileira`
-- Total canônico: `12` livros
+- Paginação validada até: `/page/12`
+- Total canônico: `133` livros
 - Status atual:
   - `0` como `done`
-  - `12` como `pending`
+  - `133` como `pending`
   - `0` como `source_blocked`
   - `0` como `retry_later`
 - Próximo item: `01. Historia Da Literatura Brasileira`
@@ -47,3 +48,124 @@ Formato preferido:
 - [pending] 10. A Cartomante | https://www.baixelivros.com.br/literatura-brasileira/a-cartomante
 - [pending] 11. Um Cinturao | https://www.baixelivros.com.br/literatura-brasileira/um-cinturao
 - [pending] 12. O Minotauro | https://www.baixelivros.com.br/literatura-brasileira/o-minotauro
+- [pending] 13. Broqueis | https://www.baixelivros.com.br/literatura-brasileira/broqueis
+- [pending] 14. Vidas Secas | https://www.baixelivros.com.br/literatura-brasileira/vidas-secas
+- [pending] 15. Aritmetica Da Emilia | https://www.baixelivros.com.br/literatura-brasileira/aritmetica-da-emilia
+- [pending] 16. Peter Pan Monteiro Lobato | https://www.baixelivros.com.br/literatura-brasileira/peter-pan-monteiro-lobato
+- [pending] 17. Contrabandista | https://www.baixelivros.com.br/literatura-brasileira/contrabandista
+- [pending] 18. Crisalidas | https://www.baixelivros.com.br/literatura-brasileira/crisalidas
+- [pending] 19. O Emprestimo | https://www.baixelivros.com.br/literatura-brasileira/o-emprestimo
+- [pending] 20. Uma Lagrima De Mulher | https://www.baixelivros.com.br/literatura-brasileira/uma-lagrima-de-mulher
+- [pending] 21. O Japao | https://www.baixelivros.com.br/literatura-brasileira/o-japao
+- [pending] 22. Ultimos Cantos | https://www.baixelivros.com.br/literatura-brasileira/ultimos-cantos
+- [pending] 23. Tarde | https://www.baixelivros.com.br/literatura-brasileira/tarde
+- [pending] 24. Teoria Do Medalhao | https://www.baixelivros.com.br/literatura-brasileira/teoria-do-medalhao
+- [pending] 25. O Enfermeiro | https://www.baixelivros.com.br/literatura-brasileira/o-enfermeiro
+- [pending] 26. O Gaucho | https://www.baixelivros.com.br/literatura-brasileira/o-gaucho
+- [pending] 27. Diva | https://www.baixelivros.com.br/literatura-brasileira/diva
+- [pending] 28. O Bom Crioulo | https://www.baixelivros.com.br/literatura-brasileira/o-bom-crioulo
+- [pending] 29. A Normalista | https://www.baixelivros.com.br/literatura-brasileira/a-normalista
+- [pending] 30. Uns Bracos | https://www.baixelivros.com.br/literatura-brasileira/uns-bracos
+- [pending] 31. A Carteira | https://www.baixelivros.com.br/literatura-brasileira/a-carteira
+- [pending] 32. Emilia No Pais Da Gramatica | https://www.baixelivros.com.br/literatura-brasileira/emilia-no-pais-da-gramatica
+- [pending] 33. O Mulato | https://www.baixelivros.com.br/literatura-brasileira/o-mulato
+- [pending] 34. A Condessa Vesper | https://www.baixelivros.com.br/literatura-brasileira/a-condessa-vesper
+- [pending] 35. Sonhos Douro | https://www.baixelivros.com.br/literatura-brasileira/sonhos-douro
+- [pending] 36. Guerra Dos Mascates | https://www.baixelivros.com.br/literatura-brasileira/guerra-dos-mascates
+- [pending] 37. A Chave Do Tamanho | https://www.baixelivros.com.br/literatura-brasileira/a-chave-do-tamanho
+- [pending] 38. Contos Fora Da Moda | https://www.baixelivros.com.br/literatura-brasileira/contos-fora-da-moda
+- [pending] 39. Contos Populares Do Brasil | https://www.baixelivros.com.br/literatura-brasileira/contos-populares-do-brasil
+- [pending] 40. A Escrava Isaura | https://www.baixelivros.com.br/literatura-brasileira/a-escrava-isaura
+- [pending] 41. Cacadas De Pedrinho | https://www.baixelivros.com.br/literatura-brasileira/cacadas-de-pedrinho
+- [pending] 42. O Caso Da Vara | https://www.baixelivros.com.br/literatura-brasileira/o-caso-da-vara
+- [pending] 43. Cancao Do Exilio | https://www.baixelivros.com.br/literatura-brasileira/cancao-do-exilio
+- [pending] 44. Clarice Lispector E A Descoberta Do Mundo | https://www.baixelivros.com.br/literatura-brasileira/clarice-lispector-e-a-descoberta-do-mundo
+- [pending] 45. Coletanea De Contos Cronicas | https://www.baixelivros.com.br/literatura-brasileira/coletanea-de-contos-cronicas
+- [pending] 46. Marques De Rabico | https://www.baixelivros.com.br/literatura-brasileira/marques-de-rabico
+- [pending] 47. O Saci | https://www.baixelivros.com.br/literatura-brasileira/o-saci
+- [pending] 48. O Sertanejo | https://www.baixelivros.com.br/literatura-brasileira/o-sertanejo
+- [pending] 49. A Alma Encantadora Das Ruas | https://www.baixelivros.com.br/literatura-brasileira/a-alma-encantadora-das-ruas
+- [pending] 50. Inocencia | https://www.baixelivros.com.br/literatura-brasileira/inocencia
+- [pending] 51. O Homem Que Sabia Javanes | https://www.baixelivros.com.br/literatura-brasileira/o-homem-que-sabia-javanes
+- [pending] 52. Clara Dos Anjos | https://www.baixelivros.com.br/literatura-brasileira/clara-dos-anjos
+- [pending] 53. Reliquias De Casa Velha | https://www.baixelivros.com.br/literatura-brasileira/reliquias-de-casa-velha
+- [pending] 54. O Moco Loiro | https://www.baixelivros.com.br/literatura-brasileira/o-moco-loiro
+- [pending] 55. O Espelho | https://www.baixelivros.com.br/literatura-brasileira/o-espelho
+- [pending] 56. Casa De Pensao | https://www.baixelivros.com.br/literatura-brasileira/casa-de-pensao
+- [pending] 57. O Ateneu | https://www.baixelivros.com.br/literatura-brasileira/o-ateneu
+- [pending] 58. As Joias Da Coroa | https://www.baixelivros.com.br/literatura-brasileira/as-joias-da-coroa
+- [pending] 59. Diario Intimo | https://www.baixelivros.com.br/literatura-brasileira/diario-intimo
+- [pending] 60. Cinco Minutos | https://www.baixelivros.com.br/literatura-brasileira/cinco-minutos
+- [pending] 61. Papeis Avulsos | https://www.baixelivros.com.br/literatura-brasileira/papeis-avulsos
+- [pending] 62. Historias Da Meia Noite | https://www.baixelivros.com.br/literatura-brasileira/historias-da-meia-noite
+- [pending] 63. Contos Fluminenses | https://www.baixelivros.com.br/literatura-brasileira/contos-fluminenses
+- [pending] 64. A Imprensa E O Dever Da Verdade | https://www.baixelivros.com.br/literatura-brasileira/a-imprensa-e-o-dever-da-verdade
+- [pending] 65. Um Apologo | https://www.baixelivros.com.br/literatura-brasileira/um-apologo
+- [pending] 66. Historias Sem Data | https://www.baixelivros.com.br/literatura-brasileira/historias-sem-data
+- [pending] 67. Ensaios Gracilianicos | https://www.baixelivros.com.br/literatura-brasileira/ensaios-gracilianicos
+- [pending] 68. Via Lactea | https://www.baixelivros.com.br/literatura-brasileira/via-lactea
+- [pending] 69. Contos Para Velhos | https://www.baixelivros.com.br/literatura-brasileira/contos-para-velhos
+- [pending] 70. Alma Inquieta Olavo Bilac | https://www.baixelivros.com.br/literatura-brasileira/alma-inquieta-olavo-bilac
+- [pending] 71. Contos Lima Barreto | https://www.baixelivros.com.br/literatura-brasileira/contos-lima-barreto
+- [pending] 72. Carolina | https://www.baixelivros.com.br/literatura-brasileira/carolina
+- [pending] 73. Eu E Outras Poesias | https://www.baixelivros.com.br/literatura-brasileira/eu-e-outras-poesias
+- [pending] 74. Pai Contra Mae | https://www.baixelivros.com.br/literatura-brasileira/pai-contra-mae
+- [pending] 75. Cartas Chilenas | https://www.baixelivros.com.br/literatura-brasileira/cartas-chilenas
+- [pending] 76. O Uraguai | https://www.baixelivros.com.br/literatura-brasileira/o-uraguai
+- [pending] 77. Ubirajara | https://www.baixelivros.com.br/literatura-brasileira/ubirajara
+- [pending] 78. A Pata Da Gazela | https://www.baixelivros.com.br/literatura-brasileira/a-pata-da-gazela
+- [pending] 79. Varias Historias | https://www.baixelivros.com.br/literatura-brasileira/varias-historias
+- [pending] 80. Suspiros Poeticos E Saudades | https://www.baixelivros.com.br/literatura-brasileira/suspiros-poeticos-e-saudades
+- [pending] 81. Luciola | https://www.baixelivros.com.br/literatura-brasileira/luciola
+- [pending] 82. Primeiros Cantos | https://www.baixelivros.com.br/literatura-brasileira/primeiros-cantos
+- [pending] 83. A Moreninha | https://www.baixelivros.com.br/literatura-brasileira/a-moreninha
+- [pending] 84. Ocidentais | https://www.baixelivros.com.br/literatura-brasileira/ocidentais
+- [pending] 85. A Carta De Pero Vaz De Caminha | https://www.baixelivros.com.br/literatura-brasileira/a-carta-de-pero-vaz-de-caminha
+- [pending] 86. O Coruja | https://www.baixelivros.com.br/literatura-brasileira/o-coruja
+- [pending] 87. A Causa Secreta | https://www.baixelivros.com.br/literatura-brasileira/a-causa-secreta
+- [pending] 88. Monteiro Lobato O Maravilhoso Universo Do Sitio | https://www.baixelivros.com.br/literatura-brasileira/monteiro-lobato-o-maravilhoso-universo-do-sitio
+- [pending] 89. Obras Seletas Rui Barbosa | https://www.baixelivros.com.br/literatura-brasileira/obras-seletas-rui-barbosa
+- [pending] 90. Noite Na Taverna | https://www.baixelivros.com.br/literatura-brasileira/noite-na-taverna
+- [pending] 91. Lira Dos Vinte Anos | https://www.baixelivros.com.br/literatura-brasileira/lira-dos-vinte-anos
+- [pending] 92. Berro De Fogo | https://www.baixelivros.com.br/literatura-brasileira/berro-de-fogo
+- [pending] 93. 100 Anos De Jorge Amado | https://www.baixelivros.com.br/literatura-brasileira/100-anos-de-jorge-amado
+- [pending] 94. Cronicas Do Cotidiano | https://www.baixelivros.com.br/literatura-brasileira/cronicas-do-cotidiano
+- [pending] 95. As Primaveras | https://www.baixelivros.com.br/literatura-brasileira/as-primaveras
+- [pending] 96. Senhora | https://www.baixelivros.com.br/literatura-brasileira/senhora
+- [pending] 97. O Abolicionismo | https://www.baixelivros.com.br/literatura-brasileira/o-abolicionismo
+- [pending] 98. Memorias De Um Sargento De Milicias | https://www.baixelivros.com.br/literatura-brasileira/memorias-de-um-sargento-de-milicias
+- [pending] 99. A Voz Da Esperanca | https://www.baixelivros.com.br/literatura-brasileira/a-voz-da-esperanca
+- [pending] 100. O Cortico | https://www.baixelivros.com.br/literatura-brasileira/o-cortico
+- [pending] 101. Triste Fim De Policarpo Quaresma | https://www.baixelivros.com.br/literatura-brasileira/triste-fim-de-policarpo-quaresma
+- [pending] 102. Ursula E Outras Obras | https://www.baixelivros.com.br/literatura-brasileira/ursula-e-outras-obras
+- [pending] 103. O Navio Negreiro E Vozes Dafrica | https://www.baixelivros.com.br/literatura-brasileira/o-navio-negreiro-e-vozes-dafrica
+- [pending] 104. Obras Completas Castro Alves | https://www.baixelivros.com.br/literatura-brasileira/obras-completas-castro-alves
+- [pending] 105. Espumas Flutuante | https://www.baixelivros.com.br/literatura-brasileira/espumas-flutuante
+- [pending] 106. O Garatuja | https://www.baixelivros.com.br/literatura-brasileira/o-garatuja
+- [pending] 107. Os Bruzundangas | https://www.baixelivros.com.br/literatura-brasileira/os-bruzundangas
+- [pending] 108. A Viuvinha | https://www.baixelivros.com.br/literatura-brasileira/a-viuvinha
+- [pending] 109. Iracema | https://www.baixelivros.com.br/literatura-brasileira/iracema
+- [pending] 110. Macunaima | https://www.baixelivros.com.br/literatura-brasileira/macunaima
+- [pending] 111. Obras Completas Machado De Assis | https://www.baixelivros.com.br/literatura-brasileira/obras-completas-machado-de-assis
+- [pending] 112. Oracao Aos Mocos | https://www.baixelivros.com.br/literatura-brasileira/oracao-aos-mocos
+- [pending] 113. O Alienista | https://www.baixelivros.com.br/literatura-brasileira/o-alienista
+- [pending] 114. Viagem | https://www.baixelivros.com.br/literatura-brasileira/viagem
+- [pending] 115. Contos Da Roca | https://www.baixelivros.com.br/literatura-brasileira/contos-da-roca
+- [pending] 116. A Casa Da Minha Vo | https://www.baixelivros.com.br/literatura-brasileira/a-casa-da-minha-vo
+- [pending] 117. Um Paraiso Perdido | https://www.baixelivros.com.br/literatura-brasileira/um-paraiso-perdido
+- [pending] 118. Canudos E Outros Temas | https://www.baixelivros.com.br/literatura-brasileira/canudos-e-outros-temas
+- [pending] 119. A Margem Da Historia | https://www.baixelivros.com.br/literatura-brasileira/a-margem-da-historia
+- [pending] 120. Luzia Homem | https://www.baixelivros.com.br/literatura-brasileira/luzia-homem
+- [pending] 121. O Velho Senado | https://www.baixelivros.com.br/literatura-brasileira/o-velho-senado
+- [pending] 122. Legado De Sangue | https://www.baixelivros.com.br/literatura-brasileira/legado-de-sangue
+- [pending] 123. Esau E Jaco Pdf | https://www.baixelivros.com.br/literatura-brasileira/esau-e-jaco-pdf
+- [pending] 124. Memorial De Aires Pdf | https://www.baixelivros.com.br/literatura-brasileira/memorial-de-aires-pdf
+- [pending] 125. Quincas Borba Pdf | https://www.baixelivros.com.br/literatura-brasileira/quincas-borba-pdf
+- [pending] 126. Casa Velha Pdf | https://www.baixelivros.com.br/literatura-brasileira/casa-velha-pdf
+- [pending] 127. Memorias Postumas De Bras Cubas | https://www.baixelivros.com.br/literatura-brasileira/memorias-postumas-de-bras-cubas
+- [pending] 128. Iaia Garcia | https://www.baixelivros.com.br/literatura-brasileira/iaia-garcia
+- [pending] 129. A Mao E A Luva | https://www.baixelivros.com.br/literatura-brasileira/a-mao-e-a-luva
+- [pending] 130. Helena | https://www.baixelivros.com.br/literatura-brasileira/helena
+- [pending] 131. Ressurreicao | https://www.baixelivros.com.br/literatura-brasileira/ressurreicao
+- [pending] 132. Os Sertoes | https://www.baixelivros.com.br/literatura-brasileira/os-sertoes
+- [pending] 133. Dom Casmurro | https://www.baixelivros.com.br/literatura-brasileira/dom-casmurro
