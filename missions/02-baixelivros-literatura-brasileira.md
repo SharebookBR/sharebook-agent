@@ -22,11 +22,11 @@ Formato preferido:
 - Critério de ordenação canônica: página crescente (1→12), mantendo a ordem de aparição na página (topo→baixo)
 - Total canônico: `133` livros
 - Status atual:
-- `3` como `done`
-- `130` como `pending`
+- `4` como `done`
+- `129` como `pending`
 - `0` como `source_blocked`
 - `0` como `retry_later`
-- Próximo item: `003. O Relogio De Ouro`
+- Próximo item: `004. Missa Do Galo`
 
 ## Regras
 
@@ -41,7 +41,7 @@ Formato preferido:
 
 - [done] 001. Historia Da Literatura Brasileira | https://www.baixelivros.com.br/literatura-brasileira/historia-da-literatura-brasileira | ebook publicado em 2026-04-12; id `019d8048-404d-7713-b057-5fed6454b2cf`; categoria `Conhecimento & Carreira`; família visual `foto realista encenada` (reuso de capa original ajustada para 600x900); macrofamília `foto realista`
 - [done] 002. Ao Correr Da Pena | https://www.baixelivros.com.br/literatura-brasileira/ao-correr-da-pena | ebook publicado em 2026-04-12; id `019d8063-aa3e-7288-9380-c0a34822db9c`; categoria `Drama > Drama em Narrativas Curtas`; família visual `foto realista encenada` (reuso de capa original ajustada para 600x900); macrofamília `foto realista`
-- [pending] 003. O Relogio De Ouro | https://www.baixelivros.com.br/literatura-brasileira/o-relogio-de-ouro
+- [done] 003. O Relogio De Ouro | https://www.baixelivros.com.br/literatura-brasileira/o-relogio-de-ouro | ebook publicado em 2026-04-12; id `019d807f-2e0a-72ef-a190-1b99df297e3b`; categoria `Drama > Drama em Narrativas Curtas`; família visual `foto realista encenada` (reuso de capa original ajustada para 600x900); macrofamília `foto realista`
 - [pending] 004. Missa Do Galo | https://www.baixelivros.com.br/literatura-brasileira/missa-do-galo
 - [pending] 005. O Guarani | https://www.baixelivros.com.br/literatura-brasileira/o-guarani
 - [pending] 006. O Moleque | https://www.baixelivros.com.br/literatura-brasileira/o-moleque
