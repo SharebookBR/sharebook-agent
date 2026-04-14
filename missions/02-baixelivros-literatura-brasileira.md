@@ -22,11 +22,11 @@ Formato preferido:
 - Critério de ordenação canônica: página crescente (1→12), mantendo a ordem de aparição na página (topo→baixo)
 - Total canônico: `133` livros
 - Status atual:
-- `7` como `done`
-- `125` como `pending`
+- `8` como `done`
+- `124` como `pending`
 - `0` como `source_blocked`
 - `1` como `retry_later`
-- Próximo item: `008. Grandeza`
+- Próximo item: `009. A Filha Do Barao`
 
 ## Regras
 
@@ -46,7 +46,7 @@ Formato preferido:
 - [done] 005. O Guarani | https://www.baixelivros.com.br/literatura-brasileira/o-guarani | ebook publicado em 2026-04-12; id `019d80b6-1170-709f-8235-38b9536a80f6`; categoria `Ficção > Aventura`; família visual `foto realista encenada` (reuso de capa original ajustada para 600x900); macrofamília `foto realista`
 - [done] 006. O Moleque | https://www.baixelivros.com.br/literatura-brasileira/o-moleque | ebook publicado em 2026-04-12; id `019d80d1-55b8-76d2-9816-5ca6f30aa093`; categoria `Drama > Drama de Crítica Social`; família visual `foto realista encenada` (reuso de capa original ajustada para 600x900); macrofamília `foto realista`; extractor `wp-json` falhou e houve fallback HTTP com downloadSimple + validação `%PDF`
 - [retry_later] 007. Poesia Completa | https://www.baixelivros.com.br/literatura-brasileira/poesia-completa | create falhou 2x com URLError SSL EOF no upload/cadastro; tentar novamente na próxima rodada
-- [pending] 008. Grandeza | https://www.baixelivros.com.br/literatura-brasileira/grandeza
+- [done] 008. Grandeza | https://www.baixelivros.com.br/literatura-brasileira/grandeza | ebook publicado em 2026-04-14; id `019d8daa-913c-736a-a5be-08d6d0f1e756`; categoria `Artes`; família visual `foto realista encenada` (reuso de capa original ajustada para 600x900 com título/autor visíveis); macrofamília `foto realista`; extractor `wp-json` falhou e houve fallback HTTP com downloadSimple + validação `%PDF`
 - [pending] 009. A Filha Do Barao | https://www.baixelivros.com.br/literatura-brasileira/a-filha-do-barao
 - [pending] 010. A Cartomante | https://www.baixelivros.com.br/literatura-brasileira/a-cartomante
 - [pending] 011. Um Cinturao | https://www.baixelivros.com.br/literatura-brasileira/um-cinturao
