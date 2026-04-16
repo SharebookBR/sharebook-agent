@@ -22,11 +22,11 @@ Formato preferido:
 - Critério de ordenação canônica: página crescente (1→12), mantendo a ordem de aparição na página (topo→baixo)
 - Total canônico: `133` livros
 - Status atual:
-- `8` como `done`
-- `124` como `pending`
+- `16` como `done`
+- `116` como `pending`
 - `0` como `source_blocked`
 - `1` como `retry_later`
-- Próximo item: `009. A Filha Do Barao`
+- Próximo item: `017. Contrabandista`
 
 ## Regras
 
@@ -47,14 +47,14 @@ Formato preferido:
 - [done] 006. O Moleque | https://www.baixelivros.com.br/literatura-brasileira/o-moleque | ebook publicado em 2026-04-12; id `019d80d1-55b8-76d2-9816-5ca6f30aa093`; categoria `Drama > Drama de Crítica Social`; família visual `foto realista encenada` (reuso de capa original ajustada para 600x900); macrofamília `foto realista`; extractor `wp-json` falhou e houve fallback HTTP com downloadSimple + validação `%PDF`
 - [retry_later] 007. Poesia Completa | https://www.baixelivros.com.br/literatura-brasileira/poesia-completa | create falhou 2x com URLError SSL EOF no upload/cadastro; tentar novamente na próxima rodada
 - [done] 008. Grandeza | https://www.baixelivros.com.br/literatura-brasileira/grandeza | ebook publicado em 2026-04-14; id `019d8daa-913c-736a-a5be-08d6d0f1e756`; categoria `Artes`; família visual `foto realista encenada` (reuso de capa original ajustada para 600x900 com título/autor visíveis); macrofamília `foto realista`; extractor `wp-json` falhou e houve fallback HTTP com downloadSimple + validação `%PDF`
-- [pending] 009. A Filha Do Barao | https://www.baixelivros.com.br/literatura-brasileira/a-filha-do-barao
-- [pending] 010. A Cartomante | https://www.baixelivros.com.br/literatura-brasileira/a-cartomante
-- [pending] 011. Um Cinturao | https://www.baixelivros.com.br/literatura-brasileira/um-cinturao
-- [pending] 012. O Minotauro | https://www.baixelivros.com.br/literatura-brasileira/o-minotauro
-- [pending] 013. Broqueis | https://www.baixelivros.com.br/literatura-brasileira/broqueis
-- [pending] 014. Vidas Secas | https://www.baixelivros.com.br/literatura-brasileira/vidas-secas
-- [pending] 015. Aritmetica Da Emilia | https://www.baixelivros.com.br/literatura-brasileira/aritmetica-da-emilia
-- [pending] 016. Peter Pan Monteiro Lobato | https://www.baixelivros.com.br/literatura-brasileira/peter-pan-monteiro-lobato
+- [done] 009. A Filha Do Barao | https://www.baixelivros.com.br/literatura-brasileira/a-filha-do-barao | ebook publicado em 2026-04-15; id `019d91fa-53bd-7069-89ec-bbc2316aadbe`; categoria `Drama > Drama de Crítica Social`; família visual `pintura a óleo clássica` (capa autoral DALL-E 3 600x900); macrofamília `pintura/ilustração pictórica`; extractor fallback HTTP com downloadSimple + validação `%PDF`
+- [done] 010. A Cartomante | https://www.baixelivros.com.br/literatura-brasileira/a-cartomante | ebook publicado em 2026-04-15; id `019d92df-9c1b-7197-be16-06ea95ed8e65`; categoria `Drama > Drama em Narrativas Curtas`; família visual `pintura a óleo clássica` (capa autoral DALL-E 3 600x900); macrofamília `pintura/ilustração pictórica`; extractor fallback HTTP com downloadSimple + validação `%PDF`
+- [done] 011. Um Cinturao | https://www.baixelivros.com.br/literatura-brasileira/um-cinturao | ebook publicado em 2026-04-16; id `019d93b2-210f-73f9-aba1-0c4bbb951435`; categoria `Drama > Drama Psicológico/Moral`; família visual `desenho à mão com lápis/tinta` (capa autoral DALL-E 3 600x900); macrofamília `desenho manual`; extractor fallback HTTP
+- [done] 012. O Minotauro | https://www.baixelivros.com.br/literatura-brasileira/o-minotauro | ebook publicado em 2026-04-16; id `019d93bb-b117-73cc-9bac-ad058b5cf38d`; categoria `Infantil/Juvenil`; família visual `cartaz gráfico modernista` (capa autoral DALL-E 3 600x900); macrofamília `gráfico`; PDF escaneado 34MB comprimido para 9.1MB; fonte alternativa UFSC após falha servidor original
+- [done] 013. Broqueis | https://www.baixelivros.com.br/literatura-brasileira/broqueis | ebook publicado em 2026-04-16; id `019d950e-5b17-746c-8b8d-0db3353d9e33`; categoria `Artes`; família visual `art nouveau/simbolista` (capa autoral DALL-E 3 600x900); macrofamília `ilustração pictórica`; extractor fallback HTTP
+- [done] 014. Vidas Secas | https://www.baixelivros.com.br/literatura-brasileira/vidas-secas | ebook publicado em 2026-04-16; id `019d965f-0c46-7c96-896d-31d7f64884a5`; categoria `Drama > Drama de Crítica Social`; família visual `realismo social/expressionista` (capa autoral DALL-E 3 600x900); macrofamília `pintura a óleo`; extractor fallback HTTP
+- [done] 015. Aritmetica Da Emilia | https://www.baixelivros.com.br/literatura-brasileira/aritmetica-da-emilia | ebook publicado em 2026-04-16; id `019d97b1-1cb9-7989-a6b1-56e724500e1f`; categoria `Infantil/Juvenil`; família visual `ilustração infantil brasileira anos 1930` (capa autoral DALL-E 3 600x900); macrofamília `ilustração aquarela`; extractor fallback HTTP
+- [done] 016. Peter Pan Monteiro Lobato | https://www.baixelivros.com.br/literatura-brasileira/peter-pan-monteiro-lobato | ebook publicado em 2026-04-16; id `019d9805-c357-784e-b409-6b469d687a2d`; categoria `Infantil/Juvenil`; família visual `reuso de capa original ajustada para 600x900`; macrofamília `foto/arte existente`; extractor fallback HTTP com downloadSimple + validação `%PDF`; tentativa de capa autoral bloqueada pelo safety, mantido reuso por baixo risco
 - [pending] 017. Contrabandista | https://www.baixelivros.com.br/literatura-brasileira/contrabandista
 - [pending] 018. Crisalidas | https://www.baixelivros.com.br/literatura-brasileira/crisalidas
 - [pending] 019. O Emprestimo | https://www.baixelivros.com.br/literatura-brasileira/o-emprestimo
