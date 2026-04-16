@@ -137,9 +137,12 @@ Heurística prática:
 
 ### Missões (fonte de verdade)
 - `sharebook-agent/missions/01-baixelivros-estrangeiros.md` — missão principal de ingestão (BaixeLivros, categoria estrangeiros).
+- `sharebook-agent/missions/02-baixelivros-literatura-brasileira.md` — ingestão de literatura brasileira clássica.
 - `sharebook-agent/ROADMAP.md` — visão macro e roadmap do produto.
+- `sharebook-agent/missions/06-fix-openclaw-dashboard.md` — debug e exposição do OpenClaw Control UI via Coolify + Traefik.
 - `sharebook-agent/missions/social/_plano.md` — frente social/distribuição.
 - `sharebook-agent/missions/escrever-livros/` — pipeline editorial e artefatos de livros.
+
 
 ### Matriz rápida: quando abrir o quê
 - Pedido "status" sem contexto -> `01-baixelivros-estrangeiros.md`.
