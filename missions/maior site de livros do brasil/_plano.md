@@ -211,6 +211,14 @@ Abrimos `Filosofia` seguindo a lógica correta:
 
 ---
 
+## 🐛 Tech Debt / Bugs (priorizar)
+
+- **API Category PUT bug**: endpoint `PUT /api/Category/{id}` retorna `AutoMapperMappingException`. Impede renomear categorias via API. Necessário corrigir mapeamento `Result<Category>` → `Category` no AutoMapper.
+- **API Book filter bug**: endpoint `GET /api/Book` com parâmetros `categoryId`, `title` etc. ignora filtros e retorna lista fixa (15 livros). Isso é comportamento esperado? Se sim, documentar; se não, corrigir.
+- **Ambiguous route**: `GET /api/Category/{id}` conflita com `GET /api/Category/{page}/{items}` causando `AmbiguousMatchException`. Corrigir routing.
+
+---
+
 ## 🧠 Resumo estratégico
 
 - Fase 1 → Curadoria com escala
