@@ -148,6 +148,7 @@ Heurística prática:
 - `sharebook-backend/` — backend .NET da API Sharebook (produção).
 - `sharebook-frontend/` — frontend Angular (produção).
 - `sharebook-agent/` — agentes, scripts, missões, skills (nossa automação).
+- `sharebook-ebook-importer/` — worker de importação de ebooks (SQLite + cron).
 - `sharebook-prototipo/` — protótipos HTML/CSS/JS rápidos (Netlify).
 
 **Nota:** alterações no `sharebook-backend` e `sharebook-frontend` exigem deploy via Coolify (push na branch monitorada).
