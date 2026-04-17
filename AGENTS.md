@@ -136,17 +136,17 @@ Heurística prática:
 - Se o índice estiver desatualizado, corrigir no mesmo ciclo (sem deixar pendência).
 
 ### Missões (fonte de verdade)
-- `sharebook-agent/missions/01-baixelivros-estrangeiros.md` — missão principal de ingestão (BaixeLivros, categoria estrangeiros).
-- `sharebook-agent/missions/02-baixelivros-literatura-brasileira.md` — ingestão de literatura brasileira clássica.
-- `sharebook-agent/ROADMAP.md` — visão macro e roadmap do produto.
-- `sharebook-agent/missions/06-fix-openclaw-dashboard.md` — debug e exposição do OpenClaw Control UI via Coolify + Traefik.
+- `sharebook-agent/missions/maior site de livros do brasil/_plano.md` — visão macro e roadmap.
+- `sharebook-agent/missions/maior site de livros do brasil/etapa 06 - tags.md` — sistema de tags.
 - `sharebook-agent/missions/social/_plano.md` — frente social/distribuição.
-- `sharebook-agent/missions/escrever-livros/` — pipeline editorial e artefatos de livros.
+- `sharebook-agent/missions/escrever-livros/` — artefatos de livros (PDFs, assets).
 
+### Missões concluídas (arquivadas em `missions/completed/`)
+- `01-baixelivros-estrangeiros.md`, `02-baixelivros-literatura-brasileira.md`, `automacao-baixelivros-worker-plano.md`, `etapa-02-reorganizar-categorias.md`, `etapa-03-cobertura-minima-por-categoria.md`, `cloud-para-devs.md`, `cloud-para-devs-manuscrito-v1.md`, `redes-neurais.md`, `redes-neurais-manuscrito-v1.md`.
 
 ### Matriz rápida: quando abrir o quê
-- Pedido "status" sem contexto -> `01-baixelivros-estrangeiros.md`.
-- Tema de roadmap/priorização -> `ROADMAP.md`.
+- Pedido "status" sem contexto -> estado do pipeline de importação (SQLite: done/waiting_editor/waiting_process/retry_later).
+- Tema de roadmap/priorização -> `maior site de livros do brasil/_plano.md`.
 - Tema social/divulgação -> `social/_plano.md`.
 - Tema escrita/edição/publicação -> `missions/escrever-livros/*`.
 - Importação de ebook -> `skills/sharebook-public-ebook-importer/SKILL.md`.
