@@ -144,6 +144,14 @@ Heurística prática:
 ### Missões concluídas (arquivadas em `missions/completed/`)
 - `01-baixelivros-estrangeiros.md`, `02-baixelivros-literatura-brasileira.md`, `automacao-baixelivros-worker-plano.md`, `etapa-02-reorganizar-categorias.md`, `etapa-03-cobertura-minima-por-categoria.md`, `cloud-para-devs.md`, `cloud-para-devs-manuscrito-v1.md`, `redes-neurais.md`, `redes-neurais-manuscrito-v1.md`, `03-refatoracao-categoria-artes.md`.
 
+### Repositórios (código-fonte)
+- `sharebook-backend/` — backend .NET da API Sharebook (produção).
+- `sharebook-frontend/` — frontend Angular (produção).
+- `sharebook-agent/` — agentes, scripts, missões, skills (nossa automação).
+- `sharebook-prototipo/` — protótipos HTML/CSS/JS rápidos (Netlify).
+
+**Nota:** alterações no `sharebook-backend` e `sharebook-frontend` exigem deploy via Coolify (push na branch monitorada).
+
 ### Matriz rápida: quando abrir o quê
 - Pedido "status" sem contexto -> estado do pipeline de importação (SQLite: done/waiting_editor/waiting_process/retry_later).
 - Tema de roadmap/priorização -> `maior site de livros do brasil/_plano.md`.
