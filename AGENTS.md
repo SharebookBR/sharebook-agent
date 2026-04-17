@@ -139,6 +139,7 @@ Heurística prática:
 - `sharebook-agent/missions/maior site de livros do brasil/_plano.md` — visão macro e roadmap.
 - `sharebook-agent/missions/maior site de livros do brasil/etapa 06 - tags.md` — sistema de tags.
 - `sharebook-agent/missions/social/_plano.md` — frente social/distribuição.
+- `sharebook-agent/missions/03-refatoracao-categoria-artes.md` — refatoração da categoria Artes para Poesia & Artes com subcategorias.
 - `sharebook-agent/missions/escrever-livros/` — artefatos de livros (PDFs, assets).
 
 ### Missões concluídas (arquivadas em `missions/completed/`)
