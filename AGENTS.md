@@ -139,11 +139,10 @@ Heurística prática:
 - `sharebook-agent/missions/maior site de livros do brasil/_plano.md` — visão macro e roadmap.
 - `sharebook-agent/missions/maior site de livros do brasil/etapa 06 - tags.md` — sistema de tags.
 - `sharebook-agent/missions/social/_plano.md` — frente social/distribuição.
-- `sharebook-agent/missions/03-refatoracao-categoria-artes.md` — refatoração da categoria Artes para Poesia & Artes com subcategorias.
 - `sharebook-agent/missions/escrever-livros/` — artefatos de livros (PDFs, assets).
 
 ### Missões concluídas (arquivadas em `missions/completed/`)
-- `01-baixelivros-estrangeiros.md`, `02-baixelivros-literatura-brasileira.md`, `automacao-baixelivros-worker-plano.md`, `etapa-02-reorganizar-categorias.md`, `etapa-03-cobertura-minima-por-categoria.md`, `cloud-para-devs.md`, `cloud-para-devs-manuscrito-v1.md`, `redes-neurais.md`, `redes-neurais-manuscrito-v1.md`.
+- `01-baixelivros-estrangeiros.md`, `02-baixelivros-literatura-brasileira.md`, `automacao-baixelivros-worker-plano.md`, `etapa-02-reorganizar-categorias.md`, `etapa-03-cobertura-minima-por-categoria.md`, `cloud-para-devs.md`, `cloud-para-devs-manuscrito-v1.md`, `redes-neurais.md`, `redes-neurais-manuscrito-v1.md`, `03-refatoracao-categoria-artes.md`.
 
 ### Matriz rápida: quando abrir o quê
 - Pedido "status" sem contexto -> estado do pipeline de importação (SQLite: done/waiting_editor/waiting_process/retry_later).
