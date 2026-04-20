@@ -13,6 +13,7 @@ Usar cron Linux aqui é escolha de custo, não acidente. Tratar como infra local
 2. Operar a partir de `sharebook-ebook-importer/setup-importer-cron.sh`.
 3. Antes de instalar, validar:
    - `python3` disponível
+   - `cron` ou `crond` disponível
    - `crontab` disponível
    - `flock` disponível
    - arquivo de env escolhido existe (`.env.postgres` por padrão)
@@ -26,6 +27,13 @@ Usar cron Linux aqui é escolha de custo, não acidente. Tratar como infra local
 7. Se a imagem do OpenClaw for atualizada, reaplicar o setup pelo script e validar a linha instalada.
 
 ## Comandos canônicos
+
+Bootstrap do pacote no Debian quando necessário:
+
+```bash
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install -y cron
+```
 
 Instalar com frequência padrão de 30 min:
 
@@ -46,6 +54,13 @@ Remover a entrada gerenciada:
 ```bash
 cd /data/workspace/sharebook-ebook-importer
 bash setup-importer-cron.sh remove
+```
+
+Subir só o daemon de cron:
+
+```bash
+cd /data/workspace/sharebook-ebook-importer
+bash setup-importer-cron.sh start-daemon
 ```
 
 Ver status local:
