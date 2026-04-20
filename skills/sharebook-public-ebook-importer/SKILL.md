@@ -32,6 +32,12 @@ Regras curtas:
 - `error` não é lixeira semântica. Se o caso já couber em `retry_later`, `source_blocked` ou `duplicate`, usar a categoria correta.
 - Se um item estava `waiting_process` mas se revelar incompleto editorialmente, devolver para `waiting_editor` ou `editing` em vez de mascarar o problema.
 
+## Sinergia com outra skill
+
+- Para preparação editorial, categoria, autor e sinopse premium, usar junto a skill `sharebook-book-preparer`.
+- Regra prática: `waiting_editor` e `editing` são território natural da `sharebook-book-preparer`; `waiting_process`, `processing`, `duplicate`, `done` e falhas técnicas são território natural desta skill.
+- Se o worker ou a importação encontrarem lacuna editorial, fazer o handoff explícito para `sharebook-book-preparer` em vez de improvisar cadastro meia-boca.
+
 ## Workflow
 
 1. Tratar a fonte como fila sequencial, não como caça ao tesouro.
