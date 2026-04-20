@@ -35,7 +35,7 @@ apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y cron
 ```
 
-Instalar com frequência padrão de 30 min:
+Instalar com frequência padrão de 30 min, apenas de 00:00 até 08:00 no horário de São Paulo:
 
 ```bash
 cd /data/workspace/sharebook-ebook-importer
@@ -46,7 +46,7 @@ Instalar com cron customizado:
 
 ```bash
 cd /data/workspace/sharebook-ebook-importer
-CRON_SCHEDULE="*/15 * * * *" bash setup-importer-cron.sh install
+CRON_TZ=America/Sao_Paulo CRON_SCHEDULE="*/15 0-8 * * *" bash setup-importer-cron.sh install
 ```
 
 Remover a entrada gerenciada:
