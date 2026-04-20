@@ -12,6 +12,26 @@ Importar pouco e bem. Esta skill existe para transformar um livro público/gratu
 - Missão principal única desta automação: `sharebook-agent/missions/02-baixelivros-literatura-brasileira.md`.
 - Regra operacional: não usar nenhuma outra missão como referência durante a execução desta skill.
 
+## Status canônico do pipeline
+
+Usar estes estados como linguagem oficial do importer. Não inventar variações sem necessidade.
+
+- `waiting_editor` → ainda não planejado
+- `editing` → alguém está preparando editorialmente
+- `waiting_process` → pronto para worker
+- `processing` → worker pegou
+- `done` → publicado com sucesso
+- `retry_later` → falha temporária
+- `source_blocked` → fonte inviável
+- `duplicate` → resolvido por já existir
+- `error` → inconsistência/erro inesperado que exige revisão
+
+Regras curtas:
+
+- `duplicate` não é `done`; é resolvido, mas por motivo diferente.
+- `error` não é lixeira semântica. Se o caso já couber em `retry_later`, `source_blocked` ou `duplicate`, usar a categoria correta.
+- Se um item estava `waiting_process` mas se revelar incompleto editorialmente, devolver para `waiting_editor` ou `editing` em vez de mascarar o problema.
+
 ## Workflow
 
 1. Tratar a fonte como fila sequencial, não como caça ao tesouro.
