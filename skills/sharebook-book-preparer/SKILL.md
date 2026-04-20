@@ -2,7 +2,7 @@
 
 **Descrição:** Curador/preparador de livros para o pipeline de importação do ShareBook. Lê fontes com atenção, valida metadados, escolhe categorias apropriadas e escreve sinopses premium (3 parágrafos) combinando informação factual com contexto histórico/literário.
 
-**Quando usar:** Sempre que um livro precisa ser preparado para importação no ShareBook, especialmente para itens ainda não planejados editorialmente ou que precisem revisão antes do worker publicar.
+**Quando usar:** Sempre que um livro precisa ser preparado para importação no ShareBook, especialmente para itens em `waiting_editor`, `editing` ou que precisem voltar da fila técnica para revisão editorial.
 
 ## Sinergia com outra skill
 
@@ -43,7 +43,7 @@ curl -s -H "Authorization: Bearer $TOKEN" -H "x-requested-with: web" \
 
 ### 2. Buscar registros no PostgreSQL
 ```bash
-# Buscar itens com plan_status='draft' ou que precisam revisão
+# Buscar itens em waiting_editor/editing ou com lacuna editorial
 python3 -c "
 import psycopg2
 import os
@@ -62,12 +62,11 @@ cur.execute("""
     planned_category_id,
     planned_synopsis,
     source_url,
-    plan_status
+    status
   FROM importer.queue_items 
-  WHERE plan_status = 'draft' 
-    OR (planned_author IS NULL AND author IS NOT NULL)
-    OR (planned_synopsis IS NULL OR planned_synopsis = '')
-  ORDER BY id
+  WHERE status IN ('waiting_editor', 'editing', 'error')
+     OR (status = 'waiting_process' AND (planned_author IS NULL OR planned_synopsis IS NULL OR planned_synopsis = ''))
+  ORDER BY position
   LIMIT 5
 """)
 
@@ -175,7 +174,7 @@ cur.execute("""
     planned_author = %s,
     planned_category_id = %s,
     planned_synopsis = %s,
-    plan_status = 'ready',
+    status = 'waiting_process',
     updated_at = NOW()
   WHERE id = %s
 """, (autor, categoria, sinopse, item_id))
@@ -190,7 +189,7 @@ conn.close()
 - `planned_author`: Autor correto (da fonte)
 - `planned_category_id`: ID da categoria folha escolhida
 - `planned_synopsis`: Sinopse sexy de 3 parágrafos
-- `plan_status`: Mudar para `'ready'` quando completo
+- `status`: usar `editing` enquanto estiver trabalhando e fechar em `waiting_process` quando completar
 - `updated_at`: Atualizar timestamp automaticamente
 
 ### 7. Registrar decisões (Opcional mas recomendado)
@@ -234,7 +233,7 @@ Manter breve registro no `metadata_json` ou em log:
    UPDATE importer.queue_items SET
      planned_synopsis = 'SINOPSE_PREMIUM...',
      metadata_json = '{"wikipedia": true, "crime_real": "Questão Capistrano 1876"}',
-     plan_status = 'ready',
+     status = 'waiting_process',
      updated_at = NOW()
    WHERE id = ID_DO_ITEM
    ```
@@ -254,7 +253,7 @@ WHERE id = ID_DO_ITEM
 
 ## Checklist de Qualidade
 
-Antes de marcar como `ready`:
+Antes de marcar como `waiting_process`:
 - [ ] Fonte lida e validada
 - [ ] Título/autor conferidos com fonte
 - [ ] Categoria é folha (não tem children)

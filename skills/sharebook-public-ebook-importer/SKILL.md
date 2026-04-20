@@ -42,14 +42,14 @@ Regras curtas:
 
 1. Tratar a fonte como fila sequencial, não como caça ao tesouro.
 2. Ler [`baixelivros.md`](fontes/baixelivros.md), que é a fonte da verdade da fila sequencial; não reler a última sessão episódica para esse fluxo.
-3. Escolher sempre o primeiro item marcado como `pending` em [`baixelivros.md`](fontes/baixelivros.md).
+3. Escolher sempre o primeiro item marcado como `waiting_process` no Postgres do importer. A missão markdown serve de referência de ordem, não de estado operacional canônico.
 4. Extrair metadados com [workflow.md](references/workflow.md) e `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_source_extract.py`.
 5. Se o extractor falhar em `wp-json`, aplicar fallback HTTP direto na página:
    - extrair `title`, `author`, `cover` e URL real de download via `downloadSimple('...')`
    - baixar o arquivo com headers de navegador (mínimo: `User-Agent`, `Accept`, `Referer`)
    - validar magic bytes `%PDF` (não confiar só em extensão `.pdf`)
    - se vier HTML/redirect anti-bot sem PDF válido, marcar `source_blocked` e seguir
-6. Se a fonte estiver quebrada, o PDF vier errado ou o cadastro já existir em produção, marcar o item com o status correto na memória e seguir imediatamente para o próximo `pending`.
+6. Se a fonte estiver quebrada, o PDF vier errado ou o cadastro já existir em produção, marcar o item com o status correto no Postgres e seguir imediatamente para o próximo `waiting_process`.
 7. Tratar a capa como ativo de vitrine e otimização de custo.
    - **Padrão econômico:** reutilizar capa existente da internet quando houver imagem boa, legível em miniatura e com risco jurídico aceitável para o contexto.
    - **Fallback premium:** gerar capa autoral quando não houver capa adequada (qualidade baixa, resolução ruim, visual fraco, ou incerteza de uso).
@@ -69,13 +69,14 @@ Regras curtas:
     - inglês só entra como **exceção formal** com aprovação explícita do Raffa para aquele título
     - sem aprovação explícita, não cadastrar nem aprovar título em inglês
 19. Cadastrar e aprovar com `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_book.py create --approve`, preferindo `--synopsis-file` em UTF-8 para evitar caracteres quebrados no Windows.
-20. Atualizar a memória da automação na mesma rodada:
+20. Atualizar o status canônico na mesma rodada:
     - item publicado vira `done`
-    - duplicata vira `done` se o livro já existir em produção
+    - duplicata vira `duplicate`
     - problema da fonte vira `source_blocked`
-    - bloqueio por idioma vira `language_blocked`
     - problema local temporário vira `retry_later`
-    - se o `create` cair duas vezes seguidas com aborto de conexão durante upload de PDF grande (ex.: `WinError 10053`), marcar `retry_later` com nota curta e seguir para o próximo `pending`
+    - lacuna editorial volta para `waiting_editor` ou `editing`
+    - inconsistência inesperada vira `error`
+    - se o `create` cair duas vezes seguidas com aborto de conexão durante upload de PDF grande (ex.: `WinError 10053`), marcar `retry_later` com nota curta e seguir para o próximo `waiting_process`
 21. Ler o rastro da execução e transformar qualquer dor recorrente em melhoria concreta da skill ou dos scripts.
 
 ## Regra de variedade visual e apelo visual
