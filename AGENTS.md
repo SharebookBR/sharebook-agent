@@ -151,6 +151,17 @@ If nothing relevant → `HEARTBEAT_OK`
 - Se o `sharebook-ebook-importer` usar cron Linux dentro do container, manter o setup **reidempotente e documentado** no próprio repositório; não depender de estado manual perdido no update.
 - `/admin/importer` é painel operacional da fila do `sharebook-ebook-importer`, não tela genérica. A fonte real são `importer.sources`, `importer.queue_items` e `importer.runs`; lista de itens deve ser paginada server-side e renderizada como cards compactos responsivos, não tabela hostil no celular.
 
+## Formatação no WhatsApp
+
+- Para quadros numéricos, status operacionais e listas alinhadas no WhatsApp, preferir **bloco de código** para forçar fonte monoespaçada.
+- Tabelas markdown comuns no WhatsApp são instáveis, então usar bloco de código quando alinhamento visual importar.
+- Formato com pontinhos entre label e status é aprovado pelo Raffa e pode ser usado em checklists/status, por exemplo:
+  ```text
+  Tarefa 1 ............ done
+  Tarefa 2 ............ todo
+  Tarefa 3 ........ canceled
+  ```
+
 ---
 
 # 🧠 Autonomia
