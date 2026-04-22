@@ -26,10 +26,14 @@ Não precisa preservar categorias só porque "faz sentido" teoricamente.
      - moral/ético
      - trágico
      - satírico/irônico
+     - comédia
      - aventura
      - fantasia
      - etc.
    - Evitar categorias baseadas só em forma, como “narrativas curtas”, “dramaturgia”, “peça”, quando isso não ajuda a descoberta.
+   - Regra útil validada:
+     - `Drama Satírico / Irônico` = sátira, crítica, acidez, ironia social ou política
+     - `Ficção > Comédia` = leitura leve, espirituosa, humor relacional, prazer de leitura mais solto
 
 3. **Amor é território protegido**
    - A categoria raiz `Amor` tem prioridade como decisão de negócio.
@@ -96,6 +100,20 @@ Evitar subcategoria baseada só em forma quando o objetivo é descoberta, por ex
 - peça teatral
 
 Só usar se houver valor claro para a navegação real do usuário.
+
+### Comédia vs Drama Satírico / Irônico
+Usar esta distinção quando houver dúvida:
+- **`Ficção > Comédia`**
+  - humor leve
+  - mal-entendidos
+  - relações humanas
+  - ironia suave
+  - tom mais agradável ou agridoce
+- **`Drama > Drama Satírico / Irônico`**
+  - crítica de costumes
+  - sátira social/política
+  - ironia mais ácida
+  - humor como ataque, desconforto ou corrosão
 
 ### Quando escalar em vez de mover
 Escalar se houver:
