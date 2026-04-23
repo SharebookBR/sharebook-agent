@@ -208,6 +208,7 @@ If nothing relevant → `HEARTBEAT_OK`
 - `sharebook-agent/scripts/sharebook_prod_pg_ro_query_direct.py` — query direta read-only no Postgres de produção (padrão diário; sem SSH). ( avisar o raffa se não funcionar. ele vai dar uma permissão de rede )
 - `sharebook-agent/scripts/sharebook_prod_pg_rw_exec.py` — executor SQL write-controlado em produção (usar só com autorização explícita, com transação/validação).
 - `sharebook-agent/scripts/vps_ssh.py` — utilitário de acesso/automação SSH VPS.
+- `sharebook-agent/scripts/format_two_arrays_whatsapp.py` — formata duas colunas com pontilhado para WhatsApp; default operacional `max_chars=28`.
 
 ### Prototipação rápida (Netlify)
 - Pasta oficial de protótipo rápido: `sharebook-prototipo/` (HTML/CSS/JS puro).
