@@ -188,16 +188,16 @@ If nothing relevant → `HEARTBEAT_OK`
 - `sharebook-agent/missions/escrever-livros/` — artefatos de livros (PDFs, assets).
 
 ### Skills
-- `sharebook-agent/skills/sharebook-master-playbook.md` — playbook geral do ecossistema Sharebook. Usar quando a tarefa é ampla, mistura produto/operação/processo, ou quando não houver skill mais específica.
-- `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md` — fluxo de ingestão de ebooks públicos. Usar para importar acervo, extrair metadados/PDF, depurar fila, fontes e worker do importer.
-- `sharebook-agent/skills/sharebook-physical-book-importer/SKILL.md` — fluxo de livros físicos. Usar para cadastro/importação de livros físicos, normalmente quando a origem não é ebook público.
-- `sharebook-agent/skills/sharebook-ux-reviewer/SKILL.md` — revisão crítica de UX orientada a conversão e clareza. Usar para auditar telas, fluxos, copy, hierarquia visual e fricção de uso.
-- `sharebook-agent/skills/create-book.md` — produção de livro/PDF e seus artefatos. Usar para escrever, estruturar, diagramar, revisar ou gerar assets de livro.
-- `sharebook-agent/skills/backend.md` — mudanças no backend Sharebook. Usar para API, regras de negócio, endpoints, DTOs, queries, persistência e integrações do backend.
-- `sharebook-agent/skills/coolify-vps.md` — operação de VPS e deploy via Coolify. Usar para infra, container, variáveis, restart, diagnóstico operacional e hardening prático do ambiente.
-- `sharebook-agent/skills/web-design-reviewer/SKILL.md` — revisão de design web com foco visual. Usar quando o problema principal for layout, estética, responsividade e consistência visual.
-- `sharebook-agent/skills/sharebook-category-organizer/SKILL.md` — organização taxonômica do catálogo. Usar para escolher categoria folha, corrigir árvore, evitar categoria genérica e melhorar classificação.
-- `sharebook-agent/skills/sharebook-postgres-ro/SKILL.md` — acesso read-only ao Postgres de produção. Usar para diagnóstico, consultas, validação de pipeline e conferência de estado sem alterar dados.
+- `sharebook-agent/skills/sharebook-master-playbook.md` — playbook tático transversal do projeto, com princípios, prioridades, regras por área e armadilhas recorrentes. Usar antes de mexer em produção, quando a tarefa cruza múltiplas áreas, há risco de repetir erro, ou o fluxo oficial não está claro.
+- `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md` — importar ebooks públicos/gratuitos com fila, validação de PDF, checagem de duplicidade, capa, categoria, sinopse e aprovação em produção. Usar ao espelhar catálogos públicos, processar itens da fila de ebooks, cadastrar/aprovar ebook e tratar bloqueios técnicos ou editoriais.
+- `sharebook-agent/skills/sharebook-physical-book-importer/SKILL.md` — cadastrar livros físicos no Sharebook usando foto da capa, pesquisa pública, sinopse editorial, frete e API de produção. Usar ao importar/cadastrar livro impresso, definir categoria folha, informar frete e aprovar o exemplar em produção.
+- `sharebook-agent/skills/sharebook-ux-reviewer/SKILL.md` — auditar UX, UI e vocabulário do Sharebook. Usar ao revisar frontend, emails, textos da API ou pedir revisão crítica de design e copy.
+- `sharebook-agent/skills/create-book.md` — transformar manuscrito em livro digital apresentável, com capa, HTML/CSS e PDF final. Usar para criar, diagramar ou fechar um livro a partir de material bruto.
+- `sharebook-agent/skills/backend.md` — guiar mudanças no `sharebook-backend`, especialmente EF Core, migrations, deploy e validação. Usar em alterações de entidade/API, bugs de startup, migrations e falhas de deploy.
+- `sharebook-agent/skills/coolify-vps.md` — playbook de operação e diagnóstico do VPS com Coolify. Usar para investigar lentidão, saúde de containers, limites de recursos e consultas no Postgres da app.
+- `sharebook-agent/skills/web-design-reviewer/SKILL.md` — revisar visualmente sites e corrigir problemas de UI/layout no código-fonte. Usar para review de design, responsividade, acessibilidade visual e quebra de layout em sites rodando.
+- `sharebook-agent/skills/sharebook-category-organizer/SKILL.md` — reorganizar categorias e subcategorias do Sharebook com foco em descoberta editorial. Usar para repensar taxonomia, dividir categorias lotadas, mapear livros para destinos melhores e migrar livros em lote.
+- `sharebook-agent/skills/sharebook-postgres-ro/SKILL.md` — fazer consultas read-only no Postgres de produção do Sharebook com scripts oficiais. Usar para métricas, top lists, auditoria, inspeção de schema e diagnósticos de dados sem alterar produção.
 
 ### Scripts operacionais
 - `sharebook-agent/scripts/sharebook_prod_book.py` — find/create/update/delete/approve em produção.
