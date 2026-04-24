@@ -188,16 +188,16 @@ If nothing relevant → `HEARTBEAT_OK`
 - `sharebook-agent/missions/escrever-livros/` — artefatos de livros (PDFs, assets).
 
 ### Skills
-- `sharebook-agent/skills/sharebook-master-playbook.md`
-- `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md`
-- `sharebook-agent/skills/sharebook-physical-book-importer/SKILL.md`
-- `sharebook-agent/skills/sharebook-ux-reviewer/SKILL.md`
-- `sharebook-agent/skills/create-book.md`
-- `sharebook-agent/skills/backend.md`
-- `sharebook-agent/skills/coolify-vps.md`
-- `sharebook-agent/skills/web-design-reviewer/SKILL.md`
-- `sharebook-agent/skills/sharebook-category-organizer/SKILL.md`
-- `sharebook-agent/skills/sharebook-postgres-ro/SKILL.md`
+- `sharebook-agent/skills/sharebook-master-playbook.md` — playbook geral do ecossistema Sharebook. Usar quando a tarefa é ampla, mistura produto/operação/processo, ou quando não houver skill mais específica.
+- `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md` — fluxo de ingestão de ebooks públicos. Usar para importar acervo, extrair metadados/PDF, depurar fila, fontes e worker do importer.
+- `sharebook-agent/skills/sharebook-physical-book-importer/SKILL.md` — fluxo de livros físicos. Usar para cadastro/importação de livros físicos, normalmente quando a origem não é ebook público.
+- `sharebook-agent/skills/sharebook-ux-reviewer/SKILL.md` — revisão crítica de UX orientada a conversão e clareza. Usar para auditar telas, fluxos, copy, hierarquia visual e fricção de uso.
+- `sharebook-agent/skills/create-book.md` — produção de livro/PDF e seus artefatos. Usar para escrever, estruturar, diagramar, revisar ou gerar assets de livro.
+- `sharebook-agent/skills/backend.md` — mudanças no backend Sharebook. Usar para API, regras de negócio, endpoints, DTOs, queries, persistência e integrações do backend.
+- `sharebook-agent/skills/coolify-vps.md` — operação de VPS e deploy via Coolify. Usar para infra, container, variáveis, restart, diagnóstico operacional e hardening prático do ambiente.
+- `sharebook-agent/skills/web-design-reviewer/SKILL.md` — revisão de design web com foco visual. Usar quando o problema principal for layout, estética, responsividade e consistência visual.
+- `sharebook-agent/skills/sharebook-category-organizer/SKILL.md` — organização taxonômica do catálogo. Usar para escolher categoria folha, corrigir árvore, evitar categoria genérica e melhorar classificação.
+- `sharebook-agent/skills/sharebook-postgres-ro/SKILL.md` — acesso read-only ao Postgres de produção. Usar para diagnóstico, consultas, validação de pipeline e conferência de estado sem alterar dados.
 
 ### Scripts operacionais
 - `sharebook-agent/scripts/sharebook_prod_book.py` — find/create/update/delete/approve em produção.
