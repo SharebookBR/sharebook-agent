@@ -149,6 +149,7 @@ If nothing relevant → `HEARTBEAT_OK`
 - Validar fonte antes de confiar
 - As pastas de projeto em `/data/workspace/` (incluindo `sharebook-ebook-importer/`, `sharebook-agent/` e afins) estão em volume persistente e sobrevivem a update de imagem do OpenClaw.
 - Se o `sharebook-ebook-importer` usar cron Linux dentro do container, manter o setup **reidempotente e documentado** no próprio repositório; não depender de estado manual perdido no update.
+- `/admin/importer` é painel operacional da fila do `sharebook-ebook-importer`, não tela genérica. A fonte real são `importer.sources`, `importer.queue_items` e `importer.runs`; lista de itens deve ser paginada server-side e renderizada como cards compactos responsivos, não tabela hostil no celular.
 
 ---
 

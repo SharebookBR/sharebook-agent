@@ -3,20 +3,23 @@
 Checkpoint oficial da consolidação de memória do projeto.
 
 ## Último dream
-- Data: `2026-04-05`
+- Data: `2026-04-24`
 - Tipo: `dream incremental`
-- Última memória absorvida: `C:\REPOS\SHAREBOOK\sharebook-agent\sessions\2026-04-02-respiro-na-biblioteca.md`
-- Total de memórias lidas: `todas as memórias episódicas criadas entre 2026-03-30 e 2026-04-02`
+- Última memória absorvida: `C:\REPOS\SHAREBOOK\sharebook-agent\sessions\2026-04-10-netlify-cli-via-npmmirror.md`
+- Total de memórias lidas: `nenhuma memória episódica nova além da auditoria do intervalo desde 2026-04-10`
 
 ## Consolidação produzida
-- Promovido para [`C:/REPOS/SHAREBOOK/sharebook-agent/skills/sharebook-master-playbook.md`](C:/REPOS/SHAREBOOK/sharebook-agent/skills/sharebook-master-playbook.md):
-  - caminhos atualizados após a centralização operacional em `sharebook-agent/`
-- Promovido para [`C:/REPOS/SHAREBOOK/AGENTS.md`](C:/REPOS/SHAREBOOK/AGENTS.md):
-  - caminhos e rituais alinhados à nova topologia em `sharebook-agent/`
-  - regra explícita de que `sharebook-agent/` virou a casa padrão da memória operacional
+- A janela auditada permaneceu estável e não apresentou memória episódica nova de trabalho para absorver.
+- O material transversal da última janela consolidada já havia sido promovido durante as próprias sessões, então não foi necessário subir regra nova adicional neste ciclo.
+- Mantidas como memória útil já consolidada:
+  - heurística do `.env` do OpenClaw no volume Docker correto do host
+  - regra de paginação server-side com `summary` para listas administrativas em escala
+  - fluxo editorial `create-book` e critério de qualidade para capas/artefatos visuais
+  - exigência prática de subcategoria real em `Tecnologia`
 
 ## Próximo dream
-- Começar lendo apenas as memórias criadas depois de `C:\REPOS\SHAREBOOK\sharebook-agent\sessions\2026-04-02-respiro-na-biblioteca.md`.
+- Começar lendo apenas as memórias criadas depois de `C:\REPOS\SHAREBOOK\sharebook-agent\sessions\2026-04-10-netlify-cli-via-npmmirror.md`.
+- Ignorar os próprios artefatos de `dream` como fonte de memória episódica de trabalho, salvo se trouxerem alguma contradição operacional real.
 - Verificar se houve contradição nova entre memórias, skills, scripts, `AGENTS.md` e playbook mestre.
 - Promover apenas o que for recorrente, transversal ou estrutural.
 
