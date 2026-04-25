@@ -7,10 +7,15 @@ description: Importa livros digitais de domínio público ou gratuitos para o Sh
 
 Importar pouco e bem. Esta skill existe para transformar um livro público/gratuito em um ebook aprovado no Sharebook sem improvisar em produção.
 
-## Missão principal ativa (BaixeLivros)
 
-- Missão principal única desta automação: `sharebook-agent/missions/02-baixelivros-literatura-brasileira.md`.
-- Regra operacional: não usar nenhuma outra missão como referência durante a execução desta skill.
+## Guardrails de conexão antes de operar
+
+Antes de qualquer ação no importer:
+
+- validar `IMPORTER_DB_DSN` cedo
+- se a senha tiver caracteres especiais (`%`, `#`, `@`, `:`, `/`), exigir URL encoding
+- se o CLI reclamar que faltam `importer.queue_items`, `importer.sources` ou `importer.runs`, a conexão está no banco errado
+- não seguir com diagnóstico em cima de schema `public` achando que a fila sumiu
 
 ## Status canônico do pipeline
 
