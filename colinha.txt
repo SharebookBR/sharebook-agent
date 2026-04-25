@@ -1,0 +1,101 @@
+curl ^"https://api.sharebook.com.br/api/Operations/ImporterDashboard^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7^" ^
+  -H ^"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0ODFkNDcyNTA0MDc0YmU5YTMzMzAzMjBlZGVjYTViMSIsInVuaXF1ZV9uYW1lIjoiOWZmYzdkNjAtMWYyYS00N2JmLTliYmUtZDllNjlhYzQ4ODU5Iiwicm9sZSI6IkFkbWluaXN0cmF0b3IiLCJuYmYiOjE3NzcwNjk4MzYsImV4cCI6MTc3NzE1NjIzNiwiaWF0IjoxNzc3MDY5ODM2LCJpc3MiOiJTaGFyZWJvb2siLCJhdWQiOiJTaGFyZUJvb2tBdWRpZW5jZSJ9.skMH2nRRNAK_6_Pyv8_KW8trn05ArgPPhjZpXCP6MYs^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Origin: http://localhost:4200^" ^
+  -H ^"Referer: http://localhost:4200/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: cross-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Google Chrome^\^";v=^\^"147^\^", ^\^"Not.A/Brand^\^";v=^\^"8^\^", ^\^"Chromium^\^";v=^\^"147^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+
+
+curl ^"https://api.sharebook.com.br/api/Operations/ImporterItems?sourceId=2^&page=1^&pageSize=50^" ^
+  -H ^"Accept: application/json, text/plain, */*^" ^
+  -H ^"Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7^" ^
+  -H ^"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0ODFkNDcyNTA0MDc0YmU5YTMzMzAzMjBlZGVjYTViMSIsInVuaXF1ZV9uYW1lIjoiOWZmYzdkNjAtMWYyYS00N2JmLTliYmUtZDllNjlhYzQ4ODU5Iiwicm9sZSI6IkFkbWluaXN0cmF0b3IiLCJuYmYiOjE3NzcwNjk4MzYsImV4cCI6MTc3NzE1NjIzNiwiaWF0IjoxNzc3MDY5ODM2LCJpc3MiOiJTaGFyZWJvb2siLCJhdWQiOiJTaGFyZUJvb2tBdWRpZW5jZSJ9.skMH2nRRNAK_6_Pyv8_KW8trn05ArgPPhjZpXCP6MYs^" ^
+  -H ^"Connection: keep-alive^" ^
+  -H ^"Origin: http://localhost:4200^" ^
+  -H ^"Referer: http://localhost:4200/^" ^
+  -H ^"Sec-Fetch-Dest: empty^" ^
+  -H ^"Sec-Fetch-Mode: cors^" ^
+  -H ^"Sec-Fetch-Site: cross-site^" ^
+  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36^" ^
+  -H ^"sec-ch-ua: ^\^"Google Chrome^\^";v=^\^"147^\^", ^\^"Not.A/Brand^\^";v=^\^"8^\^", ^\^"Chromium^\^";v=^\^"147^\^"^" ^
+  -H ^"sec-ch-ua-mobile: ?0^" ^
+  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
+  
+  
+  
+  
+  -- Table: importer.queue_items
+
+-- DROP TABLE IF EXISTS importer.queue_items;
+
+CREATE TABLE IF NOT EXISTS importer.queue_items
+(
+    id integer NOT NULL DEFAULT nextval('importer.queue_items_id_seq'::regclass),
+    source_id integer NOT NULL,
+    "position" integer NOT NULL,
+    title text COLLATE pg_catalog."default" NOT NULL,
+    author text COLLATE pg_catalog."default",
+    source_url text COLLATE pg_catalog."default" NOT NULL,
+    status text COLLATE pg_catalog."default" NOT NULL,
+    planned_title text COLLATE pg_catalog."default",
+    planned_author text COLLATE pg_catalog."default",
+    planned_category_id text COLLATE pg_catalog."default",
+    planned_synopsis text COLLATE pg_catalog."default",
+    planned_cover_mode text COLLATE pg_catalog."default" NOT NULL DEFAULT 'source'::text,
+    planned_cover_url text COLLATE pg_catalog."default",
+    planned_by text COLLATE pg_catalog."default",
+    planned_at timestamp with time zone,
+    attempts integer NOT NULL DEFAULT 0,
+    last_error text COLLATE pg_catalog."default",
+    sharebook_book_id uuid,
+    metadata_json jsonb,
+    created_at timestamp with time zone NOT NULL DEFAULT now(),
+    updated_at timestamp with time zone NOT NULL DEFAULT now(),
+    retry_count integer DEFAULT 0,
+    max_retries integer DEFAULT 3,
+    retry_after timestamp with time zone,
+    CONSTRAINT queue_items_pkey PRIMARY KEY (id),
+    CONSTRAINT queue_items_source_id_position_key UNIQUE (source_id, "position"),
+    CONSTRAINT queue_items_source_id_fkey FOREIGN KEY (source_id)
+        REFERENCES importer.sources (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT queue_items_planned_cover_mode_check CHECK (planned_cover_mode = 'source'::text),
+    CONSTRAINT queue_items_status_check CHECK (status = ANY (ARRAY['waiting_triage'::text, 'triaging'::text, 'triage_rejected'::text, 'waiting_editor'::text, 'editing'::text, 'waiting_process'::text, 'processing'::text, 'done'::text, 'retry_later'::text, 'source_blocked'::text, 'duplicate'::text, 'error'::text]))
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS importer.queue_items
+    OWNER to sharebook_ai_rw;
+
+REVOKE ALL ON TABLE importer.queue_items FROM sharebook_user;
+
+GRANT ALL ON TABLE importer.queue_items TO sharebook_ai_rw;
+
+GRANT SELECT ON TABLE importer.queue_items TO sharebook_user;
+-- Index: idx_queue_items_sharebook_id
+
+-- DROP INDEX IF EXISTS importer.idx_queue_items_sharebook_id;
+
+CREATE INDEX IF NOT EXISTS idx_queue_items_sharebook_id
+    ON importer.queue_items USING btree
+    (sharebook_book_id ASC NULLS LAST)
+    TABLESPACE pg_default
+    WHERE sharebook_book_id IS NOT NULL;
+-- Index: idx_queue_items_status_position
+
+-- DROP INDEX IF EXISTS importer.idx_queue_items_status_position;
+
+CREATE INDEX IF NOT EXISTS idx_queue_items_status_position
+    ON importer.queue_items USING btree
+    (status COLLATE pg_catalog."default" ASC NULLS LAST, "position" ASC NULLS LAST)
+    TABLESPACE pg_default;
