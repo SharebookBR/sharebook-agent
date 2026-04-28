@@ -140,3 +140,6 @@ vite.config.ts.timestamp-*
 
 # Sharebook agent workspace artifacts
 temp/
+
+# Local scratch workspace
+tmp/
