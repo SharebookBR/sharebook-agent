@@ -1,0 +1,11 @@
+<!doctype html><html><head><meta charset='utf-8'><style>body{font-family:Arial,Helvetica,sans-serif;max-width:820px;margin:40px auto;line-height:1.5;font-size:18px;color:#111}h1{font-size:40px}h2{margin-top:28px}</style></head><body>
+<h1>Fundamentos de Node.js em 30 minutos</h1>
+<h2>1) O que é Node.js</h2><p>Node.js é um ambiente que permite executar JavaScript fora do navegador. É muito usado para APIs, automações e serviços web.</p>
+<h2>2) Setup inicial</h2><ul><li>Instale Node LTS</li><li>Verifique com: node -v e npm -v</li><li>Crie o projeto: npm init -y</li></ul>
+<h2>3) Primeiro script</h2><p>Crie <code>index.js</code> com <code>console.log('Olá, Sharebook!')</code> e execute com <code>node index.js</code>.</p>
+<h2>4) API mínima</h2><p>Instale Express: <code>npm i express</code></p><pre>const express = require('express');
+const app = express();
+app.get('/', (req,res)=>res.send('ok'));
+app.listen(3000);</pre>
+<h2>5) Próximos passos</h2><ul><li>Aprender rotas e middlewares</li><li>Validar entrada de dados</li><li>Conectar com banco</li><li>Fazer deploy</li></ul>
+</body></html>

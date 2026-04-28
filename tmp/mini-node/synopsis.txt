@@ -1,0 +1,5 @@
+Se você sempre ouviu falar de Node.js mas ainda não entendeu por onde começar, este guia foi feito para encurtar o caminho. Em poucas páginas, ele mostra o que realmente importa para sair do zero e já rodar código útil.
+
+Você vai entender o básico do runtime, como instalar, criar seu primeiro projeto, ler parâmetros de linha de comando e montar uma API mínima com rotas simples. Sem teoria em excesso, com foco no que desbloqueia prática rápida.
+
+Ao final, você terá um roteiro claro para seguir evoluindo: organização de pastas, scripts de execução e próximos passos naturais para backend moderno. Curto, direto e aplicável no mesmo dia.

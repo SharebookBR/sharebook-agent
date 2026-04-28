@@ -12,9 +12,9 @@ Ser "o maior" aqui não significa despejar PDF aos montes. Significa construir o
 ## Etapas
 - 01 extrair o site "livrosdominiopublico.com.br" ................... ok
 - 02 reorganizar categorias e subcatorias ........................... ok
-- 03 missão "mínimo 5 livros pra cada categoria" .................... 
+- 03 missão "mínimo 5 livros pra cada categoria" .................... ok
 - 04 paginação na tela "admin livros" ............................... ok
-- 05 fazer a curadoria de elite e cadastrar 1000 livros! ............ 
+- 05 fazer a curadoria de elite e cadastrar 1000 livros! ............ wip
 - 06 feature de tags ................................................ 
 
 ## Ideias features

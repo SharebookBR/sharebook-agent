@@ -19,12 +19,29 @@ Este é o **primeiro filtro humano** do pipeline — antes da curadoria editoria
 1. **Link 404 / acesso negado** — Archive.org removeu o item, Google Code descontinuado, URL não responde mais
 2. **Pirataria** — scan de livro comercial com direitos autorais ativos (editora ainda vendendo)
 3. **Não é livro** — videoaula, podcast, curso gravado, software, palestra, slide deck sem conteúdo textual
+4. **Slide / material de aula** — PDFs com menos de 100 KB, slides avulsos sem coesão de livro, coleção de slides modulares de um repositório sem PDF compilado único. Ex: repositório GitHub com capítulos em PDFs separados sem release consolidado.
+   - Se o PDF tiver **menos de 100 KB**, suspeitar automaticamente
+   - Se vier de repositório GitHub que é coleção de slides/aulas, verificar se existe um PDF único compilado (release ou similar). Se não existir → `triage_rejected` por `not_a_book`
 
 ### 🟡 Duplicata → `duplicate`
 
-4. **Mesma obra já importada** de outra fonte.  
+4. **Mesma obra já publicada no Sharebook**.  
+   ⚠️ **Só conta como duplicata se o livro já existe no produto** (tabela `"Books"` do banco `sharebook`).  
+   ⚠️ **Item rejeitado ou em fila não é base para duplicata**: outros itens em `triage_rejected` ou `waiting_editor` não tornam o atual duplicata. Só o banco do produto é fonte da verdade.
    ⚠️ **Não confundir com obras complementares**: "PHP para Iniciantes" e "PHP Avançado" são livros diferentes, ambos bem-vindos.  
    ⚠️ **Variações de título do mesmo conteúdo** contam como duplicata.
+
+   **Como verificar**: consultar o banco do produto (`sharebook-backend`) no schema `public`, tabela `"Books"`. O mesmo host PostgreSQL, database `sharebook`:
+   ```sql
+   -- DSN base: mesmo host/user do IMPORTER_DB_DSN, database = sharebook
+   SELECT "Id", "Title", "Author", "Status", "Slug"
+   FROM public."Books"
+   WHERE LOWER("Title") LIKE '%<palavra-chave-1>%'
+      OR LOWER("Title") LIKE '%<palavra-chave-2>%';
+   ```
+   Extrair 2-3 palavras-chave do título do item e buscar no banco. Se encontrar match próximo → `duplicate`. Se não encontrar → segue limpo.
+   
+   **Nota**: colunas com maiúsculas exigem aspas duplas no PostgreSQL (`"Title"`, `"Author"`, etc.).
 
 ### 🟢 Segue limpo → `waiting_editor`
 
@@ -136,7 +153,7 @@ Sempre registrar o motivo da rejeição em `metadata_json` para rastreabilidade 
 **Razões comuns (`reason`):**
 - `paywall` — atrás de assinatura/carrinho de compras
 - `dead_link` — 404, domínio morto, conteúdo não acessível
-- `not_a_book` — videoaula, curso, podcast, software
+- `not_a_book` — videoaula, curso, podcast, software, slide de aula, material didático modular sem compilação
 - `pirate` — material protegido sem autorização
 - `incomplete` — WIP, rascunho, < 50 páginas
 - `wip` — work-in-progress, conteúdo indica que está inacabado
@@ -154,6 +171,9 @@ Categoria e sinopse são responsabilidade da skill `sharebook-book-preparer` (st
 |---|---|
 | Domínio Leanpub, Amazon, Hotmart, ou similar | Verificar se é gratuito e irrestrito. Se tiver carrinho/assinatura → `triage_rejected` por `paywall` |
 | Descrição menciona "em andamento", "incompleto", "WIP", "rascunho" | Conteúdo não é livro completo → `triage_rejected` por `incomplete` ou `wip` |
+| PDF < 100 KB | Suspeitar de slide, artigo curto ou não-livro. Verificar número de páginas e conteúdo |
+| Repositório GitHub | Navegar na árvore de diretórios (não confiar só no README). O PDF do livro pode estar dentro de uma subpasta (ex: `Livro/`, `pdf/`, `ebook/`). Verificar também a API `/repos/<user>/<repo>/contents` para listar arquivos. |
+| Repositório GitHub com múltiplos PDFs soltos (slides de aula) | Verificar se existe release com PDF único compilado. Se não, é material didático modular → `triage_rejected` por `not_a_book` |
 | Já temos livro do mesmo tema (não mesma obra) | **Não barrar** — mas anotar em `metadata_json.triage.note` como referência |
 
 ### Transição de status
@@ -169,17 +189,24 @@ waiting_triage  →  triaging  →  waiting_editor    (segue no pipeline)
 1. **① → ②**: Ao pegar o item para análise
 2. **② → ③**: Após decisão tomada e banco atualizado
 
-### 4. Baixar o PDF (quando for seguir)
+### 4. Baixar o PDF (obrigatório para itens aprovados)
 
-Se o item for aprovado (`waiting_editor`), faça o download do PDF imediatamente e salve em:
+Se o item for aprovado (`waiting_editor`), **o triador é responsável por baixar o PDF imediatamente**.  
+O link original pode ficar indisponível. A triagem é a melhor hora para garantir o arquivo.
 
+Salvar em:
 ```
-sharebook-ebook-importer/waiting-editor-ebooks/<slug>.pdf
+sharebook-ebook-importer/triage-downloads/position_<PPP>-<slug>.pdf
 ```
 
-**Por quê?** O link original pode ficar indisponível. A triagem é a melhor hora para garantir o arquivo.
+Onde `<PPP>` é o `position` com zero-padding de 3 dígitos e `<slug>` é o slug do título.
 
-### 4a. Validar o PDF baixado
+Exemplo: position 11, título "Guia Foca Linux" →
+```
+triage-downloads/position_011-guia-foca-linux.pdf
+```
+
+### 4a. Validar o PDF baixado (obrigatório)
 
 Antes de registrar no banco, validar:
 
@@ -206,6 +233,8 @@ pdftotext /tmp/<arquivo>.pdf - -l 3 | head -20
 
 ### 4b. Gerar o slug
 
+Sempre em lowercase, sem acentos, sem caracteres especiais:
+
 ```python
 import re, unicodedata
 
@@ -220,7 +249,7 @@ slug = slug[:80]
 
 Use sempre o banco do importer, schema `importer`.
 
-Incluir o caminho do PDF baixado no `metadata_json`:
+Atualizar o `metadata_json` com o caminho do PDF baixado (relativo à raiz do `sharebook-ebook-importer`):
 
 ```python
 import psycopg2, os, json
@@ -230,9 +259,9 @@ conn = psycopg2.connect(dsn)
 cur = conn.cursor()
 
 item_id = <ID>
-novo_status = '<waiting_editor|duplicate|triage_rejected|source_blocked>'
+novo_status = '<waiting_editor|triage_rejected|source_blocked>'
 autor = '<autor ou None>'
-local_pdf = f"waiting-editor-ebooks/{slug}.pdf" if pdf_baixado else None
+local_pdf = f"triage-downloads/position_{position:03d}-{slug}.pdf" if pdf_baixado else None
 
 metadata = json.dumps({"local_pdf": local_pdf}) if local_pdf else None
 
@@ -293,9 +322,25 @@ conn.close()
 - [ ] Se aprovado: PDF do conteúdo baixado e validado?
 - [ ] Para rejeição: status é `triage_rejected`, não `error`
 - [ ] Para rejeição: `metadata_json->'triage'` preenchido com reason + detail
-- [ ] Se aprovado: PDF salvo em `waiting-editor-ebooks/<slug>.pdf`
+- [ ] Se aprovado: PDF salvo em `triage-downloads/position_<PPP>-<slug>.pdf`
 - [ ] Se aprovado: `metadata_json->>'local_pdf'` preenchido
 - [ ] Item marcado com status correto no PostgreSQL
+
+---
+
+## Teste cego de skill (validação)
+
+Quando uma regra da skill for corrigida com base em erro do triador, validar a correção com um **teste cego**:
+
+1. Corrigir a skill com a nova regra
+2. Resetar o item para `waiting_triage` (limpar `planned_author`, `metadata_json`, remover PDF baixado)
+3. Disparar um **subagente novo** com instrução apenas de ler a SKILL.md e executar a triagem
+4. Se o subagente acertar seguindo a skill → regra validada
+5. Se errar → a skill ainda está ambígua ou incompleta
+
+**Regra**: nunca usar o mesmo agente que errou para validar a correção. O teste só vale com agente fresco que não sabe do erro anterior.
+
+Nome técnico: **Teste Cego de Skill (Blind Skill Test)**.
 
 ---
 
