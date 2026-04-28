@@ -143,3 +143,7 @@ temp/
 
 # Local scratch workspace
 tmp/
+
+# Agent disposable artifacts
+codex-temp/
+var/

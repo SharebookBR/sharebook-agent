@@ -1,5 +1,0 @@
-Cloud para Devs é um guia direto para quem quer sair da teoria e tomar decisões melhores em arquitetura moderna sem virar refém de buzzword. Em vez de começar por siglas, o livro começa pelo que realmente dói no dia a dia: deploy frágil, custo sem controle, ambiente inconsistente e medo de escalar.
-
-Com linguagem prática, ele organiza os fundamentos que importam — serviços gerenciados, observabilidade, segurança, filas, storage, automação e estratégias de rollout — sempre conectando conceito com impacto real de produto. A leitura mostra quando simplificar, quando desacoplar e como evitar as armadilhas clássicas de overengineering.
-
-Se você é dev e quer construir sistemas mais resilientes, baratos e previsíveis em AWS, Azure ou GCP, este livro funciona como mapa de campo. Menos misticismo de plataforma, mais clareza técnica para entregar software que aguenta produção de verdade.
