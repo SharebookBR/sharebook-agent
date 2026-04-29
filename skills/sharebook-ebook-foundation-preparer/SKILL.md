@@ -18,9 +18,22 @@ Prepara itens da `ebook_foundation` que passaram pela triagem e estão em `waiti
 ## Pré-requisitos
 
 - DSN PostgreSQL com senha URL-encoded (`%25` para `%`, `%23` para `#`)
-- Token `TOKEN_V2` válido (não expirado)
-- Worker com: `IMPORTER_DB_DSN` + `TOKEN_V2` + `PGSSLMODE=disable`
+- Credenciais válidas de produção no `sharebook-agent/.env` (`SHAREBOOK_PROD_USER`, `SHAREBOOK_PROD_PASSWORD`)
+- `sharebook-ebook-importer/.env` com `IMPORTER_DB_DSN` válido
 - Fontes ousadas instaladas: `fonts-kaushanscript`, `fonts-cabinsketch`, `fonts-humor-sans` (já instaladas)
+
+## Caminho operacional canônico
+
+Não improvisar shell grande, token inline ou SQL remoto no escuro. O caminho feliz validado nesta automação é:
+
+1. Buscar o item no Postgres do importer pelo container remoto, usando `vps_ssh.py` + `psql -U postgres -d sharebook_importer`.
+2. Trabalhar no PDF local em `/data/workspace/sharebook-ebook-importer/triage-downloads/`.
+3. Registrar os campos editoriais no importer com script Python local usando `IMPORTER_DB_DSN` do `sharebook-ebook-importer/.env`.
+4. Rodar o worker pelo wrapper canônico:
+   - `python3 /data/workspace/sharebook-agent/scripts/sharebook_run_ebook_foundation_worker.py`
+5. Se houver `401`, o wrapper deve renovar token automaticamente antes de falhar.
+
+Regra importante: o agente não deve mais pensar manualmente em `TOKEN_V2` para esse fluxo. Renovação de token é responsabilidade do wrapper/autenticação.
 
 ## 📋 Antes de tudo: pare e leia o índice
 
@@ -94,14 +107,16 @@ Se encontrar itens com status `done` que tenham o mesmo PDF, hash SHA-1 do conte
 
 #### 2c. Verificar duplicata no ShareBook via API
 
+Use token obtido pelo fluxo canônico de autenticação. Não fixar token no comando nem na skill.
+
 ```bash
-TOKEN_V2="..."
+TOKEN_V2="$(python3 /data/workspace/sharebook-agent/scripts/sharebook_refresh_token.py)"
 curl -s -H "Authorization: Bearer $TOKEN_V2" -H "x-requested-with: web" \
   "https://www.sharebook.com.br/api/Book/search?q=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''<TITULO> <AUTOR>'''))")" | \
   jq '.items[] | {id, title, author}'
 ```
 
-Se encontrar correspondência no ShareBook, marcar como `duplicate` e pular.
+Se vier `401`, renovar token automaticamente e repetir. Se encontrar correspondência no ShareBook, marcar como `duplicate` e pular.
 
 #### 2d. Deduplicar PDF por hash MD5
 
@@ -249,7 +264,7 @@ cp sharebook-ebook-importer/triage-downloads/<slug>-var-<N>.jpg \
 
 ### 5.5. Verificar e otimizar tamanho do PDF
 
-**⚠️ PDFs acima de 5MB brutos podem travar o worker.** O servidor do ShareBook fecha conexões SSL em POSTs com payload > ~10MB (base64 do PDF). O worker não tem compressão automática — é responsabilidade do curador garantir que o PDF cabe.
+**⚠️ Não paranoiar com PDF médio.** O backend atual aceita PDFs grandes de forma estável; o alerta aqui existe por causa de casos raros e exagerados, como arquivo de ~65 MB. O worker não tem compressão automática, então o curador só precisa agir quando o tamanho for claramente problemático.
 
 ```bash
 # Verificar tamanho do PDF bruto
@@ -260,9 +275,9 @@ ls -lh sharebook-ebook-importer/triage-downloads/position_XXX-*.pdf
 
 | Tamanho do PDF bruto | Ação |
 |---|---|
-| < 5MB | ✅ Segue direto, sem compressão |
-| 5MB — 15MB | ⚠️ Comprimir com Ghostscript `/prepress` (preserva 300 DPI, qualidade de imagem): `gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/prepress -dNOPAUSE -dQUIET -dBATCH -sOutputFile=/tmp/compressed.pdf <input.pdf>` |
-| > 15MB | ⚠️ O PDF muito grande pode ter imagens pesadas (prints de emulador, scans). Comprimir com `/prepress`. Se ainda > 15MB após compressão, **avaliar se o conteúdo realmente precisa de todas as imagens**. Nunca usar `/ebook` (destrói legibilidade de prints técnicos). |
+| < 15MB | ✅ Segue direto, sem compressão obrigatória |
+| 15MB — 40MB | ⚠️ Considerar compressão com Ghostscript `/prepress` (preserva 300 DPI, qualidade de imagem): `gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/prepress -dNOPAUSE -dQUIET -dBATCH -sOutputFile=/tmp/compressed.pdf <input.pdf>` |
+| > 40MB | ⚠️ Forte candidato a compressão. Se ainda ficar enorme após `/prepress`, avaliar se o conteúdo realmente precisa de todas as imagens. Nunca usar `/ebook` em material técnico com prints ou gráficos finos. |
 
 **Após comprimir, substituir o PDF original pelo comprimido antes de registrar no banco:**
 
@@ -327,7 +342,7 @@ Categoria folha é obrigatória, mas se houver dúvida genuína entre duas, use 
 #### Para verificar se a categoria existe:
 
 ```bash
-TOKEN_V2=$(grep SHAREBOOK_PROD_ACCESS_TOKEN /data/workspace/sharebook-agent/.env | cut -d= -f2)
+TOKEN_V2="$(python3 /data/workspace/sharebook-agent/scripts/sharebook_refresh_token.py)"
 curl -s -H "Authorization: Bearer $TOKEN_V2" -H "x-requested-with: web" \
   "https://www.sharebook.com.br/api/category" | python3 -c "
 import json, sys
@@ -345,7 +360,9 @@ Categoria folha obrigatória.
 
 ### 7. Registrar no PostgreSQL
 
-Usar Python com psycopg2 (não SQL direto) para evitar escaping e encoding:
+Usar Python com psycopg2 (não SQL direto) para evitar escaping, encoding e circo de quoting remoto.
+
+**Regra operacional validada:** para `ebook_foundation`, o caminho prático e confiável é conectar localmente com `IMPORTER_DB_DSN` vindo de `/data/workspace/sharebook-ebook-importer/.env`. Não insistir em usuário read-only nem em query helper que não tenha permissão no schema `importer`.
 
 ```python
 import os, urllib.parse, psycopg2, json
@@ -379,24 +396,32 @@ conn.close()
 
 ### 8. Publicar via worker
 
+Use o wrapper canônico, não `TOKEN_V2` inline:
+
 ```bash
-cd /data/workspace/sharebook-ebook-importer/src
-env \
-  IMPORTER_DB_DSN="postgresql://..." \
-  TOKEN_V2="..." \
-  python3 -m sharebook_ebook_importer.cli run-once --source ebook_foundation
+python3 /data/workspace/sharebook-agent/scripts/sharebook_run_ebook_foundation_worker.py
 ```
 
-O worker:
-- Pega o próximo item `waiting_process` da source `ebook_foundation`
-- Reusa PDF de `triage-downloads/` se `metadata_json->>'local_pdf'` existir
-- Usa capa de `metadata_json->>'cover_path'` (caminho absoluto)
-- Publica e aprova automaticamente
+Opcionalmente, para outra source:
 
-**Se o worker falhar com 401 (token expirado):**
-1. Pegar token novo de `sharebook-agent/.env`
-2. Resetar status: `UPDATE importer.queue_items SET status = 'waiting_process', last_error = NULL, updated_at = NOW() WHERE id = <ID>;`
-3. Rodar worker de novo
+```bash
+python3 /data/workspace/sharebook-agent/scripts/sharebook_run_ebook_foundation_worker.py ebook_foundation
+```
+
+O wrapper:
+- lê `IMPORTER_DB_DSN` de `sharebook-ebook-importer/.env`
+- obtém token válido pelo `sharebook_prod_auth.py`
+- testa o token com probe leve
+- se vier `401`, renova automaticamente
+- roda `python -m sharebook_ebook_importer.cli run-once --source ebook_foundation`
+
+O worker:
+- pega o próximo item `waiting_process` da source `ebook_foundation`
+- reusa PDF de `triage-downloads/` se `metadata_json->>'local_pdf'` existir
+- usa capa de `metadata_json->>'cover_path'` (caminho absoluto)
+- publica e aprova automaticamente
+
+**Se o worker falhar com 401 mesmo assim:** tratar como bug de automação/autenticação e corrigir o wrapper. Não voltar para ritual manual de copiar token na unha.
 
 ## Scripts
 
@@ -461,6 +486,10 @@ Qualquer campo faltando → worker joga de volta pra `waiting_editor`. Registrar
 
 O operador humano sempre se refere ao número da **position** (ex.: #115), que pode ser diferente do `id` no banco. Ao buscar, filtrar por `position`, não por `id`.
 
+### Query helper local pode não servir para o importer
+
+O helper local `query_importer_db.py` pode falhar por permissão no schema `importer` dependendo do usuário configurado. Quando isso acontecer, não perder tempo brigando com ele: usar `vps_ssh.py` + `docker exec ... psql -U postgres -d sharebook_importer` para leitura, e conexão local por `IMPORTER_DB_DSN` para escrita editorial.
+
 ## Regras de ouro
 
 - **Índice do PDF é a fonte primária da sinopse** — não inventar
@@ -468,5 +497,7 @@ O operador humano sempre se refere ao número da **position** (ex.: #115), que p
 - **Sinopse específica** — baseada nos tópicos reais, tom envolvente
 - **Capa sempre aleatória** — nunca fixar paleta/fonte/layout em produção
 - **Categoria folha** — verificar que não tem children
-- **Worker com `--source ebook_foundation`** — o default é `baixelivros`
+- **Worker com `--source ebook_foundation`** — o default do CLI cru pode não ser esse, então use o wrapper canônico
+- **401 não é erro terminal** — é evento de renovação automática de token
+- **Não pensar manualmente em token** — isso é responsabilidade do wrapper de autenticação/worker
 - **Erro de fonte = quebra proposital** — se path de fonte sumir, o script falha com `FileNotFoundError`
