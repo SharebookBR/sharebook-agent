@@ -360,39 +360,40 @@ Categoria folha obrigatória.
 
 ### 7. Registrar no PostgreSQL
 
-Usar Python com psycopg2 (não SQL direto) para evitar escaping, encoding e circo de quoting remoto.
+Usar o script canônico. Não reescrever snippet ad hoc por item.
 
 **Regra operacional validada:** para `ebook_foundation`, o caminho prático e confiável é conectar localmente com `IMPORTER_DB_DSN` vindo de `/data/workspace/sharebook-ebook-importer/.env`. Não insistir em usuário read-only nem em query helper que não tenha permissão no schema `importer`.
 
-```python
-import os, urllib.parse, psycopg2, json
-
-dsn = os.environ["IMPORTER_DB_DSN"]
-parsed = urllib.parse.urlparse(dsn)
-password = urllib.parse.unquote(parsed.password)
-conn = psycopg2.connect(host=parsed.hostname, port=parsed.port or 5432,
-                        dbname=parsed.path.lstrip("/"), user=parsed.username, password=password)
-cur = conn.cursor()
-cur.execute("""
-    UPDATE importer.queue_items SET
-      planned_author = %s,
-      planned_category_id = %s,
-      planned_synopsis = %s,
-      planned_cover_mode = 'source',
-      planned_cover_url = %s,
-      metadata_json = metadata_json || %s::jsonb,
-      status = 'waiting_process',
-      updated_at = NOW()
-    WHERE id = %s
-""", (author, category_id, synopsis, cover_url_rel,
-      json.dumps({"cover_palette": palette, "cover_style": "pillow", "synopsis_source": "pdf_toc", "cover_path": cover_path_abs}),
-      item_id))
-conn.commit()
-cur.close()
-conn.close()
+```bash
+python3 /data/workspace/sharebook-agent/scripts/sharebook_register_ebook_foundation_item.py \
+  --item-id 278 \
+  --title "Análise Exploratória de Dados usando o R" \
+  --author "Enio Jelihovschi" \
+  --category-id "019d636c-62c1-71e9-9a51-099d3304753e" \
+  --synopsis-file /data/workspace/tmp/analise-r-sinopse.txt \
+  --cover-url triage-downloads/analise-r-cover.jpg \
+  --cover-path /data/workspace/sharebook-ebook-importer/triage-downloads/analise-r-cover.jpg \
+  --pdf-md5 671f8eb0fad7ea712ec4eeb2c7211890 \
+  --cover-palette matrix \
+  --level intermediario
 ```
 
-**Nota:** `planned_cover_mode` só aceita `'source'` (check constraint). Detalhes da capa (caminho absoluto, paleta, fonte, etc.) vão no `metadata_json`.
+O script grava de uma vez:
+- `planned_title`
+- `planned_author`
+- `planned_category_id`
+- `planned_synopsis`
+- `planned_cover_mode='source'`
+- `planned_cover_url`
+- `metadata_json.cover_path`
+- `metadata_json.cover_palette`
+- `metadata_json.cover_style`
+- `metadata_json.synopsis_source`
+- `metadata_json.pdf_md5`
+- `metadata_json.current_level`
+- `status='waiting_process'`
+
+**Nota:** `planned_cover_mode` só aceita `'source'` (check constraint). Detalhes da capa continuam em `metadata_json`.
 
 ### 8. Publicar via worker
 
