@@ -192,6 +192,7 @@ If nothing relevant → `HEARTBEAT_OK`
 
 ### Skills
 - `sharebook-agent/skills/sharebook-master-playbook.md` — playbook geral do ecossistema Sharebook. Usar quando a tarefa é ampla, mistura produto/operação/processo, ou quando não houver skill mais específica.
+- `sharebook-agent/skills/sharebook-voice-glossary/SKILL.md` — glossário e voz oficial do Sharebook. Usar quando a tarefa envolver copy, nomenclatura, microcopy, emails, labels, mensagens, UX writing, revisão semântica ou dúvidas sobre termos oficiais como `livro digital`, `doação`, `solicitação`, `doador(a)`, `ganhador(a)`, `vitrine` e `data de escolha`. Também usar quando houver suspeita de inconsistência entre fluxo físico e digital e for preciso separar problema de vocabulário vs problema de mecânica do produto.
 - `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md` — fluxo de ingestão de ebooks públicos. Usar para importar acervo, extrair metadados/PDF, depurar fila, fontes e worker do importer.
 - `sharebook-agent/skills/sharebook-physical-book-importer/SKILL.md` — fluxo de livros físicos. Usar para cadastro/importação de livros físicos, normalmente quando a origem não é ebook público.
 - `sharebook-agent/skills/sharebook-ux-reviewer/SKILL.md` — revisão crítica de UX orientada a conversão e clareza. Usar para auditar telas, fluxos, copy, hierarquia visual e fricção de uso.
