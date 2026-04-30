@@ -23,7 +23,7 @@ Exemplos típicos:
 ## Fonte da verdade
 
 A fonte primária atual é:
-- `/data/workspace/sharebook-frontend/docs/ux-writing-guide.md`
+- `references/ux-writing-guide.md`
 
 Leia esse arquivo antes de decidir terminologia quando houver dúvida real.
 

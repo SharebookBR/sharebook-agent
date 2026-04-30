@@ -21,7 +21,7 @@ Use **sharebook-voice-glossary** antes ou junto desta skill quando a dúvida pri
 - decidir se o erro é de vocabulário ou de mecânica do fluxo
 
 ## 🛠️ Recursos de Apoio
-- **`references/vocabulary.md`**: Glossário local de apoio. Se houver divergência ou dúvida de precedência, consultar também a skill `sharebook-voice-glossary`, que aponta para a fonte canônica atual do produto.
+- **`references/vocabulary.md`**: Glossário local de apoio. Se houver divergência ou dúvida de precedência, consultar também a skill `sharebook-voice-glossary`, cuja fonte canônica atual está em `sharebook-voice-glossary/references/ux-writing-guide.md`.
 - **`references/ui-checklist.md`**: Guia de auditoria técnica (Bootstrap 4, Angular Material, Sentence Case).
 
 ## 🚀 Workflow Procedural
