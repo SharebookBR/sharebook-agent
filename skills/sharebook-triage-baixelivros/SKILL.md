@@ -100,6 +100,7 @@ A source `baixelivros_infantil` é valiosa, mas misturada e juridicamente hetero
 - contos tradicionais
 - lendas e folclore
 - obras com licença explícita
+- títulos da coleção/fornecimento `SEDUC/CE` quando vierem com ISBN, paginação consistente, narrativa infantil clara e PDF íntegro, mesmo que a descrição de vitrine enfatize benefícios educativos
 
 ### O que tende a ser suspeito
 - autores contemporâneos pouco conhecidos com PDF completo
@@ -107,6 +108,7 @@ A source `baixelivros_infantil` é valiosa, mas misturada e juridicamente hetero
 - adaptações modernas de clássicos sem licença clara
 - compilações genéricas tipo `100 histórias` sem origem jurídica clara
 - material escolar ou paradidático disfarçado de infantil
+- **não tratar `SEDUC/CE` como suspeita por si só**; nessa frente ela pode ser sinal positivo de coleção editorial legítima
 
 ### O que não deve ser barrado por excesso de purismo
 - clássico inequivocamente em domínio público só porque o PDF foi diagramado recentemente
@@ -118,6 +120,7 @@ A source `baixelivros_infantil` é valiosa, mas misturada e juridicamente hetero
 - URL em `/didatico/` deve ser rejeitada por escopo
 - item com cara de atividade escolar, caderno, apoio pedagógico ou alfabetização deve virar `triage_rejected`
 - item centrado em iniciação religiosa, evangelização, símbolos de fé para estímulo/formação de bebê/criança ou proposta explicitamente educativa/devocional também tende a `triage_rejected`
+- descrição de vitrine falando em aprendizado, memória, imaginação, organização, tempo ou outros benefícios não basta sozinha para rejeitar; se houver personagem, narrativa, lirismo ou arco de história, isso pode continuar sendo literatura infantil legítima
 
 ### Regra jurídica dura
 Se o item parecer contemporâneo e não houver licença explícita ou base forte de legitimidade, rejeitar.
