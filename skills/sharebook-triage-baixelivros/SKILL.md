@@ -31,8 +31,13 @@ Se a origem não for BaixeLivros e a lógica principal depender de outra fonte, 
 2. **Pirataria / risco jurídico alto**
    - scan de livro comercial ainda vendido
    - obra contemporânea sem licença clara
-   - edição ilustrada recente de texto clássico sem base de autorização clara
-   - tradução/adaptação moderna sem segurança jurídica mínima
+   - tradução/adaptação moderna com traço autoral relevante sem segurança jurídica mínima
+   - edição recente com sinais de exploração comercial ou restrição de uso
+
+   **Exceção pragmática aprovada**:
+   - clássico em domínio público com edição recente amadora/independente, sem sinais fortes de exploração comercial, pode seguir
+   - presença de diagramação nova, capa nova ou PDF montado recentemente **não basta sozinha** para rejeitar
+   - se a obra-base for inequivocamente pública e o arquivo parecer circulação cultural aberta, o default pode ser aceitar
 3. **Não é livro**
    - videoaula, podcast, software, palestra, curso, atividade solta, cartilha avulsa, folheto, slide deck
 4. **Material didático / pedagógico fora do alvo editorial**
@@ -96,10 +101,15 @@ A source `baixelivros_infantil` é valiosa, mas misturada e juridicamente hetero
 
 ### O que tende a ser suspeito
 - autores contemporâneos pouco conhecidos com PDF completo
-- livros infantis recentes com ilustração/editorial moderna
+- livros infantis recentes com ilustração/editorial moderna e cara de produto comercial
 - adaptações modernas de clássicos sem licença clara
 - compilações genéricas tipo `100 histórias` sem origem jurídica clara
 - material escolar ou paradidático disfarçado de infantil
+
+### O que não deve ser barrado por excesso de purismo
+- clássico inequivocamente em domínio público só porque o PDF foi diagramado recentemente
+- edição independente aparentemente feita por entusiasta, sem editora comercial evidente
+- circulação cultural aberta de conto/fábula/lenda clássica, desde que não haja aviso restritivo ou sinal forte de apropriação comercial
 
 ### Regra de escopo
 - URL em `/infantil/` não basta para aprovar
@@ -108,7 +118,7 @@ A source `baixelivros_infantil` é valiosa, mas misturada e juridicamente hetero
 
 ### Regra jurídica dura
 Se o item parecer contemporâneo e não houver licença explícita ou base forte de legitimidade, rejeitar.
-Não tentar ser advogado heroico no meio da fila.
+Mas não confundir isso com edição amadora de clássico público. Se a obra-base for claramente domínio público e não houver cheiro de produto comercial protegido, pode seguir.
 
 ## Informações sobre as fontes
 
@@ -215,7 +225,7 @@ Sempre registrar o motivo da rejeição em `metadata_json` para rastreabilidade 
 - `fake_pdf` — HTML, redirecionamento ou anti-download no lugar do PDF
 - `not_a_book` — videoaula, curso, software, atividade, cartilha, slide, material modular
 - `pirate` — material protegido sem autorização clara
-- `legal_risk` — obra contemporânea ou edição suspeita sem segurança jurídica mínima
+- `legal_risk` — obra contemporânea ou edição suspeita com sinal comercial/restritivo relevante
 - `didactic_out_of_scope` — material pedagógico fora da missão editorial
 - `incomplete` — rascunho, amostra, obra truncada
 - `language` — fora do idioma aceito
@@ -234,6 +244,7 @@ Categoria e sinopse são responsabilidade da skill `sharebook-book-preparer` (st
 | PDF < 100 KB | suspeitar de slide, amostra, artigo ou não-livro |
 | Autor contemporâneo pouco conhecido com PDF completo | suspeitar de `legal_risk` |
 | Tradução/adaptação moderna de clássico | suspeitar de `legal_risk` |
+| Clássico público com edição amadora recente | não rejeitar automaticamente |
 | Coletânea genérica sem origem clara | suspeitar de `legal_risk` ou `not_a_book` |
 | Já temos livro do mesmo tema (não mesma obra) | não barrar, mas anotar se ajudar |
 
@@ -269,28 +280,32 @@ triage-downloads/position_011-guia-foca-linux.pdf
 
 ### 4a. Validar o PDF baixado (obrigatório)
 
-Antes de registrar no banco, validar:
+Antes de registrar no banco, validar com `pdfinfo`:
 
 ```bash
-file /tmp/<arquivo>.pdf
-# Deve retornar: PDF document, version X.X, <N> pages
+pdfinfo /tmp/<arquivo>.pdf
 ```
 
-Se o comando `file` não estiver disponível no ambiente, instalar:
-```bash
-apt-get install -y file
-```
-
-Se o comando `pdftotext` não estiver disponível, instalar:
+Se o comando `pdfinfo` não estiver disponível, instalar:
 ```bash
 apt-get install -y poppler-utils
+```
+
+Validação prática:
+- `pdfinfo` precisa abrir o arquivo de verdade
+- deve existir contagem de páginas (`Pages:`)
+- se sair `Syntax Error`, tratar como PDF inválido ou suspeito
+
+Cheque complementar de legibilidade:
+```bash
 pdftotext /tmp/<arquivo>.pdf - -l 3 | head -20
 ```
 
 **O que checar:**
-- É um PDF válido? (não HTML disfarçado)
-- Tem páginas reais? (6+ páginas — menos que isso é provavelmente artigo, não livro)
-- O conteúdo está legível? (primeiras páginas com pdftotext)
+- é um PDF estruturalmente válido?
+- tem páginas reais? (6+ páginas, salvo exceções claras de conto curto)
+- o conteúdo está legível?
+- não é HTML disfarçado ou arquivo corrompido?
 
 ### 4b. Gerar o slug
 
@@ -375,7 +390,8 @@ conn.close()
 
 - [ ] URL acessível? (não 404, não domínio morto)
 - [ ] Conteúdo é livro/publicação? (não curso, não atividade, não material pedagógico avulso)
-- [ ] Não há risco jurídico alto?
+- [ ] Não há risco jurídico alto segundo a política pragmática?
+- [ ] Se for clássico público com edição recente, ele parece circulação cultural aberta e não produto comercial protegido?
 - [ ] Não é didático fora do escopo?
 - [ ] Idioma: português?
 - [ ] Não é duplicata de obra já importada?
@@ -408,10 +424,10 @@ Nome técnico: **Teste Cego de Skill (Blind Skill Test)**.
 ## Erros comuns
 
 1. **Confundir duplicata com complemento**: "CSS Iniciante" ≠ "CSS Avançado" , ambos seguem
-2. **Aceitar infantil contemporâneo por simpatia**: bonitinho não é critério jurídico
+2. **Rejeitar clássico público por purismo excessivo**: edição recente amadora não é veto automático
 3. **Confundir infantil com didático**: caderno, atividade e alfabetização não entram só porque falam com criança
 4. **Aceitar conteúdo fora do português**: neste fluxo, manter português como padrão
 5. **Marcar como `error` o que é rejeição humana**: rejeição deliberada usa `triage_rejected`
-6. **Empurrar dúvida jurídica para frente**: se a dúvida é séria, rejeite cedo
+6. **Empurrar dúvida jurídica séria para frente**: se o cheiro comercial/restritivo é forte, rejeite cedo
 7. **Rodar query no banco errado**: se `importer.queue_items` não existir, a conexão está errada
 8. **Confiar mais nesta skill do que no código**: `pg_db.py`, `README.md` e `docs/PLAYBOOK.md` mandam mais que este arquivo.
