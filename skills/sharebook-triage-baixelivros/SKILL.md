@@ -42,6 +42,7 @@ Se a origem não for BaixeLivros e a lógica principal depender de outra fonte, 
    - videoaula, podcast, software, palestra, curso, atividade solta, cartilha avulsa, folheto, slide deck
 4. **Material didático / pedagógico fora do alvo editorial**
    - alfabetização, caderno de atividades, exercícios, apoio escolar, material de professor, conteúdo para colorir
+   - material de iniciação religiosa, evangelização, catequese, estímulo formativo ou devocional infantil, quando o foco principal for ensino/formação e não uma obra literária infantil propriamente dita
 5. **PDF inconsistente**
    - HTML fingindo ser PDF
    - arquivo muito curto / quebrado / ilegível
@@ -116,6 +117,7 @@ A source `baixelivros_infantil` é valiosa, mas misturada e juridicamente hetero
 - URL em `/infantil/` não basta para aprovar
 - URL em `/didatico/` deve ser rejeitada por escopo
 - item com cara de atividade escolar, caderno, apoio pedagógico ou alfabetização deve virar `triage_rejected`
+- item centrado em iniciação religiosa, evangelização, símbolos de fé para estímulo/formação de bebê/criança ou proposta explicitamente educativa/devocional também tende a `triage_rejected`
 
 ### Regra jurídica dura
 Se o item parecer contemporâneo e não houver licença explícita ou base forte de legitimidade, rejeitar.
@@ -246,6 +248,7 @@ Categoria e sinopse são responsabilidade da skill `sharebook-baixelivros-editor
 |---|---|
 | Item em `/didatico/` | `triage_rejected` por `didactic_out_of_scope` |
 | Título com cara de atividade escolar, alfabetização, caderno, colorir, professor, 1º ano, creche | suspeitar forte de `didactic_out_of_scope` |
+| Descrição fala em estímulo visual, iniciação na fé, evangelização, conteúdo educativo, formação religiosa ou fortalecimento de vínculos como proposta formativa | suspeitar forte de `didactic_out_of_scope` |
 | PDF < 100 KB | suspeitar de slide, amostra, artigo ou não-livro |
 | `/download-gratuito` retorna HTML/403 mas a página tem `downloadSimple(...)` ou `data-target` | testar a URL real antes de rejeitar |
 | Autor contemporâneo pouco conhecido com PDF completo | suspeitar de `legal_risk`, **mas reavaliar se a própria página traz `Licença: Gratuita` e vínculo com `licenca/gratuito` do BaixeLivros** |
