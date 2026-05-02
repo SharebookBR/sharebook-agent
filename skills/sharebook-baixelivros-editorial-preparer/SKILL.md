@@ -152,7 +152,34 @@ Baseado no conteúdo real da obra (não em suposições):
 - **Não inventar** se Wikipedia não tiver informação
 - **Registrar** no SQLite se usou Wikipedia ou não
 
-### 6. Atualizar PostgreSQL
+### 6. Gerar capa (se necessário)
+
+O worker **não publica sem capa**. Antes de marcar como `waiting_process`, o item precisa de uma imagem de capa.
+
+**Fluxo de capa:**
+
+1. **Verificar se o item já tem capa** (`planned_cover_url` preenchido e arquivo existente)
+2. Se não tiver, **gerar via OpenAI Images API** com o script `sharebook_openai_cover.py`:
+   ```bash
+   python3 /data/workspace/sharebook-agent/scripts/sharebook_openai_cover.py \
+     --prompt "Capa de livro infantil, ... (descrever cena/estilo). Título: TITULO. Autor: AUTOR." \
+     --output /tmp/cover_<ID>.png \
+     --size 1024x1536 \
+     --quality high
+   ```
+3. **Copiar a capa** para `triage-downloads/covers/` com nome padronizado:
+   ```bash
+   cp /tmp/cover_<ID>.png /data/workspace/sharebook-ebook-importer/triage-downloads/covers/position_<PPP>-<slug>.png
+   ```
+4. **Registrar** no PostgreSQL: `planned_cover_mode = 'source'` e `planned_cover_url = 'triage-downloads/covers/position_<PPP>-<slug>.png'`
+
+**Regras:**
+- Tamanho: 1024x1536 (proporção 2:3 vertical)
+- Qualidade: high
+- Prompt deve descrever: personagens da história, cenário relevante, estilo visual (aquarela, traço infantil, etc.)
+- **Para capas de alta qualidade, priorizar fluxo ChatGPT web** (qualidade superior). Nesse caso, definir `planned_cover_mode = 'source'` com o caminho relativo do arquivo baixado.
+
+### 7. Atualizar PostgreSQL
 ```bash
 python3 -c "
 import psycopg2
@@ -167,6 +194,7 @@ item_id = ID_DO_ITEM  # Substituir pelo ID real
 autor = 'AUTOR_CORRETO'
 categoria = 'ID_CATEGORIA_FOLHA'
 sinopse = 'SINOPSE_SEXY_3_PARAGRAFOS'
+cover_url = 'triage-downloads/covers/position_<PPP>-<slug>.png'
 
 # Atualizar
 cur.execute("""
@@ -174,10 +202,12 @@ cur.execute("""
     planned_author = %s,
     planned_category_id = %s,
     planned_synopsis = %s,
+    planned_cover_url = %s,
+    planned_cover_mode = 'source',
     status = 'waiting_process',
     updated_at = NOW()
   WHERE id = %s
-""", (autor, categoria, sinopse, item_id))
+""", (autor, categoria, sinopse, cover_url, item_id))
 
 conn.commit()
 print(f'✅ Item {item_id} atualizado no PostgreSQL')
@@ -189,10 +219,12 @@ conn.close()
 - `planned_author`: Autor correto (da fonte)
 - `planned_category_id`: ID da categoria folha escolhida
 - `planned_synopsis`: Sinopse sexy de 3 parágrafos
+- `planned_cover_url`: Caminho relativo ao project_root da capa (ex: `triage-downloads/covers/position_011-um-dia-so-para-nos.png`)
+- `planned_cover_mode`: `'source'` (capa gerada externamente)
 - `status`: usar `editing` enquanto estiver trabalhando e fechar em `waiting_process` quando completar
 - `updated_at`: Atualizar timestamp automaticamente
 
-### 7. Registrar decisões (Opcional mas recomendado)
+### 8. Registrar decisões (Opcional mas recomendado)
 Manter breve registro no `metadata_json` ou em log:
 - Por que escolheu esta categoria
 - Principais elementos da sinopse
@@ -260,6 +292,9 @@ Antes de marcar como `waiting_process`:
 - [ ] Sinopse tem 3 parágrafos
 - [ ] Sinopse é fiel à obra
 - [ ] Sinopse tem tom envolvente/sex
+- [ ] Capa gerada (arquivo PNG 1024x1536 em `triage-downloads/covers/`)
+- [ ] `planned_cover_url` preenchido com caminho relativo
+- [ ] `planned_cover_mode = 'source'`
 - [ ] PostgreSQL atualizado com todos os campos
 
 ---

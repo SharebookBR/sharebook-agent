@@ -10,6 +10,8 @@ MIN_DOTS = 2
 MIN_SPACE_BETWEEN = 1
 MIN_LEFT_WIDTH = 12
 MIN_RIGHT_WIDTH = 8
+MAX_SHARED_ROW_IMBALANCE = 8
+MAX_LEFTOVER_ROWS_FOR_DOTTED = 0
 
 
 def wrap_text(text: str, width: int) -> List[str]:
@@ -27,7 +29,7 @@ def wrap_text(text: str, width: int) -> List[str]:
     ) or [""]
 
 
-def choose_widths(left_text: str, right_text: str, max_chars: int) -> Tuple[int, int, List[str], List[str]]:
+def choose_global_widths(left: List[str], right: List[str], max_chars: int) -> Tuple[int, int]:
     best = None
 
     for right_width in range(MIN_RIGHT_WIDTH, max_chars - MIN_DOTS - MIN_SPACE_BETWEEN):
@@ -35,41 +37,77 @@ def choose_widths(left_text: str, right_text: str, max_chars: int) -> Tuple[int,
         if left_width < MIN_LEFT_WIDTH:
             continue
 
-        left_lines = wrap_text(left_text, left_width)
-        right_lines = wrap_text(right_text, right_width)
+        total_leftover = 0
+        total_rows = 0
+        total_balance = 0
+        worst_rows = 0
+        valid = True
 
-        connector_len = len(left_lines[-1]) + MIN_SPACE_BETWEEN + MIN_DOTS + len(right_lines[0])
-        if connector_len > max_chars:
+        for left_text, right_text in zip(left, right):
+            left_lines = wrap_text(left_text, left_width)
+            right_lines = wrap_text(right_text, right_width)
+            shared_rows = min(len(left_lines), len(right_lines))
+            if shared_rows == 0:
+                valid = False
+                break
+
+            connector_len = (
+                len(left_lines[shared_rows - 1])
+                + MIN_SPACE_BETWEEN
+                + MIN_DOTS
+                + len(right_lines[shared_rows - 1])
+            )
+            if connector_len > max_chars:
+                valid = False
+                break
+
+            total_leftover += abs(len(left_lines) - len(right_lines))
+            total_rows += len(left_lines) + len(right_lines)
+            total_balance += abs(len(left_lines[shared_rows - 1]) - len(right_lines[shared_rows - 1]))
+            worst_rows = max(worst_rows, max(len(left_lines), len(right_lines)))
+
+        if not valid:
             continue
 
-        shared_rows = min(len(left_lines), len(right_lines))
-        leftover_rows = abs(len(left_lines) - len(right_lines))
-        connector_balance = abs(len(left_lines[-1]) - len(right_lines[shared_rows - 1])) if shared_rows else 0
-
         score = (
-            leftover_rows,
-            max(len(left_lines), len(right_lines)),
-            len(left_lines) + len(right_lines),
-            connector_balance,
+            total_leftover,
+            worst_rows,
+            total_rows,
+            total_balance,
             abs(left_width - right_width),
             -left_width,
         )
 
         if best is None or score < best[0]:
-            best = (score, left_width, right_width, left_lines, right_lines)
+            best = (score, left_width, right_width)
 
     if best is None:
-        raise ValueError(
-            f"max_chars too small for pair left='{left_text}' right='{right_text}'"
-        )
+        raise ValueError("max_chars too small for provided arrays")
 
-    _, left_width, right_width, left_lines, right_lines = best
-    return left_width, right_width, left_lines, right_lines
+    _, left_width, right_width = best
+    return left_width, right_width
 
 
-def format_pair(left_text: str, right_text: str, max_chars: int) -> List[str]:
-    _, right_width, left_lines, right_lines = choose_widths(left_text, right_text, max_chars)
+def should_use_dotted(left_lines: List[str], right_lines: List[str]) -> bool:
+    shared_rows = min(len(left_lines), len(right_lines))
+    if shared_rows == 0:
+        return False
 
+    if len(left_lines) > 2 or len(right_lines) > 2:
+        return False
+
+    leftover_rows = abs(len(left_lines) - len(right_lines))
+    if leftover_rows > MAX_LEFTOVER_ROWS_FOR_DOTTED:
+        return False
+
+    connector_balance = abs(len(left_lines[shared_rows - 1]) - len(right_lines[shared_rows - 1]))
+    if connector_balance > MAX_SHARED_ROW_IMBALANCE:
+        return False
+
+    return True
+
+
+def format_dotted_pair(left_lines: List[str], right_lines: List[str], max_chars: int, right_width: int) -> List[str]:
     right_indent = max_chars - right_width
     shared_rows = min(len(left_lines), len(right_lines))
     connector_row = shared_rows - 1
@@ -98,23 +136,49 @@ def format_pair(left_text: str, right_text: str, max_chars: int) -> List[str]:
     return lines
 
 
+def format_fallback_pair(left_lines: List[str], right_lines: List[str], max_chars: int, right_width: int) -> List[str]:
+    right_indent = max_chars - right_width
+    lines: List[str] = []
+
+    lines.extend(left_lines)
+    lines.append("." * max_chars)
+    for line in right_lines:
+        lines.append(" " * right_indent + line)
+
+    return lines
+
+
+def format_pair(left_text: str, right_text: str, max_chars: int, left_width: int, right_width: int) -> List[str]:
+    left_lines = wrap_text(left_text, left_width)
+    right_lines = wrap_text(right_text, right_width)
+
+    if should_use_dotted(left_lines, right_lines):
+        return format_dotted_pair(left_lines, right_lines, max_chars, right_width)
+
+    return format_fallback_pair(left_lines, right_lines, max_chars, right_width)
+
+
 def format_two_arrays(left: List[str], right: List[str], max_chars: int = DEFAULT_MAX_CHARS) -> str:
     if len(left) != len(right):
         raise ValueError("left and right must have the same length")
     if max_chars < 12:
         raise ValueError("max_chars must be at least 12")
 
+    left_values = [str(item).strip() for item in left]
+    right_values = [str(item).strip() for item in right]
+    left_width, right_width = choose_global_widths(left_values, right_values, max_chars)
+
     rendered: List[str] = []
-    for index, (l, r) in enumerate(zip(left, right)):
+    for index, (l, r) in enumerate(zip(left_values, right_values)):
         if index > 0:
             rendered.append("")
-        rendered.extend(format_pair(str(l), str(r), max_chars))
+        rendered.extend(format_pair(l, r, max_chars, left_width, right_width))
 
     return "\n".join(rendered)
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Format two string arrays into dotted two-column blocks")
+    parser = argparse.ArgumentParser(description="Format two string arrays into resilient two-column dotted blocks")
     parser.add_argument("--left", required=True, help="JSON array of left strings")
     parser.add_argument("--right", required=True, help="JSON array of right strings")
     parser.add_argument("--max-chars", type=int, default=DEFAULT_MAX_CHARS, help=f"Maximum chars per output line (default: {DEFAULT_MAX_CHARS})")
