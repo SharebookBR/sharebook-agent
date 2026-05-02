@@ -63,6 +63,8 @@ def format_pair(left_text: str, right_text: str, max_chars: int) -> List[str]:
     _, right_width, left_lines, right_lines = choose_widths(left_text, right_text, max_chars)
 
     right_indent = max_chars - right_width
+    shared_rows = min(len(left_lines), len(right_lines))
+    connector_row = shared_rows - 1
     rows = max(len(left_lines), len(right_lines))
     lines: List[str] = []
 
@@ -70,8 +72,7 @@ def format_pair(left_text: str, right_text: str, max_chars: int) -> List[str]:
         left_line = left_lines[row] if row < len(left_lines) else ""
         right_line = right_lines[row] if row < len(right_lines) else ""
 
-        is_connector_row = row == rows - 1
-        if is_connector_row:
+        if row == connector_row and left_line and right_line:
             dots_count = max_chars - len(left_line) - MIN_SPACE_BETWEEN - len(right_line)
             if dots_count < MIN_DOTS:
                 raise ValueError("internal layout error: insufficient dots")
