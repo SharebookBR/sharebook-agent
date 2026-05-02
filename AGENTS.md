@@ -148,6 +148,8 @@ If nothing relevant → `HEARTBEAT_OK`
 - Preferir scripts oficiais
 - Update > delete+create
 - Validar fonte antes de confiar
+- **Missão principal atual do importer: `baixelivros_infantil`.** Quando houver ambiguidade de prioridade, UI, filtro default, triagem e esforço operacional devem favorecer essa source.
+- `/admin/importer` deve abrir por padrão focado em `baixelivros_infantil`, não em fonte genérica legado como `ebook_foundation`.
 - As pastas de projeto em `/data/workspace/` (incluindo `sharebook-ebook-importer/`, `sharebook-agent/` e afins) estão em volume persistente e sobrevivem a update de imagem do OpenClaw.
 - Se o `sharebook-ebook-importer` usar cron Linux dentro do container, manter o setup **reidempotente e documentado** no próprio repositório; não depender de estado manual perdido no update.
 - `/admin/importer` é painel operacional da fila do `sharebook-ebook-importer`, não tela genérica. A fonte real são `importer.sources`, `importer.queue_items` e `importer.runs`; lista de itens deve ser paginada server-side e renderizada como cards compactos responsivos, não tabela hostil no celular.
@@ -193,7 +195,7 @@ If nothing relevant → `HEARTBEAT_OK`
 ### Skills
 - `sharebook-agent/skills/sharebook-master-playbook.md` — playbook geral do ecossistema Sharebook. Usar quando a tarefa é ampla, mistura produto/operação/processo, ou quando não houver skill mais específica.
 - `sharebook-agent/skills/sharebook-voice-glossary/SKILL.md` — glossário e voz oficial do Sharebook. Usar quando a tarefa envolver copy, nomenclatura, microcopy, emails, labels, mensagens, UX writing, revisão semântica ou dúvidas sobre termos oficiais como `livro digital`, `doação`, `solicitação`, `doador(a)`, `ganhador(a)`, `vitrine` e `data de escolha`. Também usar quando houver suspeita de inconsistência entre fluxo físico e digital e for preciso separar problema de vocabulário vs problema de mecânica do produto.
-- `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md` — fluxo de ingestão de ebooks públicos. Usar para importar acervo, extrair metadados/PDF, depurar fila, fontes e worker do importer.
+- `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md` — fluxo de ingestão de ebooks públicos. Usar para importar acervo, extrair metadados/PDF, depurar fila, fontes e worker do importer. Prioridade operacional atual: `baixelivros_infantil`.
 - `sharebook-agent/skills/sharebook-physical-book-importer/SKILL.md` — fluxo de livros físicos. Usar para cadastro/importação de livros físicos, normalmente quando a origem não é ebook público.
 - `sharebook-agent/skills/sharebook-ux-reviewer/SKILL.md` — revisão crítica de UX orientada a conversão e clareza. Usar para auditar telas, fluxos, copy, hierarquia visual e fricção de uso.
 - `sharebook-agent/skills/create-book.md` — produção de livro/PDF e seus artefatos. Usar para escrever, estruturar, diagramar, revisar ou gerar assets de livro.
@@ -203,6 +205,7 @@ If nothing relevant → `HEARTBEAT_OK`
 - `sharebook-agent/skills/sharebook-category-organizer/SKILL.md` — organização taxonômica do catálogo. Usar para escolher categoria folha, corrigir árvore, evitar categoria genérica e melhorar classificação.
 - `sharebook-agent/skills/sharebook-postgres-ro/SKILL.md` — acesso read-only ao Postgres de produção. Usar para diagnóstico, consultas, validação de pipeline e conferência de estado sem alterar dados.
 - `sharebook-agent/skills/sharebook-triage/SKILL.md` — triagem inicial de itens extraídos (`waiting_triage`). Usar assim que items chegam de uma fonte: avalia link, conteúdo, duplicata, autor mínimo e avança para `waiting_editor`. Não preenche sinopse/categoria — isso é da preparer.
+- `sharebook-agent/skills/sharebook-triage-baixelivros/SKILL.md` — skill específica da missão principal atual, `baixelivros_infantil`. Usar como default quando a triagem for da frente BaixeLivros infantil.
 
 ### Scripts operacionais
 - `sharebook-agent/scripts/sharebook_prod_book.py` — find/create/update/delete/approve em produção.
