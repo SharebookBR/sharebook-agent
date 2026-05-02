@@ -187,6 +187,8 @@ WHERE id = <ID_DO_ITEM>
   - há indício jurídico ruim?
   - o item está dentro do escopo editorial?
   - o idioma é português?
+- **No BaixeLivros, não pare no wrapper `/download-gratuito`**. Antes de rejeitar por `fake_pdf` ou `dead_link`, inspecione o HTML da página do item e procure o alvo real do download em `onclick="downloadSimple('...')"`, `data-target`, ou URL direta equivalente. O wrapper pode devolver HTML/403 e mesmo assim o PDF real estar válido no destino apontado pelo botão.
+- Só rejeite por PDF inacessível depois de testar o alvo real do botão e validar que ele também falha ou não é PDF.
 
 No BaixeLivros, desconfiar da vitrine. O que manda é a página real do item e o arquivo real baixado.
 
@@ -222,7 +224,7 @@ Sempre registrar o motivo da rejeição em `metadata_json` para rastreabilidade 
 
 **Razões comuns (`reason`):**
 - `dead_link` — 404, domínio morto, conteúdo não acessível
-- `fake_pdf` — HTML, redirecionamento ou anti-download no lugar do PDF
+- `fake_pdf` — HTML, redirecionamento ou anti-download no lugar do PDF, **depois** de testar também o alvo real do botão (`downloadSimple`/`data-target`) quando existir
 - `not_a_book` — videoaula, curso, software, atividade, cartilha, slide, material modular
 - `pirate` — material protegido sem autorização clara
 - `legal_risk` — obra contemporânea ou edição suspeita com sinal comercial/restritivo relevante
@@ -242,6 +244,7 @@ Categoria e sinopse são responsabilidade da skill `sharebook-baixelivros-editor
 | Item em `/didatico/` | `triage_rejected` por `didactic_out_of_scope` |
 | Título com cara de atividade escolar, alfabetização, caderno, colorir, professor, 1º ano, creche | suspeitar forte de `didactic_out_of_scope` |
 | PDF < 100 KB | suspeitar de slide, amostra, artigo ou não-livro |
+| `/download-gratuito` retorna HTML/403 mas a página tem `downloadSimple(...)` ou `data-target` | testar a URL real antes de rejeitar |
 | Autor contemporâneo pouco conhecido com PDF completo | suspeitar de `legal_risk` |
 | Tradução/adaptação moderna de clássico | suspeitar de `legal_risk` |
 | Clássico público com edição amadora recente | não rejeitar automaticamente |
