@@ -1,0 +1,356 @@
+---
+name: sharebook-triage-baixelivros
+description: "Triagem inicial de itens no pipeline de importação do ShareBook. Use quando items estão em `waiting_triage` — o primeiro filtro após a extração da fonte. Avalia se o material é um livro aproveitável, detecta links quebrados, conteúdo não-livro, pirataria, duplicatas e define a metadata mínima para avançar no pipeline. O output é um item em `waiting_editor` (segue), `duplicate` (já temos), `source_blocked` (fonte com problema estrutural) ou `error` (item problemático isolado)."
+---
+
+# ShareBook Triage
+
+## Quando usar
+
+Items recém-chegados de uma fonte externa (Archive.org, Google Code, etc.) com status `waiting_triage`.  
+Este é o **primeiro filtro humano** do pipeline — antes da curadoria editorial (`sharebook-book-preparer`).
+
+---
+
+## Critérios de decisão
+
+### 🔴 Bloqueantes → `source_blocked` (se for padrão da fonte) ou `error` (item isolado)
+
+1. **Link 404 / acesso negado** — Archive.org removeu o item, Google Code descontinuado, URL não responde mais
+2. **Pirataria** — scan de livro comercial com direitos autorais ativos (editora ainda vendendo)
+3. **Não é livro** — videoaula, podcast, curso gravado, software, palestra, slide deck sem conteúdo textual
+4. **Slide / material de aula** — PDFs com menos de 100 KB, slides avulsos sem coesão de livro, coleção de slides modulares de um repositório sem PDF compilado único. Ex: repositório GitHub com capítulos em PDFs separados sem release consolidado.
+   - Se o PDF tiver **menos de 100 KB**, suspeitar automaticamente
+   - Se vier de repositório GitHub que é coleção de slides/aulas, verificar se existe um PDF único compilado (release ou similar). Se não existir → `triage_rejected` por `not_a_book`
+
+### 🟡 Duplicata → `duplicate`
+
+4. **Mesma obra já publicada no Sharebook**.  
+   ⚠️ **Só conta como duplicata se o livro já existe no produto** (tabela `"Books"` do banco `sharebook`).  
+   ⚠️ **Item rejeitado ou em fila não é base para duplicata**: outros itens em `triage_rejected` ou `waiting_editor` não tornam o atual duplicata. Só o banco do produto é fonte da verdade.
+   ⚠️ **Não confundir com obras complementares**: "PHP para Iniciantes" e "PHP Avançado" são livros diferentes, ambos bem-vindos.  
+   ⚠️ **Variações de título do mesmo conteúdo** contam como duplicata.
+
+   **Como verificar**: consultar o banco do produto (`sharebook-backend`) no schema `public`, tabela `"Books"`. O mesmo host PostgreSQL, database `sharebook`:
+   ```sql
+   -- DSN base: mesmo host/user do IMPORTER_DB_DSN, database = sharebook
+   SELECT "Id", "Title", "Author", "Status", "Slug"
+   FROM public."Books"
+   WHERE LOWER("Title") LIKE '%<palavra-chave-1>%'
+      OR LOWER("Title") LIKE '%<palavra-chave-2>%';
+   ```
+   Extrair 2-3 palavras-chave do título do item e buscar no banco. Se encontrar match próximo → `duplicate`. Se não encontrar → segue limpo.
+   
+   **Nota**: colunas com maiúsculas exigem aspas duplas no PostgreSQL (`"Title"`, `"Author"`, etc.).
+
+### 🟢 Segue limpo → `waiting_editor`
+
+- Guia/monografia original (conteúdo didático próprio, autores identificados)
+- Domínio público ou Creative Commons explícito
+- Literatura consolidada com fonte confiável
+- Metadata pode ser **mínima** — a fonte (ebook_foundation) é uma curadoria de links, não uma livraria com descrições ricas
+- **Idioma**: português (BR) ou inglês. Qualquer outro (chinês, espanhol, etc.) não serve pro acervo
+
+---
+
+## Informações sobre as fontes
+
+Consulte `references/sources.md` para detalhes de cada fonte (comportamento esperado, riscos conhecidos, padrões de URL).
+
+---
+
+## Referência de identificação
+
+Cada item tem dois números:
+- **`id`**: chave primária global da tabela (usado nos comandos SQL)
+- **`position`**: número sequencial por source (o que o dashboard mostra)
+
+**Sempre use `position` quando se referir ao número do item com o Raffa.**
+
+---
+
+## Fluxo operacional
+
+## Fonte de verdade operacional
+
+Antes de qualquer triagem, validar a fonte atual nesta ordem:
+
+1. `sharebook-ebook-importer/src/sharebook_ebook_importer/pg_db.py`
+2. `sharebook-ebook-importer/README.md`
+3. `sharebook-ebook-importer/docs/PLAYBOOK.md`
+
+Se a documentação desta skill divergir do código do importer, corrigir a skill.
+
+**Importante**: a fila real fica em **Postgres, schema `importer`**, nas tabelas `importer.queue_items`, `importer.sources` e `importer.runs`.
+Se sua conexão SQL não enxergar esse schema, você está no banco errado. Não improvise triagem em outra base.
+
+### 1. Buscar próximo item e marcar como `triaging`
+
+```sql
+-- Buscar item (sempre incluir id e position)
+SELECT qi.id,
+       qi.position,
+       qi.title,
+       qi.author,
+       qi.source_url,
+       s.name as source_name
+FROM importer.queue_items qi
+JOIN importer.sources s ON s.id = qi.source_id
+WHERE qi.status = 'waiting_triage'
+ORDER BY qi.position
+LIMIT 1;
+```
+
+**Antes de começar a análise**, atualizar o status para `triaging` para evitar corrida com outro operador/processo:
+
+```sql
+UPDATE importer.queue_items
+SET status = 'triaging', updated_at = NOW()
+WHERE id = <ID_DO_ITEM>
+  AND status = 'waiting_triage';
+```
+
+### 2. Validar a URL e o conteúdo
+
+- Se a URL for do **Archive.org**, usar `web_fetch(url)` na página ou no metadata JSON (`https://archive.org/metadata/<identifier>`)
+- Se for de outro domínio, acessar diretamente
+- Verificar:
+  - A página existe? (HTTP 200?)
+  - O conteúdo é um livro/publicação textual?
+  - Tem indícios de pirataria? (scan de livro comercial recente, editora identificável)
+  - Idioma está dentro do aceito?
+
+### 3. Decidir o destino
+
+| Situação | Status | planned_author | planned_category_id | planned_synopsis |
+|---|---|---|---|---|
+| ✅ Tudo ok | `waiting_editor` | Preencher se disponível | Deixar vazio (preparer decide) | Deixar vazio (preparer escreve) |
+| 🟡 Duplicata | `duplicate` | - | - | - |
+| 🔴 Link quebrado | `triage_rejected` | - | - | - |
+| 🔴 Não é livro | `triage_rejected` | - | - | - |
+| 🔴 Pirataria (isolado) | `triage_rejected` | - | - | - |
+| 🔴 Paywall (Leanpub, Amazon, Hotmart…) | `triage_rejected` | - | - | - |
+| 🔴 Pirataria (padrão da fonte) | `source_blocked` | - | - | - |
+
+**`triage_rejected`** é o status para itens que passaram pelo filtro humano e foram rejeitados. Isso o diferencia de `error` (falha técnica do worker/extrator).
+
+⚠️ **Regra de ouro**: `triage_rejected` **não** é um túmulo. O metadata é o rastro que permite recuperar itens no futuro. Se amanhã surgir um conversor Markdown→PDF, uma assinatura Leanpub, ou uma nova fonte, a query `WHERE metadata_json->'triage'->>'reason' = 'no_pdf'` traz todos os itens esperando. **Registre o motivo com precisão — isso é tão importante quanto a decisão.**
+
+### Por que rejeitou? — Registro no metadata_json
+
+Sempre registrar o motivo da rejeição em `metadata_json` para rastreabilidade futura:
+
+```json
+{
+  "triage": {
+    "rejected_by": "Raffa",
+    "reason": "paywall",
+    "detail": "Redirecionou para Leanpub — conteúdo gratuito apenas com assinatura"
+  }
+}
+```
+
+**Razões comuns (`reason`):**
+- `paywall` — atrás de assinatura/carrinho de compras
+- `dead_link` — 404, domínio morto, conteúdo não acessível
+- `not_a_book` — videoaula, curso, podcast, software, slide de aula, material didático modular sem compilação
+- `pirate` — material protegido sem autorização
+- `incomplete` — WIP, rascunho, < 50 páginas
+- `wip` — work-in-progress, conteúdo indica que está inacabado
+- `no_pdf` — conteúdo existe mas não tem PDF (ex: GitHub Markdown)
+- `language` — chinês, espanhol ou outro fora do aceito
+
+Isso permite consultar depois: quantos itens foram rejeitados por paywall? Por link quebrado?
+
+**Importante**: na triagem, **só preenchemos `planned_author`** se o autor estiver claro na fonte.  
+Categoria e sinopse são responsabilidade da skill `sharebook-book-preparer` (status `waiting_editor`/`editing`).
+
+### Gatilhos de suspeita — quando desconfiar e verificar mais
+
+| Gatilho | Ação |
+|---|---|
+| Domínio Leanpub, Amazon, Hotmart, ou similar | Verificar se é gratuito e irrestrito. Se tiver carrinho/assinatura → `triage_rejected` por `paywall` |
+| Descrição menciona "em andamento", "incompleto", "WIP", "rascunho" | Conteúdo não é livro completo → `triage_rejected` por `incomplete` ou `wip` |
+| PDF < 100 KB | Suspeitar de slide, artigo curto ou não-livro. Verificar número de páginas e conteúdo |
+| Repositório GitHub | Navegar na árvore de diretórios (não confiar só no README). O PDF do livro pode estar dentro de uma subpasta (ex: `Livro/`, `pdf/`, `ebook/`). Verificar também a API `/repos/<user>/<repo>/contents` para listar arquivos. |
+| Repositório GitHub com múltiplos PDFs soltos (slides de aula) | Verificar se existe release com PDF único compilado. Se não, é material didático modular → `triage_rejected` por `not_a_book` |
+| Já temos livro do mesmo tema (não mesma obra) | **Não barrar** — mas anotar em `metadata_json.triage.note` como referência |
+
+### Transição de status
+
+```
+waiting_triage  →  triaging  →  waiting_editor    (segue no pipeline)
+                                duplicate         (já temos)
+                                triage_rejected   (link quebrado / não-livro / pirataria / sem PDF)
+                                source_blocked    (padrão problemático na fonte inteira)
+      ①              ②                 ③
+```
+
+1. **① → ②**: Ao pegar o item para análise
+2. **② → ③**: Após decisão tomada e banco atualizado
+
+### 4. Baixar o PDF (obrigatório para itens aprovados)
+
+Se o item for aprovado (`waiting_editor`), **o triador é responsável por baixar o PDF imediatamente**.  
+O link original pode ficar indisponível. A triagem é a melhor hora para garantir o arquivo.
+
+Salvar em:
+```
+sharebook-ebook-importer/triage-downloads/position_<PPP>-<slug>.pdf
+```
+
+Onde `<PPP>` é o `position` com zero-padding de 3 dígitos e `<slug>` é o slug do título.
+
+Exemplo: position 11, título "Guia Foca Linux" →
+```
+triage-downloads/position_011-guia-foca-linux.pdf
+```
+
+### 4a. Validar o PDF baixado (obrigatório)
+
+Antes de registrar no banco, validar:
+
+```bash
+file /tmp/<arquivo>.pdf
+# Deve retornar: PDF document, version X.X, <N> pages
+```
+
+Se o comando `file` não estiver disponível no ambiente, instalar:
+```bash
+apt-get install -y file
+```
+
+Se o comando `pdftotext` não estiver disponível, instalar:
+```bash
+apt-get install -y poppler-utils
+pdftotext /tmp/<arquivo>.pdf - -l 3 | head -20
+```
+
+**O que checar:**
+- É um PDF válido? (não HTML disfarçado)
+- Tem páginas reais? (6+ páginas — menos que isso é provavelmente artigo, não livro)
+- O conteúdo está legível? (primeiras páginas com pdftotext)
+
+### 4b. Gerar o slug
+
+Sempre em lowercase, sem acentos, sem caracteres especiais:
+
+```python
+import re, unicodedata
+
+normalized = unicodedata.normalize('NFKD', title).encode('ascii', 'ignore').decode('ascii')
+slug = re.sub(r'[^a-z0-9]+', '-', normalized.lower()).strip('-')
+slug = slug[:80]
+# 'O Editor de Texto Vim' → 'o-editor-de-texto-vim'
+# 'Guia da Computação em Nuvem: Conceito, Prática & Capacitação' → 'guia-da-computacao-em-nuvem-conceito-pratica-capacitacao'
+```
+
+### 5. Atualizar o PostgreSQL
+
+Use sempre o banco do importer, schema `importer`.
+
+Atualizar o `metadata_json` com o caminho do PDF baixado (relativo à raiz do `sharebook-ebook-importer`):
+
+```python
+import psycopg2, os, json
+
+dsn = os.getenv('IMPORTER_DB_DSN')
+conn = psycopg2.connect(dsn)
+cur = conn.cursor()
+
+item_id = <ID>
+novo_status = '<waiting_editor|triage_rejected|source_blocked>'
+autor = '<autor ou None>'
+local_pdf = f"triage-downloads/position_{position:03d}-{slug}.pdf" if pdf_baixado else None
+
+metadata = json.dumps({"local_pdf": local_pdf}) if local_pdf else None
+
+cur.execute("""
+  UPDATE importer.queue_items SET
+    planned_author = COALESCE(%s, planned_author),
+    status = %s,
+    metadata_json = COALESCE(%s::jsonb, metadata_json),
+    updated_at = NOW()
+  WHERE id = %s AND status = 'triaging'
+""", (autor, novo_status, metadata, item_id))
+
+conn.commit()
+conn.close()
+```
+
+**Exemplo completo de rejeição com motivo:**
+
+```python
+import psycopg2, os, json
+
+dsn = os.getenv('IMPORTER_DB_DSN')
+conn = psycopg2.connect(dsn)
+cur = conn.cursor()
+
+item_id = 136
+motivo = json.dumps({
+    "triage": {
+        "rejected_by": "Raffa",
+        "reason": "paywall",
+        "detail": "Redirecionou para Leanpub — Free With Membership, conteúdo pago"
+    }
+})
+
+cur.execute("""
+  UPDATE importer.queue_items SET
+    status = 'triage_rejected',
+    metadata_json = %s::jsonb,
+    updated_at = NOW()
+  WHERE id = %s AND status = 'triaging'
+""", (motivo, item_id))
+
+conn.commit()
+conn.close()
+```
+
+---
+
+## Checklist de triagem
+
+- [ ] URL acessível? (não 404, não domínio morto)
+- [ ] Conteúdo é livro/publicação? (não videoaula, não podcast, não software)
+- [ ] Não é pirataria evidente?
+- [ ] Link não redireciona para marketplace pago? (Leanpub, Amazon, Hotmart…)
+- [ ] Idioma: português ou inglês?
+- [ ] Não é duplicata de obra já importada?
+- [ ] Autor identificável? (se sim, preencher `planned_author`)
+- [ ] Se aprovado: PDF do conteúdo baixado e validado?
+- [ ] Para rejeição: status é `triage_rejected`, não `error`
+- [ ] Para rejeição: `metadata_json->'triage'` preenchido com reason + detail
+- [ ] Se aprovado: PDF salvo em `triage-downloads/position_<PPP>-<slug>.pdf`
+- [ ] Se aprovado: `metadata_json->>'local_pdf'` preenchido
+- [ ] Item marcado com status correto no PostgreSQL
+
+---
+
+## Teste cego de skill (validação)
+
+Quando uma regra da skill for corrigida com base em erro do triador, validar a correção com um **teste cego**:
+
+1. Corrigir a skill com a nova regra
+2. Resetar o item para `waiting_triage` (limpar `planned_author`, `metadata_json`, remover PDF baixado)
+3. Disparar um **subagente novo** com instrução apenas de ler a SKILL.md e executar a triagem
+4. Se o subagente acertar seguindo a skill → regra validada
+5. Se errar → a skill ainda está ambígua ou incompleta
+
+**Regra**: nunca usar o mesmo agente que errou para validar a correção. O teste só vale com agente fresco que não sabe do erro anterior.
+
+Nome técnico: **Teste Cego de Skill (Blind Skill Test)**.
+
+---
+
+## Erros comuns
+
+1. **Confundir duplicata com complemento**: "CSS Iniciante" ≠ "CSS Avançado" , ambos seguem
+2. **Rejeitar por metadata pobre**: a fonte ebook_foundation é essencialmente uma lista de links com títulos. Metadata enxuta é esperado, não motivo de rejeição
+3. **Aceitar conteúdo em chinês/espanhol**: só português e inglês
+4. **Marcar como `error` o que é rejeição humana**: `error` é para falha técnica (worker, OCR, extração). Rejeição deliberada na triagem usa `triage_rejected`.
+5. **Marcar como `source_blocked` o que é padrão da fonte**: se a fonte inteira parece ter links quebrados, marcar como `source_blocked` na triagem, não item por item
+6. **Esquecer que `triage_rejected` com `no_pdf` é recuperável**: não é um erro, é um item pausado. O metadata é a ponte pro futuro. Não deixe de registrar o `reason` com precisão.
+7. **Rodar query no banco errado**: se `importer.queue_items` não existir, a conexão não é a da fila real. Pare, valide DSN/schema e só então continue.
+8. **Confiar mais nesta skill do que no código**: `pg_db.py`, `README.md` e `docs/PLAYBOOK.md` mandam mais que este arquivo.
