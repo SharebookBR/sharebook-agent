@@ -141,6 +141,18 @@ If nothing relevant → `HEARTBEAT_OK`
 - `sharebook-agent` → commit direto na master
 - Preferir HTTPS (evitar SSH)
 
+## Permissões / ownership
+
+- Evitar alternância entre arquivos `root:root` e `node:node` dentro de `/data/workspace`.
+- Padrão saudável para repositórios operados pelo OpenClaw: diretórios e arquivos editáveis do workspace em `node:node`.
+- Se o OpenClaw começar a falhar em escrita parcial, rename, git add ou update de arquivos já existentes, suspeitar primeiro de ownership inconsistente antes de culpar a ferramenta.
+- Após operações que rodem como root e deixem rastro no workspace, normalizar ownership do repositório afetado.
+- Comando de correção canônico:
+  ```bash
+  chown -R node:node /data/workspace/sharebook-agent
+  ```
+- Se o problema afetar mais de um repositório, corrigir o alvo real, não sair dando `chown` cego na casa inteira.
+
 ---
 
 ## Produção
@@ -206,6 +218,7 @@ If nothing relevant → `HEARTBEAT_OK`
 - `sharebook-agent/skills/sharebook-postgres-ro/SKILL.md` — acesso read-only ao Postgres de produção. Usar para diagnóstico, consultas, validação de pipeline e conferência de estado sem alterar dados.
 - `sharebook-agent/skills/sharebook-triage/SKILL.md` — triagem inicial de itens extraídos (`waiting_triage`). Usar assim que items chegam de uma fonte: avalia link, conteúdo, duplicata, autor mínimo e avança para `waiting_editor`. Não preenche sinopse/categoria — isso é da preparer.
 - `sharebook-agent/skills/sharebook-triage-baixelivros/SKILL.md` — skill específica da missão principal atual, `baixelivros_infantil`. Usar como default quando a triagem for da frente BaixeLivros infantil.
+- `sharebook-agent/skills/sharebook-baixelivros-editorial-preparer/SKILL.md` — preparador editorial da missão principal atual, `baixelivros_infantil`. Usar como default para itens em `waiting_editor` e `editing` da frente BaixeLivros infantil.
 
 ### Scripts operacionais
 - `sharebook-agent/scripts/sharebook_prod_book.py` — find/create/update/delete/approve em produção.
