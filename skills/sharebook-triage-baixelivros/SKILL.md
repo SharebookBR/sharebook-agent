@@ -1,27 +1,51 @@
 ---
 name: sharebook-triage-baixelivros
-description: "Triagem inicial de itens no pipeline de importação do ShareBook. Use quando items estão em `waiting_triage` — o primeiro filtro após a extração da fonte. Avalia se o material é um livro aproveitável, detecta links quebrados, conteúdo não-livro, pirataria, duplicatas e define a metadata mínima para avançar no pipeline. O output é um item em `waiting_editor` (segue), `duplicate` (já temos), `source_blocked` (fonte com problema estrutural) ou `error` (item problemático isolado)."
+description: "Triagem inicial de itens do BaixeLivros no pipeline de importação do ShareBook. Use quando items de sources BaixeLivros estão em `waiting_triage`, especialmente `baixelivros_infantil`, `baixelivros`, literatura brasileira e estrangeira. Avalia se o material é livro aproveitável, detecta links quebrados, conteúdo não-livro, pirataria, duplicatas, didático fora de escopo e risco jurídico de obras contemporâneas. O output é um item em `waiting_editor`, `duplicate`, `triage_rejected` ou `source_blocked`."
 ---
 
-# ShareBook Triage
+# ShareBook Triage, BaixeLivros
 
 ## Quando usar
 
-Items recém-chegados de uma fonte externa (Archive.org, Google Code, etc.) com status `waiting_triage`.  
-Este é o **primeiro filtro humano** do pipeline — antes da curadoria editorial (`sharebook-book-preparer`).
+Items recém-chegados de sources do **BaixeLivros** com status `waiting_triage`.  
+Este é o **primeiro filtro humano** do pipeline, antes da curadoria editorial.
+
+Sources-alvo mais importantes:
+- `baixelivros`
+- `baixelivros_infantil`
+- recortes de literatura brasileira
+- recortes de literatura estrangeira
+
+Se a origem não for BaixeLivros e a lógica principal depender de outra fonte, esta skill pode não ser a mais adequada.
 
 ---
 
 ## Critérios de decisão
 
-### 🔴 Bloqueantes → `source_blocked` (se for padrão da fonte) ou `error` (item isolado)
+### 🔴 Bloqueantes
 
-1. **Link 404 / acesso negado** — Archive.org removeu o item, Google Code descontinuado, URL não responde mais
-2. **Pirataria** — scan de livro comercial com direitos autorais ativos (editora ainda vendendo)
-3. **Não é livro** — videoaula, podcast, curso gravado, software, palestra, slide deck sem conteúdo textual
-4. **Slide / material de aula** — PDFs com menos de 100 KB, slides avulsos sem coesão de livro, coleção de slides modulares de um repositório sem PDF compilado único. Ex: repositório GitHub com capítulos em PDFs separados sem release consolidado.
-   - Se o PDF tiver **menos de 100 KB**, suspeitar automaticamente
-   - Se vier de repositório GitHub que é coleção de slides/aulas, verificar se existe um PDF único compilado (release ou similar). Se não existir → `triage_rejected` por `not_a_book`
+1. **Link morto / acesso negado / anti-download**
+   - página não responde
+   - download volta HTML disfarçado
+   - proteção do site impede obter PDF real
+2. **Pirataria / risco jurídico alto**
+   - scan de livro comercial ainda vendido
+   - obra contemporânea sem licença clara
+   - edição ilustrada recente de texto clássico sem base de autorização clara
+   - tradução/adaptação moderna sem segurança jurídica mínima
+3. **Não é livro**
+   - videoaula, podcast, software, palestra, curso, atividade solta, cartilha avulsa, folheto, slide deck
+4. **Material didático / pedagógico fora do alvo editorial**
+   - alfabetização, caderno de atividades, exercícios, apoio escolar, material de professor, conteúdo para colorir
+5. **PDF inconsistente**
+   - HTML fingindo ser PDF
+   - arquivo muito curto / quebrado / ilegível
+
+Regra prática para BaixeLivros:
+- problema estrutural recorrente da source → `source_blocked`
+- problema isolado do item → `triage_rejected`
+
+Para BaixeLivros, evitar usar `error` como lixeira semântica. Se a triagem humana decidiu rejeitar, o status normal é `triage_rejected`.
 
 ### 🟡 Duplicata → `duplicate`
 
@@ -45,17 +69,50 @@ Este é o **primeiro filtro humano** do pipeline — antes da curadoria editoria
 
 ### 🟢 Segue limpo → `waiting_editor`
 
-- Guia/monografia original (conteúdo didático próprio, autores identificados)
-- Domínio público ou Creative Commons explícito
-- Literatura consolidada com fonte confiável
-- Metadata pode ser **mínima** — a fonte (ebook_foundation) é uma curadoria de links, não uma livraria com descrições ricas
-- **Idioma**: português (BR) ou inglês. Qualquer outro (chinês, espanhol, etc.) não serve pro acervo
+- domínio público claro
+- licença explícita clara
+- literatura consolidada com risco jurídico baixo
+- conto, fábula, folclore ou clássico com base razoável
+- PDF real, íntegro e minimamente legível
+- **Idioma**: português
+
+Para BaixeLivros infantil, o default saudável é conservador.
+Se houver dúvida jurídica séria, rejeitar cedo em vez de empurrar problema para frente.
 
 ---
 
+## Regras específicas para `baixelivros_infantil`
+
+A source `baixelivros_infantil` é valiosa, mas misturada e juridicamente heterogênea.
+
+### O que tende a ser candidato forte
+- Andersen
+- Esopo
+- Monteiro Lobato em obras clássicas já consolidadas
+- fábulas
+- contos tradicionais
+- lendas e folclore
+- obras com licença explícita
+
+### O que tende a ser suspeito
+- autores contemporâneos pouco conhecidos com PDF completo
+- livros infantis recentes com ilustração/editorial moderna
+- adaptações modernas de clássicos sem licença clara
+- compilações genéricas tipo `100 histórias` sem origem jurídica clara
+- material escolar ou paradidático disfarçado de infantil
+
+### Regra de escopo
+- URL em `/infantil/` não basta para aprovar
+- URL em `/didatico/` deve ser rejeitada por escopo
+- item com cara de atividade escolar, caderno, apoio pedagógico ou alfabetização deve virar `triage_rejected`
+
+### Regra jurídica dura
+Se o item parecer contemporâneo e não houver licença explícita ou base forte de legitimidade, rejeitar.
+Não tentar ser advogado heroico no meio da fila.
+
 ## Informações sobre as fontes
 
-Consulte `references/sources.md` para detalhes de cada fonte (comportamento esperado, riscos conhecidos, padrões de URL).
+Consulte `references/sources.md` para detalhes das fontes e padrões de URL.
 
 ---
 
@@ -112,13 +169,16 @@ WHERE id = <ID_DO_ITEM>
 
 ### 2. Validar a URL e o conteúdo
 
-- Se a URL for do **Archive.org**, usar `web_fetch(url)` na página ou no metadata JSON (`https://archive.org/metadata/<identifier>`)
-- Se for de outro domínio, acessar diretamente
+- Acessar a página diretamente
 - Verificar:
-  - A página existe? (HTTP 200?)
-  - O conteúdo é um livro/publicação textual?
-  - Tem indícios de pirataria? (scan de livro comercial recente, editora identificável)
-  - Idioma está dentro do aceito?
+  - a página existe?
+  - o download real é PDF ou HTML disfarçado?
+  - o conteúdo é livro de verdade?
+  - há indício jurídico ruim?
+  - o item está dentro do escopo editorial?
+  - o idioma é português?
+
+No BaixeLivros, desconfiar da vitrine. O que manda é a página real do item e o arquivo real baixado.
 
 ### 3. Decidir o destino
 
@@ -126,11 +186,11 @@ WHERE id = <ID_DO_ITEM>
 |---|---|---|---|---|
 | ✅ Tudo ok | `waiting_editor` | Preencher se disponível | Deixar vazio (preparer decide) | Deixar vazio (preparer escreve) |
 | 🟡 Duplicata | `duplicate` | - | - | - |
-| 🔴 Link quebrado | `triage_rejected` | - | - | - |
+| 🔴 Link quebrado / HTML no lugar do PDF | `triage_rejected` | - | - | - |
 | 🔴 Não é livro | `triage_rejected` | - | - | - |
-| 🔴 Pirataria (isolado) | `triage_rejected` | - | - | - |
-| 🔴 Paywall (Leanpub, Amazon, Hotmart…) | `triage_rejected` | - | - | - |
-| 🔴 Pirataria (padrão da fonte) | `source_blocked` | - | - | - |
+| 🔴 Pirataria / risco jurídico alto | `triage_rejected` | - | - | - |
+| 🔴 Didático / pedagógico fora do alvo | `triage_rejected` | - | - | - |
+| 🔴 Problema estrutural recorrente da source | `source_blocked` | - | - | - |
 
 **`triage_rejected`** é o status para itens que passaram pelo filtro humano e foram rejeitados. Isso o diferencia de `error` (falha técnica do worker/extrator).
 
@@ -151,14 +211,14 @@ Sempre registrar o motivo da rejeição em `metadata_json` para rastreabilidade 
 ```
 
 **Razões comuns (`reason`):**
-- `paywall` — atrás de assinatura/carrinho de compras
 - `dead_link` — 404, domínio morto, conteúdo não acessível
-- `not_a_book` — videoaula, curso, podcast, software, slide de aula, material didático modular sem compilação
-- `pirate` — material protegido sem autorização
-- `incomplete` — WIP, rascunho, < 50 páginas
-- `wip` — work-in-progress, conteúdo indica que está inacabado
-- `no_pdf` — conteúdo existe mas não tem PDF (ex: GitHub Markdown)
-- `language` — chinês, espanhol ou outro fora do aceito
+- `fake_pdf` — HTML, redirecionamento ou anti-download no lugar do PDF
+- `not_a_book` — videoaula, curso, software, atividade, cartilha, slide, material modular
+- `pirate` — material protegido sem autorização clara
+- `legal_risk` — obra contemporânea ou edição suspeita sem segurança jurídica mínima
+- `didactic_out_of_scope` — material pedagógico fora da missão editorial
+- `incomplete` — rascunho, amostra, obra truncada
+- `language` — fora do idioma aceito
 
 Isso permite consultar depois: quantos itens foram rejeitados por paywall? Por link quebrado?
 
@@ -169,12 +229,13 @@ Categoria e sinopse são responsabilidade da skill `sharebook-book-preparer` (st
 
 | Gatilho | Ação |
 |---|---|
-| Domínio Leanpub, Amazon, Hotmart, ou similar | Verificar se é gratuito e irrestrito. Se tiver carrinho/assinatura → `triage_rejected` por `paywall` |
-| Descrição menciona "em andamento", "incompleto", "WIP", "rascunho" | Conteúdo não é livro completo → `triage_rejected` por `incomplete` ou `wip` |
-| PDF < 100 KB | Suspeitar de slide, artigo curto ou não-livro. Verificar número de páginas e conteúdo |
-| Repositório GitHub | Navegar na árvore de diretórios (não confiar só no README). O PDF do livro pode estar dentro de uma subpasta (ex: `Livro/`, `pdf/`, `ebook/`). Verificar também a API `/repos/<user>/<repo>/contents` para listar arquivos. |
-| Repositório GitHub com múltiplos PDFs soltos (slides de aula) | Verificar se existe release com PDF único compilado. Se não, é material didático modular → `triage_rejected` por `not_a_book` |
-| Já temos livro do mesmo tema (não mesma obra) | **Não barrar** — mas anotar em `metadata_json.triage.note` como referência |
+| Item em `/didatico/` | `triage_rejected` por `didactic_out_of_scope` |
+| Título com cara de atividade escolar, alfabetização, caderno, colorir, professor, 1º ano, creche | suspeitar forte de `didactic_out_of_scope` |
+| PDF < 100 KB | suspeitar de slide, amostra, artigo ou não-livro |
+| Autor contemporâneo pouco conhecido com PDF completo | suspeitar de `legal_risk` |
+| Tradução/adaptação moderna de clássico | suspeitar de `legal_risk` |
+| Coletânea genérica sem origem clara | suspeitar de `legal_risk` ou `not_a_book` |
+| Já temos livro do mesmo tema (não mesma obra) | não barrar, mas anotar se ajudar |
 
 ### Transição de status
 
@@ -313,10 +374,10 @@ conn.close()
 ## Checklist de triagem
 
 - [ ] URL acessível? (não 404, não domínio morto)
-- [ ] Conteúdo é livro/publicação? (não videoaula, não podcast, não software)
-- [ ] Não é pirataria evidente?
-- [ ] Link não redireciona para marketplace pago? (Leanpub, Amazon, Hotmart…)
-- [ ] Idioma: português ou inglês?
+- [ ] Conteúdo é livro/publicação? (não curso, não atividade, não material pedagógico avulso)
+- [ ] Não há risco jurídico alto?
+- [ ] Não é didático fora do escopo?
+- [ ] Idioma: português?
 - [ ] Não é duplicata de obra já importada?
 - [ ] Autor identificável? (se sim, preencher `planned_author`)
 - [ ] Se aprovado: PDF do conteúdo baixado e validado?
@@ -347,10 +408,10 @@ Nome técnico: **Teste Cego de Skill (Blind Skill Test)**.
 ## Erros comuns
 
 1. **Confundir duplicata com complemento**: "CSS Iniciante" ≠ "CSS Avançado" , ambos seguem
-2. **Rejeitar por metadata pobre**: a fonte ebook_foundation é essencialmente uma lista de links com títulos. Metadata enxuta é esperado, não motivo de rejeição
-3. **Aceitar conteúdo em chinês/espanhol**: só português e inglês
-4. **Marcar como `error` o que é rejeição humana**: `error` é para falha técnica (worker, OCR, extração). Rejeição deliberada na triagem usa `triage_rejected`.
-5. **Marcar como `source_blocked` o que é padrão da fonte**: se a fonte inteira parece ter links quebrados, marcar como `source_blocked` na triagem, não item por item
-6. **Esquecer que `triage_rejected` com `no_pdf` é recuperável**: não é um erro, é um item pausado. O metadata é a ponte pro futuro. Não deixe de registrar o `reason` com precisão.
-7. **Rodar query no banco errado**: se `importer.queue_items` não existir, a conexão não é a da fila real. Pare, valide DSN/schema e só então continue.
+2. **Aceitar infantil contemporâneo por simpatia**: bonitinho não é critério jurídico
+3. **Confundir infantil com didático**: caderno, atividade e alfabetização não entram só porque falam com criança
+4. **Aceitar conteúdo fora do português**: neste fluxo, manter português como padrão
+5. **Marcar como `error` o que é rejeição humana**: rejeição deliberada usa `triage_rejected`
+6. **Empurrar dúvida jurídica para frente**: se a dúvida é séria, rejeite cedo
+7. **Rodar query no banco errado**: se `importer.queue_items` não existir, a conexão está errada
 8. **Confiar mais nesta skill do que no código**: `pg_db.py`, `README.md` e `docs/PLAYBOOK.md` mandam mais que este arquivo.
