@@ -15,10 +15,19 @@ from typing import Any
 API_BASE = "https://api.sharebook.com.br/api"
 SSL_CONTEXT = ssl._create_unverified_context()
 TOKEN_ENV_VAR = "SHAREBOOK_PROD_ACCESS_TOKEN"
+CANONICAL_ENV_PATH = Path("/data/workspace/sharebook-agent/.env")
+
+
+def resolve_env_path(repo_root: Path | None = None) -> Path:
+    if CANONICAL_ENV_PATH.exists():
+        return CANONICAL_ENV_PATH
+    if repo_root is not None:
+        return repo_root / ".env"
+    return CANONICAL_ENV_PATH
 
 
 def load_env(repo_root: Path) -> dict[str, str]:
-    env_path = repo_root / ".env"
+    env_path = resolve_env_path(repo_root)
     values: dict[str, str] = {}
     for line in env_path.read_text(encoding="utf-8").splitlines():
         if not line or line.lstrip().startswith("#") or "=" not in line:
@@ -29,7 +38,7 @@ def load_env(repo_root: Path) -> dict[str, str]:
 
 
 def save_env_value(repo_root: Path, key: str, value: str) -> None:
-    env_path = repo_root / ".env"
+    env_path = resolve_env_path(repo_root)
     lines = env_path.read_text(encoding="utf-8").splitlines()
     updated = False
     new_lines: list[str] = []
