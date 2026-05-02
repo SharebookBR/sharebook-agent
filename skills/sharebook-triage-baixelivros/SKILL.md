@@ -80,6 +80,7 @@ Para BaixeLivros, evitar usar `error` como lixeira semântica. Se a triagem huma
 - conto, fábula, folclore ou clássico com base razoável
 - PDF real, íntegro e minimamente legível
 - **Idioma**: português
+- **Para BaixeLivros, `Licença: Gratuita` na página do item, especialmente quando combinada com a taxonomia/perfil `licenca/gratuito` dizendo que são livros disponibilizados integralmente pelos próprios autores ou do acervo em domínio público, conta como evidência operacional suficiente para aprovar na triagem, salvo se houver outro sinal forte de risco jurídico.**
 
 Para BaixeLivros infantil, o default saudável é conservador.
 Se houver dúvida jurídica séria, rejeitar cedo em vez de empurrar problema para frente.
@@ -119,6 +120,8 @@ A source `baixelivros_infantil` é valiosa, mas misturada e juridicamente hetero
 ### Regra jurídica dura
 Se o item parecer contemporâneo e não houver licença explícita ou base forte de legitimidade, rejeitar.
 Mas não confundir isso com edição amadora de clássico público. Se a obra-base for claramente domínio público e não houver cheiro de produto comercial protegido, pode seguir.
+
+**Importante para BaixeLivros:** `Licença: Gratuita` isolada em site aleatório seria fraca, mas dentro do padrão observado do BaixeLivros, com página do item + licença/taxonomia `gratutito` + distribuição integral no botão real, isso já pode ser tratado como base suficiente de legitimidade para a triagem. Não rejeite automaticamente um item contemporâneo só por ser recente se esses sinais estiverem presentes e não houver indício contrário.
 
 ## Informações sobre as fontes
 
@@ -245,7 +248,7 @@ Categoria e sinopse são responsabilidade da skill `sharebook-baixelivros-editor
 | Título com cara de atividade escolar, alfabetização, caderno, colorir, professor, 1º ano, creche | suspeitar forte de `didactic_out_of_scope` |
 | PDF < 100 KB | suspeitar de slide, amostra, artigo ou não-livro |
 | `/download-gratuito` retorna HTML/403 mas a página tem `downloadSimple(...)` ou `data-target` | testar a URL real antes de rejeitar |
-| Autor contemporâneo pouco conhecido com PDF completo | suspeitar de `legal_risk` |
+| Autor contemporâneo pouco conhecido com PDF completo | suspeitar de `legal_risk`, **mas reavaliar se a própria página traz `Licença: Gratuita` e vínculo com `licenca/gratuito` do BaixeLivros** |
 | Tradução/adaptação moderna de clássico | suspeitar de `legal_risk` |
 | Clássico público com edição amadora recente | não rejeitar automaticamente |
 | Coletânea genérica sem origem clara | suspeitar de `legal_risk` ou `not_a_book` |
