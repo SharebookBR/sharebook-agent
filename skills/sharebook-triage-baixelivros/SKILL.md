@@ -233,7 +233,7 @@ Sempre registrar o motivo da rejeição em `metadata_json` para rastreabilidade 
 Isso permite consultar depois: quantos itens foram rejeitados por paywall? Por link quebrado?
 
 **Importante**: na triagem, **só preenchemos `planned_author`** se o autor estiver claro na fonte.  
-Categoria e sinopse são responsabilidade da skill `sharebook-book-preparer` (status `waiting_editor`/`editing`).
+Categoria e sinopse são responsabilidade da skill `sharebook-baixelivros-editorial-preparer` (status `waiting_editor`/`editing`).
 
 ### Gatilhos de suspeita — quando desconfiar e verificar mais
 

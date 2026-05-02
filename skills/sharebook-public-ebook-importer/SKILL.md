@@ -39,9 +39,9 @@ Regras curtas:
 
 ## Sinergia com outra skill
 
-- Para preparação editorial, categoria, autor e sinopse premium, usar junto a skill `sharebook-book-preparer`.
-- Regra prática: `waiting_editor` e `editing` são território natural da `sharebook-book-preparer`; `waiting_process`, `processing`, `duplicate`, `done` e falhas técnicas são território natural desta skill.
-- Se o worker ou a importação encontrarem lacuna editorial, fazer o handoff explícito para `sharebook-book-preparer` em vez de improvisar cadastro meia-boca.
+- Para preparação editorial, categoria, autor e sinopse premium, usar junto a skill `sharebook-baixelivros-editorial-preparer`.
+- Regra prática: `waiting_editor` e `editing` são território natural da `sharebook-baixelivros-editorial-preparer`; `waiting_process`, `processing`, `duplicate`, `done` e falhas técnicas são território natural desta skill.
+- Se o worker ou a importação encontrarem lacuna editorial, fazer o handoff explícito para `sharebook-baixelivros-editorial-preparer` em vez de improvisar cadastro meia-boca.
 
 ## Workflow
 
