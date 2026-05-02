@@ -62,20 +62,29 @@ def choose_widths(left_text: str, right_text: str, max_chars: int) -> Tuple[int,
 def format_pair(left_text: str, right_text: str, max_chars: int) -> List[str]:
     _, right_width, left_lines, right_lines = choose_widths(left_text, right_text, max_chars)
 
-    lines: List[str] = []
-    for line in left_lines[:-1]:
-        lines.append(line)
-
-    connector_left = left_lines[-1]
-    connector_right = right_lines[0]
-    dots_count = max_chars - len(connector_left) - MIN_SPACE_BETWEEN - len(connector_right)
-    if dots_count < MIN_DOTS:
-        raise ValueError("internal layout error: insufficient dots")
-    lines.append(f"{connector_left} {'.' * dots_count}{connector_right}")
-
     right_indent = max_chars - right_width
-    for line in right_lines[1:]:
-        lines.append(" " * right_indent + line)
+    rows = max(len(left_lines), len(right_lines))
+    lines: List[str] = []
+
+    for row in range(rows):
+        left_line = left_lines[row] if row < len(left_lines) else ""
+        right_line = right_lines[row] if row < len(right_lines) else ""
+
+        is_connector_row = row == rows - 1
+        if is_connector_row:
+            dots_count = max_chars - len(left_line) - MIN_SPACE_BETWEEN - len(right_line)
+            if dots_count < MIN_DOTS:
+                raise ValueError("internal layout error: insufficient dots")
+            lines.append(f"{left_line} {'.' * dots_count}{right_line}")
+            continue
+
+        if left_line and right_line:
+            left_pad = " " * max(max_chars - right_width - len(left_line), 1)
+            lines.append(f"{left_line}{left_pad}{right_line}")
+        elif left_line:
+            lines.append(left_line)
+        else:
+            lines.append(" " * right_indent + right_line)
 
     return lines
 
