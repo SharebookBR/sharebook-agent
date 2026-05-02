@@ -8,6 +8,8 @@ from typing import List, Tuple
 DEFAULT_MAX_CHARS = 44
 MIN_DOTS = 2
 MIN_SPACE_BETWEEN = 1
+MIN_LEFT_WIDTH = 12
+MIN_RIGHT_WIDTH = 8
 
 
 def wrap_text(text: str, width: int) -> List[str]:
@@ -28,9 +30,9 @@ def wrap_text(text: str, width: int) -> List[str]:
 def choose_widths(left_text: str, right_text: str, max_chars: int) -> Tuple[int, int, List[str], List[str]]:
     best = None
 
-    for right_width in range(8, max_chars - MIN_DOTS - MIN_SPACE_BETWEEN):
+    for right_width in range(MIN_RIGHT_WIDTH, max_chars - MIN_DOTS - MIN_SPACE_BETWEEN):
         left_width = max_chars - right_width - MIN_DOTS - MIN_SPACE_BETWEEN
-        if left_width < 1:
+        if left_width < MIN_LEFT_WIDTH:
             continue
 
         left_lines = wrap_text(left_text, left_width)
@@ -40,11 +42,17 @@ def choose_widths(left_text: str, right_text: str, max_chars: int) -> Tuple[int,
         if connector_len > max_chars:
             continue
 
+        shared_rows = min(len(left_lines), len(right_lines))
+        leftover_rows = abs(len(left_lines) - len(right_lines))
+        connector_balance = abs(len(left_lines[-1]) - len(right_lines[shared_rows - 1])) if shared_rows else 0
+
         score = (
+            leftover_rows,
             max(len(left_lines), len(right_lines)),
             len(left_lines) + len(right_lines),
+            connector_balance,
             abs(left_width - right_width),
-            -right_width,
+            -left_width,
         )
 
         if best is None or score < best[0]:
