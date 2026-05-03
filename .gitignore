@@ -147,3 +147,7 @@ tmp/
 # Agent disposable artifacts
 codex-temp/
 var/
+
+# Python cache
+__pycache__/
+*.pyc

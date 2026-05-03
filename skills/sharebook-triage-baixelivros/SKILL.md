@@ -43,6 +43,7 @@ Se a origem não for BaixeLivros e a lógica principal depender de outra fonte, 
 4. **Material didático / pedagógico fora do alvo editorial**
    - alfabetização, caderno de atividades, exercícios, apoio escolar, material de professor, conteúdo para colorir
    - material de iniciação religiosa, evangelização, catequese, estímulo formativo ou devocional infantil, quando o foco principal for ensino/formação e não uma obra literária infantil propriamente dita
+   - **não confundir obra literária infantil com camada educativa com material didático**. Se houver personagem, arco narrativo, conto, lirismo, aventura, fantasia ou conflito infantil reconhecível, o fato de a página falar em descoberta, imaginação, aprendizado, apoio da escola ou prazer de aprender não basta para rejeitar.
 5. **PDF inconsistente**
    - HTML fingindo ser PDF
    - arquivo muito curto / quebrado / ilegível
@@ -70,6 +71,8 @@ Para BaixeLivros, evitar usar `error` como lixeira semântica. Se a triagem huma
       OR LOWER("Title") LIKE '%<palavra-chave-2>%';
    ```
    Extrair 2-3 palavras-chave do título do item e buscar no banco. Se encontrar match próximo → `duplicate`. Se não encontrar → segue limpo.
+   **Se a verificação de duplicata não puder ser concluída** por limitação de conexão, query, permissão ou ambiente, trate isso como **sem evidência de duplicata**, nunca como motivo de rejeição.
+   É proibido inventar motivos como `duplicate_unverifiable` ou converter falha de validação em `triage_rejected`.
    
    **Nota**: colunas com maiúsculas exigem aspas duplas no PostgreSQL (`"Title"`, `"Author"`, etc.).
 
@@ -121,6 +124,7 @@ A source `baixelivros_infantil` é valiosa, mas misturada e juridicamente hetero
 - item com cara de atividade escolar, caderno, apoio pedagógico ou alfabetização deve virar `triage_rejected`
 - item centrado em iniciação religiosa, evangelização, símbolos de fé para estímulo/formação de bebê/criança ou proposta explicitamente educativa/devocional também tende a `triage_rejected`
 - descrição de vitrine falando em aprendizado, memória, imaginação, organização, tempo ou outros benefícios não basta sozinha para rejeitar; se houver personagem, narrativa, lirismo ou arco de história, isso pode continuar sendo literatura infantil legítima
+- expressões como `apoio da escola`, `descobertas`, `brinquedos`, `prazer de aprender`, `imaginação` ou `ensina` não bastam, sozinhas, para classificar como didático/pedagógico fora do alvo
 
 ### Regra jurídica dura
 Se o item parecer contemporâneo e não houver licença explícita ou base forte de legitimidade, rejeitar.
@@ -206,6 +210,7 @@ No BaixeLivros, desconfiar da vitrine. O que manda é a página real do item e o
 |---|---|---|---|---|
 | ✅ Tudo ok | `waiting_editor` | Preencher se disponível | Deixar vazio (preparer decide) | Deixar vazio (preparer escreve) |
 | 🟡 Duplicata | `duplicate` | - | - | - |
+| 🟡 Duplicata não pôde ser verificada | **não é motivo de rejeição** | seguir avaliação normal do item | - | - |
 | 🔴 Link quebrado / HTML no lugar do PDF | `triage_rejected` | - | - | - |
 | 🔴 Não é livro | `triage_rejected` | - | - | - |
 | 🔴 Pirataria / risco jurídico alto | `triage_rejected` | - | - | - |
@@ -252,6 +257,7 @@ Categoria e sinopse são responsabilidade da skill `sharebook-baixelivros-editor
 | Item em `/didatico/` | `triage_rejected` por `didactic_out_of_scope` |
 | Título com cara de atividade escolar, alfabetização, caderno, colorir, professor, 1º ano, creche | suspeitar forte de `didactic_out_of_scope` |
 | Descrição fala em estímulo visual, iniciação na fé, evangelização, conteúdo educativo, formação religiosa ou fortalecimento de vínculos como proposta formativa | suspeitar forte de `didactic_out_of_scope` |
+| Descrição usa linguagem educativa leve, mas também apresenta personagem, conto, aventura, fantasia, sensibilidade ou imaginação como núcleo da obra | não rejeitar automaticamente; pesar como literatura infantil possível |
 | PDF < 100 KB | suspeitar de slide, amostra, artigo ou não-livro |
 | `/download-gratuito` retorna HTML/403 mas a página tem `downloadSimple(...)` ou `data-target` | testar a URL real antes de rejeitar |
 | Autor contemporâneo pouco conhecido com PDF completo | suspeitar de `legal_risk`, **mas reavaliar se a própria página traz `Licença: Gratuita` e vínculo com `licenca/gratuito` do BaixeLivros** |
@@ -441,5 +447,6 @@ Nome técnico: **Teste Cego de Skill (Blind Skill Test)**.
 4. **Aceitar conteúdo fora do português**: neste fluxo, manter português como padrão
 5. **Marcar como `error` o que é rejeição humana**: rejeição deliberada usa `triage_rejected`
 6. **Empurrar dúvida jurídica séria para frente**: se o cheiro comercial/restritivo é forte, rejeite cedo
-7. **Rodar query no banco errado**: se `importer.queue_items` não existir, a conexão está errada
-8. **Confiar mais nesta skill do que no código**: `pg_db.py`, `README.md` e `docs/PLAYBOOK.md` mandam mais que este arquivo.
+7. **Transformar duplicata não verificada em rejeição**: ausência de prova de duplicata não autoriza `triage_rejected`
+8. **Rodar query no banco errado**: se `importer.queue_items` não existir, a conexão está errada
+9. **Confiar mais nesta skill do que no código**: `pg_db.py`, `README.md` e `docs/PLAYBOOK.md` mandam mais que este arquivo.
