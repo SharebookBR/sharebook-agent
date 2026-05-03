@@ -1,5 +1,8 @@
 # Triage BaixeLivros Infantil — 2026-05-03 06:04 UTC
 
+modelo: deepseek 3
+ambiente: vps
+
 ## Item processado: position 25 — "Dia dos Pais / Meu Pai é um Super"
 
 **Decisão**: ✅ `waiting_editor`

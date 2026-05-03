@@ -1,5 +1,8 @@
 # Triage BaixeLivros Infantil — 2026-05-03 05:33 UTC
 
+modelo: deepseek 3
+ambiente: vps
+
 ## Item processado: position 24 — "O Avião, o Automóvel e a Bicicleta –"
 
 **Decisão**: ✅ `waiting_editor`

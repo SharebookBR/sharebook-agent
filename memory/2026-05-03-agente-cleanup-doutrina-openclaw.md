@@ -1,12 +1,15 @@
 # Sessão 2026-05-03 — Agente Cleanup e Doutrina OpenClaw
 
+modelo: gemini 3
+ambiente: windows
+
 ## O que foi feito
 
 - **Resolução de Conflitos**: Analisados e resolvidos conflitos críticos nos arquivos `sharebook-master-playbook.md` e `AGENTS.md`, priorizando a versão expandida da VPS que continha heurísticas vitais.
 - **Fusão Total (Decommissioning)**: O arquivo `sharebook-master-playbook.md` foi identificado como redundante e genérico. Executada a fusão total de seu conteúdo útil para o `AGENTS.md` e Skills específicas, seguida pela deleção do arquivo.
 - **Doutrina OpenClaw (Memória)**: Unificada a arquitetura de memória episódica. A pasta `sessions/` foi eliminada e todos os seus arquivos foram migrados para `sharebook-agent/memory/`, seguindo o padrão de mercado definido pelo OpenClaw.
 - **Criação de Skills Especializadas**:
-  - `openclaw-ops.md`: Centraliza regras de permissão (`chown`), volumes Docker e particularidades do PowerShell/Windows.
+  - `openclaw-ops.md`: Centraliza regras de permissão (`chown`), volumes Docker e particularidades.
   - `frontend.md`: Primeira skill dedicada ao frontend Angular, consolidando padrões de UI (Cartão > Tabela), Smart Sorting e overrides globais de CSS.
 - **Higiene do AGENTS.md**: O arquivo foi transformado em uma "Constituição" estratégica. Toda a "Knowledge Base" técnica (EF Core, Npgsql, Modais, AI Workflow) foi redistribuída para as Skills correspondentes (`backend.md`, `frontend.md`, `importer/SKILL.md`).
 

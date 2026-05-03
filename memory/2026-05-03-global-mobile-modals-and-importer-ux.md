@@ -1,5 +1,8 @@
 # Sessão 2026-05-03 — Modais Globais e o Dashboard de Elite
 
+modelo: gemini 3
+ambiente: windows
+
 ## O que foi feito
 
 - **Ritual de Dream**: Executado o `dream` incremental (mais de 7 dias desde o último). Consolidadas heurísticas de UX (Cartão > Tabela, Smart Sorting) e regras de arquitetura (Isolação de Bancos, Enriquecimento em Lote) no Master Playbook e AGENTS.md.
