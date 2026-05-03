@@ -89,7 +89,7 @@ Read HEARTBEAT.md if exists.
 If nothing relevant → `HEARTBEAT_OK`
 
 - Usar para tarefas simples e rápidas.
-- Tente supreender o Raffa com algo útil. Use o protótipo se necessário.
+- Tente surpreender o Raffa com algo útil. Use o protótipo se necessário.
 
 ---
 
@@ -141,7 +141,7 @@ If nothing relevant → `HEARTBEAT_OK`
 - `sharebook-agent` → commit direto na master
 - Preferir HTTPS (evitar SSH)
 
-## Permissões / ownership
+## Permissões / ownership (OpenClaw/VPS)
 
 - Evitar alternância entre arquivos `root:root` e `node:node` dentro de `/data/workspace`.
 - Padrão saudável para repositórios operados pelo OpenClaw: diretórios e arquivos editáveis do workspace em `node:node`.
@@ -176,8 +176,7 @@ If nothing relevant → `HEARTBEAT_OK`
   Tarefa 2 ............ todo
   Tarefa 3 ........ canceled
   ```
-
-- tentar fazer manualmente dá muita dor de cabeça e nos fez errar muitas vezes. Use sempre o script `sharebook-agent/scripts/format_two_arrays_whatsapp.py`.
+- Tentar fazer manualmente dá muita dor de cabeça e nos fez errar muitas vezes. Use sempre o script `sharebook-agent/scripts/format_two_arrays_whatsapp.py`.
 
 ---
 
@@ -204,21 +203,29 @@ If nothing relevant → `HEARTBEAT_OK`
 - `sharebook-agent/missions/social/_plano.md` — frente social/distribuição.
 - `sharebook-agent/missions/escrever-livros/` — artefatos de livros (PDFs, assets).
 
+### Lições Aprendidas e Armadilhas (Knowledge Base)
+- **EF Core Mapping**: Propriedades marcadas com `.Ignore()` no mapeamento (ex: `BookMap.cs`) NÃO são populadas pelo repositório genérico, mesmo que existam na entidade. Se precisar desses dados, use colunas persistidas (como `ImageSlug` em vez de `ImageUrl`).
+- **Arquitetura de Bancos**: O banco do Importador e o banco da App são isolados na VPS. **NÃO tentar fazer JOIN SQL** entre eles. A composição de dados (ex: buscar slugs de livros para itens da fila) deve ser feita na camada de Serviço através de **Enriquecimento em Lote** (coletar IDs e fazer uma única consulta via repositório).
+- **Npgsql Resilience**: Ao ler colunas que podem ser `uuid`, `text` ou `varchar` no Postgres, prefira `reader.GetValue(i)?.ToString()` ou um método universal para evitar `InvalidCastException`.
+- **Importer Productivity**: O status `triage_rejected` representa trabalho concluído (descartado) e deve contar para o `completionRate`.
+- **AI Agent Workflow**: O pipeline do importador é movido por agentes: `waiting_triage/triaging` (GPT-5.4 Mini), `waiting_editor/editing` (GPT-5.4 Editor) e `waiting_process/processing/retry_later` (Python Worker).
+- **Design de Modais (Mobile)**: Evite hacks de CSS local para modais no mobile. A regra de ouro é o **Override Global** no `custom-theme.scss`. Todo modal no celular deve ser 100% width/height com padding reduzido (15px) para máxima legibilidade.
+
 ### Skills
-- `sharebook-agent/skills/sharebook-master-playbook.md` — playbook geral do ecossistema Sharebook. Usar quando a tarefa é ampla, mistura produto/operação/processo, ou quando não houver skill mais específica.
-- `sharebook-agent/skills/sharebook-voice-glossary/SKILL.md` — glossário e voz oficial do Sharebook. Usar quando a tarefa envolver copy, nomenclatura, microcopy, emails, labels, mensagens, UX writing, revisão semântica ou dúvidas sobre termos oficiais como `livro digital`, `doação`, `solicitação`, `doador(a)`, `ganhador(a)`, `vitrine` e `data de escolha`. Também usar quando houver suspeita de inconsistência entre fluxo físico e digital e for preciso separar problema de vocabulário vs problema de mecânica do produto.
-- `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md` — fluxo de ingestão de ebooks públicos. Usar para importar acervo, extrair metadados/PDF, depurar fila, fontes e worker do importer. Prioridade operacional atual: `baixelivros_infantil`.
-- `sharebook-agent/skills/sharebook-physical-book-importer/SKILL.md` — fluxo de livros físicos. Usar para cadastro/importação de livros físicos, normalmente quando a origem não é ebook público.
-- `sharebook-agent/skills/sharebook-ux-reviewer/SKILL.md` — revisão crítica de UX orientada a conversão e clareza. Usar para auditar telas, fluxos, copy, hierarquia visual e fricção de uso.
-- `sharebook-agent/skills/create-book.md` — produção de livro/PDF e seus artefatos. Usar para escrever, estruturar, diagramar, revisar ou gerar assets de livro.
-- `sharebook-agent/skills/backend.md` — mudanças no backend Sharebook. Usar para API, regras de negócio, endpoints, DTOs, queries, persistência e integrações do backend.
-- `sharebook-agent/skills/coolify-vps.md` — operação de VPS e deploy via Coolify. Usar para infra, container, variáveis, restart, diagnóstico operacional e hardening prático do ambiente.
-- `sharebook-agent/skills/web-design-reviewer/SKILL.md` — revisão de design web com foco visual. Usar quando o problema principal for layout, estética, responsividade e consistência visual.
-- `sharebook-agent/skills/sharebook-category-organizer/SKILL.md` — organização taxonômica do catálogo. Usar para escolher categoria folha, corrigir árvore, evitar categoria genérica e melhorar classificação.
-- `sharebook-agent/skills/sharebook-postgres-ro/SKILL.md` — acesso read-only ao Postgres de produção. Usar para diagnóstico, consultas, validação de pipeline e conferência de estado sem alterar dados.
-- `sharebook-agent/skills/sharebook-triage/SKILL.md` — triagem inicial de itens extraídos (`waiting_triage`). Usar assim que items chegam de uma fonte: avalia link, conteúdo, duplicata, autor mínimo e avança para `waiting_editor`. Não preenche sinopse/categoria — isso é da preparer.
-- `sharebook-agent/skills/sharebook-triage-baixelivros/SKILL.md` — skill específica da missão principal atual, `baixelivros_infantil`. Usar como default quando a triagem for da frente BaixeLivros infantil.
-- `sharebook-agent/skills/sharebook-baixelivros-editorial-preparer/SKILL.md` — preparador editorial da missão principal atual, `baixelivros_infantil`. Usar como default para itens em `waiting_editor` e `editing` da frente BaixeLivros infantil.
+- `sharebook-agent/skills/sharebook-master-playbook.md` — playbook tático transversal do projeto, com princípios, prioridades, regras por área e armadilhas recorrentes. Usar antes de mexer em produção, quando a tarefa cruza múltiplas áreas, há risco de repetir erro, ou o fluxo oficial não está claro.
+- `sharebook-agent/skills/sharebook-voice-glossary/SKILL.md` — glossário e voz oficial do Sharebook. Usar para copy, nomenclatura e microcopy oficial.
+- `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md` — fluxo de ingestão de ebooks públicos. Prioridade operacional atual: `baixelivros_infantil`.
+- `sharebook-agent/skills/sharebook-physical-book-importer/SKILL.md` — fluxo de livros físicos. Usar para cadastro/importação quando a origem não é ebook público.
+- `sharebook-agent/skills/sharebook-ux-reviewer/SKILL.md` — auditar UX, UI e vocabulário do Sharebook.
+- `sharebook-agent/skills/create-book.md` — produção de livro/PDF e seus artefatos.
+- `sharebook-agent/skills/backend.md` — mudanças no `sharebook-backend`, EF Core, migrations e deploy.
+- `sharebook-agent/skills/coolify-vps.md` — playbook de operação e diagnóstico do VPS com Coolify.
+- `sharebook-agent/skills/web-design-reviewer/SKILL.md` — revisar visualmente sites e corrigir problemas de UI/layout.
+- `sharebook-agent/skills/sharebook-category-organizer/SKILL.md` — reorganizar categorias e subcategorias do Sharebook.
+- `sharebook-agent/skills/sharebook-postgres-ro/SKILL.md` — consultas read-only no Postgres de produção com scripts oficiais.
+- `sharebook-agent/skills/sharebook-triage/SKILL.md` — triagem inicial de itens extraídos (`waiting_triage`).
+- `sharebook-agent/skills/sharebook-triage-baixelivros/SKILL.md` — skill específica da missão `baixelivros_infantil`.
+- `sharebook-agent/skills/sharebook-baixelivros-editorial-preparer/SKILL.md` — preparador editorial da missão `baixelivros_infantil`.
 
 ### Scripts operacionais
 - `sharebook-agent/scripts/sharebook_prod_book.py` — find/create/update/delete/approve em produção.
@@ -226,27 +233,24 @@ If nothing relevant → `HEARTBEAT_OK`
 - `sharebook-agent/scripts/sharebook_openai_cover.py` — geração de capa.
 - `sharebook-agent/scripts/sharebook_prod_auth.py` — autenticação para operações em produção.
 - `sharebook-agent/scripts/print_pdf_devtools.mjs` — geração/impressão PDF via DevTools.
-- `sharebook-agent/scripts/sharebook_prod_pg_ro_query_direct.py` — query direta read-only no Postgres de produção (padrão diário; sem SSH). ( avisar o raffa se não funcionar. ele vai dar uma permissão de rede )
-- `sharebook-agent/scripts/sharebook_prod_pg_rw_exec.py` — executor SQL write-controlado em produção (usar só com autorização explícita, com transação/validação).
+- `sharebook-agent/scripts/sharebook_prod_pg_ro_query_direct.py` — query direta read-only no Postgres de produção.
+- `sharebook-agent/scripts/sharebook_prod_pg_rw_exec.py` — executor SQL write-controlled em produção (usar só com autorização explícita).
 - `sharebook-agent/scripts/vps_ssh.py` — utilitário de acesso/automação SSH VPS.
 - `sharebook-agent/scripts/format_two_arrays_whatsapp.py` — formata duas colunas com pontilhado para WhatsApp; default operacional `max_chars=28`.
 
 ### Prototipação rápida (Netlify)
 - Pasta oficial de protótipo rápido: `sharebook-prototipo/` (HTML/CSS/JS puro).
-- Objetivo: validar UX/copy/CTA sem depender de build Angular.
-- Deploy padrão:
-  - `cd /data/workspace/sharebook-prototipo`
-  - `netlify deploy --prod --dir .`
-- Site vinculado: `https://sharebook-prototipo.netlify.app`.
-- Token operacional: usar `NETLIFY_AUTH_TOKEN` salvo em `sharebook-agent/.env`.
-- Use o protótipo quando quiser impressionar o raffa com conteúdo rico. Dashboard efêmero.
+- Deploy padrão: `netlify deploy --prod --dir .` (via `sharebook-prototipo/`).
+- Site: `https://sharebook-prototipo.netlify.app`.
+- Token: `NETLIFY_AUTH_TOKEN` em `sharebook-agent/.env`.
 
 ### Repositórios (código-fonte)
 - `sharebook-backend/` — backend .NET da API Sharebook (produção).
 - `sharebook-frontend/` — frontend Angular (produção).
 - `sharebook-agent/` — agentes, scripts, missões, skills (nossa automação).
-- `sharebook-ebook-importer/` — worker de importação de ebooks (Postgres + cron).
-- `sharebook-prototipo/` — protótipos HTML/CSS/JS rápidos (Netlify).
-- 
+- `sharebook-ebook-importer/` — worker de importação de ebooks.
+- `sharebook-prototipo/` — protótipos rápidos (Netlify).
 
+### Arquivos temporários
 Não crie lixo na raíz. Use a pasta tmp.
+- `sharebook-agent/tmp` (gitignorada).

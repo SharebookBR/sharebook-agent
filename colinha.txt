@@ -1,101 +1,121 @@
-curl ^"https://api.sharebook.com.br/api/Operations/ImporterDashboard^" ^
-  -H ^"Accept: application/json, text/plain, */*^" ^
-  -H ^"Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7^" ^
-  -H ^"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0ODFkNDcyNTA0MDc0YmU5YTMzMzAzMjBlZGVjYTViMSIsInVuaXF1ZV9uYW1lIjoiOWZmYzdkNjAtMWYyYS00N2JmLTliYmUtZDllNjlhYzQ4ODU5Iiwicm9sZSI6IkFkbWluaXN0cmF0b3IiLCJuYmYiOjE3NzcwNjk4MzYsImV4cCI6MTc3NzE1NjIzNiwiaWF0IjoxNzc3MDY5ODM2LCJpc3MiOiJTaGFyZWJvb2siLCJhdWQiOiJTaGFyZUJvb2tBdWRpZW5jZSJ9.skMH2nRRNAK_6_Pyv8_KW8trn05ArgPPhjZpXCP6MYs^" ^
-  -H ^"Connection: keep-alive^" ^
-  -H ^"Origin: http://localhost:4200^" ^
-  -H ^"Referer: http://localhost:4200/^" ^
-  -H ^"Sec-Fetch-Dest: empty^" ^
-  -H ^"Sec-Fetch-Mode: cors^" ^
-  -H ^"Sec-Fetch-Site: cross-site^" ^
-  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36^" ^
-  -H ^"sec-ch-ua: ^\^"Google Chrome^\^";v=^\^"147^\^", ^\^"Not.A/Brand^\^";v=^\^"8^\^", ^\^"Chromium^\^";v=^\^"147^\^"^" ^
-  -H ^"sec-ch-ua-mobile: ?0^" ^
-  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
-
-
-curl ^"https://api.sharebook.com.br/api/Operations/ImporterItems?sourceId=2^&page=1^&pageSize=50^" ^
-  -H ^"Accept: application/json, text/plain, */*^" ^
-  -H ^"Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7^" ^
-  -H ^"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0ODFkNDcyNTA0MDc0YmU5YTMzMzAzMjBlZGVjYTViMSIsInVuaXF1ZV9uYW1lIjoiOWZmYzdkNjAtMWYyYS00N2JmLTliYmUtZDllNjlhYzQ4ODU5Iiwicm9sZSI6IkFkbWluaXN0cmF0b3IiLCJuYmYiOjE3NzcwNjk4MzYsImV4cCI6MTc3NzE1NjIzNiwiaWF0IjoxNzc3MDY5ODM2LCJpc3MiOiJTaGFyZWJvb2siLCJhdWQiOiJTaGFyZUJvb2tBdWRpZW5jZSJ9.skMH2nRRNAK_6_Pyv8_KW8trn05ArgPPhjZpXCP6MYs^" ^
-  -H ^"Connection: keep-alive^" ^
-  -H ^"Origin: http://localhost:4200^" ^
-  -H ^"Referer: http://localhost:4200/^" ^
-  -H ^"Sec-Fetch-Dest: empty^" ^
-  -H ^"Sec-Fetch-Mode: cors^" ^
-  -H ^"Sec-Fetch-Site: cross-site^" ^
-  -H ^"User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36^" ^
-  -H ^"sec-ch-ua: ^\^"Google Chrome^\^";v=^\^"147^\^", ^\^"Not.A/Brand^\^";v=^\^"8^\^", ^\^"Chromium^\^";v=^\^"147^\^"^" ^
-  -H ^"sec-ch-ua-mobile: ?0^" ^
-  -H ^"sec-ch-ua-platform: ^\^"Windows^\^"^"
-  
-  
-  
-  
-  -- Table: importer.queue_items
-
--- DROP TABLE IF EXISTS importer.queue_items;
-
-CREATE TABLE IF NOT EXISTS importer.queue_items
-(
-    id integer NOT NULL DEFAULT nextval('importer.queue_items_id_seq'::regclass),
-    source_id integer NOT NULL,
-    "position" integer NOT NULL,
-    title text COLLATE pg_catalog."default" NOT NULL,
-    author text COLLATE pg_catalog."default",
-    source_url text COLLATE pg_catalog."default" NOT NULL,
-    status text COLLATE pg_catalog."default" NOT NULL,
-    planned_title text COLLATE pg_catalog."default",
-    planned_author text COLLATE pg_catalog."default",
-    planned_category_id text COLLATE pg_catalog."default",
-    planned_synopsis text COLLATE pg_catalog."default",
-    planned_cover_mode text COLLATE pg_catalog."default" NOT NULL DEFAULT 'source'::text,
-    planned_cover_url text COLLATE pg_catalog."default",
-    planned_by text COLLATE pg_catalog."default",
-    planned_at timestamp with time zone,
-    attempts integer NOT NULL DEFAULT 0,
-    last_error text COLLATE pg_catalog."default",
-    sharebook_book_id uuid,
-    metadata_json jsonb,
-    created_at timestamp with time zone NOT NULL DEFAULT now(),
-    updated_at timestamp with time zone NOT NULL DEFAULT now(),
-    retry_count integer DEFAULT 0,
-    max_retries integer DEFAULT 3,
-    retry_after timestamp with time zone,
-    CONSTRAINT queue_items_pkey PRIMARY KEY (id),
-    CONSTRAINT queue_items_source_id_position_key UNIQUE (source_id, "position"),
-    CONSTRAINT queue_items_source_id_fkey FOREIGN KEY (source_id)
-        REFERENCES importer.sources (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT queue_items_planned_cover_mode_check CHECK (planned_cover_mode = 'source'::text),
-    CONSTRAINT queue_items_status_check CHECK (status = ANY (ARRAY['waiting_triage'::text, 'triaging'::text, 'triage_rejected'::text, 'waiting_editor'::text, 'editing'::text, 'waiting_process'::text, 'processing'::text, 'done'::text, 'retry_later'::text, 'source_blocked'::text, 'duplicate'::text, 'error'::text]))
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS importer.queue_items
-    OWNER to sharebook_ai_rw;
-
-REVOKE ALL ON TABLE importer.queue_items FROM sharebook_user;
-
-GRANT ALL ON TABLE importer.queue_items TO sharebook_ai_rw;
-
-GRANT SELECT ON TABLE importer.queue_items TO sharebook_user;
--- Index: idx_queue_items_sharebook_id
-
--- DROP INDEX IF EXISTS importer.idx_queue_items_sharebook_id;
-
-CREATE INDEX IF NOT EXISTS idx_queue_items_sharebook_id
-    ON importer.queue_items USING btree
-    (sharebook_book_id ASC NULLS LAST)
-    TABLESPACE pg_default
-    WHERE sharebook_book_id IS NOT NULL;
--- Index: idx_queue_items_status_position
-
--- DROP INDEX IF EXISTS importer.idx_queue_items_status_position;
-
-CREATE INDEX IF NOT EXISTS idx_queue_items_status_position
-    ON importer.queue_items USING btree
-    (status COLLATE pg_catalog."default" ASC NULLS LAST, "position" ASC NULLS LAST)
-    TABLESPACE pg_default;
+{
+    "page": 1,
+    "itemsPerPage": 50,
+    "totalItems": 6,
+    "items": [
+        {
+            "id": 142,
+            "sourceId": 2,
+            "sourceName": "ebook_foundation",
+            "position": 9,
+            "title": "Lógica de Programação para iniciantes",
+            "author": null,
+            "sourceUrl": "https://dicasdeprogramacao.com.br/download/ebook-logica-de-programacao-para-iniciantes.pdf",
+            "status": "done",
+            "plannedTitle": "Lógica de Programação para Iniciantes",
+            "plannedAuthor": "Gustavo Furtado de Oliveira Alves",
+            "plannedCategoryId": "019d636c-5fdd-7505-9c76-e02944d9b618",
+            "attempts": 4,
+            "lastError": "duplicata detectada; create bloqueado",
+            "sharebookBookId": "019dcbbc-76d9-7892-887c-f6c6230a17ce",
+            "metadataJson": "{\"book\": {\"raw\": \"{\\n  \\\"id\\\": \\\"019dcb6f-e303-7121-a32c-a5c2397db5f4\\\",\\n  \\\"title\\\": \\\"Lógica de Programação para Iniciantes\\\",\\n  \\\"author\\\": \\\"Gustavo Furtado de Oliveira Alves\\\",\\n  \\\"downloadCount\\\": 0,\\n  \\\"status\\\": \\\"Available\\\",\\n  \\\"creationDate\\\": \\\"2026-04-26T20:16:40.707449Z\\\",\\n  \\\"chooseDate\\\": null,\\n  \\\"freightOption\\\": null,\\n  \\\"categoryId\\\": \\\"019d636c-5fdd-7505-9c76-e02944d9b618\\\",\\n  \\\"category\\\": \\\"Backend\\\",\\n  \\\"categoryInfo\\\": {\\n    \\\"id\\\": \\\"019d636c-5fdd-7505-9c76-e02944d9b618\\\",\\n    \\\"name\\\": \\\"Backend\\\",\\n    \\\"parentCategoryId\\\": \\\"1dc0f9e3-70d9-4bc8-a76c-90d7144e318c\\\",\\n    \\\"parentCategoryName\\\": \\\"Tecnologia\\\"\\n  },\\n  \\\"imageSlug\\\": null,\\n  \\\"imageUrl\\\": \\\"https://api.sharebook.com.br/Images/Books/logica-de-programacao-para-iniciantes.png\\\",\\n  \\\"city\\\": \\\"São Paulo\\\",\\n  \\\"state\\\": \\\"SP\\\",\\n  \\\"synopsis\\\": \\\"Você decidiu aprender programação, abriu um tutorial qualquer e se viu perdido entre sintaxes, frameworks e jargões antes mesmo de entender o básico. Este ebook faz o contrário: começa pelo zero absoluto, com uma linguagem simples e exemplos em português, usando o Visualg — um ambiente criado especialmente para quem nunca programou.\\\\n\\\\nEscrito por Gustavo Furtado de Oliveira Alves, mestre em computação e engenheiro da computação, o material cobre desde o conceito de algoritmo até estruturas de decisão (SE-ENTÃO-SENÃO, ESCOLHA-CASO), repetição (ENQUANTO, REPITA, PARA), vetores, matrizes e funções. Cada capítulo tem exercícios práticos e o autor responde perguntas comuns de iniciantes: precisa saber inglês? qual linguagem escolher? como instalar as ferramentas?\\\\n\\\\nSe você quer construir uma base sólida de lógica de programação sem pular etapas — e de quebra sair escrevendo seus primeiros programas funcionais — este material foi feito sob medida para você.\\\",\\n  \\\"slug\\\": \\\"logica-de-programacao-para-iniciantes\\\",\\n  \\\"type\\\": \\\"Eletronic\\\",\\n  \\\"eBookPdfPath\\\": \\\"ebooks/logica-de-programacao-para-iniciantes.pdf\\\",\\n  \\\"donor\\\": {\\n    \\\"displayName\\\": \\\"Raffaello D. N.\\\",\\n    \\\"linkedin\\\": \\\"https://www.linkedin.com/in/raffacabofrio\\\"\\n  }\\n}\", \"exists\": true, \"book_id\": \"019dcbbc-76d9-7892-887c-f6c6230a17ce\", \"returncode\": 0}, \"reason\": \"duplicate\", \"manifest\": {\"source_url\": \"https://dicasdeprogramacao.com.br/download/ebook-logica-de-programacao-para-iniciantes.pdf\", \"source_name\": \"ebook_foundation\", \"manifest_path\": \"/data/workspace/sharebook-ebook-importer/var/tmp/9-l-gica-de-programa-o-para-iniciantes/manifest.json\", \"downloaded_pdf_path\": \"/data/workspace/sharebook-ebook-importer/var/tmp/9-l-gica-de-programa-o-para-iniciantes/source.pdf\"}}",
+            "createdAt": "2026-04-24T01:18:55.709292Z",
+            "updatedAt": "2026-04-26T21:40:26.374136Z"
+        },
+        {
+            "id": 146,
+            "sourceId": 2,
+            "sourceName": "ebook_foundation",
+            "position": 13,
+            "title": "Sistemas Operacionais: Conceitos e Mecanismos",
+            "author": null,
+            "sourceUrl": "http://wiki.inf.ufpr.br/maziero/lib/exe/fetch.php?media=socm:socm-livro.pdf",
+            "status": "done",
+            "plannedTitle": "Sistemas Operacionais: Conceitos e Mecanismos",
+            "plannedAuthor": "Carlos A. Maziero",
+            "plannedCategoryId": "019d636c-640a-7e2f-babd-c22d3b37c226",
+            "attempts": 1,
+            "lastError": null,
+            "sharebookBookId": "019dcbba-ac9c-7b48-8b51-42374d882e62",
+            "metadataJson": "{\"created\": {\"book\": {\"id\": \"019dcbba-ac9c-7b48-8b51-42374d882e62\", \"city\": \"São Paulo\", \"slug\": \"sistemas-operacionais-conceitos-e-mecanismos\", \"type\": \"Eletronic\", \"donor\": {\"linkedin\": \"https://www.linkedin.com/in/raffacabofrio\", \"displayName\": \"Raffaello D. N.\"}, \"state\": \"SP\", \"title\": \"Sistemas Operacionais: Conceitos e Mecanismos\", \"author\": \"Carlos A. Maziero\", \"status\": \"Available\", \"category\": \"DevOps\", \"imageUrl\": \"https://api.sharebook.com.br/Images/Books/sistemas-operacionais-conceitos-e-mecanismos.jpg\", \"synopsis\": \"Se você já se perguntou como o sistema operacional gerencia seus programas, organiza a memória ou decide qual tarefa executar primeiro, este livro tem as respostas. Diferente de cursos introdutórios, a obra mergulha nos mecanismos reais do SO — desde a troca de contexto entre processos até como o escalonador Round-Robin decide quem roda quando.\\n\\nO conteúdo percorre as oito grandes áreas de um sistema operacional moderno: gestão de tarefas com threads e escalonamento preemptivo, coordenação entre processos via semáforos e monitores, deadlocks e impasses clássicos (como o jantar dos filósofos), além de gestão de memória com paginação, alocadores Buddy e Slab, e a temida anomalia de Belady. A parte de E/S cobre desde discos rígidos e RAID até a arquitetura interna de SSDs com nivelamento de desgaste e o comando TRIM.\\n\\nO livro avança ainda para tópicos que vão além do cardápio tradicional: segurança computacional com criptografia simétrica e assimétrica, autenticação Kerberos, controle de acesso Bell-LaPadula e o modelo de Biba. Fecha com um capítulo inteiro de virtualização cobrindo Xen, KVM, Docker e JVM. É material de graduação em sistemas operacionais que serve tanto para estudantes quanto para profissionais que querem entender o que realmente acontece sob o capô do computador.\", \"imageSlug\": null, \"categoryId\": \"019d636c-640a-7e2f-babd-c22d3b37c226\", \"chooseDate\": null, \"categoryInfo\": {\"id\": \"019d636c-640a-7e2f-babd-c22d3b37c226\", \"name\": \"DevOps\", \"parentCategoryId\": \"1dc0f9e3-70d9-4bc8-a76c-90d7144e318c\", \"parentCategoryName\": \"Tecnologia\"}, \"creationDate\": \"2026-04-26T21:38:21.981242Z\", \"eBookPdfPath\": \"ebooks/sistemas-operacionais-conceitos-e-mecanismos.pdf\", \"downloadCount\": 0, \"freightOption\": null}, \"create_response\": {\"value\": null, \"success\": true, \"messages\": [], \"successMessage\": \"Livro cadastrado com sucesso! Aguarde aprovação.\"}, \"approve_response\": {\"value\": null, \"success\": true, \"messages\": [], \"successMessage\": \"Livro aprovado com sucesso.\"}}, \"pdf_md5\": \"7a040d87e64eb52568ed00dbf06613b2\", \"manifest\": {\"title\": \"Sistemas Operacionais: Conceitos e Mecanismos\", \"author\": \"\", \"source_url\": \"http://wiki.inf.ufpr.br/maziero/lib/exe/fetch.php?media=socm:socm-livro.pdf\", \"downloaded_pdf_path\": \"/data/workspace/sharebook-ebook-importer/triage-downloads/position_013-sistemas-operacionais-conceitos-e-mecanismos.pdf\"}, \"local_pdf\": \"triage-downloads/position_013-sistemas-operacionais-conceitos-e-mecanismos.pdf\", \"cover_path\": \"/data/workspace/sharebook-ebook-importer/triage-downloads/sistemas-operacionais-cover.jpg\", \"cover_style\": \"pillow\", \"cover_palette\": \"platinum\", \"synopsis_source\": \"pdf_toc\"}",
+            "createdAt": "2026-04-24T01:18:55.709292Z",
+            "updatedAt": "2026-04-26T21:38:22Z"
+        },
+        {
+            "id": 144,
+            "sourceId": 2,
+            "sourceName": "ebook_foundation",
+            "position": 11,
+            "title": "Guia Foca Linux",
+            "author": null,
+            "sourceUrl": "https://www.guiafoca.org/#download",
+            "status": "done",
+            "plannedTitle": null,
+            "plannedAuthor": "Gleydson Mazioli da Silva",
+            "plannedCategoryId": "019d636c-640a-7e2f-babd-c22d3b37c226",
+            "attempts": 1,
+            "lastError": null,
+            "sharebookBookId": "019dcbba-27e6-7a3c-9c9c-e36468140213",
+            "metadataJson": "{\"created\": {\"book\": {\"id\": \"019dcbba-27e6-7a3c-9c9c-e36468140213\", \"city\": \"São Paulo\", \"slug\": \"guia-foca-linux\", \"type\": \"Eletronic\", \"donor\": {\"linkedin\": \"https://www.linkedin.com/in/raffacabofrio\", \"displayName\": \"Raffaello D. N.\"}, \"state\": \"SP\", \"title\": \"Guia Foca Linux\", \"author\": \"Gleydson Mazioli da Silva\", \"status\": \"Available\", \"category\": \"DevOps\", \"imageUrl\": \"https://api.sharebook.com.br/Images/Books/guia-foca-linux.jpg\", \"synopsis\": \"Você já se sentiu perdido diante do terminal, sem saber por onde começar ou o que cada comando realmente faz? O Guia Foca Linux nasceu exatamente dessa necessidade: ser um mapa completo que parte do zero — desde o que é um sistema operacional e como ligar o computador — e chega até tópicos como firewalls iptables, configuração de servidores Apache e SSH, virtualização com GNU/Linux e controle de versão com Git. Não é um manual superficial: ele dedica capítulos inteiros a hardware (IRQ, DMA, conflitos de barramento), discos e partições, boot loaders como LILO e GRUB, e até um capítulo específico para quem está migrando do DOS/Windows, com tabelas de comandos equivalentes.\\n\\nA verdadeira profundidade aparece nos capítulos mais avançados: o guia não só ensina a usar o Linux, mas mostra como configurar um servidor SAMBA do zero, montar regras de firewall com iptables, gerenciar certificados digitais e criptografia, trabalhar com systemd (o polêmico sistema de inicialização), e até mergulhar em virtualização de sistemas. Há seções dedicadas a compactadores, compilação de programas, gerenciamento de pacotes no Debian, logs do sistema e personalização do ambiente. É o tipo de material que serve tanto como primeiro contato quanto como referência de consulta no dia a dia.\\n\\nSe você é profissional de TI, estudante de ciência da computação ou um entusiasta que quer dominar o Linux de verdade, este guia entrega o que promete: uma base sólida que evolui gradualmente para administração de sistemas, redes e segurança. São mais de 40 capítulos que cobrem desde os fundamentos até tópicos de produção — sem pular etapas. O que você leva é a confiança de quem não apenas usa Linux, mas entende como ele funciona por dentro.\", \"imageSlug\": null, \"categoryId\": \"019d636c-640a-7e2f-babd-c22d3b37c226\", \"chooseDate\": null, \"categoryInfo\": {\"id\": \"019d636c-640a-7e2f-babd-c22d3b37c226\", \"name\": \"DevOps\", \"parentCategoryId\": \"1dc0f9e3-70d9-4bc8-a76c-90d7144e318c\", \"parentCategoryName\": \"Tecnologia\"}, \"creationDate\": \"2026-04-26T21:37:48.16163Z\", \"eBookPdfPath\": \"ebooks/guia-foca-linux.pdf\", \"downloadCount\": 0, \"freightOption\": null}, \"create_response\": {\"value\": null, \"success\": true, \"messages\": [], \"successMessage\": \"Livro cadastrado com sucesso! Aguarde aprovação.\"}, \"approve_response\": {\"value\": null, \"success\": true, \"messages\": [], \"successMessage\": \"Livro aprovado com sucesso.\"}}, \"pdf_md5\": \"a835e1e4ff2a529a076d096110cc608d\", \"manifest\": {\"title\": \"Guia Foca Linux\", \"author\": \"\", \"source_url\": \"https://www.guiafoca.org/#download\", \"downloaded_pdf_path\": \"/data/workspace/sharebook-ebook-importer/triage-downloads/position_011-guia-foca-linux.pdf\"}, \"local_pdf\": \"triage-downloads/position_011-guia-foca-linux.pdf\", \"cover_path\": \"/data/workspace/sharebook-ebook-importer/triage-downloads/guia-foca-linux-cover.jpg\", \"cover_style\": \"pillow\", \"cover_palette\": \"tron\", \"current_level\": \"intermediario-avancado\", \"cover_variants\": [{\"file\": \"guia-foca-linux-var-1.jpg\", \"palette\": \"cyber\"}, {\"file\": \"guia-foca-linux-var-2.jpg\", \"palette\": \"frost\"}, {\"file\": \"guia-foca-linux-var-3.jpg\", \"palette\": \"tron\"}, {\"file\": \"guia-foca-linux-var-4.jpg\", \"palette\": \"platinum\"}, {\"file\": \"guia-foca-linux-var-5.jpg\", \"palette\": \"deep-ocean\"}, {\"file\": \"guia-foca-linux-var-6.jpg\", \"palette\": \"cyber\"}], \"synopsis_source\": \"pdf_toc\"}",
+            "createdAt": "2026-04-24T01:18:55.709292Z",
+            "updatedAt": "2026-04-26T21:37:48Z"
+        },
+        {
+            "id": 139,
+            "sourceId": 2,
+            "sourceName": "ebook_foundation",
+            "position": 6,
+            "title": "Algoritmos e Estruturas de Dados 1",
+            "author": null,
+            "sourceUrl": "https://www.inf.ufpr.br/marcos/livro_alg1/livro_alg1.pdf",
+            "status": "done",
+            "plannedTitle": null,
+            "plannedAuthor": "Marcos Alexandre Castilho, Fabiano Silva, Daniel Weingaertner",
+            "plannedCategoryId": "019d636c-62c1-71e9-9a51-099d3304753e",
+            "attempts": 1,
+            "lastError": null,
+            "sharebookBookId": "019dcb46-f1ab-7f1f-b3a5-1bac2476ff2d",
+            "metadataJson": "{\"created\": {\"book\": {\"id\": \"019dcb46-f1ab-7f1f-b3a5-1bac2476ff2d\", \"city\": \"São Paulo\", \"slug\": \"algoritmos-e-estruturas-de-dados-1\", \"type\": \"Eletronic\", \"donor\": {\"linkedin\": \"https://www.linkedin.com/in/raffacabofrio\", \"displayName\": \"Raffaello D. N.\"}, \"state\": \"SP\", \"title\": \"Algoritmos e Estruturas de Dados 1\", \"author\": \"Marcos Alexandre Castilho, Fabiano Silva, Daniel Weingaertner\", \"status\": \"Available\", \"category\": \"Dados\", \"imageUrl\": \"https://api.sharebook.com.br/Images/Books/algoritmos-e-estruturas-de-dados-1.jpg\", \"synopsis\": \"Se você está começando agora em ciência da computação, já deve ter sentido o baque: de repente você não está mais resolvendo equações — está tentando convencer uma máquina a executar uma sequência lógica de passos, e ela não perdoa um único erro de sintaxe. Esse livro foi escrito por quem dá aula para calouros há décadas na UFPR, e a abordagem é cirúrgica: menos linguagem, mais algoritmo. Enquanto a maioria dos cursos te joga de cabeça em dezenas de comandos, aqui você trabalha com números inteiros quase o livro inteiro, um único comando de repetição, e o foco é entender o fluxo — não decorar syntaxe.\\n\\nO conteúdo é dividido em duas grandes partes. Na primeira, você constrói a base: o que é um algoritmo (sim, existe diferença entre algoritmo e programa), o modelo do computador em nível de abstração, técnicas elementares como acumulador e teste de mesa, e aplicações clássicas — MDC, Fibonacci, números primos, palíndromos, séries. Depois vem funções e procedimentos com passagem de parâmetros por valor e referência. Na segunda parte, o jogo muda: vetores com busca binária, ordenação por seleção e inserção, matrizes com aplicação em manipulação de imagens, registros, tipos abstratos de dados (conjunto e pilha), e um capítulo inteiro dedicado à implementação de jogos — Campo Minado e Flood-It.\\n\\nO diferencial que ninguém conta: o capítulo de aplicações em jogos não é um extra opcional — é o ápice didático do livro. Você usa TADs, matrizes e refinamentos sucessivos para construir um jogo do zero. E os exercícios não são jogados aleatoriamente: são organizados em níveis de dificuldade com casos de teste, para você validar cada solução. Se você programa os cem exercícios certos, sai pronto para algoritmos avançados.\", \"imageSlug\": null, \"categoryId\": \"019d636c-62c1-71e9-9a51-099d3304753e\", \"chooseDate\": null, \"categoryInfo\": {\"id\": \"019d636c-62c1-71e9-9a51-099d3304753e\", \"name\": \"Dados\", \"parentCategoryId\": \"1dc0f9e3-70d9-4bc8-a76c-90d7144e318c\", \"parentCategoryName\": \"Tecnologia\"}, \"creationDate\": \"2026-04-26T19:31:57.484406Z\", \"eBookPdfPath\": \"ebooks/algoritmos-e-estruturas-de-dados-1.pdf\", \"downloadCount\": 0, \"freightOption\": null}, \"create_response\": {\"value\": null, \"success\": true, \"messages\": [], \"successMessage\": \"Livro cadastrado com sucesso! Aguarde aprovação.\"}, \"approve_response\": {\"value\": null, \"success\": true, \"messages\": [], \"successMessage\": \"Livro aprovado com sucesso.\"}}, \"pdf_md5\": \"48bebdcb036036ae01797e5c86712a5a\", \"manifest\": {\"title\": \"Algoritmos e Estruturas de Dados 1\", \"author\": \"\", \"source_url\": \"https://www.inf.ufpr.br/marcos/livro_alg1/livro_alg1.pdf\", \"downloaded_pdf_path\": \"/data/workspace/sharebook-ebook-importer/triage-downloads/position_006-algoritmos-e-estruturas-de-dados-1.pdf\"}, \"local_pdf\": \"triage-downloads/position_006-algoritmos-e-estruturas-de-dados-1.pdf\", \"cover_path\": \"/data/workspace/sharebook-ebook-importer/triage-downloads/alg1-cover.jpg\", \"cover_style\": \"pillow\", \"source_hash\": \"1cb27eeb9a4b4a2fae1c7a763abe3a1c978469ca\", \"cover_palette\": \"matrix\", \"synopsis_source\": \"pdf_toc\"}",
+            "createdAt": "2026-04-24T01:18:55.709292Z",
+            "updatedAt": "2026-04-26T19:31:57Z"
+        },
+        {
+            "id": 134,
+            "sourceId": 2,
+            "sourceName": "ebook_foundation",
+            "position": 1,
+            "title": "Guia da Computação em Nuvem: Conceito, Prática & Capacitação",
+            "author": null,
+            "sourceUrl": "https://archive.org/details/guia-da-computacao-em-nuvem",
+            "status": "done",
+            "plannedTitle": null,
+            "plannedAuthor": "Beatriz & Mari",
+            "plannedCategoryId": "019d636c-640a-7e2f-babd-c22d3b37c226",
+            "attempts": 4,
+            "lastError": null,
+            "sharebookBookId": "019dcabc-c119-7250-9420-78ac67ac63cd",
+            "metadataJson": "{\"created\": {\"book\": {\"id\": \"019dcabc-c119-7250-9420-78ac67ac63cd\", \"city\": \"São Paulo\", \"slug\": \"guia-da-computacao-em-nuvem-conceito-pratica\", \"type\": \"Eletronic\", \"donor\": {\"linkedin\": \"https://www.linkedin.com/in/raffacabofrio\", \"displayName\": \"Raffaello D. N.\"}, \"state\": \"SP\", \"title\": \"Guia da Computação em Nuvem: Conceito, Prática & Capacitação\", \"author\": \"Beatriz & Mari\", \"status\": \"Available\", \"category\": \"DevOps\", \"imageUrl\": \"https://api.sharebook.com.br/Images/Books/guia-da-computacao-em-nuvem-conceito-pratica.jpg\", \"synopsis\": \"Sabe aquela sensação de que todo mundo ao seu redor já migrou pra nuvem menos você? Enquanto os colegas discutem arquiteturas multi cloud e estratégias de FinOps, você ainda está tentando entender a diferença entre IaaS e PaaS — e torcendo pra ninguém perceber.\\n\\nEste guia não é mais um manual teórico sobre computação em nuvem. Escrito por duas profissionais que vivem cloud na prática — uma na operação de infraestrutura, outra na venda de soluções para grandes clientes —, ele parte exatamente de onde você está: do zero. Em dez capítulos objetivos, você vai entender o que é nuvem de fato, comparar provedores sem viés de marca, descobrir qual estratégia de migração faz sentido pro seu cenário e, principalmente, aprender a não repetir os erros clássicos de quem está começando.\\n\\nE não para por aí: o guia também aborda tópicos que poucos materiais gratuitos em português cobrem, como Cloud Center of Excellence, FinOps (sim, cloud tem custo escondido) e um roteiro de certificações pra quem quer se posicionar no mercado. Prático, direto e escrito em português claro — sem jargão desnecessário, sem pressão de vendor.\", \"imageSlug\": null, \"categoryId\": \"019d636c-640a-7e2f-babd-c22d3b37c226\", \"chooseDate\": null, \"categoryInfo\": {\"id\": \"019d636c-640a-7e2f-babd-c22d3b37c226\", \"name\": \"DevOps\", \"parentCategoryId\": \"1dc0f9e3-70d9-4bc8-a76c-90d7144e318c\", \"parentCategoryName\": \"Tecnologia\"}, \"creationDate\": \"2026-04-26T17:01:01.081962Z\", \"eBookPdfPath\": \"ebooks/guia-da-computacao-em-nuvem-conceito-pratica.pdf\", \"downloadCount\": 0, \"freightOption\": null}, \"create_response\": {\"value\": null, \"success\": true, \"messages\": [], \"successMessage\": \"Livro cadastrado com sucesso! Aguarde aprovação.\"}, \"approve_response\": {\"value\": null, \"success\": true, \"messages\": [], \"successMessage\": \"Livro aprovado com sucesso.\"}}, \"manifest\": {\"title\": \"Guia da Computação em Nuvem: Conceito, Prática & Capacitação\", \"author\": \"\", \"source_url\": \"https://archive.org/details/guia-da-computacao-em-nuvem\", \"downloaded_pdf_path\": \"/data/workspace/sharebook-ebook-importer/triage-downloads/position_001-guia-da-computacao-em-nuvem-conceito-pratica-capacitacao.pdf\"}}",
+            "createdAt": "2026-04-24T01:06:16.569952Z",
+            "updatedAt": "2026-04-26T17:01:01Z"
+        },
+        {
+            "id": 145,
+            "sourceId": 2,
+            "sourceName": "ebook_foundation",
+            "position": 12,
+            "title": "Linux Essentials",
+            "author": null,
+            "sourceUrl": "https://learning.lpi.org/pt/learning-materials/010-160/",
+            "status": "done",
+            "plannedTitle": "Linux Essentials",
+            "plannedAuthor": "Linux Professional Institute (LPI)",
+            "plannedCategoryId": "019d636c-640a-7e2f-babd-c22d3b37c226",
+            "attempts": 2,
+            "lastError": null,
+            "sharebookBookId": "019dca99-c671-730f-aa1c-fb2973905773",
+            "metadataJson": "{\"created\": {\"book\": {\"id\": \"019dca99-c671-730f-aa1c-fb2973905773\", \"city\": \"São Paulo\", \"slug\": \"linux-essentials\", \"type\": \"Eletronic\", \"donor\": {\"linkedin\": \"https://www.linkedin.com/in/raffacabofrio\", \"displayName\": \"Raffaello D. N.\"}, \"state\": \"SP\", \"title\": \"Linux Essentials\", \"author\": \"Linux Professional Institute (LPI)\", \"status\": \"Available\", \"category\": \"DevOps\", \"imageUrl\": \"https://api.sharebook.com.br/Images/Books/linux-essentials.jpg\", \"synopsis\": \"O material oficial do LPI para a certificação Linux Essentials (010-160) começa situando o leitor no ecossistema open source: a evolução do Linux, suas distribuições, aplicações em sistemas embarcados e na nuvem, e o papel das licenças de software livre. A jornada passa por aplicações open source essenciais — de pacotes de escritório a servidores, passando por compartilhamento de dados, administração de redes e linguagens de programação — e aborda habilidades práticas de ICT, privacidade na internet e criptografia. É uma fundação sólida para quem quer entender não apenas o sistema, mas a cultura e o mercado que o cercam.\\n\\nA partir daí, o foco se volta para a operação prática no terminal. O guia ensina a estrutura da linha de comando, variáveis de ambiente, navegação no sistema de arquivos com caminhos absolutos e relativos, criação, movimentação e exclusão de arquivos, e o uso de globbing. Depois avança para o verdadeiro poder do shell: redirecionamento de E/S, pipes, grep e expressões regulares, compactação e empacotamento com ferramentas como gzip, tar e zip, e finalmente a construção de scripts com variáveis, argumentos, condicionais, loops e tratamento de erros.\\n\\nNa reta final, o conteúdo explora o sistema operacional em profundidade: escolha de distribuições, entendimento de hardware, organização de dados no sistema de arquivos Linux, gerenciamento de processos e logs, e conceitos de rede como IPv4, IPv6, DNS e sockets. Fecha com segurança e permissões — contas de usuário e grupo, gerenciamento de donos e permissões de arquivo, links simbólicos e físicos. Um percurso completo do zero até a operação confiante de um sistema Linux.\", \"imageSlug\": null, \"categoryId\": \"019d636c-640a-7e2f-babd-c22d3b37c226\", \"chooseDate\": null, \"categoryInfo\": {\"id\": \"019d636c-640a-7e2f-babd-c22d3b37c226\", \"name\": \"DevOps\", \"parentCategoryId\": \"1dc0f9e3-70d9-4bc8-a76c-90d7144e318c\", \"parentCategoryName\": \"Tecnologia\"}, \"creationDate\": \"2026-04-26T16:22:48.70915Z\", \"eBookPdfPath\": \"ebooks/linux-essentials.pdf\", \"downloadCount\": 0, \"freightOption\": null}, \"create_response\": {\"value\": null, \"success\": true, \"messages\": [], \"successMessage\": \"Livro cadastrado com sucesso! Aguarde aprovação.\"}, \"approve_response\": {\"value\": null, \"success\": true, \"messages\": [], \"successMessage\": \"Livro aprovado com sucesso.\"}}, \"manifest\": {\"title\": \"Linux Essentials\", \"author\": \"\", \"source_url\": \"https://learning.lpi.org/pt/learning-materials/010-160/\", \"downloaded_pdf_path\": \"/data/workspace/sharebook-ebook-importer/triage-downloads/position_012-linux-essentials.pdf\"}}",
+            "createdAt": "2026-04-24T01:18:55.709292Z",
+            "updatedAt": "2026-04-26T16:22:49Z"
+        }
+    ]
+}

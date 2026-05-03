@@ -3,19 +3,15 @@
 Checkpoint oficial da consolidação de memória do projeto.
 
 ## Último dream
-- Data: `2026-04-24`
+- Data: `2026-05-03`
 - Tipo: `dream incremental`
-- Última memória absorvida: `C:\REPOS\SHAREBOOK\sharebook-agent\sessions\2026-04-10-netlify-cli-via-npmmirror.md`
-- Total de memórias lidas: `nenhuma memória episódica nova além da auditoria do intervalo desde 2026-04-10`
+- Última memória absorvida: `C:\REPOS\SHAREBOOK\sharebook-agent\sessions\2026-05-02-dashboard-importer-absolute-cinema.md`
+- Total de memórias lidas: `4 memórias episódicas novas absorvidas.`
 
 ## Consolidação produzida
-- A janela auditada permaneceu estável e não apresentou memória episódica nova de trabalho para absorver.
-- O material transversal da última janela consolidada já havia sido promovido durante as próprias sessões, então não foi necessário subir regra nova adicional neste ciclo.
-- Mantidas como memória útil já consolidada:
-  - heurística do `.env` do OpenClaw no volume Docker correto do host
-  - regra de paginação server-side com `summary` para listas administrativas em escala
-  - fluxo editorial `create-book` e critério de qualidade para capas/artefatos visuais
-  - exigência prática de subcategoria real em `Tecnologia`
+- **UX Operational**: Heurísticas de Cartão > Tabela, Smart Sorting e Inspetor de Metadados consolidadas no Master Playbook.
+- **Arquitetura**: Reforçada a regra de isolação de bancos e enriquecimento em lote na camada de serviço.
+- **Domínio Importer**: Mapeamento dos agentes GPT-5.4 e Python Worker para o workflow da fila; status `triage_rejected` validado como "resolvido".
 
 ## Próximo dream
 - Começar lendo apenas as memórias criadas depois de `C:\REPOS\SHAREBOOK\sharebook-agent\sessions\2026-04-10-netlify-cli-via-npmmirror.md`.

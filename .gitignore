@@ -140,14 +140,13 @@ vite.config.ts.timestamp-*
 
 # Sharebook agent workspace artifacts
 temp/
-
-# Local scratch workspace
 tmp/
-
-# Agent disposable artifacts
 codex-temp/
 var/
 
 # Python cache
 __pycache__/
 *.pyc
+
+# temprário do Raffa
+colinha.txt
