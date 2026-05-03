@@ -21,6 +21,12 @@ Antes de qualquer ação no importer:
 
 Usar estes estados como linguagem oficial do importer. Não inventar variações sem necessidade.
 
+- `waiting_triage` -> `triaging` (Gatilho: GPT Mini)
+- `waiting_editor` -> `editing` (Gatilho: GPT Editor)
+- `waiting_process` -> `processing` -> `done` (Gatilho: Python Worker)
+
+Regras de produtividade:
+- **Taxa de Conclusão**: O status `triage_rejected` representa trabalho concluído (descartado) e deve contar para o `completionRate`.
 - `waiting_editor` → ainda não planejado
 - `editing` → alguém está preparando editorialmente
 - `waiting_process` → pronto para worker

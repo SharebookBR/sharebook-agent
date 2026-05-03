@@ -61,6 +61,13 @@ dotnet build C:\REPOS\SHAREBOOK\sharebook-backend\ShareBook\ShareBook.Api\ShareB
 
 ## Armadilhas conhecidas
 
+### EF Core e Mapping
+- **Propriedades Ignoradas**: Propriedades marcadas com `.Ignore()` no mapeamento (ex: `BookMap.cs`) NÃO são populadas pelo repositório genérico, mesmo que existam na entidade. Se precisar desses dados, use colunas persistidas (como `ImageSlug` em vez de `ImageUrl`).
+- **Npgsql Resilience**: Ao ler colunas que podem ser `uuid`, `text` ou `varchar` no Postgres via Npgsql, prefira `reader.GetValue(i)?.ToString()` para evitar `InvalidCastException`.
+
+### Arquitetura e Persistência
+- **Bancos Isolados**: O banco do Importador e o banco da App são isolados na VPS. **NÃO tentar fazer JOIN SQL** entre eles. A composição de dados deve ser feita na camada de Serviço através de **Enriquecimento em Lote** (coletar IDs e fazer uma única consulta via repositório).
+
 - Teste paralelo no Windows pode travar DLL em `obj\Release`. Se aparecer `CS2012`, rerodar de forma sequencial antes de entrar em paranoia.
 - Probe com `dotnet ef migrations add` pode sujar `ApplicationDbContextModelSnapshot.cs`. Se foi só investigação, restaurar o arquivo antes de commitar.
 - Hotfix que só “faz subir” pode ser válido em incidente, mas deve ser tratado como ponte, não como reconciliação definitiva de migration.
