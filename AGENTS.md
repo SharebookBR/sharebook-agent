@@ -149,6 +149,9 @@ If nothing relevant → `HEARTBEAT_OK`
 - Preferir scripts oficiais
 - Update > delete+create
 - Validar fonte antes de confiar
+- **Proibido gerar imagens via API da OpenAI no fluxo Sharebook sem confirmação explícita do Raffa.**
+- Contexto da regra: em 2026-05-06 houve susto de gasto após pico de custo; a suspeita inicial era embedding, mas a causa real veio da API de imagens. Portanto, qualquer geração de capa/imagem por OpenAI deve parar por padrão e só pode acontecer com confirmação explícita do Raffa para aquele caso ou lote.
+- Na ausência dessa confirmação, preferir reaproveitar capa original, redimensionar, restaurar assets existentes ou usar alternativas não-OpenAI aprovadas.
 - **Missão principal atual do importer: `baixelivros_infantil`.** Quando houver ambiguidade de prioridade, UI, filtro default, triagem e esforço operacional devem favorecer essa source.
 - `/admin/importer` deve abrir por padrão focado em `baixelivros_infantil`, não em fonte genérica legado como `ebook_foundation`.
 
@@ -212,12 +215,14 @@ If nothing relevant → `HEARTBEAT_OK`
 - `sharebook-agent/skills/web-design-reviewer/SKILL.md` — revisar e corrigir UI/layout.
 - `sharebook-agent/skills/sharebook-category-organizer/SKILL.md` — taxonomia e categorias.
 - `sharebook-agent/skills/sharebook-postgres-ro/SKILL.md` — consultas read-only no Postgres de produção.
+- `sharebook-agent/skills/sharebook-aws-s3/SKILL.md` — operações no S3 de produção (buscar credenciais no container, upload, substituição de PDFs).
 - `sharebook-agent/skills/sharebook-triage/SKILL.md` — triagem inicial (`waiting_triage`).
 - `sharebook-agent/skills/sharebook-triage-baixelivros/SKILL.md` — skill específica `baixelivros_infantil`.
 - `sharebook-agent/skills/sharebook-baixelivros-editorial-preparer/SKILL.md` — preparador editorial `baixelivros_infantil`.
 
 ### Scripts operacionais
 - `sharebook-agent/scripts/sharebook_prod_book.py` — find/create/update/delete/approve em produção.
+- `sharebook-agent/scripts/sharebook_aws_s3.py` — upload, download, list e delete de ebooks no bucket S3 de produção (`sharebook-ebooks-prod`). Usar para substituir PDFs grandes que a API rejeita.
 - `sharebook-agent/scripts/sharebook_source_extract.py` — extrai metadados e PDF da fonte.
 - `sharebook-agent/scripts/sharebook_openai_cover.py` — geração de capa.
 - `sharebook-agent/scripts/sharebook_prod_auth.py` — autenticação para operações em produção.
@@ -225,6 +230,7 @@ If nothing relevant → `HEARTBEAT_OK`
 - `sharebook-agent/scripts/sharebook_prod_pg_ro_query_direct.py` — query direta read-only no Postgres de produção.
 - `sharebook-agent/scripts/sharebook_prod_pg_rw_exec.py` — executor SQL write-controlled em produção.
 - `sharebook-agent/scripts/vps_ssh.py` — utilitário de acesso/automação SSH VPS.
+- `sharebook-agent/scripts/sharebook_aws_s3.py` — gerencia ebooks no bucket S3 (`sharebook-ebooks-prod`).
 - `sharebook-agent/scripts/format_two_arrays_whatsapp.py` — formata duas colunas com pontilhado para WhatsApp; default operacional `max_chars=28`.
 
 ### Prototipação rápida (Netlify)
