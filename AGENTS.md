@@ -151,7 +151,7 @@ If nothing relevant → `HEARTBEAT_OK`
 - Validar fonte antes de confiar
 - **Proibido gerar imagens via API da OpenAI no fluxo Sharebook sem confirmação explícita do Raffa.**
 - Contexto da regra: em 2026-05-06 houve susto de gasto após pico de custo; a suspeita inicial era embedding, mas a causa real veio da API de imagens. Portanto, qualquer geração de capa/imagem por OpenAI deve parar por padrão e só pode acontecer com confirmação explícita do Raffa para aquele caso ou lote.
-- Isso inclui uso direto de API, tool de image generation e também o script local `sharebook-agent/scripts/sharebook_openai_cover.py`.
+- Isso inclui uso direto de API, tool de image generation e também scripts locais como `sharebook-agent/scripts/sharebook_openai_cover.py` e `sharebook-agent/scripts/generate_covers.py`.
 - Se esse script parecer ser o caminho óbvio, o agente **não deve se autodesbloquear** nem assumir permissão implícita. Deve parar e pedir confirmação explícita do Raffa antes de usar.
 - Na ausência dessa confirmação, preferir reaproveitar capa original, redimensionar, restaurar assets existentes ou usar alternativas não-OpenAI aprovadas.
 - **Missão principal atual do importer: `baixelivros_infantil`.** Quando houver ambiguidade de prioridade, UI, filtro default, triagem e esforço operacional devem favorecer essa source.
