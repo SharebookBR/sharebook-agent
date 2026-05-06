@@ -10,7 +10,7 @@ ORDER BY status;
 """
 
 result = subprocess.run(
-    [sys.executable, "/data/workspace/sharebook-agent/scripts/query_triage_rw.py", sql],
+    [sys.executable, "/data/workspace/sharebook-agent/scripts/importer/query_triage_rw.py", sql],
     capture_output=True, text=True, timeout=60
 )
 print(result.stdout)

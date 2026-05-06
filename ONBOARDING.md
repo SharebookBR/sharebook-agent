@@ -303,19 +303,19 @@ Permissão mínima foi validada com sucesso.
 ### Script principal de consulta read-only
 
 ```text
-sharebook-agent/scripts/sharebook_prod_pg_ro_query_direct.py
+sharebook-agent/scripts/production/sharebook_prod_pg_ro_query_direct.py
 ```
 
 ### Utilitário SSH oficial
 
 ```text
-sharebook-agent/scripts/vps_ssh.py
+sharebook-agent/scripts/infra/vps_ssh.py
 ```
 
 Uso típico:
 
 ```bash
-python3 sharebook-agent/scripts/vps_ssh.py --env-file sharebook-agent/.env --cmd '<comando>'
+python3 sharebook-agent/scripts/infra/vps_ssh.py --env-file sharebook-agent/.env --cmd '<comando>'
 ```
 
 ---

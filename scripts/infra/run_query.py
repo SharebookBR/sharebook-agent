@@ -4,7 +4,7 @@ import sys, subprocess
 
 sql = sys.argv[1] if len(sys.argv) > 1 else "SELECT 1"
 result = subprocess.run(
-    [sys.executable, "/data/workspace/sharebook-agent/scripts/query_importer_db.py", sql],
+    [sys.executable, "/data/workspace/sharebook-agent/scripts/importer/query_importer_db.py", sql],
     capture_output=True, text=True, timeout=60
 )
 print(result.stdout, end="")

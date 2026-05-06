@@ -224,17 +224,12 @@ If nothing relevant → `HEARTBEAT_OK`
 - `sharebook-agent/skills/sharebook-baixelivros-editorial-preparer/SKILL.md` — preparador editorial `baixelivros_infantil`.
 
 ### Scripts operacionais
-- `sharebook-agent/scripts/sharebook_prod_book.py` — find/create/update/delete/approve em produção.
-- `sharebook-agent/scripts/sharebook_aws_s3.py` — upload, download, list e delete de ebooks no bucket S3 de produção (`sharebook-ebooks-prod`). Usar para substituir PDFs grandes que a API rejeita.
-- `sharebook-agent/scripts/sharebook_source_extract.py` — extrai metadados e PDF da fonte.
-- `sharebook-agent/scripts/sharebook_openai_cover.py` — geração de capa.
-- `sharebook-agent/scripts/sharebook_prod_auth.py` — autenticação para operações em produção.
-- `sharebook-agent/scripts/print_pdf_devtools.mjs` — geração/impressão PDF via DevTools.
-- `sharebook-agent/scripts/sharebook_prod_pg_ro_query_direct.py` — query direta read-only no Postgres de produção.
-- `sharebook-agent/scripts/sharebook_prod_pg_rw_exec.py` — executor SQL write-controlled em produção.
-- `sharebook-agent/scripts/vps_ssh.py` — utilitário de acesso/automação SSH VPS.
-- `sharebook-agent/scripts/sharebook_aws_s3.py` — gerencia ebooks no bucket S3 (`sharebook-ebooks-prod`).
-- `sharebook-agent/scripts/format_two_arrays_whatsapp.py` — formata duas colunas com pontilhado para WhatsApp; default operacional `max_chars=28`.
+- `sharebook-agent/scripts/covers/INDEX.md` — família de scripts de capas. Inclui geração local barata e geração via OpenAI (bloqueada por padrão).
+- `sharebook-agent/scripts/importer/INDEX.md` — família de scripts do importer, triagem, fila e extração de fontes.
+- `sharebook-agent/scripts/production/INDEX.md` — família de scripts de produção, autenticação, banco e S3.
+- `sharebook-agent/scripts/infra/INDEX.md` — família de scripts de infra, SSH, utilitários e automação de suporte.
+- `sharebook-agent/scripts/formatting/INDEX.md` — família de scripts de formatação, incluindo WhatsApp.
+- `sharebook-agent/scripts/web/INDEX.md` — família de scripts web/UI, PDF e utilitários visuais.
 
 ### Prototipação rápida (Netlify)
 - Pasta: `sharebook-prototipo/` (HTML/CSS/JS puro).

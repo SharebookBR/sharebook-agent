@@ -161,7 +161,7 @@ O worker **não publica sem capa**. Antes de marcar como `waiting_process`, o it
 1. **Verificar se o item já tem capa** (`planned_cover_url` preenchido e arquivo existente)
 2. Se não tiver, **gerar via OpenAI Images API** com o script `sharebook_openai_cover.py`:
    ```bash
-   python3 /data/workspace/sharebook-agent/scripts/sharebook_openai_cover.py \
+   python3 /data/workspace/sharebook-agent/scripts/covers/sharebook_openai_cover.py \
      --prompt "Capa de livro infantil, ... (descrever cena/estilo). Título: TITULO. Autor: AUTOR." \
      --output /tmp/cover_<ID>.png \
      --size 1024x1536 \

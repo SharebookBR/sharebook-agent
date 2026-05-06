@@ -135,7 +135,7 @@ Regra:
 Rota operacional recomendada no `sharebook-agent`:
 
 ```bash
-node scripts/print_pdf_devtools.mjs \
+node scripts/web/print_pdf_devtools.mjs \
   /data/workspace/sharebook-agent/missions/escrever-livros/<livro>-book.html \
   /data/workspace/sharebook-agent/missions/escrever-livros/<livro>-book-vX.pdf
 ```

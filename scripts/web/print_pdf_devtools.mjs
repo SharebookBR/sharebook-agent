@@ -6,7 +6,7 @@ import { join } from 'node:path';
 
 const [,, inputPath, outputPath] = process.argv;
 if (!inputPath || !outputPath) {
-  console.error('Uso: node scripts/print_pdf_devtools.mjs <input.html> <output.pdf>');
+  console.error('Uso: node scripts/web/print_pdf_devtools.mjs <input.html> <output.pdf>');
   process.exit(1);
 }
 

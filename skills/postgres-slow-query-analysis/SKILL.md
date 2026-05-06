@@ -28,7 +28,7 @@ Identify the main slow-query offenders, name them clearly, and summarize likely 
    - Use `pg_stat_user_tables`, `pg_stat_user_indexes`, `pg_stat_database`, `pg_stat_activity`, `pg_stats`, and `information_schema` as needed.
    - Look for high `seq_scan`, high `seq_tup_read`, low `idx_scan`, temp usage, and suspicious table access patterns.
 3. Inspect the Postgres container logs through the VPS in read-only mode.
-   - Use the canonical VPS helper: `sharebook-agent/scripts/vps_ssh.py`.
+   - Use the canonical VPS helper: `sharebook-agent/scripts/infra/vps_ssh.py`.
    - Discover the application Postgres container with `docker ps` if needed.
    - Read logs only. Do not restart containers or edit retention.
    - Search for entries matching slow statements, typically `duration: ... ms`.
@@ -78,7 +78,7 @@ When sending the final weekly report to Raffa on WhatsApp:
 ## Canonical tools and paths
 
 - Read-only DB query skill: `sharebook-agent/skills/sharebook-postgres-ro/SKILL.md`
-- VPS helper: `sharebook-agent/scripts/vps_ssh.py`
+- VPS helper: `sharebook-agent/scripts/infra/vps_ssh.py`
 - VPS playbook: `sharebook-agent/skills/coolify-vps.md`
 
 ## Minimal command patterns
@@ -86,15 +86,15 @@ When sending the final weekly report to Raffa on WhatsApp:
 Use these only as patterns, adapting carefully and keeping everything read-only.
 
 ```bash
-python3 sharebook-agent/scripts/sharebook_prod_pg_ro_query_direct.py --csv --sql "SELECT name, setting FROM pg_settings WHERE name IN ('log_min_duration_statement','track_io_timing','compute_query_id','shared_preload_libraries');"
+python3 sharebook-agent/scripts/production/sharebook_prod_pg_ro_query_direct.py --csv --sql "SELECT name, setting FROM pg_settings WHERE name IN ('log_min_duration_statement','track_io_timing','compute_query_id','shared_preload_libraries');"
 ```
 
 ```bash
-python3 sharebook-agent/scripts/sharebook_prod_pg_ro_query_direct.py --csv --sql "SELECT schemaname, relname, seq_scan, seq_tup_read, idx_scan, n_live_tup FROM pg_stat_user_tables ORDER BY seq_tup_read DESC NULLS LAST LIMIT 20;"
+python3 sharebook-agent/scripts/production/sharebook_prod_pg_ro_query_direct.py --csv --sql "SELECT schemaname, relname, seq_scan, seq_tup_read, idx_scan, n_live_tup FROM pg_stat_user_tables ORDER BY seq_tup_read DESC NULLS LAST LIMIT 20;"
 ```
 
 ```bash
-python3 sharebook-agent/scripts/vps_ssh.py --cmd "docker logs --since 168h <postgres-container> 2>&1 | grep -E 'duration: .* ms' | tail -n 200"
+python3 sharebook-agent/scripts/infra/vps_ssh.py --cmd "docker logs --since 168h <postgres-container> 2>&1 | grep -E 'duration: .* ms' | tail -n 200"
 ```
 
 ## Stop conditions

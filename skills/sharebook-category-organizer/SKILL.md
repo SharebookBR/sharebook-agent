@@ -129,6 +129,37 @@ Escalar se houver:
 - Antes de remover categoria, validar que está vazia.
 - Antes de criar categoria nova, verificar se já existe equivalente.
 - Se houver blocker editorial real, não chutar.
+- Para diagnóstico, preferir primeiro **query read-only no Postgres** em vez de sair batendo na API sem necessidade.
+
+## Operação no OpenClaw
+
+### Exec de scripts Python
+- No OpenClaw, o preflight de `exec` pode bloquear **interpretador + shell complexo**.
+- Preferir sempre comando direto com `workdir` definido.
+- Exemplo certo:
+  - `python3 scripts/production/sharebook_prod_book.py categories`
+- Evitar:
+  - `cd ... && python3 ...`
+  - pipes, redirecionamentos e shell enfeitado no mesmo comando
+- Se precisar de script auxiliar, escrever um arquivo temporário curto e rodar com `python3 <arquivo>`.
+
+### Fonte de verdade para diagnóstico
+- Para medir volume, detectar duplicidade, checar categoria pai/filha e mapear livros, preferir **Postgres produção read-only** quando isso for mais rápido e confiável.
+- Usar API principalmente para:
+  - validar comportamento exposto
+  - criar categoria (`POST /api/Category`)
+  - mover livro (`PUT /api/Book/{id}` via script utilitário)
+- Regra prática:
+  - **RO no banco para entender**
+  - **API para escrever**
+
+### Criação de subcategoria
+- Antes de criar, listar a árvore atual e confirmar duplicidade por `name + parentCategoryId`.
+- Para criar categoria filha, usar `POST /api/Category` com:
+  - `Name`
+  - `ParentCategoryId`
+  - `Order` (quando fizer sentido para exibição)
+- Validar no retorno se a categoria nasceu com o `parentCategoryId` correto.
 
 ## Saídas esperadas
 
@@ -166,15 +197,15 @@ Tabela:
 ## Comandos úteis
 
 ```bash
-python3 sharebook-agent/scripts/sharebook_prod_book.py categories
+python3 sharebook-agent/scripts/production/sharebook_prod_book.py categories
 ```
 
 ```bash
-python3 sharebook-agent/scripts/sharebook_prod_book.py find --title "..." --author "..."
+python3 sharebook-agent/scripts/production/sharebook_prod_book.py find --title "..." --author "..."
 ```
 
 ```bash
-python3 sharebook-agent/scripts/sharebook_prod_book.py update --id <book_id> --category-id <subcategory_id>
+python3 sharebook-agent/scripts/production/sharebook_prod_book.py update --id <book_id> --category-id <subcategory_id>
 ```
 
 Para volume maior, preferir Postgres produção com consulta RO e execução RW controlada.

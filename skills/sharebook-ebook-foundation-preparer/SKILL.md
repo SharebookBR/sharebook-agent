@@ -30,7 +30,7 @@ Não improvisar shell grande, token inline ou SQL remoto no escuro. O caminho fe
 2. Trabalhar no PDF local em `/data/workspace/sharebook-ebook-importer/triage-downloads/`.
 3. Registrar os campos editoriais no importer com script Python local usando `IMPORTER_DB_DSN` do `sharebook-ebook-importer/.env`.
 4. Rodar o worker pelo wrapper canônico:
-   - `python3 /data/workspace/sharebook-agent/scripts/sharebook_run_ebook_foundation_worker.py`
+   - `python3 /data/workspace/sharebook-agent/scripts/importer/sharebook_run_ebook_foundation_worker.py`
 5. Se houver `401`, o wrapper deve renovar token automaticamente antes de falhar.
 
 Regra importante: o agente não deve mais pensar manualmente em `TOKEN_V2` para esse fluxo. Renovação de token é responsabilidade do wrapper/autenticação.
@@ -110,7 +110,7 @@ Se encontrar itens com status `done` que tenham o mesmo PDF, hash SHA-1 do conte
 Use token obtido pelo fluxo canônico de autenticação. Não fixar token no comando nem na skill.
 
 ```bash
-TOKEN_V2="$(python3 /data/workspace/sharebook-agent/scripts/sharebook_refresh_token.py)"
+TOKEN_V2="$(python3 /data/workspace/sharebook-agent/scripts/production/sharebook_refresh_token.py)"
 curl -s -H "Authorization: Bearer $TOKEN_V2" -H "x-requested-with: web" \
   "https://www.sharebook.com.br/api/Book/search?q=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''<TITULO> <AUTOR>'''))")" | \
   jq '.items[] | {id, title, author}'
@@ -342,7 +342,7 @@ Categoria folha é obrigatória, mas se houver dúvida genuína entre duas, use 
 #### Para verificar se a categoria existe:
 
 ```bash
-TOKEN_V2="$(python3 /data/workspace/sharebook-agent/scripts/sharebook_refresh_token.py)"
+TOKEN_V2="$(python3 /data/workspace/sharebook-agent/scripts/production/sharebook_refresh_token.py)"
 curl -s -H "Authorization: Bearer $TOKEN_V2" -H "x-requested-with: web" \
   "https://www.sharebook.com.br/api/category" | python3 -c "
 import json, sys
@@ -365,7 +365,7 @@ Usar o script canônico. Não reescrever snippet ad hoc por item.
 **Regra operacional validada:** para `ebook_foundation`, o caminho prático e confiável é conectar localmente com `IMPORTER_DB_DSN` vindo de `/data/workspace/sharebook-ebook-importer/.env`. Não insistir em usuário read-only nem em query helper que não tenha permissão no schema `importer`.
 
 ```bash
-python3 /data/workspace/sharebook-agent/scripts/sharebook_register_ebook_foundation_item.py \
+python3 /data/workspace/sharebook-agent/scripts/importer/sharebook_register_ebook_foundation_item.py \
   --item-id 278 \
   --title "Análise Exploratória de Dados usando o R" \
   --author "Enio Jelihovschi" \
@@ -400,13 +400,13 @@ O script grava de uma vez:
 Use o wrapper canônico, não `TOKEN_V2` inline:
 
 ```bash
-python3 /data/workspace/sharebook-agent/scripts/sharebook_run_ebook_foundation_worker.py
+python3 /data/workspace/sharebook-agent/scripts/importer/sharebook_run_ebook_foundation_worker.py
 ```
 
 Opcionalmente, para outra source:
 
 ```bash
-python3 /data/workspace/sharebook-agent/scripts/sharebook_run_ebook_foundation_worker.py ebook_foundation
+python3 /data/workspace/sharebook-agent/scripts/importer/sharebook_run_ebook_foundation_worker.py ebook_foundation
 ```
 
 O wrapper:

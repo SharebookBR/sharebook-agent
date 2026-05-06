@@ -10,9 +10,9 @@ Executar consulta de banco com segurança e velocidade, sem improvisar SQL de ri
 ## Workflow
 
 1. Preferir caminho direto (sem SSH):
-   - `sharebook-agent/scripts/sharebook_prod_pg_ro_query_direct.py`
+   - `sharebook-agent/scripts/production/sharebook_prod_pg_ro_query_direct.py`
 2. Se o direto falhar por rede, usar fallback SSH:
-   - `sharebook-agent/scripts/sharebook_prod_pg_ro_query.py`
+   - `sharebook-agent/scripts/production/sharebook_prod_pg_ro_query.py`
 3. Começar por descoberta mínima quando houver dúvida de schema:
    - tabelas (`information_schema.tables`)
    - colunas (`information_schema.columns`)
@@ -29,15 +29,15 @@ Executar consulta de banco com segurança e velocidade, sem improvisar SQL de ri
 ## Comandos canônicos
 
 ```bash
-python3 sharebook-agent/scripts/sharebook_prod_pg_ro_query_direct.py --csv --sql "SELECT now();"
+python3 sharebook-agent/scripts/production/sharebook_prod_pg_ro_query_direct.py --csv --sql "SELECT now();"
 ```
 
 ```bash
-python3 sharebook-agent/scripts/sharebook_prod_pg_ro_query_direct.py --csv --sql "SELECT table_schema, table_name FROM information_schema.tables WHERE table_schema='public' ORDER BY 2;"
+python3 sharebook-agent/scripts/production/sharebook_prod_pg_ro_query_direct.py --csv --sql "SELECT table_schema, table_name FROM information_schema.tables WHERE table_schema='public' ORDER BY 2;"
 ```
 
 ```bash
-python3 sharebook-agent/scripts/sharebook_prod_pg_ro_query_direct.py --csv --sql "SELECT column_name FROM information_schema.columns WHERE table_schema='public' AND table_name='Books' ORDER BY ordinal_position;"
+python3 sharebook-agent/scripts/production/sharebook_prod_pg_ro_query_direct.py --csv --sql "SELECT column_name FROM information_schema.columns WHERE table_schema='public' AND table_name='Books' ORDER BY ordinal_position;"
 ```
 
 ## Receitas prontas
@@ -58,8 +58,8 @@ Para consultas recorrentes, ler: `references/queries.md`.
 - Antes de qualquer `UPDATE/DELETE`, rodar `SELECT COUNT(*)` com o mesmo `WHERE` para validar escopo.
 - Preferir transação explícita (`BEGIN ... COMMIT`) e registrar query executada + contagem afetada.
 - Após escrita, validar com query de verificação read-only e reportar antes/depois.
-- Script recomendado para RW controlado: `sharebook-agent/scripts/sharebook_prod_pg_rw_exec.py`.
+- Script recomendado para RW controlado: `sharebook-agent/scripts/production/sharebook_prod_pg_rw_exec.py`.
   - Exemplo seguro (com transação automática):
-    - `python3 sharebook-agent/scripts/sharebook_prod_pg_rw_exec.py --sql-file /tmp/migracao.sql --yes`
+    - `python3 sharebook-agent/scripts/production/sharebook_prod_pg_rw_exec.py --sql-file /tmp/migracao.sql --yes`
   - Exemplo de verificação imediata:
-    - `python3 sharebook-agent/scripts/sharebook_prod_pg_rw_exec.py --sql "SELECT count(*) FROM \"Books\";" --yes --csv`
+    - `python3 sharebook-agent/scripts/production/sharebook_prod_pg_rw_exec.py --sql "SELECT count(*) FROM \"Books\";" --yes --csv`
