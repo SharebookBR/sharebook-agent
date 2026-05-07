@@ -105,6 +105,28 @@ A source `baixelivros_infantil` é valiosa, mas misturada e juridicamente hetero
 - obras com licença explícita
 - títulos da coleção/fornecimento `SEDUC/CE` quando vierem com ISBN, paginação consistente, narrativa infantil clara e PDF íntegro, mesmo que a descrição de vitrine enfatize benefícios educativos
 
+### Regra endurecida para `Animais e Natureza`
+`Animais e Natureza` é uma categoria que infla fácil com livro apenas simpático, fofinho ou funcional. Portanto, **não basta ser bonitinho, correto ou agradável**.
+
+Só aprovar item com destino plausível em `Animais e Natureza` se ele for **claramente premium**, isto é, quando a obra mostrar a combinação de:
+- força literária perceptível
+- personalidade própria
+- imaginação ou atmosfera memorável
+- acabamento narrativo acima do comum
+- potencial real de ficar entre os melhores da categoria no catálogo
+
+Regras práticas:
+- livro apenas leve, meigo, educativo ou "ok" sobre bichos/natureza → **rejeitar** por `editorial_bar_too_low`
+- obra que depende mais do tema fofo do que de execução literária → **rejeitar**
+- livro correto mas genérico, intercambiável ou sem brilho → **rejeitar**
+- texto curto só passa se houver impacto literário evidente; se for apenas gracioso, não entra
+- em dúvida entre `aprovar` e `rejeitar` para `Animais e Natureza`, o default agora é **rejeitar**
+
+Teste mental obrigatório antes de aprovar nessa categoria:
+> "Se a categoria já está inchada, eu ainda teria coragem de dizer que este item merece disputar espaço entre os melhores dela?"
+
+Se a resposta não for um **sim claro**, não aprove.
+
 ### O que tende a ser suspeito
 - autores contemporâneos pouco conhecidos com PDF completo
 - livros infantis recentes com ilustração/editorial moderna e cara de produto comercial
@@ -205,6 +227,36 @@ WHERE id = <ID_DO_ITEM>
 No BaixeLivros, desconfiar da vitrine. O que manda é a página real do item e o arquivo real baixado.
 
 ### 3. Decidir o destino
+
+### Registro obrigatório do motivo de triagem no importer
+
+Para qualquer item em `triage_rejected`, **não basta preencher `last_error`**.
+O dashboard do importer exibe o texto principal do motivo a partir de:
+
+```json
+metadata_json.triage.detail
+```
+
+Formato canônico mínimo:
+
+```json
+{
+  "triage": {
+    "reason": "didactic_out_of_scope",
+    "detail": "Livro infantil devocional/religioso para iniciação na fé, com objetivo de estímulo visual, evangelização e fortalecimento de vínculos familiares; fora do alvo editorial de obra literária infantil.",
+    "rejected_by": "<nome-do-operador-ou-agente>"
+  }
+}
+```
+
+Regras práticas:
+- `metadata_json.triage.reason` → motivo curto padronizado (`dead_link`, `fake_pdf`, `pirate`, `legal_risk`, `didactic_out_of_scope`, `editorial_bar_too_low` etc.)
+- `metadata_json.triage.detail` → texto humano que o dashboard deve mostrar no card
+- `metadata_json.triage.rejected_by` → operador/agente responsável
+- `last_error` pode continuar útil para busca rápida/telemetria, **mas não substitui** `metadata_json.triage.detail`
+- se o item for aprovado (`waiting_editor`), limpar `last_error` e evitar carregar metadata de rejeição antiga
+
+Se você rejeitar um item sem preencher `metadata_json.triage.detail`, o dashboard vai parecer mudo e o próximo operador vai ficar sem contexto.
 
 | Situação | Status | planned_author | planned_category_id | planned_synopsis |
 |---|---|---|---|---|
@@ -413,6 +465,7 @@ conn.close()
 - [ ] Não é didático fora do escopo?
 - [ ] Idioma: português?
 - [ ] Não é duplicata de obra já importada?
+- [ ] Se o destino plausível for `Animais e Natureza`, o item é realmente premium e competitivo dentro da categoria?
 - [ ] Autor identificável? (se sim, preencher `planned_author`)
 - [ ] Se aprovado: PDF do conteúdo baixado e validado?
 - [ ] Para rejeição: status é `triage_rejected`, não `error`
