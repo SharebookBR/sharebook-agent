@@ -127,6 +127,29 @@ Teste mental obrigatório antes de aprovar nessa categoria:
 
 Se a resposta não for um **sim claro**, não aprove.
 
+### Regra endurecida para `Valores e Emoções`
+`Valores e Emoções` também infla fácil, porque muita obra fraca tenta se vender como sensível, importante ou "boa para conversar com a criança". Isso não basta.
+
+Só aprovar item com destino plausível em `Valores e Emoções` se ele for **editorialmente forte**, isto é, se o livro conseguir entregar mais do que mensagem correta ou lição bonita. A obra precisa mostrar:
+- verdade emocional perceptível
+- conflito, situação ou relação com algum peso humano real
+- voz própria ou condução narrativa acima do genérico
+- capacidade de tocar sem virar sermão, cartilha ou peça utilitária
+- potencial real de figurar entre os melhores da categoria no catálogo
+
+Regras práticas:
+- livro cuja principal qualidade é "ensinar um valor" → **rejeitar** por `editorial_bar_too_low`
+- obra que parece instrumento de conversa pedagógica mais do que literatura → **rejeitar**
+- texto fofo, correto e bem-intencionado, mas previsível → **rejeitar**
+- se a emoção vem pronta, mastigada ou moralizada demais, isso pesa contra
+- texto curto só passa se houver delicadeza, tensão ou verdade emocional muito acima da média
+- em dúvida entre `aprovar` e `rejeitar` para `Valores e Emoções`, o default agora é **rejeitar**
+
+Teste mental obrigatório antes de aprovar nessa categoria:
+> "Estou aprovando porque o livro realmente toca e permanece, ou só porque ele defende uma mensagem simpática?"
+
+Se for mais mensagem simpática do que literatura forte, não aprove.
+
 ### O que tende a ser suspeito
 - autores contemporâneos pouco conhecidos com PDF completo
 - livros infantis recentes com ilustração/editorial moderna e cara de produto comercial
@@ -466,6 +489,7 @@ conn.close()
 - [ ] Idioma: português?
 - [ ] Não é duplicata de obra já importada?
 - [ ] Se o destino plausível for `Animais e Natureza`, o item é realmente premium e competitivo dentro da categoria?
+- [ ] Se o destino plausível for `Valores e Emoções`, o item entrega literatura forte, e não só mensagem simpática?
 - [ ] Autor identificável? (se sim, preencher `planned_author`)
 - [ ] Se aprovado: PDF do conteúdo baixado e validado?
 - [ ] Para rejeição: status é `triage_rejected`, não `error`
