@@ -150,6 +150,28 @@ Teste mental obrigatório antes de aprovar nessa categoria:
 
 Se for mais mensagem simpática do que literatura forte, não aprove.
 
+### Regra calibrada para `Humor`
+`Humor` é uma categoria hoje mais pobre no catálogo, então o erro aqui não é só aprovar coisa ruim, mas também matar a categoria por dureza cega.
+
+A régua de `Humor` deve ser de **vitalidade**, não de solenidade. Isso significa que o livro não precisa ser uma obra-prima, mas precisa **funcionar de verdade como humor**. Deve mostrar pelo menos parte relevante desta combinação:
+- graça real, não só intenção de ser engraçado
+- timing, ritmo ou surpresa
+- personalidade própria
+- leveza com presença
+- releitura gostosa ou energia memorável
+
+Regras práticas:
+- livro apenas bagunçado, agitado ou barulhento → **rejeitar** por `editorial_bar_too_low`
+- texto só fofinho ou leve, sem comicidade real → **rejeitar**
+- obra que depende só de careta, exagero ou confusão sem timing → **rejeitar**
+- humor menor, mas vivo, bem resolvido e com personalidade, **pode passar** mesmo sem ambição literária alta
+- em caso de dúvida, perguntar se o livro realmente diverte ou só faz pose de divertido
+
+Teste mental obrigatório antes de aprovar nessa categoria:
+> "Esse livro realmente funciona como humor e deixa alguma impressão de vivacidade, ou estou só premiando um texto leve?"
+
+Se for apenas leve, simpático ou caótico, não aprove. Se for genuinamente engraçado e vivo, pode seguir.
+
 ### O que tende a ser suspeito
 - autores contemporâneos pouco conhecidos com PDF completo
 - livros infantis recentes com ilustração/editorial moderna e cara de produto comercial
@@ -490,6 +512,7 @@ conn.close()
 - [ ] Não é duplicata de obra já importada?
 - [ ] Se o destino plausível for `Animais e Natureza`, o item é realmente premium e competitivo dentro da categoria?
 - [ ] Se o destino plausível for `Valores e Emoções`, o item entrega literatura forte, e não só mensagem simpática?
+- [ ] Se o destino plausível for `Humor`, o livro realmente funciona como humor, e não só como texto leve ou bagunçado?
 - [ ] Autor identificável? (se sim, preencher `planned_author`)
 - [ ] Se aprovado: PDF do conteúdo baixado e validado?
 - [ ] Para rejeição: status é `triage_rejected`, não `error`
