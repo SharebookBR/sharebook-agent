@@ -1,4 +1,5 @@
 ## 🗺️ Roadmap de Evolução
+- **SEO v1 — Sitemap + Breadcrumb**: script de sitemap dinâmico semanal + schema BreadcrumbList via SSR. Detalhes em `missions/seo-v1-sitemap-breadcrumb/_plano.md`.
 - **North star do produto**: tornar o Sharebook o melhor hub de livros gratuitos do Brasil, combinando escala em digitais, conexão emocional nos físicos e descoberta simples. Referência: `sharebook-agent/missions/maior site de livros do brasil/_plano.md`.
 - **Painel de Jobs (v2)**: adicionar status calculado por job (`Saudável`, `Atrasado`, `Com erro`, `Inativo`) com base no intervalo esperado e na última execução registrada.
 - **Painel de Jobs (histórico)**: permitir expandir cada job para ver as últimas execuções, com `CreationDate`, `TimeSpentSeconds`, `IsSuccess` e `Details`.
