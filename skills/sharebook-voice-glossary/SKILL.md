@@ -27,6 +27,13 @@ A fonte primária atual é:
 
 Leia esse arquivo antes de decidir terminologia quando houver dúvida real.
 
+## Regras de Sinopse
+
+Ao escrever sinopses para o catálogo:
+- **Tamanho**: Exatamente 3 parágrafos.
+- **Tom**: Envolvente e literário, focado no desejo de leitura, evitando descrições genéricas.
+- **Veracidade**: Não inventar fatos. Pesquisar fontes confiáveis (ex: Wikipedia) antes de redigir.
+
 ## Regras canônicas já validadas
 
 - Usar **livro digital**, nunca `ebook`, `e-book` ou `livro eletrônico` em texto visível.

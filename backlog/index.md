@@ -1,11 +1,18 @@
-## 🗺️ Roadmap de Evolução
-- **SEO v1 — Sitemap + Breadcrumb**: script de sitemap dinâmico semanal + schema BreadcrumbList via SSR. Detalhes em `backlog/todo/seo-v1-sitemap-breadcrumb/_plano.md`.
-- **North star do produto**: tornar o Sharebook o melhor hub de livros gratuitos do Brasil, combinando escala em digitais, conexão emocional nos físicos e descoberta simples. Referência: `sharebook-agent/backlog/todo/maior site de livros do brasil/_plano.md`.
-- **Painel de Jobs (v2)**: adicionar status calculado por job (`Saudável`, `Atrasado`, `Com erro`, `Inativo`) com base no intervalo esperado e na última execução registrada.
-- **Painel de Jobs (histórico)**: permitir expandir cada job para ver as últimas execuções, com `CreationDate`, `TimeSpentSeconds`, `IsSuccess` e `Details`.
-- **Painel de Jobs (diagnóstico)**: destacar melhor os jobs que só enfileiram trabalho (`NewBookGetInterestedUsers`, `NewEbookWeeklyDigest`) e o `MailSender`, deixando claro o fluxo “enfileirou” vs “consumiu fila”.
-- **Painel de Jobs (backend)**: criar endpoint dedicado para histórico paginado por job, evitando carregar tudo em um único payload.
-- **Painel de Jobs (frontend)**: manter a tela apenas como leitura no primeiro ciclo; qualquer ação manual de executar job ou editar configuração deve ser tratada separadamente e com mais cautela.
-- **Dependências e segurança**: reduzir o passivo de vulnerabilidades do projeto, com foco inicial no `sharebook-frontend` e nas dependências legadas de email/runtime que estão aparecendo nos alertas do GitHub e no build.
-- **Upgrade de toolchain Angular**: tratar separadamente a modernização do build do `sharebook-frontend` (`@angular-devkit/build-angular` e cadeia associada). Não aceitar PR automática com salto grande de major nesse tooling sem trilha dedicada de upgrade, validação de compatibilidade com Angular 13 e plano explícito de migração.
-- **Memória operacional via skills**: explorar formalmente a ideia de tratar `skills/` como memória durável operacional do ecossistema, não só como instruções. Investigar indexação por embedding de `SKILL.md` e referências relevantes, diferenciação entre memória factual e memória executável, e critérios de recuperação semântica que ajudem o agente a reencontrar workflows maduros sem depender de lembrar o nome exato da skill.
+## BACKLOG
+
+### 🌟 Visão Geral
+- **North star do produto**: tornar o Sharebook o melhor hub de livros gratuitos do Brasil. Detalhes em `backlog/todo/maior-site-livros/_plano.md`.
+- **Memória operacional via skills**: explorar o uso de `skills/` como memória operacional durável.
+
+### 🎯 Missões Ativas (TODO)
+
+- **[Maior Site de Livros](backlog/todo/maior-site-livros/_plano.md)**: Meta de 1000 livros curados e sistema de curadoria de elite.
+- **[Busca e Recomendação](backlog/todo/busca-e-recomendacao-sharebook.md)**: FTS, fuzzy matching e recomendações vetoriais via pgvector.
+- **[Tecnologia CC](backlog/todo/tecnologia-cc-livros.md)**: Ingestão de acervo tech com licenças Creative Commons garantidas.
+- **[Painel de Jobs](backlog/todo/painel-de-jobs.md)**: Evolução do dashboard de monitoria de jobs em background.
+- **[SEO v1](backlog/todo/seo-v1/_plano.md)**: Sitemap dinâmico, Breadcrumbs e melhorias de indexação.
+- **[Social e Reviews](backlog/todo/social/_plano.md)**: Comentários, avaliações de livros e login progressivo via Pegasus.
+- **[Dependências e Segurança](backlog/todo/seguranca-e-vulnerabilidades.md)**: Atualização de toolchain (Angular 13+) e correção de passivo de segurança.
+
+---
+Para detalhes de execução de cada item, consulte o arquivo correspondente na pasta `todo/`.

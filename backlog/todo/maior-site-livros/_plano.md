@@ -15,8 +15,7 @@ Ser "o maior" aqui não significa despejar PDF aos montes. Significa construir o
 - 03 missão "mínimo 5 livros pra cada categoria" .................... ok
 - 04 paginação na tela "admin livros" ............................... ok
 - 05 fazer a curadoria de elite e cadastrar 1000 livros! ............ wip
-- 06 feature de tags ................................................ 
-
+- 06 feature de tags ................................................ `backlog/todo/maior-site-livros/etapa-06-tags.md`
 ## Ideias features
 - PDP: navegar por categoria ......................................... ok
 - PDP: navegar por autor ............................................. ok
