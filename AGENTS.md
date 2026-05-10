@@ -227,7 +227,7 @@ If nothing relevant → `HEARTBEAT_OK`
 - `sharebook-agent/scripts/covers/INDEX.md` — família de scripts de capas. Inclui geração local barata e geração via OpenAI (bloqueada por padrão).
 - `sharebook-agent/scripts/importer/INDEX.md` — família de scripts do importer, triagem, fila e extração de fontes.
 - `sharebook-agent/scripts/production/INDEX.md` — família de scripts de produção, autenticação, banco e S3.
-- `sharebook-agent/scripts/infra/INDEX.md` — família de scripts de infra, SSH, utilitários e automação de suporte.
+- `sharebook-agent/scripts/infra/INDEX.md` — família de scripts de infra, SSH no host VPS, explorar containers, utilitários e automação de suporte.
 - `sharebook-agent/scripts/formatting/INDEX.md` — família de scripts de formatação, incluindo WhatsApp.
 - `sharebook-agent/scripts/web/INDEX.md` — família de scripts web/UI, PDF e utilitários visuais.
 

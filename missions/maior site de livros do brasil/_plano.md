@@ -216,6 +216,7 @@ Abrimos `Filosofia` seguindo a lógica correta:
 - **API Category PUT bug**: endpoint `PUT /api/Category/{id}` retorna `AutoMapperMappingException`. Impede renomear categorias via API. Necessário corrigir mapeamento `Result<Category>` → `Category` no AutoMapper.
 - **API Book filter bug**: endpoint `GET /api/Book` com parâmetros `categoryId`, `title` etc. ignora filtros e retorna lista fixa (15 livros). Isso é comportamento esperado? Se sim, documentar; se não, corrigir.
 - **Ambiguous route**: `GET /api/Category/{id}` conflita com `GET /api/Category/{page}/{items}` causando `AmbiguousMatchException`. Corrigir routing.
+- **Aposentar `position` como referência operacional de item no importer**: `position` não deve mais ser usado para falar, buscar, abrir ou operar itens. A fonte da verdade para identidade do item deve ser apenas `id`. Se `position` continuar existindo internamente para ordenação por source, que seja metadado secundário e nunca identificador visível principal na UI. Impacto esperado: importer, backend e frontend.
 
 ---
 
