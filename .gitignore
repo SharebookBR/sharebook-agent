@@ -143,6 +143,8 @@ temp/
 tmp/
 codex-temp/
 var/
+sharebook-ebook-importer/
+editorial-covers/
 
 # Python cache
 __pycache__/

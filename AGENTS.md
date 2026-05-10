@@ -199,11 +199,8 @@ If nothing relevant → `HEARTBEAT_OK`
 
 ## Índice Operacional
 
-### Missões
-- `sharebook-agent/missions/maior site de livros do brasil/_plano.md` — visão macro.
-- `sharebook-agent/missions/maior site de livros do brasil/etapa 06 - tags.md` — sistema de tags.
-- `sharebook-agent/missions/social/_plano.md` — frente social/distribuição.
-- `sharebook-agent/missions/escrever-livros/` — artefatos de livros (PDFs, assets).
+### Backlog e Missões
+- `sharebook-agent/backlog/index.md` — Fonte da verdade para prioridades, roadmap e links para planos detalhados em `backlog/todo/`.
 
 ### Skills
 - `sharebook-agent/skills/frontend.md` — desenvolvimento Angular, UI patterns (Cartão > Tabela), smart sorting e temas mobile. Usar para qualquer mudança no `sharebook-frontend`.
