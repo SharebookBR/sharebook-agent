@@ -9,7 +9,7 @@
 
 ## Curadoria
 - [ ] li a fonte original
-- [ ] li o PDF local também, se a página original não bastava
+- [ ] li o PDF local também, se a página original não bastava e se ele realmente existia
 - [ ] confirmei/corrigi autor
 - [ ] escolhi categoria folha
 - [ ] escrevi sinopse final com 3 parágrafos
@@ -28,6 +28,7 @@
 - [ ] `planned_synopsis` preenchido
 - [ ] `planned_cover_url` preenchido se houver capa
 - [ ] atualização feita preferencialmente via CLI do importer
+- [ ] se usei SQL direto, foi porque o CLI não resolveu o caso de forma limpa
 - [ ] item salvo em `waiting_process`
 
 ## Anti-autoengano

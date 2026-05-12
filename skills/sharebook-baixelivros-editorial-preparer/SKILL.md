@@ -44,6 +44,8 @@ Antes de sair daqui, o item precisa ter:
 Ler a página original com atenção.
 Não assumir autor, gênero ou contexto por associação preguiçosa.
 
+Se a página original for curta demais para sustentar a decisão editorial, usar o PDF local como apoio, mas sem assumir que ele sempre estará disponível no workspace.
+
 ### 2. Categoria sempre folha
 
 Nunca deixar item em categoria pai.
@@ -91,6 +93,8 @@ curl -s -H "Authorization: Bearer $TOKEN" -H "x-requested-with: web" \
   "https://www.sharebook.com.br/api/category"
 ```
 
+Se o endpoint devolver HTML da aplicação em vez de JSON útil, não fingir certeza. Nesse caso, usar evidência já exposta no sistema atual ou parar conscientemente para confirmar a categoria.
+
 ### PostgreSQL do importer
 
 O default operacional é usar a `IMPORTER_DB_DSN` do `.env` central:
@@ -102,6 +106,14 @@ Se a env não estiver exportada no shell atual, exportar antes de operar.
 ### Escrita no importer
 
 Default saudável: usar o **CLI do importer** quando ele resolver o caso sem gambiarra.
+
+Comando preferido para liberar item preparado:
+
+```bash
+cd /data/workspace/sharebook-ebook-importer
+python cli.py plan-set --position <POSICAO> --category-id <CATEGORIA_FOLHA> --synopsis-file <ARQUIVO_UTF8> --author "<AUTOR>" --cover-url <CAMINHO_OU_URL_DA_CAPA>
+```
+
 SQL direto fica como fallback, não como primeira escolha.
 
 ## Fluxo curto
@@ -151,3 +163,4 @@ Campos centrais:
 - esta skill cuida do julgamento editorial
 - a skill `sharebook-public-ebook-importer` cuida da operação do importer
 - quando terminar aqui, o item deve estar pronto para `publish-once`
+- se houver hesitação real de categoria por ambiguidade editorial, registrar a dúvida em vez de inventar confiança
