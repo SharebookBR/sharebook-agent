@@ -3,10 +3,13 @@
 ## Entrada
 - [ ] item está em `waiting_editor` ou `editing`
 - [ ] página original do item identificada
+- [ ] se a página for fraca, PDF local identificado
 - [ ] conexão com PostgreSQL do importer ok
+- [ ] `.env` central carregada ou acessível
 
 ## Curadoria
 - [ ] li a fonte original
+- [ ] li o PDF local também, se a página original não bastava
 - [ ] confirmei/corrigi autor
 - [ ] escolhi categoria folha
 - [ ] escrevi sinopse final com 3 parágrafos
@@ -24,6 +27,7 @@
 - [ ] `planned_category_id` preenchido
 - [ ] `planned_synopsis` preenchido
 - [ ] `planned_cover_url` preenchido se houver capa
+- [ ] atualização feita preferencialmente via CLI do importer
 - [ ] item salvo em `waiting_process`
 
 ## Anti-autoengano

@@ -20,6 +20,7 @@ Se o problema for técnico, duplicata, cron, triagem mecânica ou publicação, 
 ## Fonte da verdade
 
 - página original do item
+- PDF local do item, quando existir e quando a página for pobre demais para sustentar a curadoria
 - árvore de categorias do Sharebook
 - estado atual no PostgreSQL do importer
 
@@ -65,20 +66,55 @@ Sem aprovação explícita do Raffa, não liberar item em inglês para publicaç
 ### 5. Capa
 
 Se a capa já existe e está boa, reaproveitar.
+
+Critério mínimo de capa "boa":
+- arquivo acessível de verdade
+- proporção usável de capa vertical ou facilmente adaptável
+- título e autor legíveis
+- imagem sem artefatos grotescos, corte absurdo ou resolução miserável
+
 Se for preciso gerar capa:
 - priorizar fluxo ChatGPT web quando a qualidade importar
 - **não usar API de imagem da OpenAI sem confirmação explícita do Raffa**
+
+## Acessos práticos
+
+### Categorias do Sharebook
+
+Quando precisar da árvore de categorias, consultar a API do produto.
+
+Exemplo:
+
+```bash
+TOKEN=$(grep SHAREBOOK_PROD_ACCESS_TOKEN /data/workspace/sharebook-agent/.env | cut -d= -f2)
+curl -s -H "Authorization: Bearer $TOKEN" -H "x-requested-with: web" \
+  "https://www.sharebook.com.br/api/category"
+```
+
+### PostgreSQL do importer
+
+O default operacional é usar a `IMPORTER_DB_DSN` do `.env` central:
+
+- `/data/workspace/sharebook-agent/.env`
+
+Se a env não estiver exportada no shell atual, exportar antes de operar.
+
+### Escrita no importer
+
+Default saudável: usar o **CLI do importer** quando ele resolver o caso sem gambiarra.
+SQL direto fica como fallback, não como primeira escolha.
 
 ## Fluxo curto
 
 1. Buscar item no importer
 2. Ler a página da fonte
-3. Corrigir/confirmar autor
-4. Escolher categoria folha
-5. Escrever sinopse final de 3 parágrafos
-6. Registrar capa, se houver
-7. Atualizar PostgreSQL
-8. Fechar o item em `waiting_process`
+3. Se a página for pobre demais, ler também o PDF local do item
+4. Corrigir/confirmar autor
+5. Escolher categoria folha
+6. Escrever sinopse final de 3 parágrafos
+7. Resolver capa
+8. Atualizar o importer, preferencialmente via CLI
+9. Fechar o item em `waiting_process`
 
 ## Atualização no PostgreSQL
 
