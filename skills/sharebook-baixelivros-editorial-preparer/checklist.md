@@ -10,6 +10,7 @@
 ## Curadoria
 - [ ] li a fonte original
 - [ ] li o PDF local também, se a página original não bastava e se ele realmente existia
+- [ ] se o caminho salvo do PDF veio legado, tentei a versão equivalente em `triage/`
 - [ ] confirmei/corrigi autor
 - [ ] escolhi categoria folha
 - [ ] escrevi sinopse final com 3 parágrafos
@@ -35,3 +36,4 @@
 - [ ] não usei categoria pai
 - [ ] não escrevi sinopse genérica
 - [ ] não empurrei item incompleto para publicação
+- [ ] se houve empate entre categorias infantis próximas, registrei o critério usado

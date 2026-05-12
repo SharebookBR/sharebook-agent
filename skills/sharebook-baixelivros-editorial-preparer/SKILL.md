@@ -46,6 +46,8 @@ Não assumir autor, gênero ou contexto por associação preguiçosa.
 
 Se a página original for curta demais para sustentar a decisão editorial, usar o PDF local como apoio, mas sem assumir que ele sempre estará disponível no workspace.
 
+Regra prática: `metadata_json.local_pdf` pode apontar legado antigo (`triage-downloads/...`). Se o caminho salvo divergir da estrutura atual, procurar o equivalente em `sharebook-ebook-importer/triage/` antes de concluir que o PDF sumiu.
+
 ### 2. Categoria sempre folha
 
 Nunca deixar item em categoria pai.
@@ -94,6 +96,8 @@ curl -s -H "Authorization: Bearer $TOKEN" -H "x-requested-with: web" \
 ```
 
 Se o endpoint devolver HTML da aplicação em vez de JSON útil, não fingir certeza. Nesse caso, usar evidência já exposta no sistema atual ou parar conscientemente para confirmar a categoria.
+
+Fallback aceitável: consultar PostgreSQL read-only do produto para mapear categorias já existentes e confirmar ids folha, quando a API não cooperar.
 
 ### PostgreSQL do importer
 
@@ -157,6 +161,23 @@ Campos centrais:
 - escrever sinopse genérica
 - empurrar item incompleto para publicação
 - inventar contexto histórico/literário sem base suficiente
+- colapsar cedo demais categorias infantis de fronteira sem explicitar o critério usado
+
+## Fronteiras editoriais infantis que costumam confundir
+
+Alguns empates frequentes:
+
+- `Bebês e Crianças Pequenas` vs `Educativos / Aprendizado`
+- `Animais e Natureza` vs `Valores e Emoções`
+- livro fofo/leve vs livro realmente literário
+
+Regra prática:
+- se a obra vive mais da experiência sensível, vínculo, rotina infantil, aconchego ou descoberta inicial do mundo, tender para `Bebês e Crianças Pequenas`
+- se a obra é mais instrumento pedagógico, explicativo ou claramente voltado a ensinar conteúdo/hábito, tender para `Educativos / Aprendizado`
+- se a natureza/animais são o centro imaginativo real da obra, tender para `Animais e Natureza`
+- se o eixo for mais emocional/relacional do que temático, tender para `Valores e Emoções`
+
+Quando a disputa for real, registrar o critério usado em vez de fingir evidência absoluta.
 
 ## Relação com o importer
 
