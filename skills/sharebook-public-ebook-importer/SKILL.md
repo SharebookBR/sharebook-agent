@@ -36,7 +36,7 @@ Se esta skill divergir do código/README do importer, o importer manda.
 - `triage_rejected` conta como trabalho concluído, não como erro
 - se falha temporária já cabe em `retry_later`, não usar `error`
 - se faltar editorial, devolver para `waiting_editor`, não mascarar como erro técnico
-- não usar cron agentic do OpenClaw para este fluxo quando o objetivo for economizar tokens
+- cron agentic do OpenClaw não é o default saudável para triagem mecânica ou publish Python
 
 ## Status canônico
 
@@ -104,7 +104,11 @@ O fluxo de publicação deve:
 - se a capa da fonte servir, preferir reaproveitar
 - se precisar gerar sem custo de API, usar alternativas locais já aprovadas
 
-## Cron local do importer
+## Agendamento real: onde olhar
+
+O importer pode ser afetado por **dois mecanismos diferentes**. Não assumir um só.
+
+### 1. Cron Linux local do importer
 
 Comandos canônicos:
 
@@ -116,15 +120,34 @@ bash setup-importer-cron.sh remove
 bash setup-importer-cron.sh start-daemon
 ```
 
+Esse script instala duas entradas no `crontab` do container:
+- `MODE=triage-once`
+- `MODE=publish-once`
+
 Regras:
 - instalar via script, não por `crontab -e` solto
 - logs ficam em `var/logs/`
 - lock/estado local ficam em `var/state/`
-- ao revisar incidente, olhar nesta ordem:
-  1. `crontab -l`
-  2. `var/logs/importer-cron.log`
-  3. `var/logs/importer.jsonl`
-  4. estado no Postgres (`importer.runs`, `importer.queue_items`)
+
+### 2. Cron agentic do OpenClaw
+
+Existe um job interno do OpenClaw que pode mexer na fila real do importer:
+- `preparer-baixelivros`
+
+Esse job vive em:
+- `/data/.openclaw/cron/jobs.json`
+
+Ele não é triagem mecânica nem publish Python. Ele é preparação editorial automática.
+
+### Ordem certa de diagnóstico
+
+Ao revisar incidente ou atividade "fantasma", olhar nesta ordem:
+1. `crontab -l`
+2. `var/logs/importer-cron.log`
+3. estado no Postgres (`importer.runs`, `importer.queue_items`)
+4. `/data/.openclaw/cron/jobs.json`
+
+Se um item andou "sozinho", quase sempre a resposta está em um desses quatro lugares.
 
 ## Diagnóstico mínimo
 
