@@ -124,6 +124,9 @@ Esse script instala duas entradas no `crontab` do container:
 - `MODE=triage-once`
 - `MODE=publish-once`
 
+O detalhe fino do schedule não deve ser copiado para esta skill.
+Se precisar do schedule real, consultar o próprio `setup-importer-cron.sh` ou `bash setup-importer-cron.sh status`.
+
 Regras:
 - instalar via script, não por `crontab -e` solto
 - logs ficam em `var/logs/`
