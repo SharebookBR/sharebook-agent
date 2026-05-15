@@ -78,6 +78,7 @@ O "Dream" é o processo de destilar memórias episódicas em conhecimento duráv
 ## Regras
 - Proibido responder por memória se existir fonte (Script ou Skill).
 - Para execução → abrir skill primeiro.
+- Incidente no `sharebook-ebook-importer` ou worker morto após restart de container → abrir primeiro `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md`.
 - Para decisões de backlog → abrir `backlog/index.md`.
 
 ---
@@ -137,7 +138,7 @@ O "Dream" é o processo de destilar memórias episódicas em conhecimento duráv
 - `sharebook-agent/skills/sharebook-aws-s3/SKILL.md` — Operações em Storage.
 
 ### Skills de Operação e Importer
-- `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md` — Operação do importer de ebooks: fila, triagem mecânica, publicação e cron local.
+- `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md` — Operação e recovery do importer de ebooks: fila, triagem mecânica, publicação, bootstrap após restart de container e cron local.
 - `sharebook-agent/skills/sharebook-triage/SKILL.md` — Triagem de novos itens.
 - `sharebook-agent/skills/escrever-livros/SKILL.md` — Produção editorial de PDFs.
 - `sharebook-agent/skills/openclaw-ops.md` — VPS, Cron e permissões.

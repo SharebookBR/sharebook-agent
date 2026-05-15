@@ -1,6 +1,6 @@
 ---
 name: sharebook-public-ebook-importer
-description: Opera o importer de ebooks públicos/gratuitos do Sharebook. Use quando precisar sincronizar fila, rodar triagem mecânica, preparar publicação, publicar/aprovar ebooks, revisar status canônico, ajustar cron local do importer ou diagnosticar a operação do repositório sharebook-ebook-importer.
+description: Opera e recupera o importer de ebooks públicos/gratuitos do Sharebook. Use quando precisar sincronizar fila, rodar triagem mecânica, preparar publicação, publicar/aprovar ebooks, revisar status canônico, ajustar ou reinstalar cron local do importer, reanimar o worker após restart de container, diagnosticar ambiente quebrado ou revisar a operação do repositório sharebook-ebook-importer.
 ---
 
 # Sharebook Public Ebook Importer
@@ -15,7 +15,9 @@ Use esta skill para qualquer operação do `sharebook-ebook-importer`, especialm
 - rodar `triage-once`
 - rodar `publish-once`
 - revisar `retry_later`, `error`, `waiting_editor`, `waiting_process`
-- instalar, remover ou auditar o cron local
+- instalar, remover, auditar ou reinstalar o cron local
+- reanimar worker quebrado após restart de container
+- diagnosticar ausência de bins/deps mínimas no ambiente
 - diagnosticar logs e estado do importer
 
 ## Fonte da verdade
@@ -37,6 +39,7 @@ Se esta skill divergir do código/README do importer, o importer manda.
 - se falha temporária já cabe em `retry_later`, não usar `error`
 - se faltar editorial, devolver para `waiting_editor`, não mascarar como erro técnico
 - cron agentic do OpenClaw não é o default saudável para triagem mecânica ou publish Python
+- bootstrap/recovery local é tapa-buraco operacional, não substitui correção no build/deploy
 
 ## Status canônico
 
@@ -103,6 +106,51 @@ O fluxo de publicação deve:
 - **proibido gerar imagens via API da OpenAI no fluxo Sharebook sem confirmação explícita do Raffa**
 - se a capa da fonte servir, preferir reaproveitar
 - se precisar gerar sem custo de API, usar alternativas locais já aprovadas
+
+## Bootstrap e recovery do container
+
+Quando o container reinicia e o importer "morre", tratar como incidente de ambiente antes de culpar fila ou código.
+
+### Checklist mínimo de sobrevivência
+
+Validar nesta ordem:
+
+1. bins básicos
+   - `python3`
+   - `flock`
+   - `cron` ou `crond`
+   - `crontab`
+2. dependências Python mínimas
+   - `psycopg2`
+   - `PIL`
+3. arquivos canônicos existem
+   - `run_worker.sh`
+   - `setup-importer-cron.sh`
+   - `/data/workspace/sharebook-agent/.env`
+4. daemon de cron ativo
+5. bloco gerenciado instalado no `crontab`
+6. prova real com `triage-once` e `publish-once`
+
+### Remediação rápida
+
+Se o container vier pelado após restart:
+
+```bash
+apt-get update && apt-get install -y cron python3-psycopg2 python3-pil
+cd /data/workspace/sharebook-ebook-importer
+bash setup-importer-cron.sh install
+bash setup-importer-cron.sh status
+```
+
+Depois validar execução real:
+
+```bash
+cd /data/workspace/sharebook-ebook-importer
+ENV_FILE=/data/workspace/sharebook-agent/.env MODE=triage-once ./run_worker.sh
+ENV_FILE=/data/workspace/sharebook-agent/.env MODE=publish-once ./run_worker.sh
+```
+
+Se isso resolver, registrar mentalmente a verdade incômoda: o ambiente foi salvo por remendo local. A correção estrutural continua sendo ajustar Dockerfile/imagem/deploy para já nascer com essas dependências.
 
 ## Agendamento real: onde olhar
 
