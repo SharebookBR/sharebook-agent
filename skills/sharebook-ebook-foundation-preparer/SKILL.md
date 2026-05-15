@@ -73,10 +73,10 @@ Responder estas 3 perguntas com base no índice, não no título:
 ### 1. Buscar próximo item
 
 ```sql
-SELECT id, position, title, author, source_url, metadata_json, created_at
+SELECT id, title, author, source_url, metadata_json, created_at
 FROM importer.queue_items
 WHERE status = 'waiting_editor'
-ORDER BY position
+ORDER BY id
 LIMIT 1;
 ```
 
@@ -95,12 +95,12 @@ md5sum /data/workspace/sharebook-ebook-importer/triage-downloads/<ARQUIVO.pdf>
 #### 2b. Comparar com outros itens da fila (inclusive de outras sources)
 
 ```sql
-SELECT qi.id, qi.position, qi.title, qi.status, s.name
+SELECT qi.id, qi.title, qi.status, s.name
 FROM importer.queue_items qi
 JOIN importer.sources s ON s.id = qi.source_id
 WHERE qi.status IN ('waiting_process', 'done')
   AND qi.id != <ITEM_ATUAL>
-ORDER BY qi.position;
+ORDER BY qi.id;
 ```
 
 Se encontrar itens com status `done` que tenham o mesmo PDF, hash SHA-1 do conteúdo (`metadata_json->>'source_hash'`) ou mesmo título/autor, **marque o item atual como `duplicate` e PULE para o próximo**. Não desperdice sinopse, capa e worker num item duplicado.
@@ -124,7 +124,7 @@ Antes de extrair índice, compute o MD5 do PDF. Consulte itens do `waiting_edito
 
 ```sql
 -- Verificar se já existe item com mesmo MD5 (via metadata_json)
-SELECT qi.id, qi.position, qi.title, qi.status
+SELECT qi.id, qi.title, qi.status
 FROM importer.queue_items qi
 WHERE qi.metadata_json->>'pdf_md5' = '<MD5_DO_PDF>'
   AND qi.id != <ITEM_ATUAL>;
@@ -153,7 +153,7 @@ Se a resposta é "sim, porque um é básico e o outro é avançado", não é.
 3. **Consultar itens já publicados na mesma categoria:**
 
 ```sql
-SELECT qi.id, qi.position, qi.title, qi.planned_author,
+SELECT qi.id, qi.title, qi.planned_author,
        qi.planned_category_id, qi.metadata_json->>'cover_palette' as palette
 FROM importer.queue_items qi
 WHERE qi.source_url LIKE '%<DOMINIO DA FONTE>%'
@@ -186,8 +186,8 @@ WHERE id = <ITEM_ATUAL>;
 
 #### Critério de desempate (qual fica quando há duplicata)
 
-1. **Maior profundidade** — nível mais avançado sempre fica sobre o mais básico (mas isso já é coberto pela regra acima: só há duplicata se mesmo nível)
-2. **Autoridade da fonte** — universidade > instituição técnica > autor independente
+1. **Maior profundidade** — nível mais avançado sempre fica sobre o mais básico (mas isso já é couberto pela regra acima: só há duplicata se mesmo nível)
+2. **Autoridade da fonte** — universidade > institution técnica > autor independente
 3. **Primeiro a chegar** — quem já está publicado permanece em caso de empate
 
 ### 3. Extrair índice do PDF
@@ -268,7 +268,7 @@ cp sharebook-ebook-importer/triage-downloads/<slug>-var-<N>.jpg \
 
 ```bash
 # Verificar tamanho do PDF bruto
-ls -lh sharebook-ebook-importer/triage-downloads/position_XXX-*.pdf
+ls -lh sharebook-ebook-importer/triage-downloads/id_XXX-*.pdf
 ```
 
 **Regras:**
@@ -282,7 +282,7 @@ ls -lh sharebook-ebook-importer/triage-downloads/position_XXX-*.pdf
 **Após comprimir, substituir o PDF original pelo comprimido antes de registrar no banco:**
 
 ```bash
-cp /tmp/compressed.pdf sharebook-ebook-importer/triage-downloads/position_XXX-*.pdf
+cp /tmp/compressed.pdf sharebook-ebook-importer/triage-downloads/id_XXX-*.pdf
 ```
 
 **Nunca usar `--delete-existing` no script de publicação.** O correto é usar `update` — substitui o PDF sem perder o histórico.
@@ -413,7 +413,7 @@ O wrapper:
 - lê `IMPORTER_DB_DSN` de `sharebook-ebook-importer/.env`
 - obtém token válido pelo `sharebook_prod_auth.py`
 - testa o token com probe leve
-- se vier `401`, renova automaticamente
+- se vier `401`, renovar automaticamente
 - roda `python -m sharebook_ebook_importer.cli run-once --source ebook_foundation`
 
 O worker:
@@ -455,8 +455,8 @@ tron, deep-ocean, lava, frost, matrix, sunset, graphite, cyber, forest, platinum
 
 O worker resolve `planned_cover_url` como `project_root / planned_cover_url`.
 
-- ✅ Correto: `triage-downloads/position_XX-nome-do-livro-cover.jpg`
-- ❌ Errado: `position_XX-nome-do-livro-cover.jpg` (só o nome, sem pasta)
+- ✅ Correto: `triage-downloads/id_XX-nome-do-livro-cover.jpg`
+- ❌ Errado: `id_XX-nome-do-livro-cover.jpg` (só o nome, sem pasta)
 
 ### Worker roda no container OpenClaw, não no host SSH
 
@@ -467,7 +467,7 @@ PDF e capa precisam estar no **workspace local** (`/data/workspace/sharebook-ebo
 Várias fontes antigas do IME-USP, UFPB e similares têm links mortos. A triagem (beat) pode registrar `local_pdf` sem o arquivo existir de verdade. Verificar:
 
 ```bash
-ls -lh /data/workspace/sharebook-ebook-importer/triage-downloads/position_XX-*.pdf
+ls -lh /data/workspace/sharebook-ebook-importer/triage-downloads/id_XX-*.pdf
 ```
 
 Se não existir, buscar no Wayback Machine ou mirror alternativo.
@@ -483,9 +483,9 @@ O worker valida:
 
 Qualquer campo faltando → worker joga de volta pra `waiting_editor`. Registrar tudo no mesmo UPDATE.
 
-### Referência por position, não por id
+### Referência por id, não por position
 
-O operador humano sempre se refere ao número da **position** (ex.: #115), que pode ser diferente do `id` no banco. Ao buscar, filtrar por `position`, não por `id`.
+O operador humano sempre se refere ao **id** único no banco. O campo `position` foi aposentado.
 
 ### Query helper local pode não servir para o importer
 

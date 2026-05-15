@@ -97,7 +97,7 @@ Comando preferido para liberar item preparado:
 
 ```bash
 cd /data/workspace/sharebook-ebook-importer
-python cli.py plan-set --position <POSICAO> --category-id <CATEGORIA_FOLHA> --synopsis-file <ARQUIVO_UTF8> --author "<AUTOR>" --cover-url <CAMINHO_OU_URL_DA_CAPA>
+python cli.py plan-set --id <ID> --category-id <CATEGORIA_FOLHA> --synopsis-file <ARQUIVO_UTF8> --author "<AUTOR>" --cover-url <CAMINHO_OU_URL_DA_CAPA>
 ```
 
 SQL direto fica como fallback, não como primeira escolha.
