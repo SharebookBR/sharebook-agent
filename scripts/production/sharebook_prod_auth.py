@@ -19,11 +19,24 @@ CANONICAL_ENV_PATH = Path("/data/workspace/sharebook-agent/.env")
 
 
 def resolve_env_path(repo_root: Path | None = None) -> Path:
+    # 1. Se informou um diretório, tenta ele direto ou o pai (se for scripts/)
+    if repo_root is not None:
+        if (repo_root / ".env").exists():
+            return repo_root / ".env"
+        if (repo_root.parent / ".env").exists():
+            return repo_root.parent / ".env"
+            
+    # 2. Tenta descobrir a partir do arquivo atual (scripts/production/...)
+    # Sobe 3 níveis: production -> scripts -> sharebook-agent
+    current_discovery = Path(__file__).resolve().parents[2] / ".env"
+    if current_discovery.exists():
+        return current_discovery
+
+    # 3. Fallback canônico
     if CANONICAL_ENV_PATH.exists():
         return CANONICAL_ENV_PATH
-    if repo_root is not None:
-        return repo_root / ".env"
-    return CANONICAL_ENV_PATH
+        
+    return Path(".env")
 
 
 def load_env(repo_root: Path) -> dict[str, str]:

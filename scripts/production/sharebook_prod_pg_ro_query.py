@@ -89,7 +89,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--env-file",
-        default="/data/workspace/sharebook-agent/.env",
+        default=str(Path(__file__).resolve().parents[2] / ".env"),
         help="Caminho do .env com credenciais SSH e PG read-only.",
     )
 
