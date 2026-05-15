@@ -69,35 +69,17 @@ Sem aprovação explícita do Raffa, não liberar item em inglês para publicaç
 
 ### 5. Capa
 
-Se a capa já existe e está boa, reaproveitar.
-
-Critério mínimo de capa "boa":
-- arquivo acessível de verdade
-- proporção usável de capa vertical ou facilmente adaptável
-- título e autor legíveis
-- imagem sem artefatos grotescos, corte absurdo ou resolução miserável
-
-Se for preciso gerar capa:
-- priorizar fluxo ChatGPT web quando a qualidade importar
-- **não usar API de imagem da OpenAI sem confirmação explícita do Raffa**
+Não é sua responsabiidade obter a capa. Isso é feito na etapa de triagem.
 
 ## Acessos práticos
 
 ### Categorias do Sharebook
 
-Quando precisar da árvore de categorias, consultar a API do produto.
+Obrigatório consultar árvore de categorias no endpoint público abaixo:
 
-Exemplo:
+https://api.sharebook.com.br/api/category 
 
-```bash
-TOKEN=$(grep SHAREBOOK_PROD_ACCESS_TOKEN /data/workspace/sharebook-agent/.env | cut -d= -f2)
-curl -s -H "Authorization: Bearer $TOKEN" -H "x-requested-with: web" \
-  "https://www.sharebook.com.br/api/category"
-```
 
-Se o endpoint devolver HTML da aplicação em vez de JSON útil, não fingir certeza. Nesse caso, usar evidência já exposta no sistema atual ou parar conscientemente para confirmar a categoria.
-
-Fallback aceitável: consultar PostgreSQL read-only do produto para mapear categorias já existentes e confirmar ids folha, quando a API não cooperar.
 
 ### PostgreSQL do importer
 
