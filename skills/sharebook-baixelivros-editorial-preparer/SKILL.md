@@ -11,23 +11,23 @@ Curadoria editorial de alto volume e baixo custo de tokens.
 
 Você NÃO deve usar ferramentas de rede (browser, curl) ou leitura de arquivo (pdftotext). Tudo o que você precisa já foi mastigado pela triagem e está no banco de dados.
 
-## Fluxo de Trabalho (Apenas 2 chamadas de ferramenta)
+## Fluxo de Trabalho (Otimizado para Token)
 
-1.  **Leitura (Tool: mcp_grafana_query_loki_logs ou similar SQL):**
-    Busque o item em `importer.queue_items` onde `status = 'waiting_editor'`.
-    Leia o campo `metadata_json`.
-    Extraia o texto de apoio em `metadata_json.triage.context_text`.
+1.  **Obtenção do Item (Tool: run_shell_command):**
+    Obtenha o próximo item pronto para edição. Isso trará todo o contexto necessário (título, autor e texto extraído).
+    ```bash
+    python cli.py editor-next --source baixelivros_infantil
+    ```
 
 2.  **Processamento Interno (Seu cérebro):**
-    - Use o `context_text` (Descrição original + Primeiras páginas do PDF) para entender a obra.
+    - Use o `context_text` retornado pelo comando para entender a obra.
     - Decida a categoria folha usando a tabela hardcoded abaixo.
-    - Escreva a sinopse de **3 parágrafos** (envolvente e fiel).
+    - Escreva a sinopse de **3 parágrafos**.
 
 3.  **Escrita (Tool: run_shell_command):**
     Salve o resultado usando o CLI do importer.
     ```bash
-    cd /data/workspace/sharebook-ebook-importer
-    python cli.py plan-set --id <ID> --category-id <UUID> --synopsis-file <ARQUIVO_TEMP> --author "<AUTOR>"
+    python cli.py plan-set --id <ID> --category-id <UUID> --synopsis-file <ARQUIVO_TEMP> --author "<AUTOR>" --planned-by "preparer-baixelivros"
     ```
 
 ## Categorias Hardcoded (NÃO consulte a API)
