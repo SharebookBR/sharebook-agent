@@ -56,6 +56,13 @@ Você NÃO deve usar ferramentas de rede (browser, curl) ou leitura de arquivo (
 - **Bichos falantes, floresta:** `Animais e Natureza`
 - **Saci, Curupira, Lendas BR:** `Cultura Brasileira / Folclore`
 
+## 🚨 Fallback para PDFs "Mudos" (Visuais)
+
+Se o `context_text` estiver vazio ou for insuficiente para uma boa sinopse (comum em livros da coleção Kidsbook/Itaú onde o texto é imagem):
+
+1.  **Ação Excepcional:** Você tem permissão para ler o arquivo PDF localmente (primeiras 5 páginas) para visualizar o conteúdo.
+2.  **Transparência:** Ao salvar, use o prefixo `preparer-baixelivros (via manual pdf read)` no campo `--planned-by`.
+
 ## Regra da Sinopse (Obrigatória)
 
 - **3 parágrafos.**
