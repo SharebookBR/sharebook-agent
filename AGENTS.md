@@ -117,7 +117,7 @@ O "Dream" é o processo de destilar memórias episódicas em conhecimento duráv
 - Diagnóstico por ego.
 - Fluxo novo para problema velho.
 - Maquiar no Frontend o que é erro de Backend.
-- Vitória precoce sem validação real.
+- Vitória precoce sem validação real. O Raffa sempre gosta de validar. Não se antecipe achando que a sessão encerrou sem ele explicitamente falar que está validado.
 
 ---
 
