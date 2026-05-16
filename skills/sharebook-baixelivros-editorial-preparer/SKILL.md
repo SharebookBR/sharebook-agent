@@ -1,169 +1,70 @@
 ---
 name: sharebook-baixelivros-editorial-preparer
-description: Prepara editorialmente itens do importer, especialmente `baixelivros_infantil`, quando estão em `waiting_editor` ou `editing`. Use para validar autor, escolher categoria folha, escrever sinopse final de 3 parágrafos e liberar o item para `waiting_process` no importer.
+description: Prepara editorialmente itens do BaixeLivros com eficiência máxima. Usa o contexto já extraído na triagem para decidir categoria e escrever sinopse de 3 parágrafos. Zero uso de ferramentas externas.
 ---
 
-# Sharebook BaixeLivros Editorial Preparer
+# Sharebook BaixeLivros Editorial Preparer (Ultra Lean)
 
-Curadoria editorial. Só isso.
+Curadoria editorial de alto volume e baixo custo de tokens.
 
-## Quando usar
+## Princípio de Operação
 
-Use esta skill quando um item do importer precisar de preparação editorial antes da publicação, especialmente em:
+Você NÃO deve usar ferramentas de rede (browser, curl) ou leitura de arquivo (pdftotext). Tudo o que você precisa já foi mastigado pela triagem e está no banco de dados.
 
-- `waiting_editor`
-- `editing`
-- `waiting_process` com lacuna editorial real
+## Fluxo de Trabalho (Apenas 2 chamadas de ferramenta)
 
-Se o problema for técnico, duplicata, cron, triagem mecânica ou publicação, usar a skill do importer, não esta.
+1.  **Leitura (Tool: mcp_grafana_query_loki_logs ou similar SQL):**
+    Busque o item em `importer.queue_items` onde `status = 'waiting_editor'`.
+    Leia o campo `metadata_json`.
+    Extraia o texto de apoio em `metadata_json.triage.context_text`.
 
-## Fonte da verdade
+2.  **Processamento Interno (Seu cérebro):**
+    - Use o `context_text` (Descrição original + Primeiras páginas do PDF) para entender a obra.
+    - Decida a categoria folha usando a tabela hardcoded abaixo.
+    - Escreva a sinopse de **3 parágrafos** (envolvente e fiel).
 
-- página original do item
-- PDF local do item, quando existir e quando a página for pobre demais para sustentar a curadoria
-- árvore de categorias do Sharebook
-- estado atual no PostgreSQL do importer
+3.  **Escrita (Tool: run_shell_command):**
+    Salve o resultado usando o CLI do importer.
+    ```bash
+    cd /data/workspace/sharebook-ebook-importer
+    python cli.py plan-set --id <ID> --category-id <UUID> --synopsis-file <ARQUIVO_TEMP> --author "<AUTOR>"
+    ```
 
-Wikipedia pode ajudar, mas é opcional.
-Se não existir ou não ajudar, não inventar contexto.
+## Categorias Hardcoded (NÃO consulte a API)
 
-## O que esta skill deve entregar
+### 👶 Infantil / Juvenil (Principal)
+- `019df04c-7a39-7bd3-8b72-c840e27f46e7` -> Bebês e Crianças Pequenas
+- `019df04c-7a81-756b-932a-f424d916ef8e` -> Valores e Emoções
+- `019df04c-7a72-729d-ae85-3c0c8de910f5` -> Animais e Natureza
+- `019df04c-7a4d-7d00-b11f-902eaca73586` -> Educativos / Aprendizado
+- `019df04c-7a90-7247-bf39-ee4a160446e7` -> Cultura Brasileira / Folclore
+- `019df04c-79d2-7a9a-8f6e-49dc89cbda71` -> Clássicos Infantis
+- `019df04c-7a5f-71e7-8c68-d7679d562d10` -> Aventuras e Fantasia
+- `019e16e6-09db-7a64-9261-03e375f09192` -> Inclusão e Diversidade
+- `019df04c-7aab-7889-a6a5-7579e8594e4a` -> Diversão e Humor
+- `019df089-8268-73b1-871d-80bd395c752a` -> HQs e Mangás
 
-Antes de sair daqui, o item precisa ter:
+### 🎭 Outros (Fallback)
+- `019d9bf4-725d-7eb3-bf31-5dcd08c93053` -> Poesia Lírica (Se for poesia pura)
+- `b5cdac27-d43b-4b99-96d9-285a8053e8bc` -> Drama Moral / Ético (Se for literário pesado)
 
-- `planned_author`
-- `planned_category_id`
-- `planned_synopsis`
-- opcionalmente `planned_cover_url`, se houver capa escolhida externamente
-- status final em `waiting_process`
+## Guia de Decisão Rápida
 
-## Regras editoriais que importam
+- **Aconchego, rotina, descoberta:** `Bebês e Crianças Pequenas`
+- **Lição, ensino, hábito:** `Educativos / Aprendizado`
+- **Sentimentos, medos, amizade:** `Valores e Emoções`
+- **Bichos falantes, floresta:** `Animais e Natureza`
+- **Saci, Curupira, Lendas BR:** `Cultura Brasileira / Folclore`
 
-### 1. Fonte primeiro
+## Regra da Sinopse (Obrigatória)
 
-Ler a página original com atenção.
-Não assumir autor, gênero ou contexto por associação preguiçosa.
+- **3 parágrafos.**
+- Sem clichês ("Nesta obra emocionante...").
+- Foco no que o livro entrega de verdade.
+- Se o `context_text` for muito pobre, mencione o fato na sinopse de forma elegante em vez de inventar dados.
 
-Se a página original for curta demais para sustentar a decisão editorial, usar o PDF local como apoio, mas sem assumir que ele sempre estará disponível no workspace.
+## Checklist de Finalização
 
-Regra prática: `metadata_json.local_pdf` pode apontar legado antigo (`triage-downloads/...`). Se o caminho salvo divergir da estrutura atual, procurar o equivalente em `sharebook-ebook-importer/triage/` antes de concluir que o PDF sumiu.
-
-### 2. Categoria sempre folha
-
-Nunca deixar item em categoria pai.
-Se a categoria tiver `children`, ela está proibida como destino final.
-
-### 3. Sinopse final
-
-A sinopse deve ter:
-- 3 parágrafos
-- tom envolvente
-- fidelidade à obra
-- sem clichê vazio
-- sem invenção factual
-
-### 4. Idioma
-
-O padrão editorial é publicar em português.
-Sem aprovação explícita do Raffa, não liberar item em inglês para publicação.
-
-### 5. Capa
-
-Não é sua responsabiidade obter a capa. Isso é feito na etapa de triagem.
-
-## Acessos práticos
-
-### Categorias do Sharebook
-
-Obrigatório consultar árvore de categorias no endpoint público abaixo:
-
-https://api.sharebook.com.br/api/category 
-
-
-
-### PostgreSQL do importer
-
-O default operacional é usar a `IMPORTER_DB_DSN` do `.env` central:
-
-- `/data/workspace/sharebook-agent/.env`
-
-Se a env não estiver exportada no shell atual, exportar antes de operar.
-
-### Escrita no importer
-
-Default saudável: usar o **CLI do importer** quando ele resolver o caso sem gambiarra.
-
-Comando preferido para liberar item preparado:
-
-```bash
-cd /data/workspace/sharebook-ebook-importer
-python cli.py plan-set --id <ID> --category-id <CATEGORIA_FOLHA> --synopsis-file <ARQUIVO_UTF8> --author "<AUTOR>" --cover-url <CAMINHO_OU_URL_DA_CAPA>
-```
-
-SQL direto fica como fallback, não como primeira escolha.
-
-## Fluxo curto
-
-1. Buscar item no importer
-2. Ler a página da fonte
-3. Se a página for pobre demais, ler também o PDF local do item
-4. Corrigir/confirmar autor
-5. Escolher categoria folha
-6. Escrever sinopse final de 3 parágrafos
-7. Resolver capa
-8. Atualizar o importer, preferencialmente via CLI
-9. Fechar o item em `waiting_process`
-
-## Atualização no PostgreSQL
-
-Campos centrais:
-- `planned_author`
-- `planned_category_id`
-- `planned_synopsis`
-- `planned_cover_url` (quando existir)
-- `planned_cover_mode = 'source'` quando a capa vier de arquivo externo reaproveitado/gerado fora do worker
-- `status = 'waiting_process'`
-
-## Checklist mínimo
-
-- [ ] li a página original
-- [ ] autor validado
-- [ ] categoria folha escolhida
-- [ ] sinopse com 3 parágrafos
-- [ ] sinopse fiel à obra
-- [ ] capa resolvida ou conscientemente pendente
-- [ ] item salvo no PostgreSQL
-- [ ] status final em `waiting_process`
-
-## Erros comuns
-
-- assumir autor por associação de nome
-- assumir gênero pela fama do autor
-- usar categoria pai por preguiça
-- escrever sinopse genérica
-- empurrar item incompleto para publicação
-- inventar contexto histórico/literário sem base suficiente
-- colapsar cedo demais categorias infantis de fronteira sem explicitar o critério usado
-
-## Fronteiras editoriais infantis que costumam confundir
-
-Alguns empates frequentes:
-
-- `Bebês e Crianças Pequenas` vs `Educativos / Aprendizado`
-- `Animais e Natureza` vs `Valores e Emoções`
-- livro fofo/leve vs livro realmente literário
-
-Regra prática:
-- se a obra vive mais da experiência sensível, vínculo, rotina infantil, aconchego ou descoberta inicial do mundo, tender para `Bebês e Crianças Pequenas`
-- se a obra é mais instrumento pedagógico, explicativo ou claramente voltado a ensinar conteúdo/hábito, tender para `Educativos / Aprendizado`
-- se a natureza/animais são o centro imaginativo real da obra, tender para `Animais e Natureza`
-- se o eixo for mais emocional/relacional do que temático, tender para `Valores e Emoções`
-
-Quando a disputa for real, registrar o critério usado em vez de fingir evidência absoluta.
-
-## Relação com o importer
-
-- esta skill cuida do julgamento editorial
-- a skill `sharebook-public-ebook-importer` cuida da operação do importer
-- quando terminar aqui, o item deve estar pronto para `publish-once`
-- se houver hesitação real de categoria por ambiguidade editorial, registrar a dúvida em vez de inventar confiança
+- [ ] Sinopse tem 3 parágrafos?
+- [ ] Categoria é uma das UUIDs acima?
+- [ ] O status final do item ficou em `waiting_process`?
