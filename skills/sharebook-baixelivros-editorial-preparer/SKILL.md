@@ -11,12 +11,15 @@ Curadoria editorial de alto volume e baixo custo de tokens.
 
 Você NÃO deve usar ferramentas de rede (browser, curl) ou leitura de arquivo (pdftotext). Tudo o que você precisa já foi mastigado pela triagem e está no banco de dados.
 
+Se o texto vier vazio ou pobre, tente primeiro extração local simples antes do fallback visual.
+
 ## Fluxo de Trabalho (Otimizado para Token)
 
 1.  **Obtenção do Item (Tool: run_shell_command):**
     Obtenha o próximo item pronto para edição. Isso trará todo o contexto necessário (título, autor e texto extraído).
+    Se `python` não existir, use `python3`. Execute a partir da pasta do importer (`/data/workspace/sharebook-ebook-importer`), onde fica o `cli.py`.
     ```bash
-    python cli.py editor-next --source baixelivros_infantil
+    python3 cli.py editor-next --source baixelivros_infantil
     ```
 
 2.  **Processamento Interno (Seu cérebro):**
@@ -62,6 +65,7 @@ Se o `context_text` estiver vazio ou for insuficiente para uma boa sinopse (comu
 
 1.  **Ação Excepcional:** Você tem permissão para ler o arquivo PDF localmente (primeiras 5 páginas) para visualizar o conteúdo.
 2.  **Transparência:** Ao salvar, use o prefixo `preparer-baixelivros (via manual pdf read)` no campo `--planned-by`.
+3.  **Ordem de tentativa:** prefira `pdftotext` ou extração textual local, depois leitura manual do PDF só se ainda faltar conteúdo útil.
 
 ## Regra da Sinopse (Obrigatória)
 
