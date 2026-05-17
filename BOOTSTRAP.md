@@ -16,6 +16,39 @@ Não é documentação completa do Sharebook.
 
 ## Ferramentas obrigatórias
 
+### Renderização e leitura visual de PDF
+
+Essencial quando a extração textual falhar ou quando for preciso confirmar contexto editorial real a partir das páginas do livro.
+
+Ferramentas mínimas recomendadas:
+
+- `pdftoppm` (pacote `poppler-utils`) para exportar páginas em PNG
+- `mutool` (pacote `mupdf-tools`) como fallback técnico útil para inspeção/manipulação de PDF
+- `PyMuPDF` (`pymupdf`) para scripts Python de renderização, recorte e inspeção local
+
+Validações esperadas:
+
+```bash
+pdftoppm -h | head
+mutool -h | head
+python3 -c "import fitz; print(fitz.__doc__.splitlines()[0])"
+```
+
+Uso típico:
+
+```bash
+pdftoppm -f 1 -l 5 -png arquivo.pdf /tmp/prefixo
+```
+
+Quando usar:
+
+- PDF image-based
+- OCR/text extraction fraca ou enganosa
+- dúvida editorial sobre faixa etária, tom ou gênero
+- necessidade de olhar as primeiras páginas antes de recategorizar ou reescrever sinopse
+
+---
+
 ### psql
 
 Usado para acessar o PostgreSQL operacionalmente.

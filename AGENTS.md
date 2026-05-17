@@ -126,6 +126,11 @@ O "Dream" é o processo de destilar memórias episódicas em conhecimento duráv
 ### Backlog
 - `sharebook-agent/backlog/index.md` — Prioridades e Roadmap.
 
+### Bootstrap de ambiente
+- `sharebook-agent/BOOTSTRAP.md` — Checklist mínimo de ambiente, acessos e ferramentas essenciais.
+  - Usar quando houver migração, rebuild, servidor novo, container novo, reinstalação ou ambiente "capado" sem ferramentas básicas.
+  - Consultar também quando faltar utilitário essencial de operação, como renderização visual de PDF para inspeção editorial real.
+
 ### Skills de Produto e UX
 - `sharebook-agent/skills/sharebook-voice-glossary/SKILL.md` — Voz oficial, sinopses e glossário.
 - `sharebook-agent/skills/sharebook-ux-reviewer/SKILL.md` — Auditoria de UX e interface.
