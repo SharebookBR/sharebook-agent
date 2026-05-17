@@ -9,21 +9,36 @@ Curadoria editorial de alto volume e baixo custo de tokens.
 
 ## Princípio de Operação
 
-Você NÃO deve usar ferramentas de rede (browser, curl) ou leitura de arquivo (pdftotext). Tudo o que você precisa já foi mastigado pela triagem e está no banco de dados.
+Você NÃO deve usar ferramentas de rede (browser, curl). Tudo o que você precisa já foi mastigado pela triagem e está no banco de dados.
 
-Se o texto vier vazio ou pobre, tente primeiro extração local simples antes do fallback visual.
+O payload de `editor-next` agora pode trazer, além de texto:
+- `preview_pages`: PNGs das primeiras páginas do PDF
+- `local_cover_path`: capa baixada pela triagem
+- `local_pdf_path`: PDF bruto local
+
+Use esses campos visuais como insumo editorial primário quando existirem. O objetivo é gastar menos token cego e decidir melhor categoria, faixa etária implícita e sinopse.
 
 ## Fluxo de Trabalho (Otimizado para Token)
 
-1.  **Obtenção do Item (Tool: run_shell_command):**
-    Obtenha o próximo item pronto para edição. Isso trará todo o contexto necessário (título, autor e texto extraído).
-    Se `python` não existir, use `python3`. Execute a partir da pasta do importer (`/data/workspace/sharebook-ebook-importer`), onde fica o `cli.py`.
+1.  **Obtenção do Item:**
+    Obtenha o próximo item pronto para edição. Execute a partir da pasta do importer (`/data/workspace/sharebook-ebook-importer`), onde fica o `cli.py`.
     ```bash
     python3 cli.py editor-next --source baixelivros_infantil
     ```
 
-2.  **Processamento Interno (Seu cérebro):**
-    - Use o `context_text` retornado pelo comando para entender a obra.
+    O JSON retornado pode incluir:
+    - `id`
+    - `title`
+    - `author`
+    - `context_text`
+    - `local_pdf_path`
+    - `local_cover_path`
+    - `preview_pages`
+
+2.  **Processamento Interno:**
+    - Leia primeiro `preview_pages` e `local_cover_path` quando existirem. Eles são o melhor contexto para livro infantil.
+    - Use `context_text` como apoio textual, não como fonte única.
+    - Só recorra ao `local_pdf_path` se ainda faltar contexto depois dos previews.
     - Decida a categoria folha usando a tabela hardcoded abaixo.
     - Escreva a sinopse de **3 parágrafos**.
 
@@ -59,13 +74,20 @@ Se o texto vier vazio ou pobre, tente primeiro extração local simples antes do
 - **Bichos falantes, floresta:** `Animais e Natureza`
 - **Saci, Curupira, Lendas BR:** `Cultura Brasileira / Folclore`
 
-## 🚨 Fallback para PDFs "Mudos" (Visuais)
+## 🚨 Ordem de uso dos artefatos
 
-Se o `context_text` estiver vazio ou for insuficiente para uma boa sinopse (comum em livros da coleção Kidsbook/Itaú onde o texto é imagem):
+Para `baixelivros_infantil`, siga esta ordem:
 
-1.  **Ação Excepcional:** Você tem permissão para ler o arquivo PDF localmente (primeiras 5 páginas) para visualizar o conteúdo.
-2.  **Transparência:** Ao salvar, use o prefixo `preparer-baixelivros (via manual pdf read)` no campo `--planned-by`.
-3.  **Ordem de tentativa:** prefira `pdftotext` ou extração textual local, depois leitura manual do PDF só se ainda faltar conteúdo útil.
+1. `preview_pages`
+2. `local_cover_path`
+3. `context_text`
+4. `local_pdf_path`
+
+Se `preview_pages` existir, assuma que a triagem já te entregou o melhor atalho visual. Não ignore isso e não volte para fluxo cego baseado só em texto.
+
+Só leia o PDF localmente se os previews e o texto ainda forem insuficientes.
+
+Se precisar desse fallback manual, registre `preparer-baixelivros (via manual pdf read)` no campo `--planned-by`.
 
 ## Regra da Sinopse (Obrigatória)
 
