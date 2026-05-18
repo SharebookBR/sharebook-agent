@@ -61,6 +61,7 @@ Use esses campos visuais como insumo editorial primário quando existirem. O obj
 - `019e16e6-09db-7a64-9261-03e375f09192` -> Inclusão e Diversidade
 - `019df04c-7aab-7889-a6a5-7579e8594e4a` -> Diversão e Humor
 - `019df089-8268-73b1-871d-80bd395c752a` -> HQs e Mangás
+- `019e3b3f-39df-7c06-8252-d402cb34ecff` -> Poesia Infantil
 
 ### 🎭 Outros (Fallback)
 - `019d9bf4-725d-7eb3-bf31-5dcd08c93053` -> Poesia Lírica (Se for poesia pura)
@@ -73,6 +74,7 @@ Use esses campos visuais como insumo editorial primário quando existirem. O obj
 - **Sentimentos, medos, amizade:** `Valores e Emoções`
 - **Bichos falantes, floresta:** `Animais e Natureza`
 - **Saci, Curupira, Lendas BR:** `Cultura Brasileira / Folclore`
+- **Poemas, versos, rimas, quadrinhas, cantigas, trava-línguas, parlendas, musicalidade verbal infantil:** `Poesia Infantil`
 
 ## 🚨 Ordem de uso dos artefatos
 
@@ -100,4 +102,4 @@ Se precisar desse fallback manual, registre `preparer-baixelivros (via manual pd
 
 - [ ] Sinopse tem 3 parágrafos?
 - [ ] Categoria é uma das UUIDs acima?
-- [ ] O status final do item ficou em `waiting_process`?
+- [ ] Se o fluxo exigir avanço de status além do `plan-set`, execute explicitamente o comando correspondente antes de encerrar.
