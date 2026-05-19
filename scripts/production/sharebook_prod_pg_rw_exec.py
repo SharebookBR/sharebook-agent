@@ -15,7 +15,10 @@ def parse_env(path: Path) -> dict[str, str]:
         if not line or line.startswith("#") or "=" not in line:
             continue
         k, v = line.split("=", 1)
-        data[k.strip()] = v.strip()
+        value = v.strip()
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
+            value = value[1:-1]
+        data[k.strip()] = value
     return data
 
 
