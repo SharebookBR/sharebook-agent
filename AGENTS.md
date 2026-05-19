@@ -135,6 +135,7 @@ O "Dream" é o processo de destilar memórias episódicas em conhecimento duráv
 - `sharebook-agent/skills/sharebook-voice-glossary/SKILL.md` — Voz oficial, sinopses e glossário.
 - `sharebook-agent/skills/sharebook-ux-reviewer/SKILL.md` — Auditoria de UX e interface.
 - `sharebook-agent/skills/web-design-reviewer/SKILL.md` — Layout e correções visuais.
+- `sharebook-agent/skills/catalog-premium-scan/SKILL.md` — Ritual diário de revisão do catálogo recém-publicado, com tabela dos últimos livros e shortlist premium.
 
 ### Skills de Engenharia
 - `sharebook-agent/skills/frontend.md` — Angular, UI patterns e mobile.
