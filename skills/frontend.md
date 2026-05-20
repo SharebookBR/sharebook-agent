@@ -12,9 +12,21 @@ Skill operacional para desenvolvimento, manutenção e evolução do `sharebook-
 ## Princípios de UI/UX (Doutrina Sharebook)
 
 - **Cartão > Tabela**: Para listas operacionais (ex: painel do importador), prefira cartões compactos e responsivos. Tabelas são hostis em dispositivos móveis.
-- **Smart Sorting**: Automatize a ordenação baseada no status selecionado (ex: fila de espera -> posição ASC; concluídos -> data DESC).
+- **Smart Sorting**: Automatize a ordenação baseada no status selecionado (ex: fila de espera -> id ASC; concluídos -> data DESC).
+- **Busca por ID/Título**: No dashboard, digitar números deve buscar por `id` exato; texto busca por `title` (ILIKE).
 - **Feedback de Sucesso**: Em fluxos de publicação ou criação, exibir a miniatura do ativo gerado (ex: capa do livro) no card de conclusão é o melhor feedback visual.
 - **Inspetor de Metadados**: Nunca exiba JSON bruto para o usuário. Use flattening recursivo e listas zebradas para inspeção humana.
+
+## SSR v2 (Angular Universal)
+
+O Sharebook utiliza SSR para SEO e performance. Siga estes padrões para evitar quebras no ambiente Node:
+
+- **Zero `if (isBrowser)` espalhado**: Use o `TransferStateInterceptor` para automatizar o compartilhamento de dados entre servidor e browser.
+- **Abstração de Browser APIs**: Nunca use `window`, `localStorage` ou `document` diretamente. Use os serviços:
+    - `PlatformService`: Para checar `isBrowser` de forma centralizada.
+    - `BrowserStorageService`: Wrapper seguro para storage que não quebra no servidor.
+- **Meta Tags**: Garanta que as meta tags de redes sociais (OpenGraph) sejam renderizadas no servidor para correta indexação.
+- **Moment-timezone**: Cuidado com importações de `moment-timezone` no ambiente Node; prefira importações ES nativas quando possível.
 
 ## Regras Técnicas e Armadilhas
 

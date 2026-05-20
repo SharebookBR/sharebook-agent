@@ -145,6 +145,9 @@ codex-temp/
 var/
 sharebook-ebook-importer/
 editorial-covers/
+scripts/production/*.json
+*.json.key
+ga4-key.json
 
 # Python cache
 __pycache__/

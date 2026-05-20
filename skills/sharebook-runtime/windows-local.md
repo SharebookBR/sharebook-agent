@@ -101,3 +101,10 @@ Use o mecanismo mais simples e mais fiel ao habitat real.
 - Usar comandos PowerShell como se fossem shell POSIX.
 - Tratar Windows local como versão menor do OpenClaw, em vez de habitat diferente.
 - Deixar regra específica de Windows poluir a camada genérica do AGENTS.
+
+
+## Prints
+
+Quando o Raffa mencionar olhe o print 82 use o caminho abaixo:
+
+C:\Users\brnra019\Documents\Lightshot\Screenshot_82.png

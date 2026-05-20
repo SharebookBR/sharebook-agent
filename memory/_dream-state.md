@@ -3,22 +3,23 @@
 Checkpoint oficial da consolidação de memória do projeto.
 
 ## Último dream
-- Data: `2026-05-03`
+- Data: `2026-05-20`
 - Tipo: `dream incremental`
-- Última memória absorvida: `C:\REPOS\SHAREBOOK\sharebook-agent\sessions\2026-05-02-dashboard-importer-absolute-cinema.md`
-- Total de memórias lidas: `4 memórias episódicas novas absorvidas.`
+- Última memória absorvida: `C:\REPOS\SHAREBOOK\sharebook-agent\memory\2026-05-17.md`
+- Total de memórias lidas: `8 memórias episódicas novas absorvidas.`
 
 ## Consolidação produzida
-- **UX Operational**: Heurísticas de Cartão > Tabela, Smart Sorting e Inspetor de Metadados consolidadas no Master Playbook.
-- **Arquitetura**: Reforçada a regra de isolação de bancos e enriquecimento em lote na camada de serviço.
-- **Domínio Importer**: Mapeamento dos agentes GPT-5.4 e Python Worker para o workflow da fila; status `triage_rejected` validado como "resolvido".
+- **Infraestrutura**: O campo `position` foi EXORCIZADO de todo o ecossistema (banco, backend, frontend, agent) em favor do `id` único.
+- **Editorial (Ultra Lean)**: Implementado o comando `editor-next` no importer, permitindo curadoria "Zero Tool" baseada em previews e contexto mastigado.
+- **Frontend**: Implementado SSR v2 estável com `TransferStateInterceptor` e abstrações de Browser APIs. Dashboard aprimorado com busca inteligente por ID/Título.
+- **Worker**: Triagem robustecida com `pypdf` e fallback para `fitz`. `BOOTSTRAP.md` atualizado com dependências reais de PDF.
+- **Taxonomia**: Categorias infantis reorganizadas e povoadas com 100% dos digitais em categorias folha.
 
 ## Próximo dream
-- Começar lendo apenas as memórias criadas depois de `C:\REPOS\SHAREBOOK\sharebook-agent\sessions\2026-04-10-netlify-cli-via-npmmirror.md`.
-- Ignorar os próprios artefatos de `dream` como fonte de memória episódica de trabalho, salvo se trouxerem alguma contradição operacional real.
-- Verificar se houve contradição nova entre memórias, skills, scripts, `AGENTS.md` e playbook mestre.
-- Promover apenas o que for recorrente, transversal ou estrutural.
+- Começar lendo memórias criadas depois de `2026-05-17`.
+- Auditar eficácia do workflow "Ultra Lean" em larga escala.
+- Verificar se a remoção do `position` trouxe algum efeito colateral imprevisto em scripts legados.
 
 ## Observações
 - Este checkpoint existe para evitar releitura integral desnecessária.
-- O `dream` inicial já consolidou o histórico base do projeto; os próximos devem ser incrementais por padrão.
+- O ritual de 7 dias foi respeitado (com atraso compensado por esta sessão profunda).

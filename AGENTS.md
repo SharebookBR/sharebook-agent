@@ -160,13 +160,14 @@ O "Dream" é o processo de destilar memórias episódicas em conhecimento duráv
 - `sharebook-agent/BOOTSTRAP.md` — Checklist mínimo de ambiente, acessos e ferramentas essenciais.
   - Usar quando houver migração, rebuild, servidor novo, container novo, reinstalação ou ambiente "capado" sem ferramentas básicas.
   - Consultar também quando faltar utilitário essencial de operação, como renderização visual de PDF para inspeção editorial real.
+  - Não tem o psql no ambiente? Isso é um indício forte que precisa rodar o BOOTSTRAP. Avise e alinhe com Raffa.
 
 ### Runtime
 - `sharebook-agent/skills/sharebook-runtime/openclaw.md` — Regras específicas do runtime OpenClaw.
 - `sharebook-agent/skills/sharebook-runtime/windows-local.md` — Regras específicas do ambiente local Windows.
 
 ### Skills de Produto e UX
-- `sharebook-agent/skills/sharebook-voice-glossary/SKILL.md` — Voz oficial, sinopses e glossário.
+- `sharebook-agent/skills/sharebook-voice-glossary/SKILL.md` — Voz oficial, sinopses e glossário. Obrigatório ler essa skill antes de escrever algum texto que o usuário final vai ler.
 - `sharebook-agent/skills/sharebook-ux-reviewer/SKILL.md` — Auditoria de UX e interface.
 - `sharebook-agent/skills/web-design-reviewer/SKILL.md` — Layout e correções visuais.
 - `sharebook-agent/skills/catalog-premium-scan/SKILL.md` — Ritual diário de revisão do catálogo recém-publicado, com tabela dos últimos livros e shortlist premium.

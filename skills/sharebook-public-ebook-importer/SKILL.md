@@ -14,7 +14,7 @@ Use esta skill para qualquer operação do `sharebook-ebook-importer`, especialm
 - sincronizar source/fila
 - rodar `triage-once`
 - rodar `publish-once`
-- revisar `retry_later`, `error`, `waiting_editor`, `waiting_process`
+- revisar `retry_later`, `error`, `waiting_editor`, `waiting_process` por ID
 - instalar, remover, auditar ou reinstalar o cron local
 - reanimar worker quebrado após restart de container
 - diagnosticar ausência de bins/deps mínimas no ambiente
@@ -32,14 +32,15 @@ Se esta skill divergir do código/README do importer, o importer manda.
 
 ## Guardrails curtos
 
-- PostgreSQL é a única fonte da verdade
-- não inventar status fora do conjunto canônico
-- `duplicate` não é `done`
-- `triage_rejected` conta como trabalho concluído, não como erro
-- se falha temporária já cabe em `retry_later`, não usar `error`
-- se faltar editorial, devolver para `waiting_editor`, não mascarar como erro técnico
-- cron agentic do OpenClaw não é o default saudável para triagem mecânica ou publish Python
-- bootstrap/recovery local é tapa-buraco operacional, não substitui correção no build/deploy
+- **ID Único**: O campo `position` foi EXORCIZADO. Toda operação manual deve usar `--id`.
+- PostgreSQL é a única fonte da verdade.
+- não inventar status fora do conjunto canônico.
+- `duplicate` não é `done`.
+- `triage_rejected` conta como trabalho concluído, não como erro.
+- se falha temporária já cabe em `retry_later`, não usar `error`.
+- se faltar editorial, devolver para `waiting_editor`, não mascarar como erro técnico.
+- cron agentic do OpenClaw não é o default saudável para triagem mecânica ou publish Python.
+- bootstrap/recovery local é tapa-buraco operacional, não substitui correção no build/deploy.
 
 ## Status canônico
 
@@ -77,7 +78,21 @@ O `triage_worker.py` deve:
 
 Não tentar fazer curadoria sofisticada aqui.
 
-### 2. Publicação/aprovação
+### 2. Handoff Editorial (Concierge)
+
+Para obter o próximo item pronto para edição com contexto mastigado:
+
+```bash
+python cli.py editor-next --source baixelivros_infantil
+```
+
+Para salvar o plano editorial:
+
+```bash
+python cli.py plan-set --id <ID> --category-id <UUID> --synopsis-file <ARQUIVO_TEMP> --author "<AUTOR>"
+```
+
+### 3. Publicação/aprovação
 
 Comando:
 
