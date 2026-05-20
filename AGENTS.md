@@ -184,7 +184,7 @@ O "Dream" é o processo de destilar memórias episódicas em conhecimento duráv
 - `sharebook-agent/skills/coolify-vps.md` — Gestão via Coolify.
 
 ### Scripts
-- `sharebook-agent/scripts/formatting/INDEX.md` — Formatação WhatsApp/Telegram.
+- `sharebook-agent/scripts/format_two_arrays_whatsapp.py` — Formatação pontilhada para quadros curtos no WhatsApp, quando esse canal realmente for o alvo.
 - `sharebook-agent/scripts/covers/INDEX.md` — Scripts de capas.
 - `sharebook-agent/scripts/importer/INDEX.md` — Scripts de triagem e extração.
 - `sharebook-agent/scripts/production/INDEX.md` — Scripts de banco e autenticação.
