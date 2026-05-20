@@ -25,6 +25,7 @@ Ferramentas mínimas recomendadas:
 - `pdftoppm` (pacote `poppler-utils`) para exportar páginas em PNG
 - `mutool` (pacote `mupdf-tools`) como fallback técnico útil para inspeção/manipulação de PDF
 - `PyMuPDF` (`pymupdf`) para scripts Python de renderização, recorte e inspeção local
+- `pypdf` para extração textual básica no worker de triagem
 
 Validações esperadas:
 
@@ -32,6 +33,7 @@ Validações esperadas:
 pdftoppm -h | head
 mutool -h | head
 python3 -c "import fitz; print(fitz.__doc__.splitlines()[0])"
+python3 -c "import pypdf; print(pypdf.__version__)"
 ```
 
 Uso típico:
@@ -46,6 +48,12 @@ Quando usar:
 - OCR/text extraction fraca ou enganosa
 - dúvida editorial sobre faixa etária, tom ou gênero
 - necessidade de olhar as primeiras páginas antes de recategorizar ou reescrever sinopse
+- quando o worker de triagem precisar extrair texto do PDF sem falhar por dependência ausente
+
+Observação operacional:
+
+- manter as dependências do worker declaradas no projeto, não só no sistema
+- validar o ambiente com o worker real após qualquer mudança de dependência
 
 ---
 
