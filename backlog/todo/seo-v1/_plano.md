@@ -17,7 +17,12 @@ Melhorar a indexação do catálogo no Google e a apresentação nos resultados 
 - Servir em `/sitemap.xml`
 - Atualizado semanalmente via job agendado (GitHub Action, Coolify job ou cron)
 
-### 2. Breadcrumb JSON-LD
+### 2. robots.txt
+- Arquivo estático ou dinâmico orientando o Googlebot
+- Apontamento explícito para o `sitemap.xml`
+- Bloqueio de áreas administrativas e de triagem (ex: `/admin/*`, `/login`, `/register`)
+
+### 3. Breadcrumb JSON-LD
 - Schema `BreadcrumbList` injetado via SSR
 - Na PDP: `Home > Categoria > Título do Livro`
 - Na categoria: `Home > Categoria`
