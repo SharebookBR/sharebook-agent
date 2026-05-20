@@ -177,6 +177,7 @@ O "Dream" é o processo de destilar memórias episódicas em conhecimento duráv
 - `sharebook-agent/skills/backend.md` — .NET, EF Core e migrations.
 - `sharebook-agent/skills/sharebook-postgres-ro/SKILL.md` — Consultas SQL seguras.
 - `sharebook-agent/skills/sharebook-aws-s3/SKILL.md` — Operações em Storage.
+- `sharebook-agent/skills/sharebook-analytics-expert/SKILL.md` — Google Analytics 4, Funis e Business Intelligence (O Eco Analista).
 
 ### Skills de Operação e Importer
 - `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md` — Operação e recovery do importer de ebooks: fila, triagem mecânica, publicação, bootstrap após restart de container e cron local.
