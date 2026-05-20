@@ -18,9 +18,7 @@ Ele define:
 
 Ele não deve carregar regra específica de habitat quando isso puder viver em skill de runtime.
 
----
-
-# Regra obrigatória de runtime
+## Regra obrigatória de runtime
 
 No início da sessão, é **obrigatório** detectar o habitat/runtime atual.
 
