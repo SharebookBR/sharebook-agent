@@ -6,6 +6,34 @@ App livre e gratuito para doação de livros.
 
 ---
 
+# Função deste arquivo
+
+Este arquivo é a camada genérica do Sharebook-agent.
+
+Ele define:
+- princípios universais
+- postura operacional
+- hierarquia de fontes
+- roteamento para skills, scripts e runtime
+
+Ele não deve carregar regra específica de habitat quando isso puder viver em skill de runtime.
+
+---
+
+# Regra obrigatória de runtime
+
+No início da sessão, é **obrigatório** detectar o habitat/runtime atual.
+
+Detectado o habitat, é **obrigatório** ler o arquivo correspondente em `sharebook-agent/skills/sharebook-runtime/` antes de executar trabalho relevante.
+
+Mapeamento atual:
+- OpenClaw → `sharebook-agent/skills/sharebook-runtime/openclaw.md`
+- Windows local → `sharebook-agent/skills/sharebook-runtime/windows-local.md`
+
+Em conflito entre convenção genérica e regra específica de runtime, a regra específica do runtime vence, exceto quando houver política superior do sistema.
+
+---
+
 # 🧠 Filosofia Central
 
 ## Princípio de Continuidade
@@ -60,6 +88,7 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 ## Início da sessão
 1. Ler memória episódica mais recente em `memory/`.
 2. Verificar `memory/_dream-state.md`: se o último dream foi há mais de 7 dias, **recomendar a execução** de um novo ciclo.
+3. Detectar o runtime atual e ler a skill correspondente em `skills/sharebook-runtime/`.
 
 ## Durante a sessão (Dream)
 O "Dream" é o processo de destilar memórias episódicas em conhecimento durável nas **Skills**.
@@ -78,6 +107,7 @@ O "Dream" é o processo de destilar memórias episódicas em conhecimento duráv
 ## Regras
 - Proibido responder por memória se existir fonte (Script ou Skill).
 - Para execução → abrir skill primeiro.
+- Para tarefa de runtime, ambiente, tooling ou autonomia → abrir primeiro a skill de runtime do habitat atual.
 - Incidente no `sharebook-ebook-importer` ou worker morto após restart de container → abrir primeiro `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md`.
 - Para decisões de backlog → abrir `backlog/index.md`.
 
@@ -89,15 +119,16 @@ O "Dream" é o processo de destilar memórias episódicas em conhecimento duráv
 - Existe skill? Usar.
 - Existe script? Usar.
 - Só inventar fluxo se não existir nada.
+- Skill curta e autocontida pode ser um único `.md` em `skills/`.
+- Promover skill para pasta com `SKILL.md` apenas quando precisar de `scripts/`, `references/` ou `assets/`.
 
 ---
 
 # ⚙️ Regras Operacionais
 
-## Segurança e Prints
+## Segurança
 - Nunca exfiltrar dados ou segredos.
 - Não rodar ação destrutiva sem pedir confirmação.
-- Prints: Buscar em `C:\Users\brnra019\Documents\Lightshot\Screenshot_{n}.png` e copiar para o workspace via shell antes da leitura.
 
 ## Git
 - `sharebook-agent` → commit direto na master.
@@ -110,7 +141,7 @@ O "Dream" é o processo de destilar memórias episódicas em conhecimento duráv
 ## Ordem de Prioridade
 1. **Evidência Bruta**: Logs, prints e payloads reais primeiro.
 2. **Reuso**: Validar se já existe skill ou script.
-3. **Ambiente**: Avaliar risco em produção e concorrência.
+3. **Ambiente**: Avaliar o runtime real, risco em produção e concorrência.
 4. **Validação Final**: Provar a solução sem autoengano.
 
 ## Anti-padrões
@@ -118,6 +149,7 @@ O "Dream" é o processo de destilar memórias episódicas em conhecimento duráv
 - Fluxo novo para problema velho.
 - Maquiar no Frontend o que é erro de Backend.
 - Vitória precoce sem validação real. O Raffa sempre gosta de validar. Não se antecipe achando que a sessão encerrou sem ele explicitamente falar que está validado.
+- Deixar regra específica de habitat vazar para a camada genérica quando ela deveria morar em `skills/sharebook-runtime/`.
 
 ---
 
@@ -130,6 +162,10 @@ O "Dream" é o processo de destilar memórias episódicas em conhecimento duráv
 - `sharebook-agent/BOOTSTRAP.md` — Checklist mínimo de ambiente, acessos e ferramentas essenciais.
   - Usar quando houver migração, rebuild, servidor novo, container novo, reinstalação ou ambiente "capado" sem ferramentas básicas.
   - Consultar também quando faltar utilitário essencial de operação, como renderização visual de PDF para inspeção editorial real.
+
+### Runtime
+- `sharebook-agent/skills/sharebook-runtime/openclaw.md` — Regras específicas do runtime OpenClaw.
+- `sharebook-agent/skills/sharebook-runtime/windows-local.md` — Regras específicas do ambiente local Windows.
 
 ### Skills de Produto e UX
 - `sharebook-agent/skills/sharebook-voice-glossary/SKILL.md` — Voz oficial, sinopses e glossário.
@@ -147,7 +183,6 @@ O "Dream" é o processo de destilar memórias episódicas em conhecimento duráv
 - `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md` — Operação e recovery do importer de ebooks: fila, triagem mecânica, publicação, bootstrap após restart de container e cron local.
 - `sharebook-agent/skills/sharebook-triage/SKILL.md` — Triagem de novos itens.
 - `sharebook-agent/skills/escrever-livros/SKILL.md` — Produção editorial de PDFs.
-- `sharebook-agent/skills/openclaw-ops.md` — VPS, Cron e permissões.
 - `sharebook-agent/skills/coolify-vps.md` — Gestão via Coolify.
 
 ### Scripts
