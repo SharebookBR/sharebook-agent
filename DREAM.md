@@ -38,6 +38,22 @@ Um sistema que lembra de tudo não tem espaço para conceitos abstratos.
 
 ---
 
+## 🔁 O Ritual de Dream (Procedimento)
+
+O "Dream" é o processo de destilar memórias episódicas em conhecimento durável nas **Skills**.
+
+- **Frequência**: A cada 7 dias ou após grandes marcos (verificar `memory/_dream-state.md`).
+- **Preparação**: Reler este arquivo (`DREAM.md`) para realinhar com a intenção arquitetural antes de iniciar a destilação.
+- **Destino**: Fricções e aprendizados devem ser "enxertados" primeiramente nas **Skills específicas** e apenas em última instância no `AGENTS.md`.
+- **Simplificação e Poda**: Durante o Dream, auditar as skills para garantir que permaneçam concisas. Remover redundâncias e apagar procedimentos obsoletos. Se uma skill crescer demais, quebrá-la ou limpá-la.
+- **Protocolo**: 
+    1. Ler memórias desde o último checkpoint em `_dream-state.md`.
+    2. Identificar padrões de fricção e decisões recorrentes.
+    3. Atualizar/Endurecer as skills relevantes.
+    4. Atualizar o checkpoint em `_dream-state.md`.
+
+---
+
 ## 🧭 Como usar este arquivo
 - **Novos Agentes**: Leiam para entender que não estamos apenas editando arquivos, estamos cultivando uma inteligência.
 - **Dreamer**: Use este arquivo como bússola para decidir o que deve ser promovido a Skill e o que deve ser deixado para o esquecimento.

@@ -90,12 +90,9 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 3. Detectar o runtime atual e ler a skill correspondente em `skills/sharebook-runtime/`.
 
 ## Durante a sessão (Dream)
-O "Dream" é o processo de destilar memórias episódicas em conhecimento durável nas **Skills**.
-- **Frequência**: A cada 7 dias ou após grandes marcos.
-- **Preparação**: Ler `sharebook-agent/DREAM.md` para realinhar com a intenção arquitetural antes de iniciar a destilação.
-- **Destino**: Fricções e aprendizados devem ser "enxertados" primeiramente nas **Skills específicas** e apenas em última instância no `AGENTS.md`.
-- **Simplificação e Poda**: Durante o Dream, auditar as skills para garantir que permaneçam concisas. Remover redundâncias e apagar procedimentos obsoletos. Se uma skill crescer demais, quebrá-la ou limpá-la.
-- **Procedimento**: Ler memórias desde o último checkpoint em `_dream-state.md`, atualizar as skills relevantes e atualizar o checkpoint.
+O "Dream" é o ritual de destilação de conhecimento. 
+- **Frequência**: A cada 7 dias ou grandes marcos.
+- **Doutrina e Procedimento**: Seguir rigorosamente o Codex em `sharebook-agent/DREAM.md`.
 
 ## Fim da sessão
 1. Criar ou atualizar arquivo em `memory/`.
