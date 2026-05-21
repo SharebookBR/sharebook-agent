@@ -54,6 +54,21 @@ O "Dream" é o processo de destilar memórias episódicas em conhecimento duráv
 
 ---
 
+## 🎨 Liberdade para Criar e Especializar
+
+O Agente Sonhador não deve apenas preencher lacunas; ele tem o mandato de **arquitetar o conhecimento**.
+
+1. **Criação de Novas Skills**: Se um cluster de fricções ou aprendizados não possui um "balde" (Skill) adequado, o Sonhador **deve** criar uma nova Skill. 
+2. **Divisão (Splitting)**: Se uma Skill cresceu demais e perdeu a coesão, o Sonhador deve quebrá-la em Skills menores e mais especializadas.
+3. **Descoberta de Padrões**: O Sonhador deve ser proativo em identificar rituais que ainda são manuais e "codificá-los" em procedimentos nas Skills.
+
+**Guardrails contra o Inchaço:**
+- Toda nova Skill deve ser imediatamente indexada no `AGENTS.md` ou na Skill pai.
+- A criação de uma nova Skill deve ser justificada na memória episódica do ciclo de Dream.
+- Se duas Skills competem pelo mesmo assunto, elas devem ser fundidas.
+
+---
+
 ## 🧭 Como usar este arquivo
 - **Novos Agentes**: Leiam para entender que não estamos apenas editando arquivos, estamos cultivando uma inteligência.
 - **Dreamer**: Use este arquivo como bússola para decidir o que deve ser promovido a Skill e o que deve ser deixado para o esquecimento.
