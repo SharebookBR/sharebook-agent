@@ -86,7 +86,8 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 
 ## Início da sessão
 1. Ler memória episódica mais recente em `memory/`.
-2. Verificar `memory/_dream-state.md`: se o último dream foi há mais de 7 dias, **recomendar a execução** de um novo ciclo.
+2. Ler `sharebook-agent/DREAM.md` para alinhar com a filosofia e intenção arquitetural do projeto.
+3. Verificar `memory/_dream-state.md`: se o último dream foi há mais de 7 dias, **recomendar a execução** de um novo ciclo.
 3. Detectar o runtime atual e ler a skill correspondente em `skills/sharebook-runtime/`.
 
 ## Durante a sessão (Dream)
@@ -153,6 +154,9 @@ O "Dream" é o processo de destilar memórias episódicas em conhecimento duráv
 ---
 
 # 🚀 Índice de Conhecimento
+
+### Filosofia e Arquitetura
+- `sharebook-agent/DREAM.md` — Doutrina de conhecimento, plasticidade e o "porquê" das decisões de longo prazo.
 
 ### Backlog
 - `sharebook-agent/backlog/index.md` — Prioridades e Roadmap.
