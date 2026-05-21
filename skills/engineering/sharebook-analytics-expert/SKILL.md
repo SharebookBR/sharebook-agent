@@ -45,4 +45,4 @@ python sharebook-agent/scripts/production/test_ga4_connection.py
 - Resultados de API devem ser mastigados: prefira tabelas markdown ou conclusões textuais a JSONs brutos da API.
 
 ---
-Para instalação de novos ambientes, consulte `sharebook-agent/skills/sharebook-analytics-expert/BOOTSTRAP.md`.
+Para instalação de novos ambientes, consulte `sharebook-agent/skills/engineering/sharebook-analytics-expert/BOOTSTRAP.md`.

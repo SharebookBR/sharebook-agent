@@ -2,7 +2,7 @@
 """Generate 6 cover variations for the Beej's Networking Guide."""
 import subprocess, json, sys
 
-script = 'sharebook-agent/skills/sharebook-ebook-foundation-preparer/scripts/cover_generate.py'
+script = 'sharebook-agent/skills/importers/sharebook-ebook-foundation-preparer/scripts/cover_generate.py'
 title = "Guia Beej's Para Programação em Rede"
 author = "Brian Beej Jorgensen Hall"
 

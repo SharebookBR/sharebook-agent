@@ -25,7 +25,7 @@ Entregar, em uma resposta só:
 
 ## Workflow
 
-1. Ler primeiro a skill `sharebook-agent/skills/sharebook-postgres-ro/SKILL.md`.
+1. Ler primeiro a skill `sharebook-agent/skills/engineering/sharebook-postgres-ro/SKILL.md`.
 2. Consultar o importer (`importer.queue_items`) para descobrir os `sharebook_book_id` marcados como `done` na janela pedida.
 3. Consultar o banco read-only de produção do Sharebook para buscar, para esses IDs:
    - título

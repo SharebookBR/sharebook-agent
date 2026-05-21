@@ -40,7 +40,7 @@ Regras:
 
 Criar uma pasta simples e previsível:
 
-- `skills/escrever-livros/<projeto>/assets/`
+- `skills/importers/escrever-livros/<projeto>/assets/`
 
 Tudo visual relevante deve cair ali:
 
@@ -136,8 +136,8 @@ Rota operacional recomendada no `sharebook-agent`:
 
 ```bash
 node scripts/web/print_pdf_devtools.mjs \
-  /data/workspace/sharebook-agent/skills/escrever-livros/<livro>-book.html \
-  /data/workspace/sharebook-agent/skills/escrever-livros/<livro>-book-vX.pdf
+  /data/workspace/sharebook-agent/skills/importers/escrever-livros/<livro>-book.html \
+  /data/workspace/sharebook-agent/skills/importers/escrever-livros/<livro>-book-vX.pdf
 ```
 
 Checklist pós-geração (rápido):
@@ -186,7 +186,7 @@ Checklist mínimo:
 Exemplo saudável:
 
 ```text
-skills/escrever-livros/
+skills/importers/escrever-livros/
   escrever-livros/
     meu-livro-manuscrito-v1.md
     meu-livro-book.html

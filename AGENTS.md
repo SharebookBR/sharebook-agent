@@ -28,7 +28,7 @@ Mapeamento atual:
 - OpenClaw → `sharebook-agent/skills/runtime/openclaw.md`
 - Windows local → `sharebook-agent/skills/runtime/windows-local.md`
 
-Em conflito entre convenção genérica e regra específica do runtime, a regra específica do runtime vence, exceto quando houver política superior do sistema.
+Em conflito entre convenção genérica e regra específica de runtime, a regra específica do runtime vence, exceto quando houver política superior do sistema.
 
 ---
 
