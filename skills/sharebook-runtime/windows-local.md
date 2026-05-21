@@ -48,9 +48,11 @@ Use o mecanismo mais simples e mais fiel ao habitat real.
 
 ## Paths, shell e encoding
 
-- Tratar caminhos Windows como fonte canônica quando o trabalho for local.
+- Tratar caminhos Windows como fonte canônica quando o trabalho for local. Traduzir mentalmente `/data/workspace/` para o caminho real do repositório local (ex: `C:\REPOS\SHAREBOOK\`).
 - Em PowerShell, não usar `&&`; usar `;` ou chamadas separadas.
 - Tratar quoting e encoding como suspeitos usuais quando o comando parecer certo e o resultado vier torto.
+- **Encoding Fix**: Para evitar `UnicodeDecodeError` em subprocessos Python no Windows que retornam acentuação, force `PYTHONIOENCODING=utf-8` no ambiente ou no comando.
+- **Database DSN**: Se `IMPORTER_DB_DSN` estiver ausente, construa-o usando as variáveis `SHAREBOOK_PROD_PG_RW_*`, mas lembre-se que o banco do importer é geralmente `sharebook_importer`, diferente do banco principal `sharebook`.
 - Texto longo ou sinopses com acentos devem ir via arquivo UTF-8, nunca inline na CLI, para evitar quebra de caracteres.
 - Se o arquivo temporário precisar ser consumido por script, preferir UTF-8 sem BOM quando houver histórico de atrito.
 - Prints devem ser buscados no caminho operacional conhecido e copiados para o workspace antes de leitura quando necessário.

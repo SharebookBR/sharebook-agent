@@ -33,7 +33,7 @@ Se esta skill divergir do código/README do importer, o importer manda.
 ## Guardrails curtos
 
 - **ID Único**: O campo `position` foi EXORCIZADO. Toda operação manual deve usar `--id`.
-- PostgreSQL é a única fonte da verdade.
+- PostgreSQL é a única fonte da verdade. O banco de dados do importer é `sharebook_importer` (não confundir com o banco principal `sharebook`).
 - não inventar status fora do conjunto canônico.
 - `duplicate` não é `done`.
 - `triage_rejected` conta como trabalho concluído, não como erro.
