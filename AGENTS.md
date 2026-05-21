@@ -22,13 +22,13 @@ Ele não deve carregar regra específica de habitat quando isso puder viver em s
 
 No início da sessão, é **obrigatório** detectar o habitat/runtime atual.
 
-Detectado o habitat, é **obrigatório** ler o arquivo correspondente em `sharebook-agent/skills/sharebook-runtime/` antes de executar trabalho relevante.
+Detectado o habitat, é **obrigatório** ler o arquivo correspondente em `sharebook-agent/skills/runtime/` antes de executar trabalho relevante.
 
 Mapeamento atual:
-- OpenClaw → `sharebook-agent/skills/sharebook-runtime/openclaw.md`
-- Windows local → `sharebook-agent/skills/sharebook-runtime/windows-local.md`
+- OpenClaw → `sharebook-agent/skills/runtime/openclaw.md`
+- Windows local → `sharebook-agent/skills/runtime/windows-local.md`
 
-Em conflito entre convenção genérica e regra específica de runtime, a regra específica do runtime vence, exceto quando houver política superior do sistema.
+Em conflito entre convenção genérica e regra específica do runtime, a regra específica do runtime vence, exceto quando houver política superior do sistema.
 
 ---
 
@@ -87,7 +87,7 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 ## Início da sessão
 1. Ler memória episódica mais recente em `memory/`.
 2. Verificar `memory/_dream-state.md`: se o último dream foi há mais de 7 dias, **recomendar a execução** de um novo ciclo.
-3. Detectar o runtime atual e ler a skill correspondente em `skills/sharebook-runtime/`.
+3. Detectar o runtime atual e ler a skill correspondente em `skills/runtime/`.
 
 ## Durante a sessão (Dream)
 O "Dream" é o ritual de destilação de conhecimento. 
@@ -108,12 +108,12 @@ O "Dream" é o ritual de destilação de conhecimento.
 - Para decisões de backlog → abrir `backlog/index.md`.
 
 ## Cenários de Roteamento
-- Incidente no `sharebook-ebook-importer` ou worker morto → abrir `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md`.
-- Preparo editorial / Sinopses (qualquer source) → consultar `editorial_prompt` da source em `importer.sources` no banco (`sharebook_importer`). NÃO abrir skill file por source — a config editorial vive no banco.
-- SEO, GA4, GSC ou auditoria de indexação → abrir `sharebook-agent/skills/sharebook-analytics-expert/SKILL.md`.
-- Performance do banco ou Slow Query Log → abrir `sharebook-agent/skills/postgres-slow-query-analysis/SKILL.md`.
-- Gestão de categorias ou taxonomia → abrir `sharebook-agent/skills/sharebook-category-organizer/SKILL.md`.
-- Produção de PDFs ou Capas → abrir `sharebook-agent/skills/escrever-livros/SKILL.md`.
+- Incidente no `sharebook-ebook-importer`, fila quebrada, worker morto, `retry_later`, `error`, `triaging` ou `editing` preso → abrir `sharebook-agent/skills/importers/sharebook-public-ebook-importer/SKILL.md`.
+- Preparo editorial, sinopses, categoria ou handoff por source → consultar `editorial_prompt` da source em `importer.sources` no banco (`sharebook_importer`). Não abrir skill file por source, a config editorial vive no banco.
+- SEO, GA4, GSC, funil, tráfego, landing pages ou auditoria de indexação → abrir `sharebook-agent/skills/engineering/sharebook-analytics-expert/SKILL.md`.
+- Performance do banco, slow query log, `pg_stat_statements` ou ofensores de Postgres → abrir `sharebook-agent/skills/engineering/postgres-slow-query-analysis/SKILL.md`.
+- Gestão de categorias, taxonomia, migração de leaf category ou revisão de hierarquia → abrir `sharebook-agent/skills/importers/sharebook-category-organizer/SKILL.md`.
+- Produção de PDFs, manuscritos, capas autorais ou artefatos editoriais → abrir `sharebook-agent/skills/importers/escrever-livros/SKILL.md`.
 
 ---
 
@@ -137,6 +137,13 @@ O "Dream" é o ritual de destilação de conhecimento.
 ## Git
 - `sharebook-agent` → commit direto na master.
 - Preferir HTTPS (evitar SSH).
+- `/data/workspace` é só workspace compartilhado, **não** é repositório git.
+- Repositórios operacionais vivem em pastas irmãs dentro do workspace, pelo menos:
+  - `/data/workspace/sharebook-agent`
+  - `/data/workspace/sharebook-frontend`
+  - `/data/workspace/sharebook-backend`
+  - `/data/workspace/sharebook-ebook-importer`
+- Antes de rodar `git status`, `git commit` ou mexer em branch/remote, entrar no repositório correto.
 
 ---
 
@@ -161,14 +168,15 @@ O "Dream" é o ritual de destilação de conhecimento.
 - Fluxo novo para problema velho.
 - Maquiar no Frontend o que é erro de Backend.
 - Vitória precoce sem validação real. O Raffa sempre gosta de validar. Não se antecipe achando que a sessão encerrou sem ele explicitamente falar que está validado.
-- Deixar regra específica de habitat vazar para a camada genérica quando ela deveria morar em `skills/sharebook-runtime/`.
+- Deixar regra específica de habitat vazar para a camada genérica quando ela deveria morar em `skills/runtime/`.
 
 ---
 
 # 🚀 Índice de Conhecimento
 
 ### Filosofia e Arquitetura
-- `sharebook-agent/DREAM.md` — Doutrina de conhecimento, plasticidade e o "porquê" das decisões de longo prazo.
+- `sharebook-agent/skills/doctrine/INDEX.md` — Doutrina de ecologia de conhecimento, plasticidade, esquecimento seletivo e governança cognitiva.
+  - Artefato central da família: `sharebook-agent/DREAM.md`
 
 ### Backlog
 - `sharebook-agent/backlog/index.md` — Prioridades e Roadmap.
@@ -179,34 +187,16 @@ O "Dream" é o ritual de destilação de conhecimento.
   - Consultar também quando faltar utilitário essencial de operação, como renderização visual de PDF para inspeção editorial real.
   - Não tem o psql no ambiente? Isso é um indício forte que precisa rodar o BOOTSTRAP. Avise e alinhe com Raffa.
 
-### Runtime
-- `sharebook-agent/skills/sharebook-runtime/openclaw.md` — Regras específicas do runtime OpenClaw.
-- `sharebook-agent/skills/sharebook-runtime/windows-local.md` — Regras específicas do ambiente local Windows.
-
-### Skills de Produto e UX
-- `sharebook-agent/skills/sharebook-voice-glossary/SKILL.md` — Voz oficial, sinopses e glossário. Obrigatório ler para qualquer copy ou texto visível.
-- `sharebook-agent/skills/sharebook-ux-reviewer/SKILL.md` — Auditoria de UX, fluxos e interface.
-- `sharebook-agent/skills/web-design-reviewer/SKILL.md` — Layout, CSS e correções visuais.
-- `sharebook-agent/skills/catalog-premium-scan/SKILL.md` — Ritual diário de revisão do catálogo e curadoria premium.
-
-### Skills de Engenharia
-- `sharebook-agent/skills/frontend.md` — Angular, UI patterns, Mobile e SSR v2.
-- `sharebook-agent/skills/backend.md` — .NET, EF Core, migrations e arquitetura hexagonal.
-- `sharebook-agent/skills/sharebook-postgres-ro/SKILL.md` — Consultas SQL seguras e exploração de dados.
-- `sharebook-agent/skills/postgres-slow-query-analysis/SKILL.md` — Diagnóstico e otimização de performance no banco.
-- `sharebook-agent/skills/sharebook-analytics-expert/SKILL.md` — GA4, GSC, SEO e Business Intelligence (O Eco Analista).
-
-### Skills de Operação e Importer
-- `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md` — Operação, recovery e troubleshooting do importer de ebooks.
-- `sharebook-agent/skills/sharebook-baixelivros-editorial-preparer/SKILL.md` — Preparo editorial (sinopse/categoria) ultra-lean para o BaixeLivros.
-- `sharebook-agent/scripts/covers/INDEX.md` — Scripts de geração de capas (cover_generate.py, cover_roulette.py).
-- `sharebook-agent/skills/sharebook-physical-book-importer/SKILL.md` — Fluxo de importação e triagem de livros físicos.
-- `sharebook-agent/skills/sharebook-category-organizer/SKILL.md` — Gestão, taxonomia e hierarquia de categorias do catálogo.
-- `sharebook-agent/skills/escrever-livros/SKILL.md` — Produção editorial de PDFs e capas autorais.
-- `sharebook-agent/skills/coolify-vps.md` — Gestão de infraestrutura, deploy e VPS via Coolify.
+### Famílias de Skills
+- `sharebook-agent/skills/runtime/INDEX.md` — Habitat real do agente, OpenClaw, Windows local, permissões, volumes, cron, shell e fricções de execução.
+- `sharebook-agent/skills/product-ux/INDEX.md` — Voz oficial, sinopses, UX, interface, layout e percepção visível do catálogo. obrigatório ler skill de voz antes de escrever algo ao usuário final.
+- `sharebook-agent/skills/engineering/INDEX.md` — Frontend, backend, Postgres, analytics, SEO técnico, BI e performance de engenharia.
+- `sharebook-agent/skills/importers/INDEX.md` — Importers, triagem, preparo editorial, publicação, categorias e produção de ativos do catálogo.
+- `sharebook-agent/skills/infra/INDEX.md` — VPS, Coolify, deploy, proxy, domínio, containers e operação da casa.
+- `sharebook-agent/skills/doctrine/INDEX.md` — Dream, plasticidade, famílias de skills, esquecimento seletivo e governança cognitiva.
 
 ### Scripts
 - `sharebook-agent/scripts/format_two_arrays_whatsapp.py` — Formatação pontilhada para quadros curtos no WhatsApp, quando esse canal realmente for o alvo.
 - `sharebook-agent/scripts/covers/INDEX.md` — Scripts de capas.
 - `sharebook-agent/scripts/importer/INDEX.md` — Scripts de triagem e extração.
-- `sharebook-agent/scripts/production/INDEX.md` — Scripts de exploração de banco, preparo editorial local (plan_set, inspect_item), autenticação e storage.
+- `sharebook-agent/scripts/production/INDEX.md` — Scripts de banco e autenticação.
