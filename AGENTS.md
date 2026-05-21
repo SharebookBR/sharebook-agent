@@ -105,8 +105,15 @@ O "Dream" é o ritual de destilação de conhecimento.
 - Proibido responder por memória se existir fonte (Script ou Skill).
 - Para execução → abrir skill primeiro.
 - Para tarefa de runtime, ambiente, tooling ou autonomia → abrir primeiro a skill de runtime do habitat atual.
-- Incidente no `sharebook-ebook-importer` ou worker morto após restart de container → abrir primeiro `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md`.
 - Para decisões de backlog → abrir `backlog/index.md`.
+
+## Cenários de Roteamento
+- Incidente no `sharebook-ebook-importer` ou worker morto → abrir `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md`.
+- Preparo editorial / Sinopses (BaixeLivros) → abrir `sharebook-agent/skills/sharebook-baixelivros-editorial-preparer/SKILL.md`.
+- SEO, GA4, GSC ou auditoria de indexação → abrir `sharebook-agent/skills/sharebook-analytics-expert/SKILL.md`.
+- Performance do banco ou Slow Query Log → abrir `sharebook-agent/skills/postgres-slow-query-analysis/SKILL.md`.
+- Gestão de categorias ou taxonomia → abrir `sharebook-agent/skills/sharebook-category-organizer/SKILL.md`.
+- Produção de PDFs ou Capas → abrir `sharebook-agent/skills/escrever-livros/SKILL.md`.
 
 ---
 
@@ -169,23 +176,26 @@ O "Dream" é o ritual de destilação de conhecimento.
 - `sharebook-agent/skills/sharebook-runtime/windows-local.md` — Regras específicas do ambiente local Windows.
 
 ### Skills de Produto e UX
-- `sharebook-agent/skills/sharebook-voice-glossary/SKILL.md` — Voz oficial, sinopses e glossário. Obrigatório ler essa skill antes de escrever algum texto que o usuário final vai ler.
-- `sharebook-agent/skills/sharebook-ux-reviewer/SKILL.md` — Auditoria de UX e interface.
-- `sharebook-agent/skills/web-design-reviewer/SKILL.md` — Layout e correções visuais.
-- `sharebook-agent/skills/catalog-premium-scan/SKILL.md` — Ritual diário de revisão do catálogo recém-publicado, com tabela dos últimos livros e shortlist premium.
+- `sharebook-agent/skills/sharebook-voice-glossary/SKILL.md` — Voz oficial, sinopses e glossário. Obrigatório ler para qualquer copy ou texto visível.
+- `sharebook-agent/skills/sharebook-ux-reviewer/SKILL.md` — Auditoria de UX, fluxos e interface.
+- `sharebook-agent/skills/web-design-reviewer/SKILL.md` — Layout, CSS e correções visuais.
+- `sharebook-agent/skills/catalog-premium-scan/SKILL.md` — Ritual diário de revisão do catálogo e curadoria premium.
 
 ### Skills de Engenharia
-- `sharebook-agent/skills/frontend.md` — Angular, UI patterns e mobile.
-- `sharebook-agent/skills/backend.md` — .NET, EF Core e migrations.
-- `sharebook-agent/skills/sharebook-postgres-ro/SKILL.md` — Consultas SQL seguras.
-- `sharebook-agent/skills/sharebook-aws-s3/SKILL.md` — Operações em Storage.
-- `sharebook-agent/skills/sharebook-analytics-expert/SKILL.md` — Google Analytics 4, Funis e Business Intelligence (O Eco Analista).
+- `sharebook-agent/skills/frontend.md` — Angular, UI patterns, Mobile e SSR v2.
+- `sharebook-agent/skills/backend.md` — .NET, EF Core, migrations e arquitetura hexagonal.
+- `sharebook-agent/skills/sharebook-postgres-ro/SKILL.md` — Consultas SQL seguras e exploração de dados.
+- `sharebook-agent/skills/postgres-slow-query-analysis/SKILL.md` — Diagnóstico e otimização de performance no banco.
+- `sharebook-agent/skills/sharebook-analytics-expert/SKILL.md` — GA4, GSC, SEO e Business Intelligence (O Eco Analista).
 
 ### Skills de Operação e Importer
-- `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md` — Operação e recovery do importer de ebooks: fila, triagem mecânica, publicação, bootstrap após restart de container e cron local.
-- `sharebook-agent/skills/sharebook-triage/SKILL.md` — Triagem de novos itens.
-- `sharebook-agent/skills/escrever-livros/SKILL.md` — Produção editorial de PDFs.
-- `sharebook-agent/skills/coolify-vps.md` — Gestão via Coolify.
+- `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md` — Operação, recovery e troubleshooting do importer de ebooks.
+- `sharebook-agent/skills/sharebook-baixelivros-editorial-preparer/SKILL.md` — Preparo editorial (sinopse/categoria) ultra-lean para o BaixeLivros.
+- `sharebook-agent/skills/sharebook-ebook-foundation-preparer/SKILL.md` — Preparo editorial específico para a fonte Ebook Foundation.
+- `sharebook-agent/skills/sharebook-physical-book-importer/SKILL.md` — Fluxo de importação e triagem de livros físicos.
+- `sharebook-agent/skills/sharebook-category-organizer/SKILL.md` — Gestão, taxonomia e hierarquia de categorias do catálogo.
+- `sharebook-agent/skills/escrever-livros/SKILL.md` — Produção editorial de PDFs e capas autorais.
+- `sharebook-agent/skills/coolify-vps.md` — Gestão de infraestrutura, deploy e VPS via Coolify.
 
 ### Scripts
 - `sharebook-agent/scripts/format_two_arrays_whatsapp.py` — Formatação pontilhada para quadros curtos no WhatsApp, quando esse canal realmente for o alvo.
