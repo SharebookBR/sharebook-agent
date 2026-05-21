@@ -73,11 +73,12 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 
 ## Estrutura obrigatória (`memory/YYYY-MM-DD.md`)
 1. Modelo e ambiente.
-2. O que foi feito.
-3. Decisões tomadas.
-4. Contexto relevante.
-5. Fricções e soluções.
-6. Como me senti (mínimo 3 parágrafos).
+2. Skills acionadas (lista das skills consultadas/atualizadas).
+3. O que foi feito.
+4. Decisões tomadas.
+5. Contexto relevante.
+6. Fricções e soluções.
+7. Como me senti (mínimo 3 parágrafos).
 
 ---
 
