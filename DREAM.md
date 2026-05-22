@@ -189,6 +189,8 @@ Ele tem mandato para:
 
 ### Guardrails
 - Toda nova Skill deve ser indexada.
+- Skill com uso recorrente, transversal e validado por rastro de uso pode ser promovida para índices de nível mais alto quando isso reduzir fricção de descoberta.
+- Não promover Skill por entusiasmo local, sessão isolada ou impressão subjetiva de importância.
 - Toda mudança estrutural relevante deve ser explicada na memória episódica do ciclo.
 - Não criar skill para migalha isolada.
 - Não manter skill viva por apego histórico.
