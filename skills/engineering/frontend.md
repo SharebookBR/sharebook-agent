@@ -35,6 +35,7 @@ Skill operacional para desenvolvimento, manutenção e evolução do `sharebook-
 - **Smart Sorting**: Automatize a ordenação baseada no status selecionado (ex: fila de espera -> id ASC; concluídos -> data DESC).
 - **Busca por ID/Título**: No dashboard, digitar números deve buscar por `id` exato; texto busca por `title` (ILIKE).
 - **Feedback de Sucesso**: Em fluxos de publicação ou criação, exibir a miniatura do ativo gerado (ex: capa do livro) no card de conclusão é o melhor feedback visual.
+- **Toast de Ação**: Toda ação mutante bem-sucedida (salvar, publicar, atualizar) deve exibir um toast de confirmação via `ToastrService.success('...')`. Nunca fechar silenciosamente um modal ou formulário sem feedback. Para erros, usar `ToastrService.error()` ou exibir inline se o contexto for um formulário com campos. `ToastrService` já está configurado no `AppModule` — apenas injetar no construtor.
 - **Inspetor de Metadados**: Nunca exiba JSON bruto para o usuário. Use flattening recursivo e listas zebradas para inspeção humana.
 
 ## SSR v2 (Angular Universal)
