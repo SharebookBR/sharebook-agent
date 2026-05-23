@@ -2,7 +2,7 @@
 
 ### 🌟 Visão Geral
 - **North star do produto**: tornar o Sharebook o melhor hub de livros gratuitos do Brasil. Detalhes em `backlog/todo/maior-site-livros/_plano.md`.
-- **Memória operacional via skills**: explorar o uso de `skills/` como memória operacional durável.
+- **[Unificação Scripts + Renomeação do Corpus](backlog/todo/unificacao-scripts-memory-durable.md)**: Scripts viram artefatos subordinados a knowledge; `skills/` → `memory-durable/`, `memory/` → `memory-episodic/`.
 
 ### 🎯 Missões Ativas (TODO)
 

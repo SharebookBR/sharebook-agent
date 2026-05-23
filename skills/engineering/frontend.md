@@ -9,6 +9,26 @@ Skill operacional para desenvolvimento, manutenção e evolução do `sharebook-
 - Mudança em fluxos de navegação ou integração com a API.
 - Diagnóstico de falhas de build ou inconsistências entre ambiente local e produção.
 
+## Design System — Paleta Oficial
+
+**Obrigatório consultar antes de criar ou modificar qualquer elemento visual.**
+
+| Papel | Cor | Uso |
+|---|---|---|
+| **Primary** | `#29abe2` (azul Sharebook) | Botões padrão, inputs focados, links de ação |
+| **Accent** | `#ff4081` (rosa) | Destaque máximo — usar com parcimônia (ex: botão "Receber livro digital") |
+| **Warn** | vermelho Material | Erros de formulário, ações destrutivas |
+
+**Regras:**
+- Nunca hardcode uma cor sem antes verificar se o papel `primary` ou `accent` já resolve.
+- Nunca usar `mat.$indigo-palette` — foi substituído pela paleta `$sharebook-blue`.
+- O botão "Doe um Livro" no header usa `#29abe2` via CSS direto — é a referência visual da primary.
+- Accent é raro por design. Se tudo grita, nada grita.
+
+**Fonte:** `src/custom-theme.scss` — paleta `$sharebook-blue`, tom 500.
+
+---
+
 ## Princípios de UI/UX (Doutrina Sharebook)
 
 - **Cartão > Tabela**: Para listas operacionais (ex: painel do importador), prefira cartões compactos e responsivos. Tabelas são hostis em dispositivos móveis.

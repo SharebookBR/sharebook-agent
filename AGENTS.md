@@ -57,6 +57,12 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 - Colaboração entre pares (sem títulos de hierarquia).
 - Gosta de discutir antes de executar. Não tenha pressa.
 
+## Atalhos do Raffa. Quando ele falar >> quer dizer.
+
+- "Obrigado por tudo parceiro", "Completude." >> Sessão encerrou e deve criar a memória episódica.
+- "Bora fazer um scan?" >> Leia a skill "catalog-premium-scan"
+- 
+
 ---
 
 # ⚔️ Postura do Agente
@@ -108,6 +114,7 @@ O "Dream" é o ritual de destilação de conhecimento.
 - Para decisões de backlog → abrir `backlog/index.md`.
 
 ## Cenários de Roteamento
+- Qualquer tarefa no frontend Angular (componente, estilo, layout, UI, tela nova) → abrir `sharebook-agent/skills/engineering/frontend.md` **antes** de qualquer implementação.
 - Incidente no `sharebook-ebook-importer`, fila quebrada, worker morto, `retry_later`, `error`, `triaging` ou `editing` preso → abrir `sharebook-agent/skills/importers/sharebook-public-ebook-importer/SKILL.md`.
 - Preparo editorial, sinopses, categoria ou handoff por source → consultar `editorial_prompt` da source em `importer.sources` no banco (`sharebook_importer`). Não abrir skill file por source, a config editorial vive no banco.
 - SEO, GA4, GSC, funil, tráfego, landing pages ou auditoria de indexação → abrir `sharebook-agent/skills/engineering/sharebook-analytics-expert/SKILL.md`.

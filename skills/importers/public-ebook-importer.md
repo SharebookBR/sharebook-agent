@@ -1,5 +1,5 @@
 ---
-name: sharebook-public-ebook-importer
+name: public-ebook-importer
 description: Opera e recupera o importer de ebooks públicos/gratuitos do Sharebook. Use quando precisar sincronizar fila, rodar triagem mecânica, preparar publicação, publicar/aprovar ebooks, revisar status canônico, ajustar ou reinstalar cron local do importer, reanimar o worker após restart de container, diagnosticar ambiente quebrado ou revisar a operação do repositório sharebook-ebook-importer.
 ---
 
@@ -36,7 +36,7 @@ Se esta skill divergir do código/README do importer, o importer manda.
 - PostgreSQL é a única fonte da verdade. O banco de dados do importer é `sharebook_importer` (não confundir com o banco principal `sharebook`).
 - não inventar status fora do conjunto canônico.
 - `duplicate` não é `done`.
-- `triage_rejected` conta como trabalho concluído, não como erro.
+- `triage_rejected` conta como como erro.
 - se falha temporária já cabe em `retry_later`, não usar `error`.
 - se faltar editorial, devolver para `waiting_editor`, não mascarar como erro técnico.
 - cron agentic do OpenClaw não é o default saudável para triagem mecânica ou publish Python.
