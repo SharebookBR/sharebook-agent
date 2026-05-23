@@ -26,6 +26,11 @@ No início da sessão:
 3. Confirmar shell, caminhos e ferramentas reais antes de depender delas.
 4. Procurar a fonte canônica local do trabalho antes de improvisar contexto.
 5. Se a continuidade depender de registro durável, favorecer arquivos canônicos do projeto em vez de confiar no fio da sessão.
+6. **Ler memórias episódicas usando o caminho absoluto completo no Glob** — não usar `path` + padrão relativo (armadilha documentada):
+   ```
+   Glob pattern: C:\Repos\SHAREBOOK\sharebook-agent\memory\*.md
+   ```
+   Ordenar por data de modificação e ler as mais recentes (pós último dream).
 
 ## Escolha de mecanismo
 
@@ -56,6 +61,9 @@ Use o mecanismo mais simples e mais fiel ao habitat real.
 - Texto longo ou sinopses com acentos devem ir via arquivo UTF-8, nunca inline na CLI, para evitar quebra de caracteres.
 - Se o arquivo temporário precisar ser consumido por script, preferir UTF-8 sem BOM quando houver histórico de atrito.
 - Prints devem ser buscados no caminho operacional conhecido e copiados para o workspace antes de leitura quando necessário.
+- **Glob no Windows — armadilha conhecida**: O parâmetro `path` do Glob com caminho absoluto não é confiável neste habitat. Sempre usar o caminho completo diretamente no `pattern`. Exemplos corretos:
+  - Memórias episódicas: `C:\Repos\SHAREBOOK\sharebook-agent\memory\*.md`
+  - Skills: `C:\Repos\SHAREBOOK\sharebook-agent\skills\**\*.md`
 
 ## Continuidade e memória
 
@@ -70,6 +78,27 @@ Use o mecanismo mais simples e mais fiel ao habitat real.
 - Se uma correção depende de app, shell, arquivo ou UI local, provar no próprio ambiente.
 - Não importar confiança do OpenClaw para encobrir falta de validação no Windows.
 - Quando houver dúvida entre erro lógico e limitação do habitat, testar primeiro a hipótese de habitat.
+
+## Acesso ao banco de dados
+
+Ambiente configurado em 2026-05-23. Não há fricção de setup — tudo já está instalado e funcional.
+
+- **Python 3.12**: instalado em `C:\Users\raffa\AppData\Local\Programs\Python\Python312\` e no PATH permanente do usuário.
+- **psycopg2-binary**: instalado. `import psycopg2` funciona direto.
+- **Credenciais**: todas em `C:\Repos\SHAREBOOK\sharebook-agent\.env`. Carregar com `python-dotenv` ou ler manualmente.
+- **Host**: `212.85.23.202:5432` (IP público da VPS — acessível direto, sem tunnel).
+- **Bancos disponíveis**:
+  - `sharebook` — banco transacional principal (user: `sharebook_ai_ro` para leitura, `sharebook_ai_rw` para escrita)
+  - `sharebook_importer` — fila e runs do importer (schema `importer`, user: `sharebook_ai_rw`)
+- **Script de exploração rápida**: `C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\explore_db.py`
+- **Atenção**: tabelas do `sharebook` têm nomes PascalCase — sempre usar aspas duplas nas queries: `SELECT * FROM "Books"`.
+
+Exemplo mínimo de conexão:
+```python
+import psycopg2
+conn = psycopg2.connect(host="212.85.23.202", port=5432, dbname="sharebook",
+    user="sharebook_ai_ro", password="3-nbj0bw3STVkxlcCeEO2ZFwtvyn", sslmode="disable")
+```
 
 ## Armadilhas recorrentes já pagas
 
@@ -109,4 +138,4 @@ Use o mecanismo mais simples e mais fiel ao habitat real.
 
 Quando o Raffa mencionar olhe o print 82 use o caminho abaixo:
 
-C:\Users\brnra019\Documents\Lightshot\Screenshot_82.png
+C:\Users\raffa\OneDrive\Documentos\Lightshot\Screenshot_82.png

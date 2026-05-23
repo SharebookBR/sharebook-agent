@@ -109,7 +109,7 @@ O "Dream" é o ritual de destilação de conhecimento.
 
 ## Cenários de Roteamento
 - Incidente no `sharebook-ebook-importer` ou worker morto → abrir `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md`.
-- Preparo editorial / Sinopses (BaixeLivros) → abrir `sharebook-agent/skills/sharebook-baixelivros-editorial-preparer/SKILL.md`.
+- Preparo editorial / Sinopses (qualquer source) → consultar `editorial_prompt` da source em `importer.sources` no banco (`sharebook_importer`). NÃO abrir skill file por source — a config editorial vive no banco.
 - SEO, GA4, GSC ou auditoria de indexação → abrir `sharebook-agent/skills/sharebook-analytics-expert/SKILL.md`.
 - Performance do banco ou Slow Query Log → abrir `sharebook-agent/skills/postgres-slow-query-analysis/SKILL.md`.
 - Gestão de categorias ou taxonomia → abrir `sharebook-agent/skills/sharebook-category-organizer/SKILL.md`.
@@ -199,7 +199,7 @@ O "Dream" é o ritual de destilação de conhecimento.
 ### Skills de Operação e Importer
 - `sharebook-agent/skills/sharebook-public-ebook-importer/SKILL.md` — Operação, recovery e troubleshooting do importer de ebooks.
 - `sharebook-agent/skills/sharebook-baixelivros-editorial-preparer/SKILL.md` — Preparo editorial (sinopse/categoria) ultra-lean para o BaixeLivros.
-- `sharebook-agent/skills/sharebook-ebook-foundation-preparer/SKILL.md` — Preparo editorial específico para a fonte Ebook Foundation.
+- `sharebook-agent/scripts/covers/INDEX.md` — Scripts de geração de capas (cover_generate.py, cover_roulette.py).
 - `sharebook-agent/skills/sharebook-physical-book-importer/SKILL.md` — Fluxo de importação e triagem de livros físicos.
 - `sharebook-agent/skills/sharebook-category-organizer/SKILL.md` — Gestão, taxonomia e hierarquia de categorias do catálogo.
 - `sharebook-agent/skills/escrever-livros/SKILL.md` — Produção editorial de PDFs e capas autorais.
@@ -209,4 +209,4 @@ O "Dream" é o ritual de destilação de conhecimento.
 - `sharebook-agent/scripts/format_two_arrays_whatsapp.py` — Formatação pontilhada para quadros curtos no WhatsApp, quando esse canal realmente for o alvo.
 - `sharebook-agent/scripts/covers/INDEX.md` — Scripts de capas.
 - `sharebook-agent/scripts/importer/INDEX.md` — Scripts de triagem e extração.
-- `sharebook-agent/scripts/production/INDEX.md` — Scripts de banco e autenticação.
+- `sharebook-agent/scripts/production/INDEX.md` — Scripts de exploração de banco, preparo editorial local (plan_set, inspect_item), autenticação e storage.

@@ -153,5 +153,8 @@ ga4-key.json
 __pycache__/
 *.pyc
 
-# temprário do Raffa
+# temporários do Raffa
 colinha.txt
+
+# sinopses temporárias geradas por sessão
+scripts/production/tmp_*.txt
