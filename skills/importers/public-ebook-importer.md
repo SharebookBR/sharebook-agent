@@ -146,6 +146,28 @@ Validar nesta ordem:
 5. bloco gerenciado instalado no `crontab`
 6. prova real com `triage-once` e `publish-once`
 
+### Incidente real observado em 2026-05-23
+
+Sintoma: o worker parecia saudável historicamente, mas os disparos pararam depois de um horário específico, sem crescer fila de `error` ou `retry_later`.
+
+Causa real: o daemon de `cron` morreu dentro do container OpenClaw. Ficou um `pidfile` stale em `/run/crond.pid`, o `crontab` continuou instalado, os lock files continuaram existindo, mas nenhum novo pulso era disparado.
+
+Como reconhecer rápido:
+- `var/logs/importer-cron.log` para de avançar em um horário exato
+- faltam os pulsos esperados de `triage-once` e `publish-once`
+- `setup-importer-cron.sh status` mostra `cron_daemon=stopped`
+- `pgrep -a cron` e `pgrep -a crond` não retornam processo vivo
+- lock file vazio sozinho **não** prova lock ativo eterno
+
+Ação corretiva aplicada e validada:
+```bash
+cd /data/workspace/sharebook-ebook-importer
+cron
+bash setup-importer-cron.sh status
+```
+
+Se o status voltar com `cron_daemon=running`, validar no relógio real se o próximo tick grava novo heartbeat no `var/logs/importer-cron.log`.
+
 ### Remediação rápida
 
 Se o container vier pelado após restart:
