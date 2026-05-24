@@ -7,6 +7,7 @@ Uso:
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import urllib.request
 from urllib.request import Request, urlopen
@@ -137,11 +138,12 @@ def main() -> int:
 
     inserted = 0
     for e in new_entries:
+        metadata = json.dumps({"subject": e["subject"]}, ensure_ascii=False) if e["subject"] else None
         cur.execute("""
             INSERT INTO importer.queue_items
-                (source_id, title, author, source_url, status, created_at, updated_at)
-            VALUES (%s, %s, %s, %s, 'waiting_triage', NOW(), NOW())
-        """, (source_id, e["title"], e["author"], e["url"]))
+                (source_id, title, author, source_url, status, metadata_json, created_at, updated_at)
+            VALUES (%s, %s, %s, %s, 'waiting_triage', %s, NOW(), NOW())
+        """, (source_id, e["title"], e["author"], e["url"], metadata))
         inserted += 1
 
     conn.commit()
