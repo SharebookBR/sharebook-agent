@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Cria a source ebook_foundation_subjects no banco do importer."""
+"""Atualiza o editorial_prompt da source ebook_foundation_subjects com acentuação correta."""
 import psycopg2
 
 EDITORIAL_PROMPT = """\
@@ -36,21 +36,10 @@ conn = psycopg2.connect(
     user="sharebook_ai_rw", password="F%Ljy9oxTA3iR#npW%4W9iaSaJKU", sslmode="disable"
 )
 cur = conn.cursor()
-cur.execute("""
-    INSERT INTO importer.sources (name, url, editorial_prompt, created_at, updated_at)
-    VALUES (%s, %s, %s, NOW(), NOW())
-    ON CONFLICT (name) DO NOTHING
-    RETURNING id
-""", (
-    "ebook_foundation_subjects",
-    "https://raw.githubusercontent.com/EbookFoundation/free-programming-books/main/books/free-programming-books-subjects.md",
-    EDITORIAL_PROMPT,
-))
-row = cur.fetchone()
-if row:
-    print(f"Source criada com ID: {row[0]}")
-else:
-    cur.execute("SELECT id FROM importer.sources WHERE name = 'ebook_foundation_subjects'")
-    print(f"Source ja existia, ID: {cur.fetchone()[0]}")
+cur.execute(
+    "UPDATE importer.sources SET editorial_prompt = %s, updated_at = NOW() WHERE name = %s",
+    (EDITORIAL_PROMPT, "ebook_foundation_subjects")
+)
+print(f"Linhas afetadas: {cur.rowcount}")
 conn.commit()
 conn.close()
