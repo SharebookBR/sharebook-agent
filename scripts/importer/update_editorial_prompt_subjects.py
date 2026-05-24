@@ -13,14 +13,16 @@ SINOPSE: escrever em português (PT-BR), 2-4 parágrafos, tom técnico-informati
 AUTOR: usar o campo author já pré-preenchido. Se vazio, extrair do PDF.
 NÍVEL: deduzir pelo título e conteúdo (basico/intermediario/avancado).
 CAPA: autoral (não há capa original nesta source).
-CATEGORIA: usar sempre a categoria Tecnologia. Subcategorias disponíveis:
-  - IA        → Machine Learning, Deep Learning, AI, Computer Vision, NLP
-  - Dados     → Data Science, Database, Statistics, Information Retrieval
-  - Cloud     → Cloud Computing, DevOps, Containers, Docker, Kubernetes
-  - DevOps    → Operating Systems, Linux, Networking, Security
-  - Frontend  → Web, JavaScript, HTML, CSS, Graphics, UI
-  - Backend   → Algorithms, Software Engineering, Programming, Compiler Design
-  - Geral     → tudo que não se encaixar claramente nas anteriores
+CATEGORIA: usar sempre uma das subcategorias de Tecnologia abaixo.
+  Escolher pelo subject da entry e pelo conteúdo do PDF.
+
+  IA        (019d636c-6365-74c5-9323-14be85d8b0a3) → Machine Learning, Deep Learning, AI, Computer Vision, NLP, Quantum Computing
+  Dados     (019d636c-62c1-71e9-9a51-099d3304753e) → Data Science, Database, Statistics, Information Retrieval
+  Cloud     (019d636c-6206-7f05-ade0-14ed095dd21c) → Cloud Computing, Containers, Networking
+  DevOps    (019d636c-640a-7e2f-babd-c22d3b37c226) → Operating Systems, Linux, Security, Reverse Engineering, Embedded Systems
+  Frontend  (019d636c-616a-7dcb-af70-77619c9dbaf5) → Web, JavaScript, HTML, CSS, Graphics, UI
+  Backend   (019d636c-5fdd-7505-9c76-e02944d9b618) → Algorithms, Software Architecture, Compiler Design, Programming Languages
+  Geral     (019dcbfc-0a09-702e-a0ab-090acb5597b6) → Mathematics, Theoretical CS, Misc, Professional Development, tudo que não se encaixar acima
 """
 
 conn = psycopg2.connect(
