@@ -13,22 +13,14 @@ SINOPSE: escrever em português (PT-BR), 2-4 parágrafos, tom técnico-informati
 AUTOR: usar o campo author já pré-preenchido. Se vazio, extrair do PDF.
 NÍVEL: deduzir pelo título e conteúdo (basico/intermediario/avancado).
 CAPA: autoral (não há capa original nesta source).
-CATEGORIA: mapear pelo subject da entry (disponível no metadata_json.subject):
-  Algorithms & Data Structures           -> Programação > Algoritmos
-  Artificial Intelligence / Machine Learning / Deep Learning -> Programação > Inteligência Artificial
-  Security / Cryptography                -> Programação > Segurança
-  Web / JavaScript / HTML / CSS / React  -> Programação > Desenvolvimento Web
-  Python                                 -> Programação > Python
-  Java                                   -> Programação > Java
-  C / C++ / C#                           -> Programação > C/C++
-  Go / Rust / Swift / Kotlin             -> Programação > [linguagem]
-  Database / SQL / NoSQL                 -> Programação > Banco de Dados
-  Operating Systems / Linux / Unix       -> Programação > Sistemas Operacionais
-  Software Engineering / Design Patterns -> Programação > Engenharia de Software
-  Cloud / DevOps / Docker / Kubernetes   -> Programação > DevOps e Cloud
-  Data Science / Statistics              -> Programação > Ciência de Dados
-  Computer Science / Mathematics         -> Programação
-  Demais assuntos                        -> Programação
+CATEGORIA: usar sempre a categoria Tecnologia. Subcategorias disponíveis:
+  - IA        → Machine Learning, Deep Learning, AI, Computer Vision, NLP
+  - Dados     → Data Science, Database, Statistics, Information Retrieval
+  - Cloud     → Cloud Computing, DevOps, Containers, Docker, Kubernetes
+  - DevOps    → Operating Systems, Linux, Networking, Security
+  - Frontend  → Web, JavaScript, HTML, CSS, Graphics, UI
+  - Backend   → Algorithms, Software Engineering, Programming, Compiler Design
+  - Geral     → tudo que não se encaixar claramente nas anteriores
 """
 
 conn = psycopg2.connect(
