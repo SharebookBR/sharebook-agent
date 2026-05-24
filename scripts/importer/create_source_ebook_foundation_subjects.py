@@ -7,7 +7,7 @@ Source: EbookFoundation free-programming-books (subjects)
 Livros técnicos de programação em inglês, organizados por assunto.
 
 TÍTULO: manter em inglês exatamente como está no arquivo original. Não traduzir.
-SINOPSE: escrever em português (PT-BR), 2-4 parágrafos, tom técnico-informativo.
+SINOPSE: escrever em inglês, 2-4 parágrafos, tom técnico-informativo.
   Focar no que o leitor vai aprender/dominar. Mencionar o assunto principal.
   Não inventar informações que não estejam no PDF ou no contexto da entry.
 AUTOR: usar o campo author já pré-preenchido. Se vazio, extrair do PDF.
