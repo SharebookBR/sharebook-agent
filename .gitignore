@@ -148,6 +148,7 @@ editorial-covers/
 scripts/production/*.json
 *.json.key
 ga4-key.json
+.venv-ga4/
 
 # Python cache
 __pycache__/
