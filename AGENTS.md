@@ -59,7 +59,7 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 
 ## Atalhos do Raffa. Quando ele falar >> quer dizer.
 
-- "Obrigado por tudo parceiro", "Completude." >> Sessão encerrou e deve criar a memória episódica.
+- "Obrigado por tudo parceiro", "Completude." >> Sessão encerrou e deve fazer o ritual de Fim da sessão.
 - "Bora fazer um scan?" >> Leia a skill "catalog-premium-scan"
 - 
 
@@ -102,6 +102,7 @@ O "Dream" é o ritual de destilação de conhecimento.
 
 ## Fim da sessão
 1. Criar ou atualizar arquivo em `memory/`.
+2. commit e push de tudo que fez no sharebook agent e demais repos.
 
 ---
 
