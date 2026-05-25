@@ -15,6 +15,7 @@
 - **[Social e Reviews](backlog/todo/social/_plano.md)**: Comentários, avaliações de livros e login progressivo via Pegasus.
 - **[Dependências e Segurança](backlog/todo/seguranca-e-vulnerabilidades.md)**: Atualização de toolchain (Angular 13+) e correção de passivo de segurança.
 - **[Search Console Access](backlog/todo/search-console-access.md)**: Destravar acesso programático do agente ao Search Console, preferencialmente com service account e fallback para OAuth.
+- **[Reformulação da Home](backlog/todo/reformulacao-home.md)**: Home mobile-first com prateleiras temáticas estilo Netflix — foco em descoberta de catálogo e curadoria.
 
 ---
 Para detalhes de execução de cada item, consulte o arquivo correspondente na pasta `todo/`.
