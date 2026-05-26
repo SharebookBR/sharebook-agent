@@ -64,6 +64,7 @@ Use o mecanismo mais simples e mais fiel ao habitat real.
 - **Glob no Windows — armadilha conhecida**: O parâmetro `path` do Glob com caminho absoluto não é confiável neste habitat. Sempre usar o caminho completo diretamente no `pattern`. Exemplos corretos:
   - Memórias episódicas: `C:\Repos\SHAREBOOK\sharebook-agent\memory\*.md`
   - Skills: `C:\Repos\SHAREBOOK\sharebook-agent\skills\**\*.md`
+- **git add case-insensitive — armadilha confirmada em produção**: No Windows, o sistema de arquivos é case-insensitive. `git add AWSSQS/Foo.cs` não dá erro mesmo que o arquivo rastreado esteja em `AwsSqs/Foo.cs` — ele simplesmente não faz nada. O arquivo fica como `modified` e não entra no commit. **Regra obrigatória**: sempre rodar `git status` após o `git add` e antes do `git commit` para confirmar que todos os arquivos esperados estão em `Changes to be committed`. Se algum arquivo ainda aparecer em `Changes not staged`, o path está errado — usar o caminho exato que o `git status` mostra.
 
 ## Continuidade e memória
 
