@@ -159,3 +159,5 @@ colinha.txt
 
 # sinopses temporárias geradas por sessão
 scripts/production/tmp_*.txt
+
+tools/browser-triage/output/
