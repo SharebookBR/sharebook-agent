@@ -18,6 +18,7 @@ Use esta skill para qualquer operação do `sharebook-ebook-importer`, especialm
 - instalar, remover, auditar ou reinstalar o cron local
 - reanimar worker quebrado após restart de container
 - diagnosticar ausência de bins/deps mínimas no ambiente
+- operar ou recuperar o handoff editorial automático (`editor-next` + `plan-set`)
 - diagnosticar logs e estado do importer
 
 ## Fonte da verdade
@@ -135,7 +136,8 @@ Validar nesta ordem:
    - `flock`
    - `cron` ou `crond`
    - `crontab`
-2. dependências Python mínimas
+2. bins/deps mínimas de processamento
+   - `ghostscript`
    - `psycopg2`
    - `PIL`
 3. arquivos canônicos existem
@@ -173,7 +175,7 @@ Se o status voltar com `cron_daemon=running`, validar no relógio real se o pró
 Se o container vier pelado após restart:
 
 ```bash
-apt-get update && apt-get install -y cron python3-psycopg2 python3-pil
+apt-get update && apt-get install -y cron ghostscript python3-psycopg2 python3-pil
 cd /data/workspace/sharebook-ebook-importer
 bash setup-importer-cron.sh install
 bash setup-importer-cron.sh status
@@ -220,12 +222,12 @@ Regras:
 ### 2. Cron agentic do OpenClaw
 
 Existe um job interno do OpenClaw que pode mexer na fila real do importer:
-- `preparer-baixelivros`
+- `editorial-preparer`
 
 Esse job vive em:
 - `/data/.openclaw/cron/jobs.json`
 
-Ele não é triagem mecânica nem publish Python. Ele é preparação editorial automática.
+Ele não é triagem mecânica nem publish Python. Ele é preparação editorial automática baseada em `editor-next` + `plan-set`.
 
 ### Ordem certa de diagnóstico
 
@@ -248,5 +250,102 @@ Antes de culpar o fluxo:
 ## Handoff com curadoria
 
 `waiting_editor` e `editing` continuam sendo território natural da preparação editorial humana/LLM.
+
+### Fluxo durável do preparador editorial automático
+
+O modelo novo é simples e duro:
+- **uma leitura** via `python cli.py editor-next --source <SOURCE>`
+- **uma escrita** via `python cli.py plan-set --id <ID> ...`
+- a regra editorial canônica por source vive em `importer.sources.editorial_prompt`
+- não reabrir consultas extras ao banco quando o payload concierge já trouxer o contexto necessário
+
+Campos esperados no payload concierge endurecido:
+- `source_id`
+- `source_name`
+- `source_url`
+- `editorial_prompt`
+- artefatos visuais e contexto textual suficientes para a decisão editorial
+
+### Regra de runtime no OpenClaw/mini
+
+No habitat OpenClaw/mini, a invocação robusta da cron editorial deve usar shell explícito no repo correto:
+
+```bash
+cd /data/workspace/sharebook-ebook-importer && sh -c 'python3 cli.py editor-next --source <SOURCE>'
+```
+
+Não confiar em `cd` isolado num passo e `python3 cli.py ...` no passo seguinte quando a execução for agentic/cron desse runtime.
+
+### Exceção nova: triagem manual assistida para casos WAF
+
+Quando o item cair em `source_blocked` por WAF, JS challenge, download assinado ou proteção parecida, a régua mudou:
+- **é permitido fazer triagem manual assistida** como exceção operacional
+- isso não substitui o worker Python
+- isso existe para destravar casos públicos que a stack simples não consegue baixar
+
+Casos reais já observados:
+- `1143` `cupola.gettysburg.edu` — WAF na primeira requisição, mas PDF baixável com browser real
+- `1126` `milneopentextbooks.org` — landing page abre, PDF exige fluxo mais humano/browser
+
+Ferramenta auxiliar criada:
+- diretório: `/data/workspace/sharebook-agent/tools/browser-triage`
+- base instalada: `playwright` + Chromium + libs nativas do sistema
+- scripts úteis:
+  - `triage_fetch.js` — inspeciona página e links candidatos
+  - `download_probe.js` — tenta clique/download
+  - `save_pdf_via_fetch.js` — usa browser real + fetch autenticado/contextual para salvar PDF
+
+Quando usar:
+- WAF challenge
+- Cloudflare / AWS WAF / JS challenge
+- download só funciona com browser real
+- fonte pública parece boa, mas o worker Python falha cedo demais
+
+Quando **não** usar:
+- 404 claro
+- 403 estrutural sem pista de PDF público
+- login/autenticação institucional fechada sem rota pública real
+- qualquer caso em que o browser não revele um PDF acessível com esforço razoável
+
+Procedimento seguro:
+1. tentar o worker normal primeiro
+2. se cair em WAF/source_blocked mas parecer fonte pública legítima, usar browser assistido
+3. baixar o PDF para uma área neutra (`/data/workspace/tmp/` ou `sharebook-agent/tools/browser-triage/output/`)
+4. validar magic bytes `%PDF-1.x`
+5. materializar manualmente em `sharebook-ebook-importer/var/tmp/triage-<ID>/source.pdf`
+6. gerar `preview-pages/page-01.png` etc.
+7. montar `manifest.json`
+8. atualizar `metadata_json` com:
+   - `local_pdf`
+   - `local_cover`
+   - `manifest`
+   - `triage.mode = manual_browser_assisted`
+   - `triage.preview_pages`
+9. limpar `last_error`
+10. mover para `waiting_editor`
+
+Importante:
+- fazer isso **como se fosse o worker de triagem**, não como gambiarra invisível
+- registrar no metadata que foi exceção manual/browser-assisted
+- não fingir que o worker Python conseguiu sozinho
+
+### Artefatos visuais são obrigatórios
+
+Para preparo editorial com capa e `preview_pages`:
+- leitura visual é obrigatória, não opcional
+- se a tool de imagem recusar paths locais do importer fora da área permitida do agente, copiar capa e previews para um diretório permitido em `/data/workspace` antes da análise
+- essa cópia é adaptação de habitat, não busca extra de contexto
+- não escrever sinopse plausível com contexto visual incompleto
+
+Sinal clássico da fricção:
+- paths como `/data/workspace/sharebook-ebook-importer/var/tmp/...` podem existir, mas ainda assim serem rejeitados pela tool de imagem do agente
+
+### Dependência ausente que parece erro de fila
+
+Se surgir item em `error` no importer por falha de processamento de PDF/renderização, suspeitar cedo de dependência de sistema ausente no container.
+
+Caso real já pago:
+- ausência de `ghostscript` bloqueou processamento/publicação
+- depois da instalação, o item voltou para `waiting_process` e o worker retomou normalmente
 
 Esta skill não substitui julgamento curatorial. Ela só descreve a operação do importer.

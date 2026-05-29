@@ -61,6 +61,7 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 
 - "Obrigado por tudo parceiro", "Completude." >> Sessão encerrou e deve fazer o ritual de Fim da sessão.
 - "Bora fazer um scan?" >> Leia a skill "catalog-premium-scan"
+- "Roda a roleta de estilos" >> executar `python3 /data/workspace/sharebook-agent/scripts/covers/cover_roulette.py --pretty`
 - 
 
 ---
