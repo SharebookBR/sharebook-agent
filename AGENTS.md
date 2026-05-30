@@ -184,12 +184,13 @@ Antes de corrigir qualquer falha reportada por outro agente ou ambiente, exigir 
 
 Sem isso, qualquer correção é chute. Um chute pode acertar por sorte, mas não garante que o problema foi entendido — e o próximo caso semelhante vai falhar de novo.
 
-**Fluxo obrigatório ao receber "falhou no OpenClaw":**
-1. Pedir o traceback completo ao agente do OpenClaw.
-2. Ler o traceback. Identificar o estágio exato (função, linha, tipo de exceção).
-3. Reproduzir ou raciocinar sobre o comportamento no ambiente real.
-4. Só então implementar a correção.
-5. Validar localmente. Pedir confirmação no OpenClaw após push.
+**Fluxo obrigatório diante de qualquer falha — local ou remota:**
+1. Coletar a evidência: traceback, log, output real. Não resumo, não paráfrase — o dado bruto.
+2. Ler a evidência. Identificar o estágio exato: função, linha, tipo de exceção, ambiente.
+3. Formular hipótese com base no que foi lido — não no que parece provável.
+4. Implementar a correção mínima que endereça a hipótese.
+5. Validar: rodar, observar o output real, confirmar que o comportamento mudou.
+6. Só declarar resolvido depois da validação. Não antes.
 
 **Nunca:** assumir que o erro é "provavelmente X" e corrigir X sem ver a evidência. Isso é diagnóstico por ego.
 
