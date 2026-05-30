@@ -18,6 +18,9 @@
 - **[Nova Fonte: dBooks.org](backlog/todo/fonte-dbooks.md)**: `dbooks.org` tem catálogo navegável por subject (`/subject/computer-science/`, etc.), API em `/api/` e RSS. Vale criar extractor dedicado para expandir o corpus técnico.
 - **[Nova Fonte: Goalkicker.com](backlog/todo/fonte-goalkicker.md)**: PDFs técnicos gratuitos de alta qualidade, um por linguagem/tecnologia (JavaScript, Python, Git, SQL, etc.). PDFs diretos e bem estruturados. Alto valor para o corpus técnico.
 - **[Nova Fonte: FreeTechBooks.com](backlog/todo/fonte-freetechbooks.md)**: Agregador de livros técnicos gratuitos em várias categorias. Descoberto como item `source_blocked` da EbookFoundation — homepage apontada como item, mas o site em si é candidato a fonte.
+- **[Nova Fonte: InfoQ Minibooks](backlog/todo/fonte-infoq.md)**: Minibooks técnicos gratuitos da InfoQ — arquitetura, microserviços, DevOps, linguagens. Conteúdo de alta qualidade editorial.
+- **[Nova Fonte: InTech Open](backlog/todo/fonte-intechopen.md)**: Editora acadêmica open access. Livros de Computer and Information Science disponíveis gratuitamente em `intechopen.com/subjects/9`.
+- **[Nova Fonte: JSBooks](backlog/todo/fonte-jsbooks.md)**: Diretório curado de ebooks gratuitos de JavaScript. Repo GitHub `revolunet/JSBooks` com links diretos para PDFs.
 
 ---
 Para detalhes de execução de cada item, consulte o arquivo correspondente na pasta `todo/`.
