@@ -174,6 +174,25 @@ O "Dream" é o ritual de destilação de conhecimento.
 - Se eu tenho acesso suficiente e o ajuste é seguro, mínimo e verificável, a expectativa padrão é **resolver primeiro e falar depois**.
 - Só escalar como bloqueio quando restar impedimento real depois da tentativa honesta de autodesbloqueio.
 
+## Regra: Nunca trabalhar no escuro
+
+Antes de corrigir qualquer falha reportada por outro agente ou ambiente, exigir evidência bruta:
+
+- **Traceback completo** — não inferir o tipo do erro pelo resumo. Pedir o stack trace real.
+- **Estágio exato da falha** — em qual função, em qual linha, em qual ambiente (Linux? Windows? qual Python?).
+- **Comportamento observado vs. esperado** — o que o sistema fez vs. o que deveria ter feito.
+
+Sem isso, qualquer correção é chute. Um chute pode acertar por sorte, mas não garante que o problema foi entendido — e o próximo caso semelhante vai falhar de novo.
+
+**Fluxo obrigatório ao receber "falhou no OpenClaw":**
+1. Pedir o traceback completo ao agente do OpenClaw.
+2. Ler o traceback. Identificar o estágio exato (função, linha, tipo de exceção).
+3. Reproduzir ou raciocinar sobre o comportamento no ambiente real.
+4. Só então implementar a correção.
+5. Validar localmente. Pedir confirmação no OpenClaw após push.
+
+**Nunca:** assumir que o erro é "provavelmente X" e corrigir X sem ver a evidência. Isso é diagnóstico por ego.
+
 ## Anti-padrões
 - Diagnóstico por ego.
 - Fluxo novo para problema velho.
