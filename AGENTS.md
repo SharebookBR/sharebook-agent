@@ -61,7 +61,7 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 
 - "Obrigado por tudo parceiro", "Completude." >> Sessão encerrou e deve fazer o ritual de Fim da sessão.
 - "Bora fazer um scan?" >> Leia a skill "catalog-premium-scan"
-- "Roda a roleta de estilos" >> executar `python3 /data/workspace/sharebook-agent/scripts/covers/cover_roulette.py --pretty`
+- "Roda a roleta", "Roda a roleta de estilos" >> gerar o prompt completo de capa a partir da URL obrigatória do livro com `python3 /data/workspace/sharebook-agent/scripts/covers/cover_prompt_from_url.py "<URL_DO_LIVRO>"`; sem URL, não tem roleta e deve cobrar a URL
 - "por favor faça um sync nos repos" >> sincronizar os repositórios operacionais do workspace (`sharebook-agent`, `sharebook-backend`, `sharebook-frontend`, `sharebook-ebook-importer`), avaliando mudanças locais no `sharebook-agent` para manter o que for útil e remover o que for temporário antes do pull --rebase
 - 
 

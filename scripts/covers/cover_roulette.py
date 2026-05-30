@@ -4,154 +4,219 @@ Roleta de direção visual para capas de livros.
 
 Objetivo:
 - aumentar a diversidade real do catálogo
-- sortear cor principal com personalidade
-- escolher cor secundária por afinidade
-- fixar uma cor neutra de apoio
+- sortear a partir de paletas-mãe coerentes
+- distribuir background, primary, secondary e accent sem perder harmonia
 - sortear um modo conceitual: bom vs ruim_bom
 - entregar direção visual, não prompt engessado
-
-Uso:
-    python3 cover_roulette.py
-    python3 cover_roulette.py --pretty
 """
 
 import argparse
 import json
 import random
 
-MAIN_COLORS = [
+PALETTES = [
     {
-        "name": "verde total",
-        "hex": "#16A34A",
-        "family": "ousado_chapado",
-        "affinities": ["rosa chiclete", "amarelo gema", "creme editorial", "preto absoluto", "azul royal"],
+        "name": "verde pop",
+        "colors": {
+            "verde total": "#16A34A",
+            "rosa chiclete": "#EC4899",
+            "preto absoluto": "#111111",
+            "creme editorial": "#F5E9D4",
+        },
+        "schemes": [
+            {"background": "verde total", "primary": "preto absoluto", "secondary": "creme editorial", "accent": "rosa chiclete"},
+            {"background": "preto absoluto", "primary": "verde total", "secondary": "creme editorial", "accent": "rosa chiclete"},
+            {"background": "creme editorial", "primary": "verde total", "secondary": "preto absoluto", "accent": "rosa chiclete"},
+            {"background": "rosa chiclete", "primary": "preto absoluto", "secondary": "creme editorial", "accent": "verde total"},
+        ],
     },
     {
-        "name": "azul elétrico",
-        "hex": "#2563EB",
-        "family": "tech_vivo",
-        "affinities": ["laranja cartaz", "amarelo gema", "branco duro", "rosa chiclete", "grafite"],
-    },
-    {
-        "name": "vermelho cartaz",
-        "hex": "#DC2626",
-        "family": "poster",
-        "affinities": ["ciano vivo", "creme editorial", "preto absoluto", "rosa pálido"],
+        "name": "poster soviético tropical",
+        "colors": {
+            "vermelho cartaz": "#DC2626",
+            "ciano vivo": "#06B6D4",
+            "creme editorial": "#F5E9D4",
+            "preto absoluto": "#111111",
+        },
+        "schemes": [
+            {"background": "vermelho cartaz", "primary": "creme editorial", "secondary": "preto absoluto", "accent": "ciano vivo"},
+            {"background": "creme editorial", "primary": "vermelho cartaz", "secondary": "preto absoluto", "accent": "ciano vivo"},
+            {"background": "preto absoluto", "primary": "vermelho cartaz", "secondary": "creme editorial", "accent": "ciano vivo"},
+            {"background": "ciano vivo", "primary": "preto absoluto", "secondary": "creme editorial", "accent": "vermelho cartaz"},
+        ],
     },
     {
         "name": "roxo sintético",
-        "hex": "#7C3AED",
-        "family": "estranho_bom",
-        "affinities": ["amarelo gema", "verde ácido", "branco duro", "rosa chiclete"],
+        "colors": {
+            "roxo sintético": "#7C3AED",
+            "amarelo gema": "#F59E0B",
+            "grafite": "#374151",
+            "rosa pálido": "#F9A8D4",
+        },
+        "schemes": [
+            {"background": "roxo sintético", "primary": "amarelo gema", "secondary": "grafite", "accent": "rosa pálido"},
+            {"background": "grafite", "primary": "roxo sintético", "secondary": "amarelo gema", "accent": "rosa pálido"},
+            {"background": "amarelo gema", "primary": "roxo sintético", "secondary": "grafite", "accent": "rosa pálido"},
+            {"background": "rosa pálido", "primary": "grafite", "secondary": "roxo sintético", "accent": "amarelo gema"},
+        ],
     },
     {
-        "name": "amarelo total",
-        "hex": "#FACC15",
-        "family": "ousado_chapado",
-        "affinities": ["azul royal", "preto absoluto", "vermelho cartaz", "grafite"],
+        "name": "manual industrial",
+        "colors": {
+            "azul royal": "#1D4ED8",
+            "amarelo total": "#FACC15",
+            "grafite": "#374151",
+            "branco duro": "#FFFFFF",
+        },
+        "schemes": [
+            {"background": "azul royal", "primary": "branco duro", "secondary": "amarelo total", "accent": "grafite"},
+            {"background": "branco duro", "primary": "azul royal", "secondary": "grafite", "accent": "amarelo total"},
+            {"background": "grafite", "primary": "amarelo total", "secondary": "branco duro", "accent": "azul royal"},
+            {"background": "amarelo total", "primary": "grafite", "secondary": "azul royal", "accent": "branco duro"},
+        ],
     },
     {
-        "name": "laranja brutal",
-        "hex": "#EA580C",
-        "family": "poster",
-        "affinities": ["azul royal", "creme editorial", "preto absoluto", "rosa pálido"],
+        "name": "laranja editorial",
+        "colors": {
+            "laranja brutal": "#EA580C",
+            "azul royal": "#1D4ED8",
+            "creme editorial": "#F5E9D4",
+            "bordô seco": "#7F1D1D",
+        },
+        "schemes": [
+            {"background": "laranja brutal", "primary": "creme editorial", "secondary": "bordô seco", "accent": "azul royal"},
+            {"background": "creme editorial", "primary": "laranja brutal", "secondary": "azul royal", "accent": "bordô seco"},
+            {"background": "azul royal", "primary": "creme editorial", "secondary": "laranja brutal", "accent": "bordô seco"},
+            {"background": "bordô seco", "primary": "creme editorial", "secondary": "laranja brutal", "accent": "azul royal"},
+        ],
     },
     {
-        "name": "rosa chiclete",
-        "hex": "#EC4899",
-        "family": "cafona_charmoso",
-        "affinities": ["verde total", "preto absoluto", "creme editorial", "azul royal"],
+        "name": "tech limão",
+        "colors": {
+            "verde ácido": "#84CC16",
+            "roxo sintético": "#7C3AED",
+            "preto absoluto": "#111111",
+            "branco duro": "#FFFFFF",
+        },
+        "schemes": [
+            {"background": "verde ácido", "primary": "preto absoluto", "secondary": "branco duro", "accent": "roxo sintético"},
+            {"background": "preto absoluto", "primary": "verde ácido", "secondary": "branco duro", "accent": "roxo sintético"},
+            {"background": "branco duro", "primary": "verde ácido", "secondary": "preto absoluto", "accent": "roxo sintético"},
+            {"background": "roxo sintético", "primary": "branco duro", "secondary": "preto absoluto", "accent": "verde ácido"},
+        ],
     },
     {
-        "name": "ciano vivo",
-        "hex": "#06B6D4",
-        "family": "tech_vivo",
-        "affinities": ["vermelho cartaz", "grafite", "branco duro", "amarelo gema"],
+        "name": "oceano premium",
+        "colors": {
+            "azul elétrico": "#2563EB",
+            "laranja cartaz": "#F97316",
+            "branco duro": "#FFFFFF",
+            "grafite": "#374151",
+        },
+        "schemes": [
+            {"background": "azul elétrico", "primary": "branco duro", "secondary": "grafite", "accent": "laranja cartaz"},
+            {"background": "branco duro", "primary": "azul elétrico", "secondary": "grafite", "accent": "laranja cartaz"},
+            {"background": "grafite", "primary": "azul elétrico", "secondary": "branco duro", "accent": "laranja cartaz"},
+            {"background": "laranja cartaz", "primary": "grafite", "secondary": "branco duro", "accent": "azul elétrico"},
+        ],
     },
     {
-        "name": "verde ácido",
-        "hex": "#84CC16",
-        "family": "estranho_bom",
-        "affinities": ["roxo sintético", "preto absoluto", "rosa chiclete", "grafite"],
+        "name": "vinho de revista",
+        "colors": {
+            "bordô seco": "#7F1D1D",
+            "rosa pálido": "#F9A8D4",
+            "creme editorial": "#F5E9D4",
+            "grafite": "#374151",
+        },
+        "schemes": [
+            {"background": "bordô seco", "primary": "creme editorial", "secondary": "rosa pálido", "accent": "grafite"},
+            {"background": "creme editorial", "primary": "bordô seco", "secondary": "grafite", "accent": "rosa pálido"},
+            {"background": "grafite", "primary": "rosa pálido", "secondary": "creme editorial", "accent": "bordô seco"},
+            {"background": "rosa pálido", "primary": "bordô seco", "secondary": "creme editorial", "accent": "grafite"},
+        ],
     },
     {
-        "name": "bordô seco",
-        "hex": "#7F1D1D",
-        "family": "editorial_sobrio",
-        "affinities": ["creme editorial", "ouro sujo", "rosa pálido", "grafite"],
+        "name": "amarelo manifesto",
+        "colors": {
+            "amarelo total": "#FACC15",
+            "vermelho cartaz": "#DC2626",
+            "preto absoluto": "#111111",
+            "creme editorial": "#F5E9D4",
+        },
+        "schemes": [
+            {"background": "amarelo total", "primary": "preto absoluto", "secondary": "vermelho cartaz", "accent": "creme editorial"},
+            {"background": "preto absoluto", "primary": "amarelo total", "secondary": "creme editorial", "accent": "vermelho cartaz"},
+            {"background": "creme editorial", "primary": "vermelho cartaz", "secondary": "preto absoluto", "accent": "amarelo total"},
+            {"background": "vermelho cartaz", "primary": "creme editorial", "secondary": "preto absoluto", "accent": "amarelo total"},
+        ],
+    },
+    {
+        "name": "ciano laboratório",
+        "colors": {
+            "ciano vivo": "#06B6D4",
+            "azul royal": "#1D4ED8",
+            "branco duro": "#FFFFFF",
+            "preto absoluto": "#111111",
+        },
+        "schemes": [
+            {"background": "ciano vivo", "primary": "preto absoluto", "secondary": "branco duro", "accent": "azul royal"},
+            {"background": "azul royal", "primary": "branco duro", "secondary": "ciano vivo", "accent": "preto absoluto"},
+            {"background": "branco duro", "primary": "azul royal", "secondary": "preto absoluto", "accent": "ciano vivo"},
+            {"background": "preto absoluto", "primary": "ciano vivo", "secondary": "branco duro", "accent": "azul royal"},
+        ],
+    },
+    {
+        "name": "rosa terminal",
+        "colors": {
+            "rosa chiclete": "#EC4899",
+            "azul elétrico": "#2563EB",
+            "preto absoluto": "#111111",
+            "branco duro": "#FFFFFF",
+        },
+        "schemes": [
+            {"background": "rosa chiclete", "primary": "preto absoluto", "secondary": "branco duro", "accent": "azul elétrico"},
+            {"background": "preto absoluto", "primary": "rosa chiclete", "secondary": "branco duro", "accent": "azul elétrico"},
+            {"background": "branco duro", "primary": "rosa chiclete", "secondary": "preto absoluto", "accent": "azul elétrico"},
+            {"background": "azul elétrico", "primary": "branco duro", "secondary": "rosa chiclete", "accent": "preto absoluto"},
+        ],
+    },
+    {
+        "name": "musgo sofisticado",
+        "colors": {
+            "verde total": "#16A34A",
+            "ouro sujo": "#C08A00",
+            "creme editorial": "#F5E9D4",
+            "bordô seco": "#7F1D1D",
+        },
+        "schemes": [
+            {"background": "verde total", "primary": "creme editorial", "secondary": "ouro sujo", "accent": "bordô seco"},
+            {"background": "creme editorial", "primary": "verde total", "secondary": "bordô seco", "accent": "ouro sujo"},
+            {"background": "bordô seco", "primary": "creme editorial", "secondary": "verde total", "accent": "ouro sujo"},
+            {"background": "ouro sujo", "primary": "bordô seco", "secondary": "creme editorial", "accent": "verde total"},
+        ],
     },
 ]
-
-SECONDARY_COLORS = {
-    "rosa chiclete": "#EC4899",
-    "amarelo gema": "#F59E0B",
-    "creme editorial": "#F5E9D4",
-    "preto absoluto": "#111111",
-    "azul royal": "#1D4ED8",
-    "laranja cartaz": "#F97316",
-    "branco duro": "#FFFFFF",
-    "grafite": "#374151",
-    "ciano vivo": "#06B6D4",
-    "rosa pálido": "#F9A8D4",
-    "ouro sujo": "#C08A00",
-    "verde ácido": "#84CC16",
-}
-
-NEUTRALS = [
-    {"name": "branco duro", "hex": "#FFFFFF"},
-    {"name": "preto absoluto", "hex": "#111111"},
-    {"name": "creme editorial", "hex": "#F5E9D4"},
-    {"name": "grafite", "hex": "#374151"},
-]
-
-STYLE_BUCKETS = {
-    "bom": [
-        {"name": "tipografia brutalista", "direction": "tipografia enorme, composição seca, impacto editorial"},
-        {"name": "blueprint técnico", "direction": "grade fina, linhas técnicas, sensação de manual de engenharia"},
-        {"name": "poster geométrico", "direction": "formas geométricas grandes, composição limpa e decidida"},
-        {"name": "faixa editorial", "direction": "grande faixa estrutural, hierarquia tipográfica clara, cara de livro sério"},
-        {"name": "diagonal cartaz", "direction": "corte diagonal forte, sensação de movimento e energia"},
-        {"name": "grid modernista", "direction": "alinhamento rígido, respiro, composição de revista de design"},
-        {"name": "circuito elegante", "direction": "linhas e nós discretos, tecnologia sem exagero neon"},
-    ],
-    "ruim_bom": [
-        {"name": "apostila premium duvidosa", "direction": "conceito de apostila corporativa meio brega, mas acabamento impecável"},
-        {"name": "flyer de curso de informática 2004", "direction": "energia de panfleto antigo de tecnologia, porém super bem resolvido"},
-        {"name": "cd-rom educacional charmoso", "direction": "estética de software educativo antigo com execução elegante"},
-        {"name": "manual técnico cafona adorável", "direction": "visual meio errado de manual técnico, mas irresistível e memorável"},
-        {"name": "powerpoint impecável", "direction": "cara de slide corporativo ousado, com composição surpreendentemente bonita"},
-        {"name": "folder de evento tech estranho", "direction": "conceito de evento de tecnologia meio datado, final adorável"},
-    ],
-}
-
 
 def pick_direction():
     mode = random.choice(["bom", "ruim_bom"])
-    main = random.choice(MAIN_COLORS)
-    secondary_name = random.choice(main["affinities"])
-    neutral = random.choice(NEUTRALS)
-    style = random.choice(STYLE_BUCKETS[mode])
+    palette = random.choice(PALETTES)
+    scheme = random.choice(palette["schemes"])
+
+    def color(role_name: str):
+        name = scheme[role_name]
+        return {"name": name, "hex": palette["colors"][name]}
 
     return {
         "mode": mode,
-        "palette": {
-            "main": {
-                "name": main["name"],
-                "hex": main["hex"],
-                "family": main["family"],
-            },
-            "secondary": {
-                "name": secondary_name,
-                "hex": SECONDARY_COLORS[secondary_name],
-            },
-            "neutral": neutral,
+        "colors": {
+            "background": color("background"),
+            "primary": color("primary"),
+            "secondary": color("secondary"),
+            "accent": color("accent"),
         },
-        "style": style,
         "notes": [
-            "usar a cor principal com coragem real",
-            "a secundária deve criar tensão ou charme, não só combinar",
-            "a neutra existe para segurar legibilidade e composição",
             "não deixar a IA cair no default tech-clean genérico",
+            "accent should be used sparingly",
         ],
     }
 
@@ -165,12 +230,10 @@ def main():
 
     if args.pretty:
         print(f"🎲 Modo: {result['mode']}")
-        print(f"🎨 Principal: {result['palette']['main']['name']} ({result['palette']['main']['hex']})")
-        print(f"   Família: {result['palette']['main']['family']}")
-        print(f"🎨 Secundária: {result['palette']['secondary']['name']} ({result['palette']['secondary']['hex']})")
-        print(f"🎨 Neutra: {result['palette']['neutral']['name']} ({result['palette']['neutral']['hex']})")
-        print(f"🖼️  Estilo: {result['style']['name']}")
-        print(f"   Direção: {result['style']['direction']}")
+        print(f"🎨 Background: {result['colors']['background']['name']} ({result['colors']['background']['hex']})")
+        print(f"🎨 Primary: {result['colors']['primary']['name']} ({result['colors']['primary']['hex']})")
+        print(f"🎨 Secondary: {result['colors']['secondary']['name']} ({result['colors']['secondary']['hex']})")
+        print(f"🎨 Accent: {result['colors']['accent']['name']} ({result['colors']['accent']['hex']})")
         print("\n📌 Notas:")
         for note in result['notes']:
             print(f"- {note}")
