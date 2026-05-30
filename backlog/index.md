@@ -15,5 +15,7 @@
 - **[Search Console Access](backlog/todo/search-console-access.md)**: Destravar acesso programático do agente ao Search Console, preferencialmente com service account e fallback para OAuth.
 - **[Reformulação da Home](backlog/todo/reformulacao-home.md)**: Home mobile-first com prateleiras temáticas estilo Netflix — foco em descoberta de catálogo e curadoria.
 
+- **[Nova Fonte: dBooks.org](backlog/todo/fonte-dbooks.md)**: `dbooks.org` tem catálogo navegável por subject (`/subject/computer-science/`, etc.), API em `/api/` e RSS. Vale criar extractor dedicado para expandir o corpus técnico.
+
 ---
 Para detalhes de execução de cada item, consulte o arquivo correspondente na pasta `todo/`.
