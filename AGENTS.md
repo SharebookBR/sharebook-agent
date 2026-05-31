@@ -155,6 +155,7 @@ O "Dream" é o ritual de destilação de conhecimento.
   - `/data/workspace/sharebook-backend`
   - `/data/workspace/sharebook-ebook-importer`
 - Antes de rodar `git status`, `git commit` ou mexer em branch/remote, entrar no repositório correto.
+- **Build antes de commit — obrigatório**: antes de qualquer commit em `sharebook-frontend` ou `sharebook-backend`, rodar o build local e confirmar zero erros. Não commitar código que não compila.
 
 ---
 
