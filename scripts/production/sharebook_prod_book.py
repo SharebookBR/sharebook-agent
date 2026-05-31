@@ -188,7 +188,7 @@ def create_book(args: argparse.Namespace, token: str) -> dict[str, Any]:
         delete_book(token, existing["id"])
         existing = None
 
-    if existing:
+    if existing and existing.get("matchKind") != "similar":
         match_kind = existing.get("matchKind")
         reason = "titulo/autor e tipo" if match_kind != "similar" else "titulo similar + mesmo autor e tipo"
         raise SystemExit(

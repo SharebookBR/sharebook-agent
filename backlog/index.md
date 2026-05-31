@@ -14,6 +14,7 @@
 - **[Dependências e Segurança](backlog/todo/seguranca-e-vulnerabilidades.md)**: Atualização de toolchain (Angular 13+) e correção de passivo de segurança.
 - **[Search Console Access](backlog/todo/search-console-access.md)**: Destravar acesso programático do agente ao Search Console, preferencialmente com service account e fallback para OAuth.
 - **[Reformulação da Home](backlog/todo/reformulacao-home.md)**: Home mobile-first com prateleiras temáticas estilo Netflix — foco em descoberta de catálogo e curadoria.
+- **[Nova source: conceptf1.blogspot / item 1327](backlog/todo/nova-source-conceptf1-blogspot.md)**: O item 1327 revelou uma source nova; tratar no nível de source, não como ebook unitário.
 
 - **[Nova Fonte: dBooks.org](backlog/todo/fonte-dbooks.md)**: `dbooks.org` tem catálogo navegável por subject (`/subject/computer-science/`, etc.), API em `/api/` e RSS. Vale criar extractor dedicado para expandir o corpus técnico.
 - **[Nova Fonte: Goalkicker.com](backlog/todo/fonte-goalkicker.md)**: PDFs técnicos gratuitos de alta qualidade, um por linguagem/tecnologia (JavaScript, Python, Git, SQL, etc.). PDFs diretos e bem estruturados. Alto valor para o corpus técnico.

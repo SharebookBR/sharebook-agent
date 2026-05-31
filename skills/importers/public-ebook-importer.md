@@ -23,6 +23,8 @@ Use esta skill para qualquer operação do `sharebook-ebook-importer`, especialm
 
 ## Fonte da verdade
 
+Antes de diagnosticar importer neste habitat, partir do container OpenClaw local onde o agente roda. Checar host remoto por SSH ou outro container (`sharebook-api`) pode fabricar falso negativo sobre ausência de repo, `cli.py` ou artefatos. O repo íntegro do importer fica visível neste mesmo container.
+
 A fonte da verdade operacional agora é o repositório:
 
 - `/data/workspace/sharebook-ebook-importer/README.md`
@@ -109,6 +111,12 @@ O fluxo de publicação deve:
 - checar duplicata em produção
 - criar e aprovar ebook
 - marcar `done`, `duplicate`, `waiting_editor`, `retry_later` ou `error`
+
+Guardrails que já sangraram em produção:
+- `publish-once` consome realidade operacional, não intenção editorial.
+- Para capa da fonte, o handoff precisa materializar caminho compatível com `resolve_cover_path()` antes de mandar para `waiting_process`.
+- Estado inválido recorrente: `planned_cover_mode='source'` sem `manifest.downloaded_cover_path`, `local_cover` ou `planned_cover_url` termina em `capa da fonte não foi baixada`.
+- O publisher precisa garantir `out_dir` explicitamente antes de gravar `synopsis.txt`. Não confiar em side effects de etapas antigas.
 
 ## Regra editorial que continua viva
 
@@ -258,6 +266,8 @@ O modelo novo é simples e duro:
 - **uma escrita** via `python cli.py plan-set --id <ID> ...`
 - a regra editorial canônica por source vive em `importer.sources.editorial_prompt`
 - não reabrir consultas extras ao banco quando o payload concierge já trouxer o contexto necessário
+- quando o plano escolher capa da fonte ou `preview_pages[0]`, serializar isso em formato que o publisher já consome, preferencialmente preenchendo `manifest.downloaded_cover_path`
+- `pg_db.mark_item()` deve preservar `metadata_json` existente por merge, não sobrescrever cegamente; erosão de metadata entre triagem, editorial e publish é bug estrutural
 
 Campos esperados no payload concierge endurecido:
 - `source_id`
@@ -276,7 +286,7 @@ cd /data/workspace/sharebook-ebook-importer && sh -c 'python3 cli.py editor-next
 
 Não confiar em `cd` isolado num passo e `python3 cli.py ...` no passo seguinte quando a execução for agentic/cron desse runtime.
 
-### Exceção nova: triagem manual assistida para casos WAF
+### Exceção nova: triagem manual assistida para casos WAF ou download humano já validado
 
 Quando o item cair em `source_blocked` por WAF, JS challenge, download assinado ou proteção parecida, a régua mudou:
 - **é permitido fazer triagem manual assistida** como exceção operacional
@@ -300,6 +310,7 @@ Quando usar:
 - Cloudflare / AWS WAF / JS challenge
 - download só funciona com browser real
 - fonte pública parece boa, mas o worker Python falha cedo demais
+- host vivo porém lento, mas o PDF já foi baixado manualmente de forma confiável para uma área neutra
 
 Quando **não** usar:
 - 404 claro
@@ -328,6 +339,7 @@ Importante:
 - fazer isso **como se fosse o worker de triagem**, não como gambiarra invisível
 - registrar no metadata que foi exceção manual/browser-assisted
 - não fingir que o worker Python conseguiu sozinho
+- se o PDF veio por download manual validado, ainda assim materializar artefatos finais do worker (`source.pdf`, previews, manifest, metadata coerente) antes de devolver à fila
 
 ### Artefatos visuais são obrigatórios
 
@@ -339,6 +351,13 @@ Para preparo editorial com capa e `preview_pages`:
 
 Sinal clássico da fricção:
 - paths como `/data/workspace/sharebook-ebook-importer/var/tmp/...` podem existir, mas ainda assim serem rejeitados pela tool de imagem do agente
+
+### Casos reais que valem heurística
+
+- Em extractor `ebook_foundation`, algumas sources entregam HTML intermediário e exigem resolução até o PDF real, por exemplo Open Textbook Library via Pressbooks (`open/download?type=pdf` ou `print_pdf`). Corrigir só a URL inicial não basta se a capa da fonte continuar sem artefato serializado no manifest.
+- Links de Google Sites podem apontar para PDFs reais em Google Docs/Drive. Aceitar `docs.google.com/file/d/...` resolvendo para `https://docs.google.com/uc?export=download&id=...` e tratar `application/octet-stream` como válido quando os bytes começam com `%PDF`.
+- Quando um endurecimento arquitetural expõe falha nova, suspeitar primeiro de pré-condição implícita antes de culpar dados do item.
+- Se a source estiver realmente morta, sem DNS/host resolvendo, isso é `source_blocked`, não retry teatral.
 
 ### Dependência ausente que parece erro de fila
 
