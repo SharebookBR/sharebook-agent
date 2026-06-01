@@ -7,6 +7,19 @@ description: Especialista em Google Analytics 4 para o Sharebook. Use para extra
 
 Operar o GA4 como ferramenta de investigação, não como painel decorativo.
 
+## Atalho operacional — endpoint consolidado
+
+Antes de abrir a API do GA4 diretamente, usar o endpoint do Sharebook que já agrega tudo:
+
+```
+GET https://api.sharebook.com.br/api/analytics/dashboard
+Authorization: Bearer <SHAREBOOK_PROD_ACCESS_TOKEN>
+```
+
+Retorna em uma chamada: sessões por semana (13 semanas), downloads, logins, cadastros, top 10 livros por views e downloads (acumulado e por semana). Cache de 24h no backend — resposta instantânea na maioria das vezes.
+
+Usar a API GA4 diretamente só quando precisar de granularidade, filtros ou métricas que o endpoint não expõe.
+
 ## Fonte da verdade
 
 - **GCP Key:** `sharebook-agent/scripts/production/ga4-key.json` (protegida)
