@@ -49,6 +49,62 @@ O Sharebook utiliza SSR para SEO e performance. Siga estes padrões para evitar 
 - **Meta Tags**: Garanta que as meta tags de redes sociais (OpenGraph) sejam renderizadas no servidor para correta indexação.
 - **Moment-timezone**: Cuidado com importações de `moment-timezone` no ambiente Node; prefira importações ES nativas quando possível.
 
+## Padrões de Layout
+
+### Container
+- Usar `class="container"` para páginas admin — cria margens laterais automáticas e dá respiro em monitores grandes.
+- **Nunca** usar `container-fluid` em páginas admin — estica até a borda e fica ilegível em telas largas.
+- Referência: importer dashboard usa `class="importer-dashboard container"`.
+
+### Breadcrumb
+Padrão obrigatório em todas as páginas admin:
+```html
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink="/panel">Painel</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Nome da Página</li>
+  </ol>
+</nav>
+```
+CSS obrigatório para remover o fundo cinza padrão do Bootstrap:
+```css
+.breadcrumb {
+  background: none;
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
+}
+```
+Sem esse CSS o breadcrumb fica com uma caixa cinza/azul que destoa do restante do app.
+
+### Proteção de rota admin
+```typescript
+// app-routing.module.ts
+{
+  path: 'admin/minha-pagina',
+  component: MinhaPaginaComponent,
+  canActivate: [AuthGuardAdmin],
+}
+```
+`AuthGuardAdmin` verifica `user.profile === 'Administrator'` via localStorage.
+
+## Integração com o Backend
+
+### apiEndpoint
+O `environment.apiEndpoint` já inclui `/api`:
+```
+https://api.sharebook.com.br/api
+```
+Chamadas de serviço devem ser: `${this.config.apiEndpoint}/Controller/Action`  
+**Nunca** adicionar `/api` ou `/v1/` na URL — resulta em `apiController` concatenado errado.
+
+### TypeScript — limitações do lib target
+O projeto tem `lib` configurado em ES2018 ou anterior. Evitar:
+- `Object.fromEntries()` — usar `reduce` como alternativa:
+  ```typescript
+  array.reduce((acc, x) => { acc[x.key] = x.value; return acc; }, {} as Record<string, T>)
+  ```
+
 ## Regras Técnicas e Armadilhas
 
 ### Design de Modais (Mobile)
@@ -70,7 +126,7 @@ npm run lint
 npm test
 
 # Build de produção local (para validar se não quebra na CI)
-npm run build -- --prod
+npm run build-prod
 ```
 
 ## Referências

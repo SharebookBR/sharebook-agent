@@ -51,6 +51,62 @@ Skill operacional para mudanças de backend no `sharebook-backend`, com foco esp
 - Para reproduzir erro real de startup local, às vezes é preciso destravar primeiro o bootstrap do ambiente `Development` com config mínima válida, como `TokenConfigurations:SecretJwtKey`.
 - Se a API local ligada no banco certo subir e o host remoto continuar morto, usar a API local ou um utilitário temporário contra o mesmo Postgres ajuda a estabilizar o dado sem depender do deploy naquele minuto.
 
+## Estrutura de projeto
+
+```
+ShareBook.Api/
+  Controllers/      ← endpoints HTTP
+  Configuration/    ← ServiceRepositoryCollectionExtensions.cs (registro de DI)
+  Filters/          ← AuthorizationFilter, ValidateModelStateFilter
+  Startup.cs        ← Configure<Settings>, JWTConfig, AddMemoryCache
+ShareBook.Service/
+  <Feature>/        ← IFeatureService.cs, FeatureService.cs, FeatureSettings.cs
+ShareBook.Domain/   ← entidades, enums, validators
+ShareBook.Repository/ ← repositórios, EF Core, migrations
+```
+
+## Padrão para novo endpoint admin
+
+**1. Settings** (se precisar de configuração):
+```csharp
+// ShareBook.Service/<Feature>/<Feature>Settings.cs
+namespace ShareBook.Service.<Feature>;
+public class <Feature>Settings { public string MyKey { get; set; } }
+```
+```csharp
+// Startup.cs
+services.Configure<<Feature>Settings>(options => Configuration.GetSection("<Feature>").Bind(options));
+```
+Variável de ambiente no Coolify: `SECTION__Key` (duplo underscore = separador de seção).
+
+**2. Service** — injetar `IOptions<Settings>` + `IMemoryCache` (já registrado no Startup):
+```csharp
+public class MyService(IOptions<MySettings> settings, IMemoryCache cache) : IMyService { }
+```
+Usar `AddSingleton` quando o serviço não tiver estado por request (ex: cache compartilhado).
+Usar `AddScoped` para serviços que dependem de `DbContext` ou `IUnitOfWork`.
+
+**3. Controller**:
+```csharp
+[Route("api/[controller]")]        // ← padrão do projeto. NÃO usar api/v1/
+public class MyController : ControllerBase
+{
+    [HttpGet("action")]
+    [Authorize("Bearer")]
+    [AuthorizationFilter(Permissions.Permission.ApproveBook)] // admin only
+    public async Task<IActionResult> Action() { ... }
+}
+```
+
+**4. Registro em `ServiceRepositoryCollectionExtensions.cs`**:
+```csharp
+services.AddScoped<IMyService, MyService>();  // ou AddSingleton
+```
+
+## ImplicitUsings
+
+Habilitado em todos os projetos desde 2026-06-01. Arquivos novos não precisam de `using System;`, `using System.Collections.Generic;`, `using System.Linq;`, `using System.Threading.Tasks;` etc.
+
 ## Comandos de validação úteis
 
 ```powershell
