@@ -109,6 +109,46 @@ conn = psycopg2.connect(host="212.85.23.202", port=5432, dbname="sharebook",
     user="sharebook_ai_ro", password="3-nbj0bw3STVkxlcCeEO2ZFwtvyn", sslmode="disable")
 ```
 
+## `python3` no Windows = stub do Microsoft Store
+
+No Windows, o comando `python3` pode resolver para um stub do Microsoft Store que não executa nada (retorna rc=9009 silenciosamente). Isso se manifesta em scripts Python que chamam subprocessos com `["python3", ...]` — eles travam ou falham sem mensagem útil.
+
+**Fix correto e cross-platform**: usar `sys.executable` nos scripts:
+```python
+import sys, subprocess
+subprocess.run([sys.executable, "outro_script.py", ...])
+```
+Isso funciona tanto no Windows quanto no Linux/OpenClaw sem condicionais.
+
+## bypassPermissions — onde configurar
+
+`defaultMode: bypassPermissions` + `skipDangerousModePermissionPrompt: true` **só funcionam em `~/.claude/settings.json`** (user settings).
+
+Configurar em `.claude/settings.json` do projeto **não tem efeito** — Claude Code não honra `bypassPermissions` fora do user settings.
+
+## SSH não-interativo — usar paramiko
+
+Autenticação por senha via Bash/PowerShell direto não funciona de forma não-interativa para SSH. Usar `paramiko` (biblioteca Python já disponível no ambiente):
+```python
+import paramiko
+client = paramiko.SSHClient()
+client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+client.connect(hostname, username=user, password=pwd)
+stdin, stdout, stderr = client.exec_command("docker inspect container_name")
+```
+
+## `PYTHONUTF8=1` para saída de subprocesso
+
+Quando um subprocesso Python retornar saída com acentos e o PowerShell exibir `UnicodeDecodeError`, forçar UTF-8:
+```powershell
+$env:PYTHONUTF8 = "1"
+python meu_script.py
+```
+
+## `sharebook_refresh_token.py`
+
+Token da API pode expirar. O script `scripts/production/sharebook_refresh_token.py` já grava o novo token no `.env` automaticamente — sem necessidade de editar manual.
+
 ## Armadilhas recorrentes já pagas
 
 - Usar comandos PowerShell como se fossem shell POSIX.
@@ -117,6 +157,9 @@ conn = psycopg2.connect(host="212.85.23.202", port=5432, dbname="sharebook",
 - Assumir que o ambiente local tem a mesma autonomia agentica do OpenClaw.
 - Confiar em memória de sessão quando o que precisava era registro durável.
 - Deixar regra específica de Windows poluir a camada genérica do `AGENTS.md`.
+- Usar `python3` sem verificar se é o stub do Microsoft Store — usar `sys.executable` nos scripts.
+- Configurar `bypassPermissions` no project settings em vez do user settings.
+- Tentar SSH não-interativo via shell sem paramiko.
 
 ## Quando promover aprendizado
 

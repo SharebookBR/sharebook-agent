@@ -105,11 +105,46 @@ O projeto tem `lib` configurado em ES2018 ou anterior. Evitar:
   array.reduce((acc, x) => { acc[x.key] = x.value; return acc; }, {} as Record<string, T>)
   ```
 
+## Angular Material / CDK — Integração e Sobreposições
+
+### z-index hierárquico
+
+| Camada | z-index | Origem |
+|---|---|---|
+| Header Sharebook | 1040 | CSS hardcoded |
+| CDK overlay (default) | 1000 | Angular Material |
+| **Override correto** | **1100** | `custom-theme.scss` |
+
+Fix global obrigatório em `src/custom-theme.scss`:
+```scss
+.cdk-overlay-container { z-index: 1100; }
+```
+Sem isso, modais, selects e tooltips ficam atrás do header.
+
+### `::ng-deep` para componentes de terceiros
+
+Usar `::ng-deep` quando o componente gera DOM dinamicamente sem atributo `_ngcontent` (ex: CodeMirror/EasyMDE, Chart.js overlays).
+
+Caso real — CodeMirror no modal editorial:
+```scss
+::ng-deep .CodeMirror {
+  overflow-x: hidden;
+  word-wrap: break-word;
+}
+::ng-deep .CodeMirror-scroll { overflow-x: hidden !important; }
+::ng-deep .CodeMirror pre.CodeMirror-line {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+```
+`::ng-deep` está deprecated mas é o único caminho correto para content gerado dinamicamente. Isolar com um seletor pai (ex: `.editorial-prompt-dialog__body`) para não vazar para outros componentes.
+
 ## Regras Técnicas e Armadilhas
 
 ### Design de Modais (Mobile)
 - **Não usar hacks de CSS local**: Para garantir consistência em todo o app, use o **Override Global** no arquivo `src/style/custom-theme.scss`.
 - **Padrão Mobile**: Todo modal no celular deve ter 100% de largura (`width: 100% !important`) com padding reduzido de `15px` para maximizar a legibilidade.
+- **Modal com conteúdo expansivo**: Usar `max-height: 80vh` + `flex: 1; min-height: 0; overflow-y: auto` no body + `flex-shrink: 0` no footer para garantir que o footer sempre apareça.
 
 ### Sincronia e Build
 - **Build Real > Ambiente Local**: O comportamento no ambiente de produção (CI/CD) é a única verdade. Sempre valide se o build passa antes de considerar a tarefa concluída.

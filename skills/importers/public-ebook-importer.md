@@ -44,6 +44,10 @@ Se esta skill divergir do código/README do importer, o importer manda.
 - se faltar editorial, devolver para `waiting_editor`, não mascarar como erro técnico.
 - cron agentic do OpenClaw não é o default saudável para triagem mecânica ou publish Python.
 - bootstrap/recovery local é tapa-buraco operacional, não substitui correção no build/deploy.
+- **`metadata_json` é acumulativo**: cada etapa do pipeline deve fazer merge, nunca sobrescrever cegamente. `pg_db.mark_item()` deve preservar campos anteriores. Erosão de metadata entre triagem, editorial e publish é bug estrutural.
+- **`sys.executable` em scripts Python**: nunca hardcode `python3` ou `python` — no Windows, `python3` resolve para o stub do Microsoft Store (rc=9009). Usar `sys.executable` é o fix correto e cross-platform.
+- **Editorial por source vive no banco**: `importer.sources.editorial_prompt` é a fonte da verdade. Skills por source são obsoletas. Sempre consultar o banco antes de preparar editorial.
+- **Categorias sempre folha**: antes de mapear categorias numa sinopse/plan, consultar `GET /api/category/Counts` para obter IDs reais. Nunca inventar categoria.
 
 ## Status canônico
 
@@ -366,5 +370,97 @@ Se surgir item em `error` no importer por falha de processamento de PDF/renderiz
 Caso real já pago:
 - ausência de `ghostscript` bloqueou processamento/publicação
 - depois da instalação, o item voltou para `waiting_process` e o worker retomou normalmente
+
+## Worker Hardening Patterns
+
+Aprendizados consolidados de ciclos reais de triagem da `ebook_foundation_subjects`. Aplicar ao revisar ou evoluir o `triage_worker.py` e os extractors.
+
+### Rejeição precoce (antes do extractor)
+
+Barrar antes de qualquer download — mais barato:
+
+- **Vídeos**: `_VIDEO_HOSTS` + `_is_video_url()` no `triage_worker.py`. Cobre YouTube, Vimeo, Twitch, Dailymotion. Mover para `triage_rejected` se confirmado vídeo.
+- **Pirataria no Archive.org**: verificar `identifier` antes de consultar metadata API. Z-lib, Libgen, B-OK, Bookfi, Bookzz, Genesis → `ValueError` expressivo antes de qualquer request.
+
+### `raise_for_restricted_html` — sinais corretos
+
+- **Remover**: sinais genéricos de autenticação (`sign in`, `login`, `password`, `get access`, `access denied`). Esses sinais queimam páginas Open Access legítimas que têm navbar com login.
+- **Manter**: sinais específicos de bloqueio de conteúdo.
+- **Adicionar**: `AUTHOR_RESTRICTED_SIGNALS` para detectar "distribuição restrita pelo autor" — retornar mensagem expressiva em vez de erro genérico "sem magic bytes".
+- **WAF**: detectar HTML de WAF challenge (`window.gokuProps`, `awsWafCookieDomainList`) e retornar mensagem semântica "AWS WAF challenge — requer browser com JavaScript".
+
+### Wayback Machine
+
+- Modificador `if_` força entrega do conteúdo bruto sem o toolbar HTML do Archive. Sem ele, `urllib.request.urlopen` recebe `text/html` mesmo para arquivos binários.
+- `inject_wayback_raw_modifier`: inserir `if_` em URLs do Wayback que apontam para `.pdf`.
+- `discover_assets_from_wayback_html`: extrair links de download do HTML do Wayback, tentar cada um com `if_`. Cobre padrão DotNetSlackers: entry page → `download.aspx` → PDF.
+- **WebFetch bloqueia `web.archive.org`**: usar Python + `urllib` diretamente para verificar PDFs no Wayback.
+
+### SSL fallback cross-platform
+
+- Servidores universitários/institucionais frequentemente têm certificados quebrados.
+- Detecção por string em vez de `isinstance(ssl.SSLError)` — `isinstance` funciona no Windows mas falha no Linux (OpenClaw).
+- Markers: `certificate`, `ssl`, `handshake`, `hostname mismatch`.
+- Aplicar fallback em `resolve_direct_pdf_assets`, `resolve_generic_http_assets` e `download_bytes`.
+
+### Handlers especializados por família de URL
+
+- **GitHub repo raiz**: detectar `github.com/{owner}/{repo}` (sem `/blob/`) → buscar PDF na última release via `api.github.com/repos/{repo}/releases/latest`. Preferir sem sufixos `-print`, `-scala`, `-a4`.
+- **Microsoft Download Center**: nova família `microsoft_download_center`. Parsear o bloco JSON da página para extrair URL direta do PDF.
+- **URL encoding**: URLs extraídas do HTML podem ter espaços no nome. Usar `urlparse` + `quote` antes de validar magic bytes.
+- **freeCodeCamp**: detectar pelo prefixo `freecodecamp.org/news/`, não por substring `/book` (não casaria com `-book`).
+- **bepress** (`viewcontent.cgi`): handler dedicado `resolve_bepress_assets`.
+
+### `sync_queue` — comportamento correto
+
+Sync só deve atualizar `title` e `updated_at` em itens **existentes**. Nunca resetar `status`, `last_error` ou metadados operacionais. A função do sync é descoberta de população, não auditoria de estado.
+
+### EbookFoundation — padrão de curadoria
+
+A EbookFoundation lista **plataformas/agregadores** como recursos além de livros individuais. Entradas como `dBooks homepage`, `Goalkicker`, `FreeTechBooks`, `InTech Open` chegam na fila como se fossem livros. Isso é design correto da raspagem — responsabilidade da triagem separar livros reais de diretórios e homepages. 6 dessas fontes são candidatas a novas sources no backlog.
+
+---
+
+## Dashboard do Importador
+
+Funcionalidades adicionadas ao painel administrativo em 2026-05 e 2026-06.
+
+### admin_notes
+
+- Campo `TEXT` em `importer.queue_items` para comentários administrativos por item.
+- Endpoint: `PATCH /Operations/ImporterItems/{id}/AdminNotes`
+- UI: área verde (`#16a34a`) abaixo do blockquote de erro, botão "Comentário do adm" / "Editar nota".
+- Grant: `GRANT UPDATE (admin_notes)` cirúrgico — não na tabela inteira.
+
+### queue_item_history (event sourcing)
+
+- Tabela `importer.queue_item_history` criada em 2026-05-29.
+- Instrumentada em 3 pontos do `pg_db.py`: `mark_item`, `set_plan`, `set_status`.
+- Campo `changed_by` semântico: `'worker'`, `'agent'`, `'admin'`.
+- `from_status` nullable — primeiro registro de um item não tem "de".
+- Fundação para análise de funil, tempo por status, quem moveu o quê.
+
+### Delta D-1
+
+Exibido nos big number cards do dashboard. Cálculo correto:
+```sql
+-- first_today_transition: para itens que mudaram hoje, from_status da 1ª transição = estado à meia-noite
+-- unchanged_today: itens sem transição hoje = status atual (não se moveram)
+-- pre_midnight = UNION ALL dos dois
+-- yesterday_counts = contagem por status a partir de pre_midnight
+```
+- **Não usar** `last to_status antes da meia-noite` — a tabela pode ter poucos registros históricos.
+- Delta zero oculto (não tem informação útil).
+- Delta sempre cinza `#94a3b8` — sem julgamento de valor.
+- Timezone: `America/Sao_Paulo` hardcoded (tool interna).
+
+### Histórico por item
+
+- Endpoint: `GET /api/Operations/ImporterItems/{id}/History`
+- UI: botão "Histórico" nos cards (outline neutro `--history`), abre modal com tabela Data/De/Para.
+- `changed_by` omitido da tabela — decisão operacional (sem valor para o caso de uso).
+- Mobile: `overflow-x: auto` no wrapper, `min-width: unset`, padding reduzido.
+
+---
 
 Esta skill não substitui julgamento curatorial. Ela só descreve a operação do importer.

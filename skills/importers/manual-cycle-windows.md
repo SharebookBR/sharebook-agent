@@ -26,6 +26,12 @@ C:\Users\raffa\AppData\Local\Microsoft\WinGet\Packages\
   poppler-25.07.0\Library\bin\pdftoppm.exe
 ```
 
+**Token antes de começar**: verificar se o token da API ainda é válido. Se houver 401 no primeiro request, rodar:
+```powershell
+python scripts/production/sharebook_refresh_token.py
+```
+O script já grava o novo token no `.env` automaticamente.
+
 ---
 
 ## Passo 1 — Triagem manual
@@ -141,6 +147,9 @@ s3.upload_file(local_pdf, env["AWS_S3_BUCKET"], ebook_pdf_path)
 | pdftoppm não encontrado | winget atualiza PATH mas requer nova sessão | Injetar o bin dir em `$env:PATH` ou usar path absoluto no script |
 | PowerShell here-string falha | `'@` deve estar na coluna 0, sem indentação | `@'...'@` com `'@` na margem esquerda |
 | `sharebook_aws_s3.py` não acha `.env` | Path calculado como `scripts/.env` | Usar boto3 inline com `.env` lido manualmente |
+| 401 no primeiro request | Token expirado | `python scripts/production/sharebook_refresh_token.py` |
+| pdftoppm gera sufixo `-001` em vez de `-1` | PDFs com 100–999 páginas geram 3 dígitos; ≥1000 páginas geram 4 | O sufixo depende do total de páginas: ≤9 → `-1`, ≤99 → `-01`, ≤999 → `-001`, ≥1000 → `-0001`. Renomear manualmente ou adaptar o script de capas para detectar o sufixo correto |
+| 415 no publish | Enviando multipart em vez de JSON+base64 | A rota `/api/Book` usa JSON com campos `PdfBytes` e `ImageBytes` em base64. Ver `sharebook_prod_book.py` como referência |
 
 ---
 

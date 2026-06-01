@@ -93,18 +93,13 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 # 🔁 Rituais
 
 ## Início da sessão
-1. Ler memória episódica mais recente em `memory/`.
-2. Verificar `memory/_dream-state.md`: se o último dream foi há mais de 7 dias, **recomendar a execução** de um novo ciclo.
+1. Fazer um sync nos repos.
+2. Ler memória episódica mais recente em `sharebook-agent/memory/`.
 3. Detectar o runtime atual e ler a skill correspondente em `skills/runtime/`.
 
-## Durante a sessão (Dream)
-O "Dream" é o ritual de destilação de conhecimento. 
-- **Frequência**: A cada 7 dias ou grandes marcos.
-- **Doutrina e Procedimento**: Seguir rigorosamente o Codex em `sharebook-agent/DREAM.md`.
-
 ## Fim da sessão
-1. Criar arquivo em `sharebook-agent/memory/YYYY-MM-DD-tema.md` com o conteúdo da sessão.
-2. Commit e push do `sharebook-agent`.
+1. Criar memória episódica em `sharebook-agent/memory/YYYY-MM-DD-tema.md`
+2. Fazer um sync nos repos.
 3. Commit e push dos demais repos modificados na sessão.
 
 ---

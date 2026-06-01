@@ -103,6 +103,46 @@ public class MyController : ControllerBase
 services.AddScoped<IMyService, MyService>();  // ou AddSingleton
 ```
 
+## SMTP Rate Limit — Self-Healing Backoff
+
+Padrão implementado para o `MailSender` em 2026-05-26.
+
+**Problema**: Hostinger impõe rate limit global na conta SMTP. O Polly retry padrão tentava reenviar a mesma mensagem em loop, agravando o throttle.
+
+**Solução**: interruptor global via `IMemoryCache` + backoff crescente.
+
+```csharp
+// Não retentar rate limit com Polly:
+ShouldHandle = new PredicateBuilder().Handle<Exception>(ex =>
+    ex is not SmtpCommandException smtp || !smtp.Message.Contains("Ratelimit"))
+
+// Backoff global: constantes
+const string RateLimitCacheKey = "smtp_rate_limit";
+const int CycleMinutes = 5;
+const int MaxBackoffCycles = 5; // 5, 10, 15, 20, 25 min
+
+// No início de WorkAsync(): pular ciclo se em backoff
+if (cache.TryGetValue(RateLimitCacheKey, out int cycles))
+{
+    Logger.LogInformation("SMTP em backoff. Ciclos: {cycles}. Pulando.", cycles);
+    return; // IsSuccess=true, sem alarme no Rollbar
+}
+
+// Rate limit detectado — capturar ANTES do catch genérico:
+catch (SmtpCommandException ex) when (ex.Message.Contains("Ratelimit"))
+{
+    int nextCycles = Math.Min((cache.TryGetValue(RateLimitCacheKey, out int c) ? c : 0) + 1, MaxBackoffCycles);
+    cache.Set(RateLimitCacheKey, nextCycles, TimeSpan.FromMinutes(CycleMinutes * nextCycles));
+    Logger.LogInformation("SMTP rate limit. Backoff por {min} min.", CycleMinutes * nextCycles);
+}
+```
+
+**Regras**:
+- **Sem nack**: ao tomar rate limit, não fazer nack da mensagem SQS — ela permanece na fila e será processada quando o backoff expirar. Ack (`DeleteMessageAsync`) só após envio bem-sucedido.
+- **Sem alarme**: `LogInformation`, não `LogWarning`/`LogError`. Cenário self-healing não deve acionar Rollbar.
+- **Queue depth**: logar profundidade da fila ao retomar o envio — visível em `/admin/jobs` sem precisar de frontend novo.
+- O interruptor deve ser **global** (IMemoryCache), pois o rate limit é da conta inteira, não por mensagem.
+
 ## ImplicitUsings
 
 Habilitado em todos os projetos desde 2026-06-01. Arquivos novos não precisam de `using System;`, `using System.Collections.Generic;`, `using System.Linq;`, `using System.Threading.Tasks;` etc.

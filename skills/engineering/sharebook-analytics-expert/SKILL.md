@@ -115,12 +115,86 @@ Comparação útil:
 - Quando `pageReferrer` conflitar com origem de sessão, priorizar a atribuição de sessão do GA4 e explicar a divergência.
 - Quando a análise depender de `screenPageViews`, lembrar que pode haver pequenas esquisitices em SPA.
 
+## Dashboard Analytics — Integração Sharebook
+
+Dashboard integrado ao painel admin em 2026-06-01.
+
+### Acesso
+- Rota Angular: `/admin/analytics` (protegida por `AuthGuardAdmin`)
+- Endpoint backend: `GET /api/analytics/dashboard` (admin only, `[AuthorizationFilter(Permissions.Permission.ApproveBook)]`)
+- Cache `IMemoryCache` com TTL 24h — primeira request do dia bate no GA4, restante instantâneo
+
+### Eventos rastreados
+
+| Evento | Onde dispara |
+|---|---|
+| `login` | `login.component.ts` após auth bem-sucedida |
+| `sign_up` | `register.component.ts` após cadastro bem-sucedido |
+| `ebook_download` | PDP ao clicar em download |
+| `social_share` | PDP ao clicar em compartilhar |
+
+Todos usam `GoogleAnalyticsService.sendEvent` já existente.
+
+### Configuração de credenciais
+
+Credenciais via variável de ambiente `GA4__CredentialsBase64` (base64 do `ga4-key.json`). No Coolify, duplo underscore é separador de seção. O `appsettings.json` tem a seção `GA4.CredentialsBase64` vazia (só documentação).
+
+### KPIs e filtro de semana
+
+- 4 KPIs: sessões, downloads, logins, cadastros — filtrados pela semana selecionada
+- Tabelas: top livros por views e downloads — filtradas por semana
+- Todos os dados chegam numa única chamada de API (filtro de semana é 100% client-side)
+- Select de semana: ISO week internamente, conversão para `YYYY-MM-Wn` só no display
+- Semana corrente com highlight laranja no select
+
+### Biblioteca de charts
+
+Chart.js instalado via npm (`npm install chart.js`). Usar para visualizações de tendência semanal.
+
+---
+
+## SEO Operacional
+
+### Soft 404 (SSR)
+
+Em Angular Universal, quando um livro não existe, o componente sabe mas o servidor retorna HTTP 200. O Google conta como "soft 404" e para de indexar a URL.
+
+Fix em `details.component.ts`:
+```typescript
+// Injetar no construtor:
+@Inject(RESPONSE) @Optional() private response: any,
+
+// Nas condições de not-found:
+this.response?.status(404);
+```
+
+Verificar no Google Search Console > Cobertura > "Soft 404" — tendência deve cair após deploy.
+
+### Canonical e domínio
+
+- Domínio oficial: `https://www.sharebook.com.br` (com `www`)
+- Redirect non-www → www configurado no Coolify
+- `SeoService` e meta OG tags devem sempre usar `www`
+- Share link vai direto para a PDP — não precisa de endpoint de redirect no backend (SSR já serve HTML com meta OG)
+
+### Paginação de categorias — risco conhecido
+
+11+ categorias com mais de 24 livros digitais. Livros além da página 1 ficam sem link acessível para o Google. Risco documentado, não atacado ainda.
+
+---
+
 ## Scripts disponíveis
 
 ### Teste de conexão
 ```bash
 python sharebook-agent/scripts/production/test_ga4_connection.py
 ```
+
+### Dashboard estático (prova de conceito)
+```bash
+python sharebook-agent/scripts/production/ga4_dashboard.py
+```
+Gera HTML local com métricas de 12 semanas, downloads, logins, cadastros e top 10 livros.
 
 ---
 Para instalação de novos ambientes, consulte `sharebook-agent/skills/engineering/sharebook-analytics-expert/BOOTSTRAP.md`.
