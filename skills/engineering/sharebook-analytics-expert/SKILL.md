@@ -203,11 +203,5 @@ Verificar no Google Search Console > Cobertura > "Soft 404" — tendência deve 
 python sharebook-agent/scripts/production/test_ga4_connection.py
 ```
 
-### Dashboard estático (prova de conceito)
-```bash
-python sharebook-agent/scripts/production/ga4_dashboard.py
-```
-Gera HTML local com métricas de 12 semanas, downloads, logins, cadastros e top 10 livros.
-
 ---
 Para instalação de novos ambientes, consulte `sharebook-agent/skills/engineering/sharebook-analytics-expert/BOOTSTRAP.md`.
