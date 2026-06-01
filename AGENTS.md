@@ -103,8 +103,9 @@ O "Dream" é o ritual de destilação de conhecimento.
 - **Doutrina e Procedimento**: Seguir rigorosamente o Codex em `sharebook-agent/DREAM.md`.
 
 ## Fim da sessão
-1. Criar ou atualizar arquivo em `memory/`.
-2. commit e push de tudo que fez no sharebook agent e demais repos.
+1. Criar arquivo em `sharebook-agent/memory/YYYY-MM-DD-tema.md` com o conteúdo da sessão.
+2. Commit e push do `sharebook-agent`.
+3. Commit e push dos demais repos modificados na sessão.
 
 ---
 

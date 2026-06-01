@@ -73,6 +73,14 @@ Use o mecanismo mais simples e mais fiel ao habitat real.
 - Não confiar em improviso de sessão para carregar contexto importante entre habitats.
 - Não despejar regra específica de Windows no `AGENTS.md` se ela pertence a esta skill.
 
+## Fim da sessão neste habitat
+
+Neste runtime, o ritual de fim de sessão do Sharebook-agent (definido em `AGENTS.md`) deve ser seguido **e complementado** com:
+
+- Atualizar o índice de memória do runtime Claude em `C:\Users\raffa\.claude\projects\C--Repos-SHAREBOOK\memory\MEMORY.md` com um ponteiro para a sessão.
+
+Essa segunda etapa é responsabilidade do runtime (Claude), não do Sharebook-agent. O `AGENTS.md` não sabe e não precisa saber que ela existe.
+
 ## Validação
 
 - Validar no mundo local real antes de declarar vitória.
