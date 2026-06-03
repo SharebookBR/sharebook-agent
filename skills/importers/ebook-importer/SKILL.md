@@ -281,3 +281,51 @@ Não fingir que o worker Python conseguiu sozinho.
 ---
 
 Esta skill não substitui julgamento curatorial. Ela descreve a operação do importer.
+
+---
+
+## Scripts
+
+Scripts em `skills/importers/ebook-importer/scripts/`. Regra: se não está aqui, não existe — crie e documente no mesmo commit.
+
+### Ciclo manual Windows
+
+| Script | Comando | O que faz |
+|---|---|---|
+| `manual_triage_windows.py` | `python ... --ids <ids>` | Triagem: valida PDF, extrai texto, monta metadata → `waiting_editor` |
+| `render_covers.py` | `python ... --ids <ids>` | Renderiza página 1 como PNG, atualiza `triage.preview_pages` |
+| `publish_fake_pdf.py` | `python ... --id <id>` | Publica com fake.pdf, faz S3 upload do real, marca `done` |
+
+> Plano editorial via `cli.py plan-set` — não por script.
+
+### Crawlers / alimentação de sources
+
+| Script | O que faz |
+|---|---|
+| `crawl_baixelivros_quadrinhos.py` | Raspa BaixeLivros Quadrinhos, insere `waiting_triage`. Idempotente. **Template para novas sources `baixelivros_*`** |
+| `crawl_ebook_foundation_subjects.py` | Parseia `free-programming-books-subjects.md`, insere entradas com PDF direto. Idempotente. **Template para novas sources `ebook_foundation_*`** |
+| `inspect_baixelivros_listing.py` | Diagnóstico de estrutura de listagem. Usar ao criar nova source |
+
+### Consulta e diagnóstico
+
+| Script | O que faz |
+|---|---|
+| `query_importer_db.py` | Consultas gerais no banco |
+| `query_importer_v2.py` | Variante de consulta |
+| `query_triage_debug.py` | Debug de triagem |
+| `query_triage_fila.py` | Inspeção da fila |
+| `query_triage_rw.py` | Operações write-controlled |
+| `triage_get_queue.py` | Obtém fila de triagem |
+| `triage_stats.py` | Métricas da fila |
+| `triage-batch.sh` | Batch operacional (shell) |
+| `query_importer_wrapper.sh` | Wrapper shell para consultas |
+
+### Publicação legacy (OpenClaw)
+
+| Script | O que faz |
+|---|---|
+| `sharebook_register_ebook_foundation_item.py` | Registra item `ebook_foundation` |
+| `sharebook_run_ebook_foundation_worker.py` | Roda worker `ebook_foundation` |
+| `sharebook_source_extract.py` | Extrai metadados e PDF da fonte |
+
+Scripts históricos em `scripts/archive/`. Temporários (`tmp_*.py`) ignorados pelo git.
