@@ -223,7 +223,6 @@ Sem isso, qualquer correção é chute. Um chute pode acertar por sorte, mas nã
 - `sharebook-agent/skills/doctrine/INDEX.md` — Dream, plasticidade, famílias de skills, esquecimento seletivo e governança cognitiva.
 
 ### Scripts
-- `sharebook-agent/scripts/format_two_arrays_whatsapp.py` — Formatação pontilhada para quadros curtos no WhatsApp, quando esse canal realmente for o alvo.
 - `sharebook-agent/scripts/covers/INDEX.md` — Scripts de capas.
 - `sharebook-agent/skills/importers/ebook-importer/scripts.md` — Scripts de triagem e extração.
 - `sharebook-agent/scripts/production/INDEX.md` — Scripts de banco e autenticação.
