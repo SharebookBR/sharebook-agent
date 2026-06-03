@@ -2,7 +2,7 @@
 
 Regra: consultar este índice antes de inventar fluxo. Se não está aqui, não existe — crie e documente no mesmo commit.
 
-Fonte canônica: `scripts/importer/` no repo `sharebook-agent`.
+Scripts vivem em `skills/importers/ebook-importer/scripts/` — dentro da skill, não em pasta separada.
 
 ---
 
@@ -58,6 +58,6 @@ Sequência para itens `source_blocked` com PDF disponível localmente. Ver `wind
 
 ## Archive
 
-Scripts já executados ou substituídos vivem em `scripts/importer/archive/`. Ver `archive/README.md`.
+Scripts já executados ou substituídos vivem em `scripts/archive/`. Ver `scripts/archive/README.md`.
 
 Scripts temporários (`tmp_*.py`) são ignorados pelo git (`scripts/.gitignore`).

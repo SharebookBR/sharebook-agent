@@ -41,7 +41,7 @@ Usar quando o item ainda está em `source_blocked` sem metadata de triagem.
 
 ```powershell
 cd C:\Repos\SHAREBOOK\sharebook-agent
-python scripts/importer/manual_triage_windows.py --ids <id1> <id2>
+python skills/importers/ebook-importer/scripts/manual_triage_windows.py --ids <id1> <id2>
 ```
 
 Replica `TriageWorker.run_once()`: valida magic bytes, extrai texto, checa duplicata, monta `metadata_json`, move para `waiting_editor`.
@@ -67,7 +67,7 @@ python cli.py plan-set --id <ID> --category-id <UUID> --synopsis-file <FILE> --a
 
 ```powershell
 cd C:\Repos\SHAREBOOK\sharebook-agent
-python scripts/importer/render_covers.py --ids <id1> <id2>
+python skills/importers/ebook-importer/scripts/render_covers.py --ids <id1> <id2>
 ```
 
 Renderiza página 1 como PNG, grava path em `metadata_json.triage.preview_pages`.
@@ -75,7 +75,7 @@ Renderiza página 1 como PNG, grava path em `metadata_json.triage.preview_pages`
 ### Passo 4 — Publicação (fake PDF + S3)
 
 ```powershell
-python scripts/importer/publish_fake_pdf.py --id <ID>
+python skills/importers/ebook-importer/scripts/publish_fake_pdf.py --id <ID>
 ```
 
 Fluxo:
@@ -125,6 +125,6 @@ Ver `scripts.md` para índice completo. Scripts do ciclo manual:
 
 | Script | Uso |
 |---|---|
-| `scripts/importer/manual_triage_windows.py` | Triagem: `source_blocked` → `waiting_editor` |
-| `scripts/importer/render_covers.py` | Capa: página 1 do PDF como PNG |
-| `scripts/importer/publish_fake_pdf.py` | Publish: fake PDF + S3 real → `done` |
+| `skills/importers/ebook-importer/scripts/manual_triage_windows.py` | Triagem: `source_blocked` → `waiting_editor` |
+| `skills/importers/ebook-importer/scripts/render_covers.py` | Capa: página 1 do PDF como PNG |
+| `skills/importers/ebook-importer/scripts/publish_fake_pdf.py` | Publish: fake PDF + S3 real → `done` |
