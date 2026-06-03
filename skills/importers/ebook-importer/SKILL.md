@@ -306,26 +306,4 @@ Scripts em `skills/importers/ebook-importer/scripts/`. Regra: se não está aqui
 | `crawl_ebook_foundation_subjects.py` | Parseia `free-programming-books-subjects.md`, insere entradas com PDF direto. Idempotente. **Template para novas sources `ebook_foundation_*`** |
 | `inspect_baixelivros_listing.py` | Diagnóstico de estrutura de listagem. Usar ao criar nova source |
 
-### Consulta e diagnóstico
-
-| Script | O que faz |
-|---|---|
-| `query_importer_db.py` | Consultas gerais no banco |
-| `query_importer_v2.py` | Variante de consulta |
-| `query_triage_debug.py` | Debug de triagem |
-| `query_triage_fila.py` | Inspeção da fila |
-| `query_triage_rw.py` | Operações write-controlled |
-| `triage_get_queue.py` | Obtém fila de triagem |
-| `triage_stats.py` | Métricas da fila |
-| `triage-batch.sh` | Batch operacional (shell) |
-| `query_importer_wrapper.sh` | Wrapper shell para consultas |
-
-### Publicação legacy (OpenClaw)
-
-| Script | O que faz |
-|---|---|
-| `sharebook_register_ebook_foundation_item.py` | Registra item `ebook_foundation` |
-| `sharebook_run_ebook_foundation_worker.py` | Roda worker `ebook_foundation` |
-| `sharebook_source_extract.py` | Extrai metadados e PDF da fonte |
-
-Scripts históricos em `scripts/archive/`. Temporários (`tmp_*.py`) ignorados pelo git.
+Temporários (`tmp_*.py`) ignorados pelo git.
