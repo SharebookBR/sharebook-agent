@@ -114,8 +114,7 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 
 ## Cenários de Roteamento
 - Qualquer tarefa no frontend Angular (componente, estilo, layout, UI, tela nova) → abrir `sharebook-agent/skills/engineering/frontend.md` **antes** de qualquer implementação.
-- Incidente no `sharebook-ebook-importer`, fila quebrada, worker morto, `retry_later`, `error`, `triaging` ou `editing` preso → abrir `sharebook-agent/skills/importers/sharebook-public-ebook-importer/SKILL.md`.
-- Itens `source_blocked` com PDFs baixados manualmente no Windows, precisando de triage + editorial + capas + publish → abrir `sharebook-agent/skills/importers/manual-cycle-windows.md`.
+- Qualquer operação na fila de importação de ebooks: triagem, publish, worker, `retry_later`, `error`, `source_blocked`, ciclo manual Windows, scripts → abrir `sharebook-agent/skills/importers/sharebook-public-ebook-importer/SKILL.md`.
 - Preparo editorial, sinopses, categoria ou handoff por source → consultar `editorial_prompt` da source em `importer.sources` no banco (`sharebook_importer`). Não abrir skill file por source, a config editorial vive no banco.
 - SEO, GA4, GSC, funil, tráfego, landing pages ou auditoria de indexação → abrir `sharebook-agent/skills/engineering/sharebook-analytics-expert/SKILL.md`.
 - Performance do banco, slow query log, `pg_stat_statements` ou ofensores de Postgres → abrir `sharebook-agent/skills/engineering/postgres-slow-query-analysis/SKILL.md`.
