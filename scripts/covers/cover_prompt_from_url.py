@@ -13,6 +13,7 @@ import subprocess
 import sys
 import urllib.request
 from html import unescape
+from pathlib import Path
 
 
 def fetch_html(url: str) -> str:
@@ -81,8 +82,9 @@ def extract_book_data(html: str) -> dict:
 
 
 def run_roulette() -> dict:
+    roulette_script = Path(__file__).parent / 'cover_roulette.py'
     out = subprocess.check_output(
-        ['python3', '/data/workspace/sharebook-agent/scripts/covers/cover_roulette.py'],
+        [sys.executable, str(roulette_script)],
         text=True,
     )
     return json.loads(out)
