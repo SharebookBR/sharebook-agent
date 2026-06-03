@@ -186,6 +186,10 @@ Token da API pode expirar. O script `scripts/production/sharebook_refresh_token.
 - Deixar regra específica de Windows poluir a camada genérica do AGENTS.
 
 
+## Outputs copiáveis
+
+No Windows, outputs longos de scripts (ex: prompt da roleta de estilos) devem ser exibidos dentro de um bloco de código markdown (``` ... ```) para facilitar a cópia. Nunca exibir só como texto narrativo.
+
 ## Prints
 
 Quando o Raffa mencionar olhe o print 82 use o caminho abaixo:
