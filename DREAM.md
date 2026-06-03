@@ -248,6 +248,34 @@ Candidatos fortes a lixo — apresentar ao Raffa antes de deletar:
 
 ---
 
+## ☠️ Regra transversal — O que não está indexado é lixo
+
+Esta é a regra mais simples e mais ousada do corpus. Ela não exige julgamento subjetivo sobre uso real. Exige apenas verificação estrutural.
+
+**Indexação é o ato de legitimação.** Se existe e não está no índice, não existe de verdade.
+
+### O que conta como indexado
+
+| Artefato | Precisa estar em |
+|---|---|
+| Skill (pasta com `SKILL.md`) | `INDEX.md` da família |
+| Script | Seção Scripts do `SKILL.md` da skill |
+| Arquivo de referência ou asset | Mencionado no `SKILL.md` da skill |
+| Pasta dentro de skill | Referenciada no `SKILL.md` da skill |
+
+### O que o Dream pode remover sem perguntar
+
+- Pasta de skill sem entrada no `INDEX.md` da família
+- Script não listado no `SKILL.md` correspondente
+- Pasta sem `SKILL.md` dentro de `skills/`
+- Qualquer artefato solto sem referência em documento operacional
+
+### Corolário
+
+Antes de criar qualquer artefato novo, indexá-lo no mesmo commit. Criar sem indexar é criar lixo com data de validade.
+
+---
+
 ## 🧨 Anti-padrões
 
 - Tratar `MEMORY.md` monolítico como destino principal de conhecimento durável.
