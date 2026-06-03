@@ -165,5 +165,5 @@ npm run build-prod
 ```
 
 ## Referências
-- [`sharebook-agent/skills/product-ux/sharebook-ux-reviewer/SKILL.md`](../product-ux/sharebook-ux-reviewer/SKILL.md) - Para auditoria crítica de fluxos.
+- [`sharebook-agent/skills/product-ux/ux-reviewer/SKILL.md`](../product-ux/ux-reviewer/SKILL.md) - Para auditoria crítica de fluxos.
 - [`sharebook-agent/skills/product-ux/web-design-reviewer/SKILL.md`](../product-ux/web-design-reviewer/SKILL.md) - Para correção visual e layout.

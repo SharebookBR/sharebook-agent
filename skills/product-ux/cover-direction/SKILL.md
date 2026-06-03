@@ -1,5 +1,5 @@
 ---
-name: sharebook-cover-direction
+name: cover-direction
 description: Direção visual e prompt de capas do Sharebook com roleta cromática, papéis `background`/`primary`/`secondary`/`accent` e geração de prompt a partir da URL do livro. Use quando Raffa pedir "roda a roleta", quando precisar montar prompt de capa, revisar direção cromática ou evitar capa genérica/tech-clean.
 ---
 

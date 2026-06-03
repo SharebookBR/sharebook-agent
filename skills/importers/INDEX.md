@@ -5,8 +5,8 @@ Fluxos de ingestão, triagem, preparo editorial e publicação no catálogo.
 ## Skills
 
 - `./ebook-importer/SKILL.md` — **Porta única da fila de importação**: workflow, statuses, CLI, hardening, ciclo manual Windows e índice de scripts.
-- `./sharebook-physical-book-importer/SKILL.md` — Importação e triagem de livros físicos.
-- `./sharebook-category-organizer/SKILL.md` — Gestão, taxonomia e hierarquia de categorias.
+- `./physical-book-importer/SKILL.md` — Importação e triagem de livros físicos.
+- `./category-organizer/SKILL.md` — Gestão, taxonomia e hierarquia de categorias.
 - `./escrever-livros/SKILL.md` — Produção editorial de PDFs e capas autorais.
 
 ## Uso

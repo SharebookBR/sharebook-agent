@@ -1,5 +1,5 @@
 ---
-name: sharebook-voice-glossary
+name: voice-glossary
 description: Use quando a tarefa envolver copy, nomenclatura, microcopy, emails, labels, mensagens, UX writing, revisão semântica ou dúvidas sobre termos oficiais do Sharebook. Também usar quando houver suspeita de inconsistência entre livro físico e livro digital, ou ao decidir se termos como doação, solicitação, doador(a), ganhador(a), livro digital, vitrine e data de escolha devem aparecer em frontend, backend, templates ou textos operacionais.
 ---
 
@@ -77,7 +77,7 @@ Ao revisar um texto, validar nesta ordem:
 
 ## Relação com outras skills
 
-- Se o foco principal for layout, hierarquia visual ou usabilidade da interface, combinar com `sharebook-ux-reviewer`.
+- Se o foco principal for layout, hierarquia visual ou usabilidade da interface, combinar com `ux-reviewer`.
 - Se o foco principal for mudança de código backend, combinar com `backend.md`.
 - Se o foco principal for operação ampla do ecossistema Sharebook, combinar com `sharebook-master-playbook.md`.
 

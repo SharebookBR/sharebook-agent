@@ -77,7 +77,7 @@ When sending the final weekly report to Raffa on WhatsApp:
 
 ## Canonical tools and paths
 
-- Read-only DB query skill: `sharebook-agent/skills/engineering/sharebook-postgres-ro/SKILL.md`
+- Read-only DB query skill: `sharebook-agent/skills/engineering/postgres-ro/SKILL.md`
 - VPS helper: `sharebook-agent/scripts/infra/vps_ssh.py`
 - VPS playbook: `sharebook-agent/skills/infra/coolify-vps.md`
 

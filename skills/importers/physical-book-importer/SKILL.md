@@ -1,5 +1,5 @@
 ---
-name: sharebook-physical-book-importer
+name: physical-book-importer
 description: Cadastra livros físicos no Sharebook usando foto da capa, pesquisa de contexto, frete explícito e API de produção. Use quando o usuário quiser importar ou cadastrar livros impressos, montar sinopses editoriais com base em fontes públicas confiáveis, aprovar os livros em produção e transformar atritos do fluxo em melhorias permanentes.
 ---
 

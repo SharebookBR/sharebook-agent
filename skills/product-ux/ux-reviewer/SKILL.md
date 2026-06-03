@@ -1,6 +1,6 @@
 ---
-name: sharebook-ux-reviewer
-description: Especialista em auditoria de UX e UI para o projeto Sharebook. Use esta skill para revisar interfaces (Angular/Bootstrap), hierarquia visual, copy em contexto de tela, templates de email e textos da API quando o foco principal for experiência de uso, clareza visual e aplicação do texto dentro da interface. Para dúvidas canônicas de terminologia, identidade verbal e distinção entre problema de vocabulário vs mecânica do produto, prefira primeiro a skill sharebook-voice-glossary.
+name: ux-reviewer
+description: Especialista em auditoria de UX e UI para o projeto Sharebook. Use esta skill para revisar interfaces (Angular/Bootstrap), hierarquia visual, copy em contexto de tela, templates de email e textos da API quando o foco principal for experiência de uso, clareza visual e aplicação do texto dentro da interface. Para dúvidas canônicas de terminologia, identidade verbal e distinção entre problema de vocabulário vs mecânica do produto, prefira primeiro a skill voice-glossary.
 ---
 
 # Sharebook UX Reviewer (Elite Edition) 😈
@@ -13,7 +13,7 @@ Esta skill transforma o agente em um guardião da experiência do usuário no Sh
 - Ao atualizar templates de email ou mensagens de erro da API, quando a dúvida principal for de experiência, clareza, hierarquia ou próximo passo do usuário.
 - Quando o usuário pedir para "revisar o design", "auditar a UX" ou revisar a aplicação do texto dentro de uma tela.
 
-Use **sharebook-voice-glossary** antes ou junto desta skill quando a dúvida principal for:
+Use **voice-glossary** antes ou junto desta skill quando a dúvida principal for:
 - termo oficial do Sharebook
 - glossário canônico
 - voz de produto
@@ -21,7 +21,7 @@ Use **sharebook-voice-glossary** antes ou junto desta skill quando a dúvida pri
 - decidir se o erro é de vocabulário ou de mecânica do fluxo
 
 ## 🛠️ Recursos de Apoio
-- **`references/vocabulary.md`**: Glossário local de apoio. Se houver divergência ou dúvida de precedência, consultar também a skill `sharebook-voice-glossary`, cuja fonte canônica atual está em `sharebook-voice-glossary/references/ux-writing-guide.md`.
+- **`references/vocabulary.md`**: Glossário local de apoio. Se houver divergência ou dúvida de precedência, consultar também a skill `voice-glossary`, cuja fonte canônica atual está em `voice-glossary/references/ux-writing-guide.md`.
 - **`references/ui-checklist.md`**: Guia de auditoria técnica (Bootstrap 4, Angular Material, Sentence Case).
 
 ## 🚀 Workflow Procedural
@@ -32,7 +32,7 @@ Use **sharebook-voice-glossary** antes ou junto desta skill quando a dúvida pri
 - Verifique se a estrutura visual (grid do Bootstrap) faz sentido para o fluxo.
 
 ### 2. Avaliação de Conformidade
-- **Vocabulário**: Validar os termos contra o `vocabulary.md` e, em caso de dúvida real ou conflito físico vs digital, consultar a skill `sharebook-voice-glossary` antes de concluir que um termo está errado.
+- **Vocabulário**: Validar os termos contra o `vocabulary.md` e, em caso de dúvida real ou conflito físico vs digital, consultar a skill `voice-glossary` antes de concluir que um termo está errado.
 - **Voz e Tom**: A mensagem ajuda o usuário a dar o próximo passo? O tom é acolhedor?
 - **Estética**: Títulos e botões estão em *sentence case*?
 
@@ -43,7 +43,7 @@ Use **sharebook-voice-glossary** antes ou junto desta skill quando a dúvida pri
 
 ## 🛑 Limites e Fronteiras
 - **Não mude a lógica de negócio**: Foque estritamente em UX/UI e aplicação do texto na experiência.
-- **Não arbitre sozinho conflitos canônicos de linguagem** quando houver dúvida real sobre identidade verbal do Sharebook. Nesses casos, consultar primeiro `sharebook-voice-glossary`.
+- **Não arbitre sozinho conflitos canônicos de linguagem** quando houver dúvida real sobre identidade verbal do Sharebook. Nesses casos, consultar primeiro `voice-glossary`.
 - **Respeite o Bootstrap 4**: Não tente forçar Tailwind ou CSS moderno se o componente usa Bootstrap.
 - **Seja Conciso**: Relate apenas o que importa. Aponte o erro, explique se ele é de UX, de vocabulário ou de mecânica do fluxo, e proponha o fix.
 

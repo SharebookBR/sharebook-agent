@@ -1,5 +1,5 @@
 ---
-name: sharebook-postgres-ro
+name: postgres-ro
 description: Consultas read-only no Postgres de produção do Sharebook usando scripts oficiais (direto sem SSH e fallback via SSH). Use quando precisar responder métricas, top lists, auditoria de jobs, inspeção de schema/tabelas/colunas e diagnósticos de dados sem alterar produção.
 ---
 

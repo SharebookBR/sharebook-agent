@@ -1,5 +1,5 @@
 ---
-name: sharebook-category-organizer
+name: category-organizer
 description: Organizar, simplificar ou reestruturar categorias e subcategorias do Sharebook com foco em descoberta. Use quando o usuário pedir para repensar taxonomia, dividir categoria superlotada, mapear livros para subcategoria, migrar livros em lote, aposentar categorias confusas, ou corrigir classificação editorial em produção.
 ---
 

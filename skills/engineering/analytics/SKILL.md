@@ -1,5 +1,5 @@
 ---
-name: sharebook-analytics-expert
+name: analytics
 description: Especialista em Google Analytics 4 para o Sharebook. Use para extrair métricas de tráfego, investigar comportamento em PDPs, comparar `page_view` vs `ebook_download`, inferir busca interna pela rota `/buscar/:criteria`, cruzar `buscar -> PDP` por `pageReferrer`, analisar origem orgânica (`sessionSourceMedium`, `sessionDefaultChannelGroup`) e explicar limites do GA4 versus tracing/observability.
 ---
 
@@ -204,4 +204,4 @@ python sharebook-agent/scripts/production/test_ga4_connection.py
 ```
 
 ---
-Para instalação de novos ambientes, consulte `sharebook-agent/skills/engineering/sharebook-analytics-expert/BOOTSTRAP.md`.
+Para instalação de novos ambientes, consulte `sharebook-agent/skills/engineering/analytics/BOOTSTRAP.md`.
