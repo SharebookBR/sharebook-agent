@@ -41,8 +41,8 @@ def extract_book_data(html: str) -> dict:
         r'<title>([^<]+)</title>',
     ]
     author_patterns = [
-        r'Autor:\s*</strong>\s*<br[^>]*>\s*<a[^>]*>([^<]+)</a>',
-        r'Autor:\s*<a[^>]*>([^<]+)</a>',
+        r'Autor:\s*</strong>\s*<br[^>]*>(.*?)</p>',
+        r'Autor:\s*</strong>(.*?)</p>',
         r'Autor:([^<\n]+)',
     ]
     synopsis_patterns = [
@@ -60,7 +60,11 @@ def extract_book_data(html: str) -> dict:
     for pattern in author_patterns:
         m = re.search(pattern, html, re.I | re.S)
         if m:
-            author = clean_text(m.group(1))
+            names = re.findall(r'<a[^>]*>([^<]+)</a>', m.group(1))
+            if names:
+                author = ', '.join(clean_text(n) for n in names)
+            else:
+                author = clean_text(m.group(1))
             break
 
     for pattern in synopsis_patterns:
