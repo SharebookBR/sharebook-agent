@@ -216,6 +216,38 @@ Ele tem mandato para:
 
 ---
 
+## 🤝 Sonho manual — modo colaborativo
+
+O Dream autônomo tem mandato claro, mas tem um limite estrutural: **não sabe o que é realmente usado**.
+
+Uso real vive em parte no rastro de memória, em parte na cabeça do Raffa. Scripts nunca mencionados em memória podem ser críticos ou podem ser lixo — o Dream não tem como distinguir sem presença humana.
+
+O **sonho manual** — sessão com Raffa presente — resolve isso. O julgamento editorial vem junto com a execução. Decisões de deleção que o Dream autônomo não teria coragem de tomar ficam desbloqueadas.
+
+### Quando preferir sonho manual
+
+- Reorganização estrutural profunda (renomear famílias, fundir skills, aposentar pastas)
+- Deleção de scripts ou artefatos sem rastro de uso claro nas memórias
+- Decisões que dependem de "o que eu realmente uso" — informação que não está em arquivo nenhum
+
+### O que o Dream autônomo faz bem sozinho
+
+- Promover aprendizado de memória episódica para skill existente
+- Atualizar guardrails e heurísticas já codificadas
+- Identificar e sinalizar candidatos a limpeza para o próximo sonho manual
+- Reorganizar documentação sem deletar
+
+### Heurísticas descobertas em sonhos manuais (2026-06-03)
+
+Candidatos fortes a lixo — apresentar ao Raffa antes de deletar:
+- Scripts sem nenhuma referência em memória episódica recente
+- Pastas sem `SKILL.md` e sem referência ativa em nenhum documento operacional
+- Arquivos `archive/` dentro do repo (o git já tem o histórico)
+- Índices separados (`scripts.md`, `INDEX.md`) quando o `SKILL.md` poderia absorver
+- Prefixos redundantes no nome de pastas (ex: `sharebook-` quando tudo já é Sharebook)
+
+---
+
 ## 🧨 Anti-padrões
 
 - Tratar `MEMORY.md` monolítico como destino principal de conhecimento durável.
