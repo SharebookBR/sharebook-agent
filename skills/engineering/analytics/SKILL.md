@@ -146,7 +146,13 @@ Dashboard integrado ao painel admin em 2026-06-01.
 | `ebook_download` | clique em download na PDP | `details.component.ts` |
 | `social_share` | clique em compartilhar na PDP | `details.component.ts` |
 | `amazon_click` | clique no botão Amazon na PDP | `details.component.ts` |
+| `share_modal_open` | clique em "Compartilhar com amigos" na PDP | `details.component.ts` |
+| `social_share` | escolha do canal no modal de compartilhamento | `details.component.ts` |
 | `search` | submit do formulário de busca | `input-search.component.ts` (desktop) e `mais-sheet.component.ts` (mobile) |
+
+**Botões da PDP sem evento GA4** (intencional):
+- "Denunciar direitos autorais" — sem interesse de rastreamento
+- "Editar livro" — sem interesse de rastreamento
 
 Todos usam `GoogleAnalyticsService.sendEvent` já existente.
 
