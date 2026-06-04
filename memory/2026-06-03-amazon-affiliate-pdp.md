@@ -40,8 +40,15 @@
 - Badge `badge-danger` "Não disponível." removido
 - Modal de denúncia corrigido para mobile: `minWidth: 450` → `min(92vw, 560px)` + `sharebook-mobile-dialog`
 
-### Commit
-- `7bf454f` no `sharebook-frontend` — build validado antes do push
+### Evento de busca interna no GA4
+- `input-search.component.ts` passou a disparar `sendEvent('search', { search_term: term })` a cada busca
+- Evento `search` é recomendado pelo GA4 — aparece automaticamente no relatório "Termos de pesquisa" sem configuração extra
+- Antes dessa mudança o GA4 só via o `page_view` da rota `/buscar/termo`, sem relatório de termos agregado
+- Commit `0cfcf25`
+
+### Commits
+- `7bf454f` — botão Amazon na PDP
+- `0cfcf25` — evento search na busca interna
 
 ## Decisões tomadas
 - Botão Amazon sempre visível (CTA secundário em ebooks, primário em físicos doados)
