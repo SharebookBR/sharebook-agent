@@ -89,6 +89,27 @@ Expandir o que já existe: adicionar `isbn`, `inLanguage`, `numberOfPages`, `gen
 ### 6. Alt text dinâmico na capa — **nova prioridade baixa**
 Substituir `"Book image"` por `"Capa do livro {título} de {autor}"`.
 
+### 7. Decisão pendente: livros doados devem aparecer na busca interna? — **discussão necessária**
+
+Temos 1.647 livros físicos já doados (Received/Sent/Canceled) indexados e com PDP funcionando.
+Agora que as PDPs desses livros têm o botão Amazon, elas têm valor real — não são mais becos sem saída.
+
+**Trade-offs a discutir:**
+
+| Abordagem | Prós | Contras |
+|---|---|---|
+| Mostrar normalmente na busca | Mais conteúdo indexável, mais chance de rankear, Amazon button ativo | Frustra usuário que quer receber o livro e não pode |
+| Não mostrar na busca interna | Busca interna só retorna livros acionáveis | Perde tráfego orgânico do Google em livros populares já doados |
+| Mostrar por último (depois dos disponíveis) | Equilíbrio — disponíveis primeiro, doados como fallback | Complexidade de ordenação, pode ainda frustrar |
+| Mostrar com label claro "já doado" | Expectativa gerenciada desde a listagem | Usuário pode ignorar e não chegar na PDP |
+
+**Perguntas que precisam de resposta antes de decidir:**
+- Qual % dos cliques orgânicos do Google vai pra livros já doados vs. disponíveis?
+- O usuário que chega via Google numa PDP de livro doado converte no Amazon? (monitorar com GA `amazon_click`)
+- A busca interna e o tráfego orgânico do Google são públicos diferentes com intenções diferentes?
+
+**Hipótese:** busca interna = intenção de receber grátis → filtrar doados faz sentido. Tráfego orgânico Google = descoberta/informação → manter indexado e com Amazon button é o correto. As duas estratégias podem coexistir.
+
 ---
 
 ## 📊 Métricas de sucesso
