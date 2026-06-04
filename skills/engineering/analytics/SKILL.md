@@ -233,10 +233,15 @@ Verificar no Google Search Console > Cobertura > "Soft 404" — tendência deve 
 
 ## Scripts disponíveis
 
-### Teste de conexão
-```bash
-python sharebook-agent/scripts/production/test_ga4_connection.py
-```
+Todos em `scripts/production/`. Preferir scripts existentes antes de inventar query manual.
+
+| Script | Quando usar |
+|---|---|
+| `test_ga4_connection.py` | Testar conexão com a property. Rodar primeiro se a API não responder. |
+| `ga4_list_dimensions.py` | Listar custom dimensions registradas. Diagnosticar `(not set)` na API. |
+| `ga4_new_events.py` | Checar `search` e `amazon_click` por data (ontem + hoje). Útil após deploy. |
+| `ga4_events_30d.py` | Panorama completo dos 10 eventos rastreados nos últimos 30 dias. |
+| `ga4_search_via_pagepath.py` | Uso da busca via `/buscar/*` nos últimos 30 dias. Alternativa histórica ao evento `search` (custom dim só a partir de 04/06/2026). |
 
 ---
 Para instalação de novos ambientes, consulte `sharebook-agent/skills/engineering/analytics/BOOTSTRAP.md`.

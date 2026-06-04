@@ -3,11 +3,7 @@
 Operações em produção, autenticação, banco e storage.
 
 ## Scripts de Analytics GA4
-- `test_ga4_connection.py` — testa conexão com a property GA4 (`386966473`). Rodar antes de qualquer outra query GA4.
-- `ga4_list_dimensions.py` — lista todas as custom dimensions registradas na property. Útil para diagnosticar por que um parâmetro retorna `(not set)`.
-- `ga4_new_events.py` — métricas dos eventos `search` e `amazon_click` por data (ontem + hoje). Ponto de entrada para checar eventos recém-deployados.
-- `ga4_events_30d.py` — panorama completo dos 10 eventos rastreados nos últimos 30 dias (ocorrências + usuários).
-- `ga4_search_via_pagepath.py` — uso da busca interna via `pagePath /buscar/*` nos últimos 30 dias. Alternativa ao evento `search` para dados históricos anteriores a 04/06/2026.
+→ Indexados em `skills/engineering/analytics/SKILL.md`
 
 ## Scripts de exploração e diagnóstico
 - `explore_db.py` — lista todas as tabelas e row counts dos dois bancos (`sharebook` e `sharebook_importer`). Ponto de entrada rápido para qualquer sessão nova.
