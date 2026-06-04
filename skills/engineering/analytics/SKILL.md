@@ -139,52 +139,65 @@ Dashboard integrado ao painel admin em 2026-06-01.
 
 ### Eventos rastreados
 
-| Evento | Onde dispara | Componente |
-|---|---|---|
-| `login` | após auth bem-sucedida | `login.component.ts` |
-| `sign_up` | após cadastro bem-sucedido | `register.component.ts` |
-| `ebook_download` | clique em download na PDP | `details.component.ts` |
-| `social_share` | clique em compartilhar na PDP | `details.component.ts` |
-| `amazon_click` | clique no botão Amazon na PDP | `details.component.ts` |
-| `share_modal_open` | clique em "Compartilhar com amigos" na PDP | `details.component.ts` |
-| `social_share` | escolha do canal no modal de compartilhamento | `details.component.ts` |
-| `search` | submit do formulário de busca | `input-search.component.ts` (desktop) e `mais-sheet.component.ts` (mobile) |
+Todos usam `GoogleAnalyticsService.sendEvent` em `src/app/core/services/analytics/google-analytics.service.ts`. Só dispara em `environment.production` e `isBrowser()`.
 
-**Botões da PDP sem evento GA4** (intencional):
-- "Denunciar direitos autorais" — sem interesse de rastreamento
-- "Editar livro" — sem interesse de rastreamento
+| Evento | Quando dispara | Componente | Parâmetros enviados | No dashboard |
+|---|---|---|---|---|
+| `login` | auth bem-sucedida | `login.component.ts` | `method: 'email'` | ✅ |
+| `sign_up` | cadastro bem-sucedido | `register.component.ts` | `method: 'email'` | ✅ |
+| `ebook_download` | clique em download na PDP | `details.component.ts` | `book_title`, `book_slug` | ✅ |
+| `amazon_click` | clique no botão Amazon na PDP | `details.component.ts` | `book_title`, `book_slug` | ✅ |
+| `share_modal_open` | clique em "Compartilhar com amigos" na PDP | `details.component.ts` | `book_title`, `book_slug` | ✅ |
+| `social_share` | escolha do canal no modal de compartilhamento | `details.component.ts` | `book_title`, `book_slug`, `method` (canal) | ✅ |
+| `search` | submit da busca | `input-search.component.ts` (desktop) + `mais-sheet.component.ts` (mobile) | `search_term` | ✅ |
+| `book_request_modal_open` | abriu modal de pedido de livro | `request.component.ts` | `book_id`, `book_title` | ✅ |
+| `book_request_success` | pedido enviado com sucesso | `request.component.ts` | `book_id`, `book_title` | ✅ |
+| `book_request_error` | pedido falhou | `request.component.ts` | `book_id`, `book_title` | ✅ |
 
-Todos usam `GoogleAnalyticsService.sendEvent` já existente.
+**Botões sem evento GA4** (intencional): "Denunciar direitos autorais" e "Editar livro".
 
-**Atenção — busca mobile:** a busca no mobile é feita pelo `MaisSheetComponent` (bottom sheet "Mais"), **não** pelo `InputSearchComponent`. São dois pontos de entrada independentes. Qualquer novo evento de busca precisa ser adicionado nos dois.
+**Atenção — busca mobile:** `MaisSheetComponent` (bottom sheet "Mais") e `InputSearchComponent` (header desktop) são pontos independentes. Novo evento de busca vai nos dois.
+
+**Funis úteis:**
+- Pedido: `book_request_modal_open` → `book_request_success` (conversão de pedido)
+- Compartilhamento: `share_modal_open` → `social_share` (conversão de share)
 
 ### Custom Dimensions registradas na property
 
-Parâmetros de eventos só ficam disponíveis na Data API se registrados em **GA4 Admin → Definições personalizadas → Dimensões personalizadas**. Não retroage — dados anteriores ao registro ficam indisponíveis.
+Parâmetros só ficam disponíveis na Data API após registro em **GA4 Admin → Exibição de dados → Definições personalizadas**. Não retroage.
 
-| Dimensão | Parâmetro | Evento(s) | Registrada em |
+| Dimensão (API) | Parâmetro | Eventos que enviam | Registrada em |
 |---|---|---|---|
-| `search_term` | `search_term` | `search` | 04/06/2026 |
-| `book_title` | `book_title` | `amazon_click`, `ebook_download`, `social_share` | 04/06/2026 |
-| `book_slug` | `book_slug` | `amazon_click`, `ebook_download`, `social_share` | 04/06/2026 |
+| `customEvent:search_term` | `search_term` | `search` | 04/06/2026 |
+| `customEvent:book_title` | `book_title` | `amazon_click`, `ebook_download`, `share_modal_open`, `social_share`, `book_request_*` | 04/06/2026 |
+| `customEvent:book_slug` | `book_slug` | `amazon_click`, `ebook_download`, `share_modal_open`, `social_share` | 04/06/2026 |
 
-**Regra:** ao criar um novo evento com parâmetros relevantes para análise, registrar a custom dimension imediatamente — antes de checar métricas.
+**Parâmetros enviados mas NÃO registrados como custom dimension:** `method` (canal do `social_share`), `book_id` (eventos de pedido).
+
+**Regra:** ao criar evento novo com parâmetros relevantes, registrar a custom dimension imediatamente — dados não retroagem.
 
 ### Configuração de credenciais
 
 Credenciais via variável de ambiente `GA4__CredentialsBase64` (base64 do `ga4-key.json`). No Coolify, duplo underscore é separador de seção. O `appsettings.json` tem a seção `GA4.CredentialsBase64` vazia (só documentação).
 
-### KPIs e filtro de semana
+### Dashboard Analytics (`/admin/analytics`)
 
-- 4 KPIs: sessões, downloads, logins, cadastros — filtrados pela semana selecionada
-- Tabelas: top livros por views e downloads — filtradas por semana
-- Todos os dados chegam numa única chamada de API (filtro de semana é 100% client-side)
-- Select de semana: ISO week internamente, conversão para `YYYY-MM-Wn` só no display
-- Semana corrente com highlight laranja no select
+Endpoint: `GET /api/analytics/dashboard` — cache 24h no backend (`IMemoryCache`).
+
+**Payload retornado:**
+- `sessions`, `downloads`, `logins`, `signups` — séries semanais (12 semanas)
+- `totalDownloads`, `totalLogins`, `totalSignups` — totais do período
+- `topBooksByViews`, `topBooksByDownloads` — top 10 acumulado
+- `topBooksByViewsPerWeek`, `topBooksByDownloadsPerWeek` — top 10 por semana
+- `eventSummary` — contagem de todos os eventos rastreados (período completo)
+- `eventSummaryPerWeek` — contagem por semana (filtro de semana client-side)
+
+**KPIs:** sessões, downloads, logins, cadastros — filtrados pela semana selecionada.
+**Select de semana:** ISO week internamente, display `YYYY-MM-Wn`. Semana corrente com highlight laranja.
 
 ### Biblioteca de charts
 
-Chart.js instalado via npm (`npm install chart.js`). Usar para visualizações de tendência semanal.
+Chart.js via npm (`npm install chart.js`).
 
 ---
 
