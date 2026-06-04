@@ -139,14 +139,30 @@ Dashboard integrado ao painel admin em 2026-06-01.
 
 ### Eventos rastreados
 
-| Evento | Onde dispara |
-|---|---|
-| `login` | `login.component.ts` após auth bem-sucedida |
-| `sign_up` | `register.component.ts` após cadastro bem-sucedido |
-| `ebook_download` | PDP ao clicar em download |
-| `social_share` | PDP ao clicar em compartilhar |
+| Evento | Onde dispara | Componente |
+|---|---|---|
+| `login` | após auth bem-sucedida | `login.component.ts` |
+| `sign_up` | após cadastro bem-sucedido | `register.component.ts` |
+| `ebook_download` | clique em download na PDP | `details.component.ts` |
+| `social_share` | clique em compartilhar na PDP | `details.component.ts` |
+| `amazon_click` | clique no botão Amazon na PDP | `details.component.ts` |
+| `search` | submit do formulário de busca | `input-search.component.ts` (desktop) e `mais-sheet.component.ts` (mobile) |
 
 Todos usam `GoogleAnalyticsService.sendEvent` já existente.
+
+**Atenção — busca mobile:** a busca no mobile é feita pelo `MaisSheetComponent` (bottom sheet "Mais"), **não** pelo `InputSearchComponent`. São dois pontos de entrada independentes. Qualquer novo evento de busca precisa ser adicionado nos dois.
+
+### Custom Dimensions registradas na property
+
+Parâmetros de eventos só ficam disponíveis na Data API se registrados em **GA4 Admin → Definições personalizadas → Dimensões personalizadas**. Não retroage — dados anteriores ao registro ficam indisponíveis.
+
+| Dimensão | Parâmetro | Evento(s) | Registrada em |
+|---|---|---|---|
+| `search_term` | `search_term` | `search` | 04/06/2026 |
+| `book_title` | `book_title` | `amazon_click`, `ebook_download`, `social_share` | 04/06/2026 |
+| `book_slug` | `book_slug` | `amazon_click`, `ebook_download`, `social_share` | 04/06/2026 |
+
+**Regra:** ao criar um novo evento com parâmetros relevantes para análise, registrar a custom dimension imediatamente — antes de checar métricas.
 
 ### Configuração de credenciais
 
