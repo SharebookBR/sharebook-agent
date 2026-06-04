@@ -99,8 +99,9 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 
 ## Fim da sessão
 1. Criar memória episódica em `sharebook-agent/memory/YYYY-MM-DD-tema.md`
-2. Fazer um sync nos repos.
-3. Commit e push dos demais repos modificados na sessão.
+2. Indexar scripts novos na skill correspondente ao domínio — não no `INDEX.md` genérico de produção.
+3. Fazer um sync nos repos.
+4. Commit e push dos demais repos modificados na sessão.
 
 ---
 
