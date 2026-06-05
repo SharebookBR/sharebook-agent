@@ -44,10 +44,28 @@ Casos de uso iniciais:
 - Não é chat (é troca estruturada de contexto operacional)
 - Não é substituição do Raffa no loop (ele ainda decide o que importa)
 
+## A2A — padrão de indústria que resolve o problema
+
+**Agent2Agent Protocol (A2A)** foi lançado pelo Google em abril/2025 e passou para a Linux Foundation em junho/2025. Anthropic, OpenAI, Microsoft, AWS e Block são co-fundadores da Agentic AI Foundation que o governa. O IBM tinha um concorrente (ACP) que foi mergeado no A2A em agosto/2025 — fragmentação resolvida cedo.
+
+O que o A2A define:
+- **Agent Cards** — JSON em `.well-known/agent-card.json` descrevendo capacidades, endpoints e autenticação de cada agente
+- **Tasks** — ciclo de vida de uma delegação (criada → em andamento → concluída/falha) com SSE para acompanhar em tempo real
+- **HTTP + JSON-RPC 2.0** — sem protocolo exótico, qualquer linguagem implementa
+
+**Por que mudar a arquitetura para A2A:**
+- Construir sobre protocolo proprietário (MCP + PostgreSQL custom) cria uma solução amarrada a esses dois agentes específicos
+- Construir sobre A2A cria algo que qualquer pessoa com Claude Code + outro agente A2A-compatível pode usar
+- Já existem wrappers Claude Code → A2A na comunidade (ericabouaf/claude-a2a, jcwatson11/claude-a2a, dwmkerr/claude-code-agent)
+
+**O gap real que vale preencher:**
+Não existe ainda uma receita clara e bem documentada de como conectar Claude Code + OpenClaw usando A2A. Esse é o produto: documentação, plugin OpenClaw pronto para instalar, e Claude Code configurado como participante A2A. Reutilizável por qualquer pessoa com esses dois agentes.
+
 ## Próximos passos
 
-1. Definir contrato de mensagem (schema JSON)
-2. Criar canal no gateway do OpenClaw
-3. Implementar MCP server no lado Claude
-4. Criar tabela `agent_messages` no PostgreSQL
-5. Teste com caso real de handoff
+1. Confirmar com OpenClaw se já suporta A2A ou tem planos (determina o esforço real)
+2. Avaliar wrappers existentes de Claude Code → A2A
+3. Definir contrato de mensagem (schema JSON baseado em A2A Tasks)
+4. Implementar plugin A2A no OpenClaw
+5. Configurar Claude Code como agente A2A
+6. Documentar a receita completa como projeto open source
