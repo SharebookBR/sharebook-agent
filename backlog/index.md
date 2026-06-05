@@ -22,6 +22,7 @@
 - **[Nova Fonte: InfoQ Minibooks](backlog/todo/fonte-infoq.md)**: Minibooks técnicos gratuitos da InfoQ — arquitetura, microserviços, DevOps, linguagens. Conteúdo de alta qualidade editorial.
 - **[Nova Fonte: InTech Open](backlog/todo/fonte-intechopen.md)**: Editora acadêmica open access. Livros de Computer and Information Science disponíveis gratuitamente em `intechopen.com/subjects/9`.
 - **[Nova Fonte: JSBooks](backlog/todo/fonte-jsbooks.md)**: Diretório curado de ebooks gratuitos de JavaScript. Repo GitHub `revolunet/JSBooks` com links diretos para PDFs.
+- **[Canal Claude ↔ OpenClaw](backlog/todo/canal-claude-openclaw.md)**: Canal peer-to-peer assimétrico entre os dois agentes via MCP + PostgreSQL. Claude inicia, OpenClaw responde via gateway. Sem hierarquia — divisão de papéis por capacidade.
 
 ---
 Para detalhes de execução de cada item, consulte o arquivo correspondente na pasta `todo/`.

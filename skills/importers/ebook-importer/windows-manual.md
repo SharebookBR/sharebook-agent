@@ -4,6 +4,14 @@ Usado quando o worker automático falha (`source_blocked`, PDF grande demais) e 
 
 ---
 
+## ⚠️ Regra crítica: não rodar triage no Windows (exceto validação)
+
+**Nunca rodar `triage-once` no Windows para avançar um item de verdade.** O triage materializa arquivos localmente (`var/tmp/triage-<ID>/`). O worker de publish roda no OpenClaw e espera encontrar esses arquivos lá — se foram criados no Windows, o publish falha.
+
+**Exceção permitida**: rodar `triage-once` no Windows *apenas para validar* que o worker conseguiria processar o item (ex: confirmar que um PDF direto é acessível). Nesse caso, após a validação, resetar o item para `waiting_triage` e deixar o OpenClaw triá-lo de verdade.
+
+---
+
 ## Quando usar
 
 - Item em `source_blocked` com PDF baixável manualmente (WAF, signed URL, domínio migrado)
