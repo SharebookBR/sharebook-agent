@@ -61,11 +61,24 @@ O que o A2A define:
 **O gap real que vale preencher:**
 Não existe ainda uma receita clara e bem documentada de como conectar Claude Code + OpenClaw usando A2A. Esse é o produto: documentação, plugin OpenClaw pronto para instalar, e Claude Code configurado como participante A2A. Reutilizável por qualquer pessoa com esses dois agentes.
 
+## Descoberta: win4r/openclaw-a2a-gateway
+
+Repo público no GitHub: https://github.com/win4r/openclaw-a2a-gateway
+
+- Plugin TypeScript que implementa A2A v0.3.0 para OpenClaw
+- v1.4.0, 512 stars, MIT, criado fev/2026
+- Inclui descoberta DNS-SD, circuit breaker, auditoria JSONL, roteamento inteligente
+
+**Ressalva importante**: "OpenClaw" pode ser um nome genérico para mais de um produto. Esse plugin pode ter sido construído para uma versão pública/diferente, não para o ambiente específico que usamos. Precisa ser validado com o OpenClaw antes de qualquer investimento.
+
+**Pendência**: confirmar com OpenClaw se reconhece esse plugin como compatível.
+
 ## Próximos passos
 
 1. Confirmar com OpenClaw se já suporta A2A ou tem planos (determina o esforço real)
-2. Avaliar wrappers existentes de Claude Code → A2A
-3. Definir contrato de mensagem (schema JSON baseado em A2A Tasks)
-4. Implementar plugin A2A no OpenClaw
-5. Configurar Claude Code como agente A2A
-6. Documentar a receita completa como projeto open source
+2. Confirmar se win4r/openclaw-a2a-gateway é compatível com o OpenClaw que usamos
+3. Avaliar wrappers existentes de Claude Code → A2A
+4. Definir contrato de mensagem (schema JSON baseado em A2A Tasks)
+5. Implementar plugin A2A no OpenClaw (ou instalar o existente se compatível)
+6. Configurar Claude Code como agente A2A
+7. Documentar a receita completa como projeto open source
