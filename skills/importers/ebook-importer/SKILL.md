@@ -191,6 +191,18 @@ Não separar `cd` e `python3` em steps distintos no contexto agentic/cron.
 
 ## Worker Hardening Patterns
 
+### Source blocked como feedback de hardening
+
+Quando um item em `source_blocked` for salvo manualmente, tentar preferencialmente transformar o aprendizado em melhoria do worker/crawler antes de seguir limpando a fila na mão.
+
+Fluxo recomendado:
+1. Entender por que caiu em `source_blocked`.
+2. Classificar o caso como `true_blocked`, `triage_rejected` ou `recoverable`.
+3. Se for `recoverable` e o padrão tiver chance razoável de se repetir, endurecer resolver/extractor/crawler e adicionar teste.
+4. Só então corrigir o item e devolver para `waiting_triage` ou avançar pelo ciclo manual.
+
+Exceções existem: WAF agressivo, fluxo assinado, domínio quebrado de forma única, curadoria rara, ou automação com custo maior que o ganho. Nesses casos, documentar o motivo e operar manualmente sem transformar exceção em arquitetura.
+
 ### Rejeição precoce (antes do extractor)
 
 - **Vídeos**: `_VIDEO_HOSTS` + `_is_video_url()` → `triage_rejected`

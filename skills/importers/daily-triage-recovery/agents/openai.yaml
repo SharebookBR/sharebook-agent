@@ -1,0 +1,4 @@
+interface:
+  display_name: "Daily Triage Recovery"
+  short_description: "Recover today's importer triage failures"
+  default_prompt: "Analyze today's Sharebook importer triage failures in America/Sao_Paulo time, focusing on source_blocked items and whether to recover, reject, or harden the worker."
