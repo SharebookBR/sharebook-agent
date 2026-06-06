@@ -52,7 +52,7 @@ cd C:\Repos\SHAREBOOK\sharebook-agent
 python skills/importers/ebook-importer/scripts/manual_triage_windows.py --ids <id1> <id2>
 ```
 
-Replica `TriageWorker.run_once()`: valida magic bytes, extrai texto, checa duplicata, monta `metadata_json`, move para `waiting_editor`.
+Replica `TriageWorker.run_once()`: valida magic bytes, extrai texto, checa duplicata, monta `metadata_json`, move para `waiting_editorial`.
 
 PDFs esperados em `C:\Users\raffa\Downloads\<id>.pdf`.
 
@@ -133,6 +133,6 @@ Ver `scripts.md` para índice completo. Scripts do ciclo manual:
 
 | Script | Uso |
 |---|---|
-| `skills/importers/ebook-importer/scripts/manual_triage_windows.py` | Triagem: `source_blocked` → `waiting_editor` |
+| `skills/importers/ebook-importer/scripts/manual_triage_windows.py` | Triagem: `source_blocked` → `waiting_editorial` |
 | `skills/importers/ebook-importer/scripts/render_covers.py` | Capa: página 1 do PDF como PNG |
 | `skills/importers/ebook-importer/scripts/publish_fake_pdf.py` | Publish: fake PDF + S3 real → `done` |

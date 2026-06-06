@@ -69,7 +69,7 @@ Prefer transforming manual recovery into worker hardening when the pattern is re
 
 Use when the item points to HTML but an official direct PDF exists.
 
-Result: update `source_url`, optionally title/author, reset to `waiting_triage`, run worker, confirm `waiting_editor`.
+Result: update `source_url`, optionally title/author, reset to `waiting_triage`, run worker, confirm `waiting_editorial`.
 
 ### Worker Hardening
 

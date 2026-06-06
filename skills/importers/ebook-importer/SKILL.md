@@ -19,7 +19,7 @@ Uma skill. Uma porta. Sem teatro.
 
 - sincronizar source/fila
 - rodar `triage-once` ou `publish-once`
-- revisar `retry_later`, `error`, `waiting_editor`, `waiting_process` por ID
+- revisar `triage_retry`, `publish_retry`, `error`, `waiting_editorial`, `waiting_publish` por ID
 - instalar, remover ou reinstalar o cron local
 - reanimar worker após restart de container
 - diagnosticar ausência de bins/deps no ambiente
@@ -47,8 +47,8 @@ Se esta skill divergir do código/README do importer, o importer manda.
 - Não inventar status fora do conjunto canônico.
 - `duplicate` não é `done`.
 - `triage_rejected` conta como erro.
-- Falha temporária → `retry_later`, não `error`.
-- Editorial faltando → `waiting_editor`, não mascarar como erro técnico.
+- Falha temporária → `triage_retry` (triage worker) ou `publish_retry` (publish worker), não `error`.
+- Editorial faltando → `waiting_editorial`, não mascarar como erro técnico.
 - **`metadata_json` é acumulativo**: merge sempre, nunca sobrescrever cegamente.
 - **`sys.executable`**: nunca hardcode `python3` — no Windows resolve para stub do Microsoft Store.
 - **Editorial por source vive no banco**: `importer.sources.editorial_prompt` é a fonte da verdade.
@@ -59,12 +59,13 @@ Se esta skill divergir do código/README do importer, o importer manda.
 ## Status canônico
 
 ```
-waiting_triage → triaging → waiting_editor → editing → waiting_process → processing → done
-                          ↘ triage_rejected
-                          ↘ source_blocked
-                          ↘ retry_later
-                          ↘ duplicate
-                          ↘ error
+waiting_triage → triaging → waiting_editorial → editing → waiting_publish → publishing → done
+                           ↘ triage_rejected
+                           ↘ source_blocked
+                           ↘ triage_retry
+                           ↘ publish_retry (origem: publish worker)
+                           ↘ duplicate
+                           ↘ error
 ```
 
 ---
@@ -81,7 +82,7 @@ python cli.py triage-once --source <SOURCE>
 python cli.py triage-once --id <ID>
 ```
 
-O `triage_worker.py` pega item em `waiting_triage`, extrai via `extractors/`, valida PDF, encaminha para `waiting_editor`, `triage_rejected`, `source_blocked` ou `retry_later`.
+O `triage_worker.py` pega item em `waiting_triage`, extrai via `extractors/`, valida PDF, encaminha para `waiting_editorial`, `triage_rejected`, `source_blocked` ou `triage_retry`.
 
 ### 2. Handoff editorial
 
@@ -109,7 +110,7 @@ Guardrails de publish:
 - Categoria final: sempre folha
 - Sinopse: 3 parágrafos
 - Idioma padrão: português
-- Plano incompleto → volta para `waiting_editor`
+- Plano incompleto → volta para `waiting_editorial`
 - Capa: preferir fonte; gerar via API OpenAI **apenas com confirmação explícita do Raffa**
 
 ---
@@ -250,7 +251,7 @@ Procedimento:
 3. Validar magic bytes `%PDF-`
 4. Materializar em `var/tmp/triage-<ID>/source.pdf` + previews + `manifest.json`
 5. Atualizar `metadata_json` com `triage.mode = manual_browser_assisted`
-6. Mover para `waiting_editor`
+6. Mover para `waiting_editorial`
 
 Não fingir que o worker Python conseguiu sozinho.
 
@@ -287,7 +288,7 @@ Não fingir que o worker Python conseguiu sozinho.
 
 - Validar `IMPORTER_DB_DSN`
 - Se faltar `importer.queue_items`: conexão no banco errado
-- Item preso em `processing`/`triaging`/`editing`: destravar conscientemente
+- Item preso em `publishing`/`triaging`/`editing`: destravar conscientemente
 - Confiar no README do importer mais do que em memória antiga
 
 ---
@@ -304,7 +305,7 @@ Scripts em `skills/importers/ebook-importer/scripts/`. Regra: se não está aqui
 
 | Script | Comando | O que faz |
 |---|---|---|
-| `manual_triage_windows.py` | `python ... --ids <ids>` | Triagem: valida PDF, extrai texto, monta metadata → `waiting_editor` |
+| `manual_triage_windows.py` | `python ... --ids <ids>` | Triagem: valida PDF, extrai texto, monta metadata → `waiting_editorial` |
 | `render_covers.py` | `python ... --ids <ids>` | Renderiza página 1 como PNG, atualiza `triage.preview_pages` |
 | `publish_fake_pdf.py` | `python ... --id <id>` | Publica com fake.pdf, faz S3 upload do real, marca `done` |
 
