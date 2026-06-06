@@ -9,7 +9,7 @@
 # - Extrai texto das primeiras 15 paginas (pypdf, fallback fitz)
 # - Checa duplicata em producao pelo titulo exato
 # - Monta metadata_json no formato canonico do worker
-# - Cria run, marca triaging -> waiting_editor, fecha run
+# - Cria run, marca triaging -> waiting_editorial, fecha run
 # - Em caso de falha: marca source_blocked com last_error
 
 from __future__ import annotations
@@ -171,7 +171,7 @@ def db_mark_item(conn, item_id: int, status: str, *,
     with conn.cursor() as cur:
         # Lê estado atual para fazer merge de metadata (igual pg_db.mark_item)
         cur.execute(
-            "SELECT metadata_json, retry_count, max_retries FROM importer.queue_items WHERE id=%s",
+            "SELECT metadata_json FROM importer.queue_items WHERE id=%s",
             (item_id,),
         )
         current = cur.fetchone()
@@ -192,7 +192,7 @@ def db_mark_item(conn, item_id: int, status: str, *,
             """
             UPDATE importer.queue_items
             SET status=%s,
-                attempts=attempts + %s,
+                triage_attempts=triage_attempts + %s,
                 last_error=%s,
                 metadata_json=%s,
                 updated_at=%s
@@ -315,8 +315,8 @@ def triage_item(conn, env: dict[str, str], item: dict) -> bool:
             },
         }
 
-        # 9. Marca waiting_editor
-        db_mark_item(conn, item_id, "waiting_editor",
+        # 9. Marca waiting_editorial
+        db_mark_item(conn, item_id, "waiting_editorial",
                      last_error=None,
                      metadata_json=json.dumps(metadata, ensure_ascii=False))
         if author:
@@ -327,7 +327,7 @@ def triage_item(conn, env: dict[str, str], item: dict) -> bool:
         db_finish_run(conn, run_id, "ok", f"triage ok: {item_label}",
                       details_json=json.dumps(metadata, ensure_ascii=False))
         conn.commit()
-        print(f"  → waiting_editor  ✓")
+        print(f"  → waiting_editorial  ✓")
         return True
 
     except Exception as exc:

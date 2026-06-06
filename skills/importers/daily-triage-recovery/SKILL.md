@@ -43,6 +43,8 @@ For each item, classify it before touching the database:
 
 Prefer transforming manual recovery into worker hardening when the pattern is repeatable. Do not force automation for rare, expensive, or impossible cases.
 
+**Before marking anything `true_blocked` due to WAF or browser-only flow**: ask Raffa if he can download the PDF manually. WAF blocks the worker but not a human browser. A manual download + windows-manual.md flow can still save the item. Only give up after he confirms he cannot or does not want to.
+
 ## Workflow
 
 1. Query the item, source, status, `last_error`, history, and recent runs.
