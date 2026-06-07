@@ -69,6 +69,15 @@ cd C:\Repos\SHAREBOOK\sharebook-ebook-importer
 python cli.py plan-set --id <ID> --category-id <UUID> --synopsis-file <FILE> --author "<AUTOR>"
 ```
 
+Se a decisão humana for não publicar após a triagem, usar o comando canônico:
+
+```powershell
+cd C:\Repos\SHAREBOOK\sharebook-ebook-importer
+python cli.py editorial-reject --id <ID> --reason "<motivo humano claro>"
+```
+
+Opcionalmente, informar `--rejected-by <identificador>`. Não usar `status-set` genérico como playbook de rejeição editorial.
+
 **Nota**: o worker automático pode resetar o item para `waiting_triage` ("item sem PDF materializado"). Ignorar — o próximo passo bypassa o worker.
 
 ### Passo 3 — Capa

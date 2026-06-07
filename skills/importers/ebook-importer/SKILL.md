@@ -47,6 +47,7 @@ Se esta skill divergir do código/README do importer, o importer manda.
 - Não inventar status fora do conjunto canônico.
 - `duplicate` não é `done`.
 - `triage_rejected` conta como erro.
+- `editorial_rejected` = rejeição curatorial humana pós-triagem. Não usar como atalho para falha técnica, bloqueio de source, duplicata ou rejeição automática da triagem.
 - Falha temporária → `triage_retry` (triage worker) ou `publish_retry` (publish worker), não `error`.
 - Editorial faltando → `waiting_editorial`, não mascarar como erro técnico.
 - **`metadata_json` é acumulativo**: merge sempre, nunca sobrescrever cegamente.
@@ -63,6 +64,7 @@ waiting_triage → triaging → waiting_editorial → editing → waiting_publis
                            ↘ triage_rejected
                            ↘ source_blocked
                            ↘ triage_retry
+                           ↘ editorial_rejected
                            ↘ publish_retry (origem: publish worker)
                            ↘ duplicate
                            ↘ error
@@ -91,6 +93,12 @@ python cli.py editor-next --source <SOURCE>
 python cli.py plan-set --id <ID> --category-id <UUID> --synopsis-file <FILE> --author "<AUTOR>"
 ```
 
+Saídas legítimas do handoff:
+- publicar o plano via `plan-set`
+- rejeitar editorialmente via `editorial-reject`
+
+Não usar `status-set` genérico para rejeição curatorial. O caminho canônico é `python cli.py editorial-reject --id <ID> --reason "<motivo humano>"`.
+
 ### 3. Publicação
 
 ```bash
@@ -102,6 +110,8 @@ python cli.py publish-once --id <ID>
 Guardrails de publish:
 - `planned_cover_mode='source'` sem `manifest.downloaded_cover_path` → "capa da fonte não foi baixada"
 - Publisher precisa garantir `out_dir` antes de gravar `synopsis.txt`
+- Item com triagem/editorial íntegros e PDF real materializado pode falhar só no transporte do publish. Se `prepare_pdf_for_publish()` estimar payload acima de `upload_request_limit_bytes`, tentar otimização com Ghostscript; se ainda exceder, tratar como gargalo de upload/publish, não como falha de triagem.
+- Não inventar PDF fake como solução padrão dentro do OpenClaw. Para PDF grande demais, o conserto estrutural preferido é melhorar o fluxo de upload de arquivos grandes; o workaround Windows com fake PDF + S3 direto continua sendo exceção operacional.
 
 ---
 
@@ -176,9 +186,57 @@ bash setup-importer-cron.sh install && bash setup-importer-cron.sh status
 
 - Uma leitura: `editor-next`
 - Uma escrita: `plan-set`
+- Uma rejeição curatorial legítima: `python cli.py editorial-reject --id <ID> --reason "<motivo humano>"`
 - Regra editorial canônica: `importer.sources.editorial_prompt`
 - Não reabrir consultas extras quando o payload concierge já trouxer o contexto
 - `pg_db.mark_item()` deve preservar `metadata_json` por merge — erosão entre etapas é bug estrutural
+
+### `editorial_rejected` — doutrina
+
+Usar quando a triagem já aprovou material suficiente para handoff, mas a curadoria humana decide conscientemente não publicar o item.
+
+É para casos como:
+- livro real e publicável, mas fraco demais para a linha editorial atual;
+- conteúdo válido porém redundante, raso ou desalinhado com a coleção, sem ser duplicata técnica/canônica;
+- item que passou na mecânica, mas perde na avaliação humana de qualidade, adequação ou prioridade editorial.
+
+Não usar quando o caso for:
+- `triage_rejected`: não é livro publicável, não há PDF redistribuível, é vídeo, curso, página HTML, plataforma paga, pirataria, etc.;
+- `source_blocked`: existe possível valor, mas o acesso/asset falhou ou ficou bloqueado;
+- `duplicate`: já existe no catálogo pela regra operacional de duplicidade;
+- `error`/retry: falha técnica, transitória ou bug de processo.
+
+Exemplos rápidos:
+- **Usar `editorial_rejected`**: manual introdutório real, com PDF e metadados íntegros, mas banal demais para entrar na curadoria final.
+- **Não usar**: URL do YouTube, landing page sem PDF, Leanpub sem PDF público, PDF corrompido, item já existente.
+
+### Ação canônica para rejeição editorial
+
+Usar o comando nativo do importer:
+
+```bash
+python cli.py editorial-reject --id <ID> --reason "<motivo humano>"
+```
+
+Opcionalmente, informar `--rejected-by <identificador>`.
+
+Esse comando registra `editorial_rejection` em `metadata_json`, copia o motivo para `last_error`, zera `retry_after`, grava histórico em `importer.queue_item_history` e move o item para `editorial_rejected`.
+
+Nunca documentar `status-set --status editorial_rejected` como caminho principal. `status-set` é ferramenta genérica de manutenção, não semântica curatorial.
+
+### `status-set` — fronteira correta
+
+Usar `status-set` apenas para manutenção operacional genérica, quando o objetivo for corrigir ou destravar estado canônico sem semântica editorial própria.
+
+Exemplos aceitáveis:
+- devolver item para `waiting_triage` ou `waiting_publish` durante recovery consciente;
+- destravar estado preso para nova passagem do worker;
+- ajuste manual excepcional com nota operacional.
+
+Exemplos não aceitáveis:
+- rejeição curatorial pós-triagem (`editorial_rejected`);
+- simular `plan-set`;
+- mascarar falha técnica ou bloqueio de source como decisão humana.
 
 ### Runtime OpenClaw/mini
 
@@ -229,10 +287,25 @@ Exceções existem: WAF agressivo, fluxo assinado, domínio quebrado de forma ú
 - **Wayback**: modificador `if_` força entrega do binário sem toolbar HTML
 - **bepress**: handler dedicado `resolve_bepress_assets`
 - **Microsoft Download Center**: parsear bloco JSON da página
+- **Ebook Foundation / OpenText / links `open/download?type=pdf|print_pdf`**: tentar resolver o asset PDF direto antes de desistir
+- **HTML-books sem PDF público direto**: classificar explicitamente por família, não mascarar como erro genérico de `%PDF`
+  - `bookdown_html_book` → ex.: `clauswilke.com/dataviz/`, GitBook afins
+  - `mdbook_html_book` → ex.: `relm4.org/book/stable/`, `gtk-rs`
+  - `browser_print_html_book` → ex.: `raytracing.github.io`, `pbr-book.org`
+- O erro canônico deve explicar a família (`livro HTML/bookdown...`, `livro HTML/mdBook...`) para diferenciar falta estrutural de PDF público de falha transitória.
 
 ### `sync_queue` — comportamento correto
 
 Sync atualiza apenas `title` e `updated_at` em itens existentes. Nunca resetar `status`, `last_error` ou metadados operacionais.
+
+### Heartbeat de hardening do importer
+
+Quando o heartbeat pegar `source_blocked` recorrente por família de URL, o alvo preferencial é transformar o caso em uma destas saídas:
+- resolver asset PDF público reutilizável;
+- classificar a família HTML de forma explícita;
+- resetar o item para `waiting_triage` e colher feedback real com `triage-once`.
+
+Quiet check sem avanço estrutural é pouco. O heartbeat bom deixa o worker menos burro.
 
 ---
 

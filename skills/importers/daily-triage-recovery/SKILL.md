@@ -38,6 +38,7 @@ For each item, classify it before touching the database:
 - `recoverable`: official/public PDF exists or the source URL can be corrected.
 - `hardening_candidate`: the fix is likely to repeat and belongs in extractor/worker/crawler logic.
 - `triage_rejected`: source is HTML-only, video, platform page, paywall, non-ebook, pirated source, or no redistributable PDF.
+- `editorial_rejected`: a human curator later decides the item should not enter the catalog even though triage succeeded.
 - `true_blocked`: WAF, signed download, browser-only flow, broken host, or access restriction that is not worth automating now.
 - `new_source_candidate`: the item itself is not a book, but reveals a reusable source worth adding later.
 
@@ -54,7 +55,8 @@ Prefer transforming manual recovery into worker hardening when the pattern is re
 5. Discuss the intended action with Raffa before changing production state, unless he explicitly asked to execute.
 6. If hardening is worthwhile, patch the worker/extractor first and validate locally.
 7. Return the item to `waiting_triage`, run `triage-once --id <ID>`, and collect feedback.
-8. Report final item status, run status/id, history transition, manifest PDF URL, and any commit hash.
+8. If Raffa provides the PDF manually for a blocked item, treat that as a manual recovery path, not as evidence that the worker is fixed. Preserve the item ID mapping, triage carefully, and decide whether the pattern still deserves hardening.
+9. Report final item status, run status/id, history transition, manifest PDF URL, and any commit hash.
 
 ## Database Guardrails
 
@@ -84,6 +86,14 @@ Result: patch code, run local focused test, reset item, run worker, collect feed
 Use when there is no public/redistributable PDF or the item is not a book.
 
 Result: prefer worker-based `triage_rejected` with readable `last_error` / `triage.detail`; avoid leaving semantic failures as `source_blocked`.
+
+HTML-book families sem PDF público direto entram aqui ou em `true_blocked` conforme o caso, mas sempre com classificação explícita. Não voltar para o erro genérico de "conteúdo inválido sem %PDF".
+
+### Editorial Rejection
+
+Use only after the item has legitimately reached editorial handoff and the curator makes a human selection call.
+
+Result: run `python cli.py editorial-reject --id <ID> --reason "<motivo humano>"` so the human rationale is recorded in the importer itself. Do not retroactively call this `triage_rejected`, and do not use generic `status-set` as the canonical playbook.
 
 ### Leave Quiet
 
