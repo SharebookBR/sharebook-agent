@@ -64,7 +64,7 @@ Prefer transforming manual recovery into worker hardening when the pattern is re
 - Use IDs, never queue position.
 - Preserve `metadata_json`; merge rather than overwrite when doing direct DB work.
 - Do not mark a manually rescued item `done`; let the worker flow advance it.
-- For source URL corrections, set `status='waiting_triage'`, clear `last_error`, clear `retry_after`, reset `retry_count=0`, and insert history.
+- For source URL corrections, set `status='waiting_triage'`, clear `last_error`, clear `retry_after`, reset `triage_attempts=0`, and insert history. (`retry_count` foi removido no redesenho de schema de 2026-06-06.)
 - If changing code, commit and push after validation.
 
 ## Common Outcomes

@@ -164,6 +164,32 @@ npm test
 npm run build-prod
 ```
 
+## Amazon Affiliate Button
+
+Tag: `sharebook09-20`. Link dinâmico: `https://www.amazon.com.br/s?k=TITULO+AUTOR&tag=sharebook09-20`
+
+Regras de hierarquia na PDP:
+- Livro físico já doado → `mat-flat-button accent` (primário — único CTA da página)
+- Ebook disponível ou físico disponível → `mat-stroked-button` (secundário, abaixo do CTA principal)
+
+Sempre: `rel="noopener noreferrer sponsored"` (SEO correto para afiliado). GA event: `amazon_click` com `book_title` + `book_slug`.
+
+Máximo um `mat-flat-button accent` por página — Amazon nunca compete com "Receber livro digital".
+
+## Hover padrão em botões
+
+```scss
+&:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+```
+
+Aplicar a CTAs em PDPs e cards de ação. Não aplicar em botões inline de formulários ou links de texto.
+
+---
+
 ## Referências
 - [`sharebook-agent/skills/product-ux/ux-reviewer/SKILL.md`](../product-ux/ux-reviewer/SKILL.md) - Para auditoria crítica de fluxos.
 - [`sharebook-agent/skills/product-ux/web-design-reviewer/SKILL.md`](../product-ux/web-design-reviewer/SKILL.md) - Para correção visual e layout.

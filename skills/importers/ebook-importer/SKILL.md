@@ -52,6 +52,7 @@ Se esta skill divergir do código/README do importer, o importer manda.
 - Editorial faltando → `waiting_editorial`, não mascarar como erro técnico.
 - **`metadata_json` é acumulativo**: merge sempre, nunca sobrescrever cegamente.
 - **`sys.executable`**: nunca hardcode `python3` — no Windows resolve para stub do Microsoft Store.
+- **Sync de schema → varrer scripts/**: ao redesenhar nomes de status ou colunas, varrer `skills/importers/ebook-importer/scripts/` além dos arquivos `.md`. Scripts Python dependem dos mesmos nomes e quebram silenciosamente se ficarem desatualizados.
 - **Editorial por source vive no banco**: `importer.sources.editorial_prompt` é a fonte da verdade.
 - **Categorias sempre folha**: consultar `GET /api/category/Counts` antes de mapear. Nunca inventar.
 
@@ -288,11 +289,20 @@ Exceções existem: WAF agressivo, fluxo assinado, domínio quebrado de forma ú
 - **bepress**: handler dedicado `resolve_bepress_assets`
 - **Microsoft Download Center**: parsear bloco JSON da página
 - **Ebook Foundation / OpenText / links `open/download?type=pdf|print_pdf`**: tentar resolver o asset PDF direto antes de desistir
+- **realtimerendering** (Ray Tracing Gems): `CookieJar` + `urllib.request.build_opener` abre a página oficial primeiro, recebe cookies Cloudflare simples, depois baixa o PDF na mesma sessão — "enganador de WAF civilizado". Propaga title/author via manifest.
 - **HTML-books sem PDF público direto**: classificar explicitamente por família, não mascarar como erro genérico de `%PDF`
   - `bookdown_html_book` → ex.: `clauswilke.com/dataviz/`, GitBook afins
   - `mdbook_html_book` → ex.: `relm4.org/book/stable/`, `gtk-rs`
   - `browser_print_html_book` → ex.: `raytracing.github.io`, `pbr-book.org`
-- O erro canônico deve explicar a família (`livro HTML/bookdown...`, `livro HTML/mdBook...`) para diferenciar falta estrutural de PDF público de falha transitória.
+- O erro canônico deve explicar a família (`livro HTML/bookdown...`, `livro HTML/mdBook...`) para diferenciar falta estrutural de PDF público de falha transitória. `discover_assets_from_html()` emite erro semântico quando não encontra PDF redistribuível → `triage_worker` interpreta como `triage_rejected` limpo, não `source_blocked`.
+
+### Backoff por fase e threshold de bloqueio
+
+Tentativas por fase (não mais global `retry_count`):
+- `triage_attempts`: contadas pelo triage worker
+- `publish_attempts`: contadas pelo publish worker
+- Backoff indexado pelo número de tentativas da fase: 30 min (1) → 2h (2) → 12h (3+)
+- **Threshold**: 5 tentativas em qualquer fase → `source_blocked`
 
 ### `sync_queue` — comportamento correto
 

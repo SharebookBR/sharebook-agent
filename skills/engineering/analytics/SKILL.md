@@ -16,7 +16,7 @@ GET https://api.sharebook.com.br/api/analytics/dashboard
 Authorization: Bearer <SHAREBOOK_PROD_ACCESS_TOKEN>
 ```
 
-Retorna em uma chamada: sessões por semana (13 semanas), downloads, logins, cadastros, top 10 livros por views e downloads (acumulado e por semana). Cache de 24h no backend — resposta instantânea na maioria das vezes.
+Retorna em uma chamada: sessões por semana (13 semanas), downloads, logins, cadastros, top 10 livros por views e downloads (acumulado e por semana). Cache de 12h no backend — resposta instantânea na maioria das vezes.
 
 Usar a API GA4 diretamente só quando precisar de granularidade, filtros ou métricas que o endpoint não expõe.
 
@@ -135,7 +135,7 @@ Dashboard integrado ao painel admin em 2026-06-01.
 ### Acesso
 - Rota Angular: `/admin/analytics` (protegida por `AuthGuardAdmin`)
 - Endpoint backend: `GET /api/analytics/dashboard` (admin only, `[AuthorizationFilter(Permissions.Permission.ApproveBook)]`)
-- Cache `IMemoryCache` com TTL 24h — primeira request do dia bate no GA4, restante instantâneo
+- Cache `IMemoryCache` com TTL 12h — primeira request bate no GA4, restante instantâneo
 
 ### Eventos rastreados
 
@@ -182,7 +182,7 @@ Credenciais via variável de ambiente `GA4__CredentialsBase64` (base64 do `ga4-k
 
 ### Dashboard Analytics (`/admin/analytics`)
 
-Endpoint: `GET /api/analytics/dashboard` — cache 24h no backend (`IMemoryCache`).
+Endpoint: `GET /api/analytics/dashboard` — cache 12h no backend (`IMemoryCache`).
 
 **Payload retornado:**
 - `sessions`, `downloads`, `logins`, `signups` — séries semanais (12 semanas)

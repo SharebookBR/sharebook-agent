@@ -138,7 +138,7 @@ Path(r'C:\Temp\fake.pdf').write_bytes(minimal)
 
 ## Scripts
 
-Ver `scripts.md` para índice completo. Scripts do ciclo manual:
+Ver seção **Scripts** em `SKILL.md` para índice completo. Scripts do ciclo manual:
 
 | Script | Uso |
 |---|---|
