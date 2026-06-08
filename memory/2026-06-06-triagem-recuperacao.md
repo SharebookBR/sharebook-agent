@@ -32,6 +32,22 @@ Claude Sonnet 4.6, Windows local.
 - `plan-set` (Ted Sundstrom, categoria Geral, synopsis em inglês)
 - `publish_fake_pdf.py` → `done`, S3 OK
 
+**Triagem de triage_rejected (IDs 1534+):** 28 itens analisados — 8 recuperados, 20 não recuperáveis.
+
+Itens enviados para `waiting_triage` com URL corrigida:
+- 1535 — Understanding Machine Learning (PDF direto Huji)
+- 1538 — A Gentle Introduction to the Art of Mathematics (GitHub raw)
+- 1540 — Applied Combinatorics (appliedcombinatorics.org)
+- 1541 — Applied Discrete Structures (discretemath.org)
+- 1557 — Elementary Real Analysis (classicalrealanalysis.info)
+- 1558 — Essentials of Metaheuristics (subdomínio GMU mudou: people.cs.gmu.edu)
+- 1561 — Geometry with Cosmic Topology (mphitchman.com/geometry/GCTscreen.pdf)
+- 1575 — Mathematical Discovery (classicalrealanalysis.info)
+
+Não recuperáveis: artigos de blog, livros HTML-only, plataformas com login (CK-12, Leanpub), Trinity Digital Commons (403 sistêmico), Milne gateway com nonce dinâmico.
+
+**Workflow de subagentes**: tentativa com Workflow falhou (StructuredOutput não chamado pelos agentes). Solução: WebFetch inline + 2 subagentes via Agent tool para os incertos. Funcionou bem.
+
 ## Decisões tomadas
 
 - **Regra nova na skill de triagem**: antes de marcar `true_blocked` por WAF, pedir ao Raffa se ele consegue baixar manualmente.
