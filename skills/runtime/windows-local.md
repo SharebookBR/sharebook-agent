@@ -102,11 +102,19 @@ Ambiente configurado em 2026-05-23. Não há fricção de setup — tudo já est
 - **Script de exploração rápida**: `C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\explore_db.py`
 - **Atenção**: tabelas do `sharebook` têm nomes PascalCase — sempre usar aspas duplas nas queries: `SELECT * FROM "Books"`.
 
-Exemplo mínimo de conexão:
+Exemplo mínimo de conexão (credenciais sempre do `.env`, nunca hardcode):
 ```python
-import psycopg2
-conn = psycopg2.connect(host="212.85.23.202", port=5432, dbname="sharebook",
-    user="sharebook_ai_ro", password="3-nbj0bw3STVkxlcCeEO2ZFwtvyn", sslmode="disable")
+import os, psycopg2
+from dotenv import load_dotenv
+load_dotenv(r"C:\Repos\SHAREBOOK\sharebook-agent\.env")
+conn = psycopg2.connect(
+    host=os.getenv("SHAREBOOK_PROD_PG_RO_HOST"),
+    port=int(os.getenv("SHAREBOOK_PROD_PG_RO_PORT")),
+    dbname=os.getenv("SHAREBOOK_PROD_PG_RO_DATABASE"),
+    user=os.getenv("SHAREBOOK_PROD_PG_RO_USER"),
+    password=os.getenv("SHAREBOOK_PROD_PG_RO_PASSWORD"),
+    sslmode=os.getenv("SHAREBOOK_PROD_PG_RO_SSLMODE", "disable")
+)
 ```
 
 ## `python3` no Windows = stub do Microsoft Store
