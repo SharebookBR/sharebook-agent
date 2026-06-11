@@ -104,6 +104,7 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 
 ## Fim da sessão
 1. Criar memória episódica em `sharebook-agent/memory/YYYY-MM-DD-tema.md`
+   > Sempre que o Raffa falar em "memória episódica", ele está pensando em `sharebook-agent/memory/` — não em outro sistema de memória.
 2. Indexar scripts novos na skill correspondente ao domínio — não no `INDEX.md` genérico de produção.
 3. **Autocrítica estrutural**: durante essa sessão, encontrei alguma inconsistência no sistema de conhecimento (regra que contradiz princípio, skill não indexada, rota errada, conhecimento solto não persistido)? Se sim, corrigir antes de fechar.
 4. Fazer um sync nos repos.
