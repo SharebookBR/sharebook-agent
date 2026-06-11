@@ -12,9 +12,9 @@ Cadastrar livro físico é parecido com ebook, mas não igual. Esta skill existe
 1. Ler a capa ou foto do exemplar e confirmar título, autor e editora legíveis.
 2. Pesquisar contexto público confiável antes de escrever a sinopse. Priorizar páginas de editora, livraria, acervo ou resenha claramente atribuída.
 3. Escrever sinopse de vitrine com no mínimo 3 parágrafos, sexy, tom envolvente e sem inventar fatos que a pesquisa não sustenta.
-4. Em sessão manual de PowerShell, se houver vários cadastros seguidos, dot-source `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_login.ps1` para renovar o token, salvá-lo no `.env` e reaproveitá-lo na sessão atual.
+4. Em sessão manual de PowerShell, se houver vários cadastros seguidos, rodar `python C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\sharebook_refresh_token.py` para renovar o token (o `sharebook_prod_login.ps1` está quebrado — módulo `sharebook_prod_auth` ausente).
 5. Antes de cadastrar, consultar `GET /api/Category` e confirmar que a categoria escolhida é folha (`children` vazio). Em caso de homônimo, usar sempre `--category-id`.
-6. Cadastrar com `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_book.py create --type Printed --freight-option ... --approve`, preferindo `--synopsis-file` em UTF-8.
+6. Cadastrar com `C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\sharebook_prod_book.py create --type Printed --freight-option ... --approve`, preferindo `--synopsis-file` em UTF-8.
 7. Validar o retorno publicado com `find-many` ou pelo próprio payload do script.
 8. Reflita sobre as fricções nessa sessão e fique a vontade pra melhorar essa skill ou scripts.
 
@@ -34,30 +34,33 @@ Cadastrar livro físico é parecido com ebook, mas não igual. Esta skill existe
 
 ## Scripts úteis
 
-- `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_book.py`
+- `C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\sharebook_prod_book.py`
   - Hoje opera livro físico e digital.
   - Para físico, usar `create --type Printed --freight-option ...`.
   - Para ebook, usar `create --type Eletronic --pdf-path ...`.
   - Aceita `--synopsis` ou `--synopsis-file`.
   - `find-many --pairs-file` é útil para validar vários cadastros com um único login.
-- `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_login.ps1`
-  - Renova `SHAREBOOK_PROD_ACCESS_TOKEN`, salva no `.env` e carrega na sessão atual do PowerShell.
+- `C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\sharebook_refresh_token.py`
+  - Renova `SHAREBOOK_PROD_ACCESS_TOKEN`, salva no `.env` automaticamente.
+  - **Usar este em vez do `sharebook_prod_login.ps1`** — o .ps1 está quebrado (módulo `sharebook_prod_auth` ausente desde 2026-06-11).
+- `C:\Repos\SHAREBOOK\sharebook-agent\scripts\web\sharebook_prod_login.ps1`
+  - ⚠️ QUEBRADO desde 2026-06-11: `ModuleNotFoundError: No module named 'sharebook_prod_auth'`. Não usar até corrigir.
 
 ## Execução sugerida
 
 ```powershell
-. C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_login.ps1
+python C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\sharebook_refresh_token.py
 ```
 
 ```powershell
-python C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_book.py create `
+python C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\sharebook_prod_book.py create `
   --type Printed `
-  --title "Manual da Destruição" `
-  --author "Alexandre Dal Farra" `
+  --title "Título do Livro" `
+  --author "Nome do Autor" `
   --category-id "<ID_CATEGORIA_FOLHA>" `
   --freight-option Country `
-  --synopsis-file C:\REPOS\SHAREBOOK\codex-temp\manual-da-destruicao\synopsis.txt `
-  --image-path "C:\Users\brnra019\Downloads\manual-da-destruicao.jpeg" `
+  --synopsis-file "C:\Repos\SHAREBOOK\codex-temp\<slug>\synopsis.txt" `
+  --image-path "C:\Users\raffa\Downloads\<foto-da-capa.jpeg>" `
   --approve
 ```
 

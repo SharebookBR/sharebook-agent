@@ -254,6 +254,8 @@ def update_book(args: argparse.Namespace, token: str) -> dict[str, Any]:
     user_id = current.get("userId") or "00000000-0000-0000-0000-000000000000"
     facilitator_id = current.get("userIdFacilitator") or "00000000-0000-0000-0000-000000000000"
 
+    choose_date = getattr(args, "choose_date", None) or current.get("chooseDate")
+
     payload: dict[str, Any] = {
         "Id": args.id,
         "Title": title,
@@ -265,7 +267,7 @@ def update_book(args: argparse.Namespace, token: str) -> dict[str, Any]:
         "ImageName": Path(args.image_path).name if getattr(args, "image_path", None) else "",
         "ImageBytes": base64.b64encode(image_bytes).decode("ascii") if image_bytes else [],
         "Synopsis": synopsis,
-        "ChooseDate": current.get("chooseDate"),
+        "ChooseDate": choose_date,
         "FreightOption": args.freight_option if args.freight_option is not None else current.get("freightOption"),
         "Type": book_type,
         "PdfBytes": base64.b64encode(pdf_bytes).decode("ascii") if pdf_bytes else [],
@@ -358,6 +360,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--freight-option",
         choices=["City", "State", "Country", "World", "WithoutFreight"],
         help="Opcional para atualizar livro fisico.",
+    )
+    update_parser.add_argument(
+        "--choose-date",
+        help="Data de decisao no formato ISO 8601 (ex: 2026-07-16T03:00:00Z).",
     )
     update_parser.add_argument("--approve", action="store_true")
 
