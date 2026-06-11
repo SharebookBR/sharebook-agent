@@ -80,6 +80,8 @@ Use o mecanismo mais nativo e menos improvisado que resolva o problema.
 - Se o ambiente também usar cron Linux interno, manter o setup reidempotente, documentado e versionado.
 - Não depender de configuração manual feita via `docker exec` que não esteja scriptada.
 - Quando o trabalho ficar mais longo, complexo ou destacável, considerar subagente ou tarefa assíncrona.
+- **Padrão para subagentes: usar `mode: "session"`.**
+- **Só usar `mode: "run"` quando houver motivo forte e com ok explícito do Raffa.**
 - Não usar polling frenético. Preferir `yieldMs`, `process poll` com timeout decente, ou cron quando o caso for espera longa.
 - Tratar sessões e subagentes como ferramenta normal de separação de contexto, não como extravagância.
 
