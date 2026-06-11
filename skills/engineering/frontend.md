@@ -142,9 +142,11 @@ Caso real — CodeMirror no modal editorial:
 ## Regras Técnicas e Armadilhas
 
 ### Design de Modais (Mobile)
-- **Não usar hacks de CSS local**: Para garantir consistência em todo o app, use o **Override Global** no arquivo `src/style/custom-theme.scss`.
-- **Padrão Mobile**: Todo modal no celular deve ter 100% de largura (`width: 100% !important`) com padding reduzido de `15px` para maximizar a legibilidade.
-- **Modal com conteúdo expansivo**: Usar `max-height: 80vh` + `flex: 1; min-height: 0; overflow-y: auto` no body + `flex-shrink: 0` no footer para garantir que o footer sempre apareça.
+- Problema de modal cortado no mobile quase nunca é bug isolado do componente. Suspeitar primeiro de duas causas sistêmicas: `dialog.open(...)` com `minWidth`/larguras fixas incoerentes e override global agressivo em `src/custom-theme.scss` forçando Material dialog para `100vw` sem respeitar internals.
+- **Não usar hacks de CSS local**: para consistência, preferir correção estrutural na camada global do Material dialog e depois alinhar a configuração de `dialog.open(...)` nos componentes.
+- **Padrão Mobile**: todo modal no celular deve ter largura mobile-safe de forma consistente, sem mistura caótica de `minWidth` fixo por modal. Se precisar ocupar a tela, fazer isso com critério, sem quebrar título, body rolável e footer.
+- **Modal com conteúdo expansivo**: usar `max-height: 80vh` + `flex: 1; min-height: 0; overflow-y: auto` no body + `flex-shrink: 0` no footer para garantir que o footer sempre apareça.
+- Em legado de modais, endurecer também a estrutura interna: título, ações e scroll precisam ser mobile-safe antes de sair remendando CSS pontual de um componente por vez.
 
 ### Sincronia e Build
 - **Build Real > Ambiente Local**: O comportamento no ambiente de produção (CI/CD) é a única verdade. Sempre valide se o build passa antes de considerar a tarefa concluída.
