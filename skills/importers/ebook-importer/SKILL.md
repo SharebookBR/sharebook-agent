@@ -304,6 +304,18 @@ Tentativas por fase (não mais global `retry_count`):
 - Backoff indexado pelo número de tentativas da fase: 30 min (1) → 2h (2) → 12h (3+)
 - **Threshold**: 5 tentativas em qualquer fase → `source_blocked`
 
+### Triagem por subagentes — critério duplo obrigatório
+
+Ao delegar itens a subagentes para triagem (ex.: batch de `source_blocked`, `triage_rejected`), a instrução deve incluir **dois critérios como condição de "recuperável"**, não apenas acessibilidade:
+
+1. **PDF acessível**: URL direta, sem paywall, sem login, sem WAF intransponível.
+2. **Licença aberta**: domínio público, CC com redistribuição, autores que explicitamente permitem distribuição gratuita. Não assumir — verificar na página do autor ou no PDF.
+
+Subagentes que verificam só acessibilidade passam itens com "all rights reserved" para `waiting_triage`, o OpenClaw então rejeita e gera retrabalho. Aprendizado: 3 itens revertidos na sessão 06-08 por essa falha de instrução.
+
+Formulação recomendada para a instrução ao subagente:
+> "Para cada item, verifique se existe PDF publicamente acessível E se a licença permite redistribuição gratuita. Se algum dos dois critérios falhar, classifique como triage_rejected."
+
 ### `sync_queue` — comportamento correto
 
 Sync atualiza apenas `title` e `updated_at` em itens existentes. Nunca resetar `status`, `last_error` ou metadados operacionais.

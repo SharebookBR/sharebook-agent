@@ -49,6 +49,79 @@ O Sharebook utiliza SSR para SEO e performance. Siga estes padrões para evitar 
 - **Meta Tags**: Garanta que as meta tags de redes sociais (OpenGraph) sejam renderizadas no servidor para correta indexação.
 - **Moment-timezone**: Cuidado com importações de `moment-timezone` no ambiente Node; prefira importações ES nativas quando possível.
 
+### SSR — Bugs Arquiteturais Pagos
+
+**1. SsrCacheService: `_store` deve ser variável de módulo, não propriedade de instância**
+
+Angular Universal cria um contexto Angular novo por request → `private store = new Map()` como propriedade de instância morre a cada request → cache nunca funciona.
+
+Fix: declarar `_store` fora da classe (escopo de módulo JS):
+```typescript
+// Fora da classe:
+const _store = new Map<string, any>();
+
+@Injectable({ providedIn: 'root' })
+export class SsrCacheService {
+  get(key: string) { return _store.get(key); }
+  set(key: string, value: any) { _store.set(key, value); }
+  has(key: string) { return _store.has(key); }
+}
+```
+Persiste enquanto o processo Node.js estiver vivo. `providedIn: 'root'` não é singleton entre requests no SSR — a variável de módulo é.
+
+**2. RESPONSE token ausente no `server.ts`**
+
+Sem `RESPONSE` nos providers do `res.render()`, todos os `@Optional() @Inject(RESPONSE)` nos componentes recebem `null` → `this.response?.status(404)` nunca dispara → soft 404 para Googlebot.
+
+Fix em `server.ts`:
+```typescript
+import { REQUEST, RESPONSE } from '@nguniversal/express-engine/tokens';
+
+app.get('*', (req, res) => {
+  res.render('index', {
+    req,
+    providers: [
+      { provide: REQUEST, useValue: req },
+      { provide: RESPONSE, useValue: res },
+    ],
+  });
+});
+```
+Sem isso, o SEO de 404 está invisível para crawlers.
+
+**3. TransferState: popular manualmente no cache hit**
+
+Quando `BookService` retorna `of(cached)` em vez de ir pelo `HttpClient`, o `TransferStateInterceptor` não roda → `angular-state` fica vazio → browser re-fetcha e re-sorteia (ex: categorias da home mudam a cada F5).
+
+Fix: no cache hit em ambiente servidor, popular `TransferState` com a mesma chave URL que o interceptor usa:
+```typescript
+import { TransferState, makeStateKey } from '@angular/platform-browser';
+import { isPlatformServer } from '@angular/common';
+
+// No serviço, ao retornar cache:
+if (isPlatformServer(this.platformId)) {
+  const key = makeStateKey<T>(url);
+  this.transferState.set(key, cached);
+}
+return of(cached);
+```
+
+**4. NotFoundPageComponent — 404 real vs. soft 404**
+
+Usar `router.navigate(['/404'])` causa soft 404: URL muda, crawler recebe HTTP 200 para a URL original.
+
+Padrão correto: renderizar `NotFoundPageComponent` inline no URL original com HTTP 404:
+```typescript
+// no componente com rota 404:
+@Optional() @Inject(RESPONSE) private response: any,
+
+ngOnInit() {
+  this.response?.status(404);
+  // renderizar conteúdo 404 sem redirecionar
+}
+```
+`NotFoundPageComponent` é o componente visual único (fonte da verdade). `NotFoundComponent` (rota `**`) é wrapper de 1 linha que o inclui. `BookDetailComponent` também o inclui quando livro não existe.
+
 ## Padrões de Layout
 
 ### Container

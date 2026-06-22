@@ -3,29 +3,28 @@
 Checkpoint oficial da consolidação de memória do projeto.
 
 ## Último dream
-- Data: `2026-06-01`
+- Data: `2026-06-21`
 - Tipo: `dream semanal automatizado`
-- Última memória absorvida: `C:\Repos\SHAREBOOK\sharebook-agent\memory\2026-06-01-weekly-digest-analysis.md`
-- Total de memórias lidas: `20 memórias episódicas absorvidas (2026-05-18 a 2026-06-01).`
+- Última memória absorvida: `C:\Repos\SHAREBOOK\sharebook-agent\memory\2026-06-17-preparo-editorial-e-publicacao-windows.md`
+- Total de memórias lidas: `13 memórias episódicas absorvidas (2026-06-02 a 2026-06-17)`
 
 ## Consolidação produzida
-- **Worker Hardening**: `public-ebook-importer.md` expandida com seções de hardening patterns (rejeição precoce, Wayback `if_`, SSL cross-platform, famílias de URL, `raise_for_restricted_html`, `sync_queue`, `metadata_json` acumulativo).
-- **Dashboard do Importador**: `public-ebook-importer.md` expandida com `admin_notes`, `queue_item_history` (event sourcing), Delta D-1 CTE e Histórico por item.
-- **Windows Local**: `windows-local.md` expandida com `python3` stub da MS Store, `bypassPermissions` user-only, paramiko SSH, `PYTHONUTF8=1`, `sharebook_refresh_token.py`.
-- **Manual Cycle Windows**: `manual-cycle-windows.md` com token refresh, pdftoppm suffix, payload JSON+base64.
-- **Frontend Angular**: `frontend.md` com z-index hierárquico, CDK overlay fix, `::ng-deep` guidance.
-- **Analytics**: `sharebook-analytics-expert/SKILL.md` com dashboard integrado, eventos rastreados, SEO operacional (soft 404, canonical www).
-- **Backend**: `backend.md` com SMTP rate limit self-healing backoff pattern.
+
+- **Windows Manual**: `windows-manual.md` expandida com Python 3.12 vs 3.14, compressão de capa (SSLEOFError), materialização de assets em `C:\data\workspace\...`, `publish-once --source + --limit`, boto3, sequência de diagnóstico de SSLEOFError, 4 novas armadilhas na tabela.
+- **Triagem por Subagentes**: `SKILL.md` do ebook-importer com guardrail de critério duplo (PDF acessível + licença aberta) para instruções de subagentes — raiz do gap em 06-08.
+- **SSR Frontend**: `frontend.md` com seção "SSR — Bugs Arquiteturais Pagos": SsrCacheService (variável de módulo), RESPONSE token no server.ts, TransferState manual no cache hit, NotFoundPageComponent como 404 real.
+- **Python no Windows**: `windows-local.md` expandida com armadilha Python 3.14 sobrescrevendo PATH, Python 3.12 como ambiente canônico, `publish-once --id` nas armadilhas recorrentes.
 
 ## Próximo dream
-- Começar lendo memórias criadas depois de `2026-06-01`.
-- Verificar estabilidade do Delta D-1 em produção — o CTE foi corrigido mas é jovem.
-- Monitorar se `queue_item_history` gerou novos padrões de análise ou novas features.
-- Auditar os 6 candidatos a novas sources (dBooks, Goalkicker, FreeTechBooks, InfoQ, InTech Open, JSBooks) — algum virou source real?
-- Verificar se o dashboard Analytics do GA4 gerou insights acionáveis.
-- Checar se `client_max_body_size` no nginx foi aumentado (elimina a necessidade do workaround PDF fake).
+- Começar lendo memórias criadas depois de `2026-06-17`.
+- Verificar se scripts temporários `tmp_count_books.py`, `tmp_slug_fisico.py` (criados em 06-03) ainda existem — candidatos a limpeza.
+- Verificar se `client_max_body_size` no nginx foi aumentado (elimina workaround de capa comprimida + fake PDF no Windows).
+- Verificar evolução do canal Claude↔OpenClaw no backlog — se virou trabalho real, criar skill.
+- Verificar se o cron do Dream estava funcionando — a última execução foi 06-01 e a janela 06-10 a 06-16 ficou sem memórias (sessões não registradas ou pausa real?).
+- Checar se `publish-once --id` foi adicionado ao CLI ou continua sem suporte.
 
 ## Observações
 - Dream executado de forma autônoma (scheduled task, sem usuário presente).
-- Nenhuma skill nova foi criada — todos os aprendizados foram absorvidos em skills existentes por coesão de domínio.
-- `queue_item_history` e Delta D-1 são regiões ativas — próximo Dream deve verificar evolução.
+- Nenhuma skill nova criada — todos os aprendizados absorvidos em skills existentes por coesão de domínio.
+- Safra maior que o ideal (3 semanas em vez de 1) — verificar regularidade do cron.
+- Canal A2A Claude↔OpenClaw está no backlog como roadmap, não como procedimento operacional. Não merece skill ainda.

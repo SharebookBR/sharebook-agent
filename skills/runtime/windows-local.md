@@ -117,7 +117,9 @@ conn = psycopg2.connect(
 )
 ```
 
-## `python3` no Windows = stub do Microsoft Store
+## Python no Windows — armadilhas de versão
+
+### `python3` no Windows = stub do Microsoft Store
 
 No Windows, o comando `python3` pode resolver para um stub do Microsoft Store que não executa nada (retorna rc=9009 silenciosamente). Isso se manifesta em scripts Python que chamam subprocessos com `["python3", ...]` — eles travam ou falham sem mensagem útil.
 
@@ -127,6 +129,16 @@ import sys, subprocess
 subprocess.run([sys.executable, "outro_script.py", ...])
 ```
 Isso funciona tanto no Windows quanto no Linux/OpenClaw sem condicionais.
+
+### `python` pode ser 3.14 sem dependências operacionais
+
+Se Python 3.14 for instalado depois, pode sobrescrever o `python` no PATH. O ambiente operacional com todas as dependências (`psycopg2`, `boto3`, `dotenv`, `pikepdf`) é o **Python 3.12**:
+
+```
+C:\Users\raffa\AppData\Local\Programs\Python\Python312\python.exe
+```
+
+Checar antes de operações críticas: `python --version`. Se retornar 3.14 e houver falha de importação, usar o path completo do 3.12. Instalar dep faltante no 3.12: `C:\Users\raffa\AppData\Local\Programs\Python\Python312\python.exe -m pip install --user <dep>`.
 
 ## bypassPermissions — onde configurar
 
@@ -166,8 +178,10 @@ Token da API pode expirar. O script `scripts/production/sharebook_refresh_token.
 - Confiar em memória de sessão quando o que precisava era registro durável.
 - Deixar regra específica de Windows poluir a camada genérica do `AGENTS.md`.
 - Usar `python3` sem verificar se é o stub do Microsoft Store — usar `sys.executable` nos scripts.
+- Usar `python` sem verificar versão — pode ser 3.14 sem deps operacionais; o 3.12 é o ambiente canônico.
 - Configurar `bypassPermissions` no project settings em vez do user settings.
 - Tentar SSH não-interativo via shell sem paramiko.
+- Usar `publish-once --id` — o comando não aceita `--id`; usar `--source + --limit 1`.
 
 ## Quando promover aprendizado
 

@@ -34,6 +34,14 @@ C:\Users\raffa\AppData\Local\Microsoft\WinGet\Packages\
   poppler-25.07.0\Library\bin\pdftoppm.exe
 ```
 
+**Python**: o PATH pode ter Python 3.14 como `python`, mas o ambiente operacional com todas as dependências (`psycopg2`, `boto3`, `dotenv`) é o **Python 3.12**:
+```
+C:\Users\raffa\AppData\Local\Programs\Python\Python312\python.exe
+```
+Se `python` retornar 3.14 e falhar na importação de deps, usar o caminho completo acima. Verificar: `python --version`.
+
+Se `boto3` não estiver no Python 3.12: `pip install --user boto3` (instalado no usuário, não precisa de admin).
+
 **Token**: verificar antes de começar. Se houver 401, rodar:
 ```powershell
 python scripts/production/sharebook_refresh_token.py
@@ -89,6 +97,38 @@ python skills/importers/ebook-importer/scripts/render_covers.py --ids <id1> <id2
 
 Renderiza página 1 como PNG, grava path em `metadata_json.triage.preview_pages`.
 
+**Atenção ao tamanho da capa**: PNG gerado pode ultrapassar 800KB. Um payload grande (capa + PDF) causa `SSLEOFError` na API. Comprimir a capa para JPEG (~86KB) antes de publicar resolve o problema:
+```python
+from PIL import Image
+img = Image.open(r"C:\Users\raffa\Downloads\<id>-cover.png")
+img.save(r"C:\Users\raffa\Downloads\<id>-cover.jpg", "JPEG", quality=75)
+```
+Atualizar o path da capa em `metadata_json.triage.preview_pages` após compressão.
+
+### Passo 3b — Worker normal (alternativa ao fake PDF)
+
+Quando o PDF não é grande demais para o nginx, é possível usar o worker normal no Windows. Para isso, o worker espera os assets nos caminhos que o OpenClaw usaria — que não existem naturalmente no Windows:
+
+```
+C:\data\workspace\sharebook-ebook-importer\var\tmp\triage-<ID>\source.pdf
+C:\data\workspace\sharebook-ebook-importer\var\tmp\triage-<ID>\preview-pages\page-01.png
+```
+
+Materializar (espelhar) os assets nesses caminhos antes de rodar `publish-once`.
+
+**`publish-once` não aceita `--id`** — aceita só `--source` e `--limit`. Para publicar um item específico pelo worker normal, garantir que ele é o próximo elegível da fila (`waiting_publish`) e rodar:
+```powershell
+cd C:\Repos\SHAREBOOK\sharebook-ebook-importer
+python cli.py publish-once --source <SOURCE> --limit 1
+```
+
+Sequência de diagnóstico quando `SSLEOFError` persiste:
+1. Checar tamanho da capa — comprimir se > ~300KB.
+2. Verificar se o PDF é realmente grande; se sim, usar fake PDF + S3.
+3. Renovar token se aparecer `401` em qualquer chamada.
+4. Verificar catálogo e importer (`sharebook_prod_book.py`, SELECT no banco) após cada tentativa.
+5. Não fazer retries cegos sem mudar a hipótese entre tentativas.
+
 ### Passo 4 — Publicação (fake PDF + S3)
 
 ```powershell
@@ -129,10 +169,15 @@ Path(r'C:\Temp\fake.pdf').write_bytes(minimal)
 |---|---|---|
 | Worker reseta para `waiting_triage` | "item sem PDF materializado" — PDF no Windows, não no servidor | Ignorar, `publish_fake_pdf.py` bypassa o worker |
 | `WinError 10053/10054` no publish | nginx `client_max_body_size` | PDF fake + S3 direto |
+| `SSLEOFError` no publish com fake PDF | Capa PNG grande (>300KB) fecha a conexão | Comprimir capa para JPEG ~86KB antes de publicar |
 | 401 no publish | Token expirado | `sharebook_refresh_token.py` |
 | pdftoppm não encontrado | winget atualiza PATH mas requer nova sessão | Usar path absoluto no script |
 | PNG com sufixo errado (`-001` em vez de `-1`) | pdftoppm usa N dígitos conforme total de páginas | `render_covers.py` já normaliza automaticamente |
 | PowerShell here-string falha | `'@` deve estar na coluna 0 | `@'...'@` com `'@` na margem esquerda |
+| `editor-next` retorna paths `/data/workspace/` | CLI usa paths canônicos do OpenClaw mesmo no Windows | Traduzir mentalmente; espelhar assets em `C:\data\workspace\...` |
+| `python` no PATH é 3.14 sem deps | Python 3.14 instalado depois, sobrescreve PATH | Usar Python 3.12 explícito: `C:\Users\raffa\AppData\Local\Programs\Python\Python312\python.exe` |
+| `publish-once` falha com `--id` | Comando não aceita `--id` | Usar `--source <SOURCE> --limit 1` com o item elegível como próximo |
+| `boto3` não encontrado no Python 3.12 | Instalado no 3.14, não no 3.12 | `pip install --user boto3` (no Python 3.12) |
 
 ---
 
