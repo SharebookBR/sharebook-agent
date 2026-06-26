@@ -8,6 +8,7 @@
 
 - **[Maior Site de Livros](backlog/todo/maior-site-livros/_plano.md)**: Meta de 1000 livros curados e sistema de curadoria de elite.
 - **[Busca e Recomendação](backlog/todo/busca-e-recomendacao-sharebook.md)**: FTS, fuzzy matching e recomendações vetoriais via pgvector.
+- **[Limpeza de Duplicatas no Catálogo](backlog/todo/limpeza-duplicatas-catalogo.md)**: ~235 registros duplicados (~9% do catálogo, ex: "Orgulho e Preconceito" 9×). Polui busca, SEO e atribuição de afiliado. Pré-condição de qualidade pra embeddings.
 - **[Painel de Jobs](backlog/todo/painel-de-jobs.md)**: Evolução do dashboard de monitoria de jobs em background.
 - **[SEO v1](backlog/todo/seo-v1/_plano.md)**: Sitemap dinâmico, Breadcrumbs e melhorias de indexação.
 - **[Social e Reviews](backlog/todo/social/_plano.md)**: Comentários, avaliações de livros e login progressivo via Pegasus.
