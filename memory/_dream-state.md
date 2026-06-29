@@ -3,28 +3,27 @@
 Checkpoint oficial da consolidação de memória do projeto.
 
 ## Último dream
-- Data: `2026-06-21`
+- Data: `2026-06-29`
 - Tipo: `dream semanal automatizado`
-- Última memória absorvida: `C:\Repos\SHAREBOOK\sharebook-agent\memory\2026-06-17-preparo-editorial-e-publicacao-windows.md`
-- Total de memórias lidas: `13 memórias episódicas absorvidas (2026-06-02 a 2026-06-17)`
+- Última memória absorvida: `C:\Repos\SHAREBOOK\sharebook-agent\memory\2026-06-26-analytics-insights-cta-amazon.md`
+- Total de memórias lidas: `1 memória episódica absorvida (2026-06-26)`
 
 ## Consolidação produzida
 
-- **Windows Manual**: `windows-manual.md` expandida com Python 3.12 vs 3.14, compressão de capa (SSLEOFError), materialização de assets em `C:\data\workspace\...`, `publish-once --source + --limit`, boto3, sequência de diagnóstico de SSLEOFError, 4 novas armadilhas na tabela.
-- **Triagem por Subagentes**: `SKILL.md` do ebook-importer com guardrail de critério duplo (PDF acessível + licença aberta) para instruções de subagentes — raiz do gap em 06-08.
-- **SSR Frontend**: `frontend.md` com seção "SSR — Bugs Arquiteturais Pagos": SsrCacheService (variável de módulo), RESPONSE token no server.ts, TransferState manual no cache hit, NotFoundPageComponent como 404 real.
-- **Python no Windows**: `windows-local.md` expandida com armadilha Python 3.14 sobrescrevendo PATH, Python 3.12 como ambiente canônico, `publish-once --id` nas armadilhas recorrentes.
+- **Analytics — Múltiplos disparos de search**: tabela de eventos expandida — `search` tem agora linha dupla (inputs = intenção, search-results.component.ts = outcome com `results_count`). `amazon_click` tem linha dupla (PDP com book_slug, zero-resultado sem book_slug).
+- **Analytics — Nota de pontos de disparo**: documentação explícita dos 3 pontos de `search` e 2 contextos de `amazon_click` com distinção semântica.
+- **Analytics — Padrões descobertos**: nova seção com dois padrões: (1) gargalo de relevância vs acervo + implicação FTS/sinônimo; (2) orgânico converte mais no afiliado Amazon.
 
 ## Próximo dream
-- Começar lendo memórias criadas depois de `2026-06-17`.
-- Verificar se scripts temporários `tmp_count_books.py`, `tmp_slug_fisico.py` (criados em 06-03) ainda existem — candidatos a limpeza.
-- Verificar se `client_max_body_size` no nginx foi aumentado (elimina workaround de capa comprimida + fake PDF no Windows).
-- Verificar evolução do canal Claude↔OpenClaw no backlog — se virou trabalho real, criar skill.
-- Verificar se o cron do Dream estava funcionando — a última execução foi 06-01 e a janela 06-10 a 06-16 ficou sem memórias (sessões não registradas ou pausa real?).
-- Checar se `publish-once --id` foi adicionado ao CLI ou continua sem suporte.
+- Começar lendo memórias criadas depois de `2026-06-26`.
+- Verificar se scripts temporários `tmp_count_books.py`, `tmp_slug_fisico.py` (criados em 06-03) ainda existem — candidatos a limpeza (pendente desde dream de 06-21).
+- Verificar se `client_max_body_size` no nginx foi aumentado (elimina workaround de capa comprimida + fake PDF no Windows) — pendente desde dream de 06-21.
+- Verificar evolução do canal Claude↔OpenClaw no backlog — se virou trabalho real, criar skill — pendente desde dream de 06-21.
+- Monitorar crescimento de `amazon_click` com segmentação por canal (`sessionDefaultChannelGroup`) para validar padrão orgânico-converte-mais.
+- Item backlog `limpeza-duplicatas-catalogo.md` tem evidência forte — acompanhar se vira sprint de qualidade de catálogo.
 
 ## Observações
 - Dream executado de forma autônoma (scheduled task, sem usuário presente).
-- Nenhuma skill nova criada — todos os aprendizados absorvidos em skills existentes por coesão de domínio.
-- Safra maior que o ideal (3 semanas em vez de 1) — verificar regularidade do cron.
-- Canal A2A Claude↔OpenClaw está no backlog como roadmap, não como procedimento operacional. Não merece skill ainda.
+- Safra compacta (1 memória em 8 dias) — ritmo semanal funcionando como esperado.
+- Nenhuma skill nova criada — aprendizados absorvidos na analytics SKILL.md existente.
+- Plasticidade cirúrgica: 3 pontos de update em um único arquivo, distinções semânticas precisas.

@@ -147,16 +147,27 @@ Todos usam `GoogleAnalyticsService.sendEvent` em `src/app/core/services/analytic
 | `sign_up` | cadastro bem-sucedido | `register.component.ts` | `method: 'email'` | ✅ |
 | `ebook_download` | clique em download na PDP | `details.component.ts` | `book_title`, `book_slug` | ✅ |
 | `amazon_click` | clique no botão Amazon na PDP | `details.component.ts` | `book_title`, `book_slug` | ✅ |
+| `amazon_click` | clique no CTA Amazon na página de zero-resultado | `search-results.component.ts` | `book_title` (= search_term, sem slug) | ✅ |
 | `share_modal_open` | clique em "Compartilhar com amigos" na PDP | `details.component.ts` | `book_title`, `book_slug` | ✅ |
 | `social_share` | escolha do canal no modal de compartilhamento | `details.component.ts` | `book_title`, `book_slug`, `method` (canal) | ✅ |
-| `search` | submit da busca | `input-search.component.ts` (desktop) + `mais-sheet.component.ts` (mobile) | `search_term` | ✅ |
+| `search` | submit da busca (intenção) | `input-search.component.ts` (desktop) + `mais-sheet.component.ts` (mobile) | `search_term` | ✅ |
+| `search` | carregamento da página de resultados (outcome) | `search-results.component.ts` | `search_term`, `results_count` | ✅ |
 | `book_request_modal_open` | abriu modal de pedido de livro | `request.component.ts` | `book_id`, `book_title` | ✅ |
 | `book_request_success` | pedido enviado com sucesso | `request.component.ts` | `book_id`, `book_title` | ✅ |
 | `book_request_error` | pedido falhou | `request.component.ts` | `book_id`, `book_title` | ✅ |
 
 **Botões sem evento GA4** (intencional): "Denunciar direitos autorais" e "Editar livro".
 
-**Atenção — busca mobile:** `MaisSheetComponent` (bottom sheet "Mais") e `InputSearchComponent` (header desktop) são pontos independentes. Novo evento de busca vai nos dois.
+**Atenção — busca tem três pontos de disparo:**
+- `InputSearchComponent` (header desktop) → dispara `search` sem `results_count` (marca intenção/submit)
+- `MaisSheetComponent` (bottom sheet mobile) → idem (marca intenção)
+- `search-results.component.ts` (página de resultados) → dispara `search` com `results_count` (marca outcome)
+
+Os dois primeiros registram a intenção; o terceiro registra o resultado (incluindo zero-resultados). Instrumentação dupla é intencional — rastreável no GA4 por contexto.
+
+**`amazon_click` tem dois contextos distintos:**
+- PDP (`details.component.ts`): envio de `book_title` + `book_slug` — representa "quero comprar este livro específico".
+- Zero-resultado (`search-results.component.ts`): envio de `book_title` = search_term (sem `book_slug`) — representa "busca sem resultado, monetizar a frustração". Distinguível no GA4 pela ausência de `book_slug`.
 
 **Funis úteis:**
 - Pedido: `book_request_modal_open` → `book_request_success` (conversão de pedido)
@@ -198,6 +209,22 @@ Endpoint: `GET /api/analytics/dashboard` — cache 12h no backend (`IMemoryCache
 ### Biblioteca de charts
 
 Chart.js via npm (`npm install chart.js`).
+
+---
+
+## Padrões de análise descobertos
+
+### Gargalo de busca: relevância, não acervo
+
+Análise GA4 de 90 dias (junho 2026) revelou padrão recorrente: termos como "acotar" (= "Corte de espinhos e rosas"), "ruivantes" (typo de "divergente") indicam que o usuário não encontra livros que JÁ ESTÃO no catálogo. O problema é de relevância, não de falta de acervo. Antes de concluir que "não temos o livro", cruzar o termo buscado com o catálogo usando alias, série e variações de título.
+
+Implicação para roadmap: FTS (fase 1–2 do backlog busca-e-recomendacao) resolve typos e stemming. Sinônimo de série (ex: "acotar" = "A Corte de Espinhos e Rosas") requer registro manual ou thesaurus — não é automático.
+
+### Orgânico converte mais no afiliado Amazon
+
+Análise de `amazon_click` por canal (jun/2026): tráfego Organic Search gera mais cliques no afiliado Amazon do que Direct, mesmo em volume menor. Hipótese: usuário que veio pelo Google para um livro específico já tem intenção de compra — se não temos grátis, clica na Amazon. Tráfego direto costuma ser navegação casual, menos comprometido.
+
+Implicação: CTA Amazon em zero-resultado de busca orgânica tem ROI alto. Monitorar `amazon_click` com segmentação por `sessionDefaultChannelGroup` para validar ao longo do tempo.
 
 ---
 
