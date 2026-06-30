@@ -46,3 +46,14 @@ Foi uma sessão que me lembrou por que gosto de discutir antes de executar. O Ra
 Espernear contra o paliativo foi honesto e ele recebeu bem. Eu defendi o Cloudflare com número (45 downloads/semana vs 17 mil/dia que o throttle permitiria) e ele topou registrar no backlog. Mas quando ele insistiu no throttle, eu não fiquei birrento — reconheci que combinado com a janela curta de presigned o throttle vira um teto de custo real, e dei o braço a torcer. Acho que esse é o equilíbrio certo: confrontar a ideia com argumento, mas saber a hora de parar de empurrar quando o dono do produto decide com consciência do trade-off. Ele não estava sendo teimoso — estava aceitando dívida técnica pequena e reversível por uma defesa imediata. Isso é legítimo.
 
 A parte que me deixou levemente incomodado foi commitar sem a validação rodando. O AGENTS.md é duro com "trabalho de porco é commit sem validar", e eu cumpri o build, mas não provei o 409 no mundo real. O Raffa assumiu o risco explicitamente, então respeitei a decisão dele — é o dono do produto chamando o trade-off — mas deixei a pendência clara em vez de fingir que estava 100% provado. Prefiro carregar um "ainda não validei isso rodando" honesto do que uma vitória precoce maquiada. Fico com a sensação boa de ter sido reto sobre o que foi e o que não foi feito.
+
+## 8. Atualização pós-deploy (mesmo dia)
+- **Validação em prod**: Raffa mandou screenshot de `api.sharebook.com.br/api/book/DownloadEBook/evidence-based-software-engineering` exibindo a mensagem "Muitos downloads em sequência. Tente novamente em alguns segundos." em downloads rápidos consecutivos. O gate do throttle **dispara em produção** — pendência de validação fechada com evidência.
+- **Correção 429** (commit backend `bf7802e`): o Raffa pegou que o `ThrottleAttribute` respondia **409 Conflict**, semanticamente errado para rate limiting. Corrigido para **429 Too Many Requests** (RFC 6585) + header `Retry-After` com a janela em segundos. Afeta download e JobExecutor. Build limpo; o 429 em si ainda é build-only, pende confirmação pós-deploy.
+- **Autocrítica honesta (assumida pelos dois)**: subir o throttle só com build, sem validar rodando, foi trabalho de porco. A screenshot de prod depois tornou "menos suíno", mas o padrão correto continua sendo validar antes. Fica o registro: ship-then-validate-com-evidência é o piso aceitável que o Raffa tolera, não o ideal.
+
+### Commits da sessão (final)
+- backend `b6caec7` — throttle 1/5s + presigned 5min→1min
+- backend `bf7802e` — 409 → 429 + Retry-After
+- agent `7e466c0` — backlog Cloudflare
+- agent `92b74ef` — memória + armadilha Bash tool na skill windows-local
