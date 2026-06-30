@@ -1,17 +1,28 @@
-import psycopg2, json, sys
+import os
+import sys
+from pathlib import Path
+
+import psycopg2
+from dotenv import load_dotenv
 
 item_id = int(sys.argv[1]) if len(sys.argv) > 1 else 1046
 
+load_dotenv(Path(__file__).resolve().parents[2] / ".env")
+
 conn = psycopg2.connect(
-    host="212.85.23.202", port=5432, dbname="sharebook_importer",
-    user="sharebook_ai_rw", password="F%Ljy9oxTA3iR#npW%4W9iaSaJKU", sslmode="disable"
+    host=os.environ["SHAREBOOK_PROD_PG_RW_HOST"],
+    port=int(os.environ["SHAREBOOK_PROD_PG_RW_PORT"]),
+    dbname="sharebook_importer",
+    user=os.environ["SHAREBOOK_PROD_PG_RW_USER"],
+    password=os.environ["SHAREBOOK_PROD_PG_RW_PASSWORD"],
+    sslmode=os.getenv("SHAREBOOK_PROD_PG_RW_SSLMODE", "disable"),
 )
 cur = conn.cursor()
 cur.execute("""
     SELECT qi.id, qi.title, qi.author, qi.status, qi.source_url,
            qi.planned_title, qi.planned_author, qi.planned_synopsis,
            qi.planned_category_id, qi.planned_by,
-           qi.attempts, qi.metadata_json,
+           qi.triage_attempts, qi.publish_attempts, qi.metadata_json,
            s.name as source_name
     FROM importer.queue_items qi
     JOIN importer.sources s ON s.id = qi.source_id
@@ -24,7 +35,7 @@ if not row:
     sys.exit(1)
 
 cols = ["id","title","author","status","source_url","planned_title","planned_author",
-        "planned_synopsis","planned_category_id","planned_by","attempts",
+        "planned_synopsis","planned_category_id","planned_by","triage_attempts","publish_attempts",
         "metadata_json","source_name"]
 data = dict(zip(cols, row))
 

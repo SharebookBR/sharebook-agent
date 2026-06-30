@@ -35,6 +35,10 @@ PALETTES = {
 
 # ── Font paths (tentar fonts comuns do sistema) ─────────────────────────
 FONT_BOLD_MAP = [
+    ("Arial", "C:/Windows/Fonts/arialbd.ttf", "C:/Windows/Fonts/arial.ttf"),
+    ("Calibri", "C:/Windows/Fonts/calibrib.ttf", "C:/Windows/Fonts/calibri.ttf"),
+    ("Georgia", "C:/Windows/Fonts/georgiab.ttf", "C:/Windows/Fonts/georgia.ttf"),
+    ("Consolas", "C:/Windows/Fonts/consolab.ttf", "C:/Windows/Fonts/consola.ttf"),
     # (nome, bold_path, regular_path)
     ("Cantarell",
      "/usr/share/fonts/opentype/cantarell/Cantarell-ExtraBold.otf",
@@ -73,7 +77,13 @@ FONT_BOLD_MAP = [
 
 def pick_font_pair() -> tuple:
     """Retorna (nome, bold_font, regular_font) sorteado."""
-    entry = random.choice(FONT_BOLD_MAP)
+    available = [
+        entry for entry in FONT_BOLD_MAP
+        if Path(entry[1]).exists() and Path(entry[2]).exists()
+    ]
+    if not available:
+        raise FileNotFoundError("Nenhum par de fontes compatível foi encontrado no sistema")
+    entry = random.choice(available)
     name, bold_path, regular_path = entry
     return name, bold_path, regular_path
 
