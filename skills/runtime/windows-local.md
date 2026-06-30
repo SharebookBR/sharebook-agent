@@ -182,6 +182,7 @@ Token da API pode expirar. O script `scripts/production/sharebook_refresh_token.
 - Configurar `bypassPermissions` no project settings em vez do user settings.
 - Tentar SSH não-interativo via shell sem paramiko.
 - Usar `publish-once --id` — o comando não aceita `--id`; usar `--source + --limit 1`.
+- Confiar no Bash tool para comandos longos do Windows (ex: `dotnet build`): já retornou saída vazia silenciosamente, inclusive em `echo`. Para build/git/dotnet, preferir o PowerShell tool (shell primário do habitat) e capturar log em arquivo com `*> $log`.
 
 ## Quando promover aprendizado
 
