@@ -53,6 +53,7 @@ Se esta skill divergir do código/README do importer, o importer manda.
 - **`metadata_json` é acumulativo**: merge sempre, nunca sobrescrever cegamente.
 - **`sys.executable`**: nunca hardcode `python3` — no Windows resolve para stub do Microsoft Store.
 - **Sync de schema → varrer scripts/**: ao redesenhar nomes de status ou colunas, varrer `skills/importers/ebook-importer/scripts/` além dos arquivos `.md`. Scripts Python dependem dos mesmos nomes e quebram silenciosamente se ficarem desatualizados.
+- **Sync de schema também alcança `scripts/production/`**: scripts de preparo editorial Windows local (`inspect_item.py`, `plan_set.py`) leem/escrevem no mesmo schema `importer.queue_items` mas vivem fora de `skills/importers/ebook-importer/scripts/` — fácil esquecer na varredura. Incidente real (2026-06-30): `inspect_item.py` quebrou consultando coluna removida `qi.attempts`, corrigida para `triage_attempts`/`publish_attempts`. Ao redesenhar schema, varrer também `scripts/production/*.py`.
 - **Editorial por source vive no banco**: `importer.sources.editorial_prompt` é a fonte da verdade.
 - **Categorias sempre folha**: consultar `GET /api/category/Counts` antes de mapear. Nunca inventar.
 
@@ -122,7 +123,7 @@ Guardrails de publish:
 - Sinopse: 3 parágrafos
 - Idioma padrão: português
 - Plano incompleto → volta para `waiting_editorial`
-- Capa: preferir fonte; gerar via API OpenAI **apenas com confirmação explícita do Raffa**
+- Capa: preferir fonte (capa original do PDF/editora); se a primeira página for só folha de rosto acadêmica sem valor de capa, gerar localmente com `scripts/covers/cover_generate.py` (gratuito, cross-platform) — gerar múltiplas variações e inspecionar visualmente antes de escolher. Gerar via API OpenAI **apenas com confirmação explícita do Raffa**.
 
 ---
 

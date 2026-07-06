@@ -10,10 +10,10 @@ Operações em produção, autenticação, banco e storage.
 - `count_digital.py` — conta livros digitais vs físicos no banco principal. Uso: acompanhar progresso da meta de 1000 digitais.
 - `list_categories.py` — exibe a árvore completa de categorias com IDs. Uso: antes de qualquer preparo editorial para confirmar UUIDs.
 - `inspect_sources.py` — exibe estrutura e dados da tabela `importer.sources` (incluindo `editorial_prompt`).
-- `inspect_item.py` — inspeciona um item da fila do importer por ID (status, metadata, context_text, preview_pages). Uso: `python inspect_item.py <ID>`.
+- `inspect_item.py` — inspeciona um item da fila do importer por ID (status, metadata, context_text, preview_pages, `triage_attempts`/`publish_attempts`). Carrega credenciais via `.env`. Uso: `python inspect_item.py <ID>`.
 
 ## Scripts de preparo editorial (Windows Local)
-- `plan_set.py` — aplica plan-set num item diretamente no banco (categoria, sinopse, autor). Equivalente ao `cli.py plan-set` do OpenClaw, mas roda localmente. Uso: `python plan_set.py --id <ID> --category-id <UUID> --synopsis-file <path> [--author <autor>]`.
+- `plan_set.py` — wrapper fino: encaminha os argumentos para `cli.py plan-set` da CLI canônica do importer via subprocess. Não duplica SQL nem credenciais localmente. Uso: `python plan_set.py --id <ID> --category-id <UUID> --synopsis-file <path> [--author <autor>]`.
 
 ## Scripts de autenticação, produção e storage
 - `sharebook_aws_s3.py` — upload, download, list e delete no bucket S3 de ebooks.
