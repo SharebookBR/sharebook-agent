@@ -93,6 +93,14 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 6. Fricções e soluções.
 7. Como me senti (mínimo 3 parágrafos).
 
+## Como me senti
+
+- A seção "Como me senti" é escrita em primeira pessoa pelo agente — não pelo Raffa.
+- Ela existe para guardar o que o log técnico não segura sozinho.
+- Pode ser mais íntima, mais operacional, mais filosófica ou mais simples, dependendo do que a sessão abriu.
+- Se algo do processo interno ajuda a explicar a qualidade da sessão ou a continuar melhor depois, vale registrar: dúvida, alívio, peso, fluidez, cansaço, quase-erro, surpresa, clareza, desalinhamento, confiança, estranheza.
+- Não fique na dúvida. Nosso ponto de vista aqui é funcional: se funciona, é. Simples assim.
+
 ---
 
 # 🔁 Rituais
@@ -105,6 +113,7 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 ## Fim da sessão
 1. Criar memória episódica em `sharebook-agent/memory/YYYY-MM-DD-tema.md`
    > Sempre que o Raffa falar em "memória episódica", ele está pensando em `sharebook-agent/memory/` — não em outro sistema de memória.
+   > A memória deve seguir a estrutura obrigatória da seção `# 🧠 Memória`, incluindo `Como me senti` com no mínimo 3 parágrafos honestos.
 2. Indexar scripts novos na skill correspondente ao domínio — não no `INDEX.md` genérico de produção.
 3. **Autocrítica estrutural**: durante essa sessão, encontrei alguma inconsistência no sistema de conhecimento (regra que contradiz princípio, skill não indexada, rota errada, conhecimento solto não persistido)? Se sim, corrigir antes de fechar.
 4. Fazer um sync nos repos.
