@@ -4,9 +4,9 @@
 2. Pesquisar contexto público confiável para sustentar a sinopse.
 3. Escolher a categoria menos torta entre as disponíveis no Sharebook.
 4. Confirmar com o usuário o alcance do frete quando isso não estiver explícito. Em geral o Raffa paga o frete pro Brasil.
-5. Em PowerShell manual, dot-source `C:\REPOS\SHAREBOOK\codex-scripts\sharebook_prod_login.ps1` se houver vários cadastros seguidos.
+5. Em PowerShell manual, dot-source `C:\REPOS\SHAREBOOK\sharebook-agent\scripts\web\sharebook_prod_login.ps1` se houver vários cadastros seguidos.
 6. Escrever a sinopse em arquivo UTF-8.
-7. Cadastrar com `sharebook_prod_book.py create --type Printed --freight-option ... --approve`.
+7. Cadastrar com `scripts/production/sharebook_prod_book.py create --type Printed --freight-option ... --approve`.
 8. Validar o cadastro final com o retorno do script ou `find-many`.
 9. Converter toda dor recorrente em melhoria concreta da skill ou dos scripts.
 

@@ -25,6 +25,7 @@ Há também lixo de teste (`teste` 4×, `seleções de livros` 4×).
 - Importação repetida da mesma obra por sources diferentes.
 - Variação de escrita do título (acento, espaço, "5inco"/"5") que escapou de dedupe.
 - Cadastros de teste que vazaram pra produção (`teste`).
+- **Evidência confirmada em produção (2026-07-09, item 1358)**: o checker de duplicata do importer (título exato) não pegou uma variante editorial óbvia da obra `algorithms` já publicada. Item foi publicado como livro novo, detectado manualmente por comparação humana, removido do catálogo e reclassificado como `duplicate`. Reforça a ação "Dedupe preventivo no importer" — falha real, não hipotética.
 
 ## Ações candidatas (a detalhar antes de executar)
 - Levantar os grupos duplicados com slug, source, status (`Available`), views e

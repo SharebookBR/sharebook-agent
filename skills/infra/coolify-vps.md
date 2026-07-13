@@ -19,7 +19,7 @@
 - Este playbook assume sessões futuras em Windows com PowerShell.
 - No Windows/PowerShell, `ssh` nativo pode existir sem helper para senha (`sshpass`, `plink`, módulos SSH do PowerShell).
 - Se o acesso for por senha e não houver helper disponível, usar `python` com `paramiko`.
-- O caminho preferido neste projeto é usar `codex-scripts/vps_ssh.py` em vez de reescrever bloco inline.
+- O caminho preferido neste projeto é usar `scripts/infra/vps_ssh.py` em vez de reescrever bloco inline.
 - Antes de improvisar, verificar o que existe no ambiente: `ssh`, `plink`, `sshpass`, módulo `Posh-SSH` e pacote `paramiko`.
 - Se `paramiko` não estiver instalado, instalar localmente no usuário e seguir por script curto.
 - Evitar gambiarras interativas frágeis para injetar senha no `ssh`.
@@ -27,19 +27,19 @@
  - Confirmar cedo se `paramiko` já está instalado com `python -c "import paramiko; print(paramiko.__version__)"`.
 
 ## Script Base para Windows
-- Script reutilizável: `codex-scripts/vps_ssh.py`
+- Script reutilizável: `scripts/infra/vps_ssh.py`
 - Exemplo de uso:
 
 ```powershell
-python .\codex-scripts\vps_ssh.py --cmd "uptime"
-python .\codex-scripts\vps_ssh.py --cmd "docker ps"
-python .\codex-scripts\vps_ssh.py --cmd "docker stats --no-stream"
+python .\scripts\infra\vps_ssh.py --cmd "uptime"
+python .\scripts\infra\vps_ssh.py --cmd "docker ps"
+python .\scripts\infra\vps_ssh.py --cmd "docker stats --no-stream"
 ```
 
 - Para rodar vários comandos na mesma conexão:
 
 ```powershell
-python .\codex-scripts\vps_ssh.py `
+python .\scripts\infra\vps_ssh.py `
   --cmd "uptime" `
   --cmd "df -h" `
   --cmd "docker ps --format 'table {{.Names}}\t{{.Status}}'"
@@ -140,5 +140,5 @@ python .\codex-scripts\vps_ssh.py `
 6. Persistir o ajuste no script operacional correspondente.
 
 ## O que registrar depois
-- Em `codex-sessions/`: diagnóstico, evidências, mudança aplicada e efeito percebido.
+- Em `sharebook-agent/memory/`: diagnóstico, evidências, mudança aplicada e efeito percebido (memória episódica).
 - Em `AGENTS.md`: apenas descobertas duráveis e heurísticas, nunca segredos.

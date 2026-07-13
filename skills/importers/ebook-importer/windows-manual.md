@@ -18,6 +18,26 @@ Usado quando o worker automático falha (`source_blocked`, PDF grande demais) e 
 - Item em `error` com "pdf grande demais" — nginx `client_max_body_size` bloqueia upload direto
 - PDF já disponível em `C:\Users\raffa\Downloads\<id>.pdf`
 
+## Quando NÃO usar — publish remoto via SSH/docker exec
+
+Se a triagem do item rodou normalmente no OpenClaw (não foi ciclo manual Windows), os assets (`source.pdf`, `preview-pages/`) já estão materializados no container do OpenClaw na VPS. Nesse caso **não** default para o workaround de fake PDF + S3 — ele existe para contornar limite do nginx, não é o caminho preferencial.
+
+Antes de qualquer workaround Windows, checar se dá para publicar no lugar certo:
+
+```powershell
+python scripts/infra/vps_ssh.py --cmd "docker exec <container_openclaw> ls /data/workspace/sharebook-ebook-importer/var/tmp/triage-<ID>/"
+```
+
+Se os assets existirem, disparar o worker canônico direto dentro do container (sem materializar nada no Windows):
+
+```powershell
+python scripts/infra/vps_ssh.py --cmd "docker exec <container_openclaw> sh -lc 'cd /data/workspace/sharebook-ebook-importer && python3 cli.py publish-once --source <SOURCE> --limit 1'"
+```
+
+Item vai para `done` em uma única passada, sem fake PDF, sem upload manual de S3. Validado em produção (2026-07-11, item 1367). Só cair para o ciclo manual (Passo 3b ou fake PDF) quando os assets **não** estiverem no container — aí sim o item se qualifica para este documento.
+
+Após publicar, validar no catálogo real: rota do frontend é `/livros/:slug` (não `/livro/:slug`).
+
 ---
 
 ## Pré-requisitos
@@ -178,6 +198,7 @@ Path(r'C:\Temp\fake.pdf').write_bytes(minimal)
 | `python` no PATH é 3.14 sem deps | Python 3.14 instalado depois, sobrescreve PATH | Usar Python 3.12 explícito: `C:\Users\raffa\AppData\Local\Programs\Python\Python312\python.exe` |
 | `publish-once` falha com `--id` | Comando não aceita `--id` | Usar `--source <SOURCE> --limit 1` com o item elegível como próximo |
 | `boto3` não encontrado no Python 3.12 | Instalado no 3.14, não no 3.12 | `pip install --user boto3` (no Python 3.12) |
+| `last_error` sobrevive à publicação | Item resgatado de `editorial_rejected`/`source_blocked` é publicado por rota manual, mas o campo `last_error` herdado não é limpo automaticamente | Após confirmar publish bem-sucedido, limpar `last_error` manualmente no banco para não deixar estado mentiroso na fila |
 
 ---
 

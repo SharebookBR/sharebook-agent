@@ -183,6 +183,7 @@ Token da API pode expirar. O script `scripts/production/sharebook_refresh_token.
 - Tentar SSH não-interativo via shell sem paramiko.
 - Usar `publish-once --id` — o comando não aceita `--id`; usar `--source + --limit 1`.
 - Confiar no Bash tool para comandos longos do Windows (ex: `dotnet build`): já retornou saída vazia silenciosamente, inclusive em `echo`. Para build/git/dotnet, preferir o PowerShell tool (shell primário do habitat) e capturar log em arquivo com `*> $log`.
+- Empurrar código Python com aspas/raw string dentro de heredoc `@'...'@` de um `-c` do PowerShell: o heredoc pode corromper a string (ex: `r"...".env"` virou `rC:\...`). Escrever o script em arquivo via `Write` e chamar pelo path, nunca inline quando o código tiver aspas.
 
 ## Quando promover aprendizado
 
@@ -212,6 +213,10 @@ Token da API pode expirar. O script `scripts/production/sharebook_refresh_token.
 ## Outputs copiáveis
 
 No Windows, outputs longos de scripts (ex: prompt da roleta de estilos) devem ser exibidos dentro de um bloco de código markdown (``` ... ```) para facilitar a cópia. Nunca exibir só como texto narrativo.
+
+## Browser pane — screenshot pode travar
+
+`computer{action: screenshot}` no Browser pane já deu timeout sem modal aparente (confirmado 2026-07-11). Não insistir tentando diagnosticar — usar `get_page_text` como prova alternativa de validação; traz o conteúdo completo da página e costuma bastar para confirmar publicação/estado sem depender de captura visual.
 
 ## Prints
 

@@ -289,6 +289,7 @@ Exceções existem: WAF agressivo, fluxo assinado, domínio quebrado de forma ú
 - **Wayback**: modificador `if_` força entrega do binário sem toolbar HTML
 - **bepress**: handler dedicado `resolve_bepress_assets`
 - **Microsoft Download Center**: parsear bloco JSON da página
+- **Google Drive**: link `uc?export=download` sem `confirm=t` pode devolver página HTML (interstitial de vírus/tamanho) em vez do PDF. Usar a rota com `confirm=t` para obter o binário real
 - **Ebook Foundation / OpenText / links `open/download?type=pdf|print_pdf`**: tentar resolver o asset PDF direto antes de desistir
 - **realtimerendering** (Ray Tracing Gems): `CookieJar` + `urllib.request.build_opener` abre a página oficial primeiro, recebe cookies Cloudflare simples, depois baixa o PDF na mesma sessão — "enganador de WAF civilizado". Propaga title/author via manifest.
 - **HTML-books sem PDF público direto**: classificar explicitamente por família, não mascarar como erro genérico de `%PDF`
