@@ -119,11 +119,17 @@ Guardrails de publish:
 
 ## Regras editoriais
 
+- **Preflight antes de investir em sinopse/capa**:
+  1. confirmar que título da fila, conteúdo real do PDF e página oficial descrevem a mesma obra;
+  2. confirmar em fonte oficial ou no próprio PDF que a licença permite redistribuição gratuita — PDF público não basta;
+  3. registrar a evidência de licença no contexto editorial quando ela não estiver explícita no payload.
+- Se a obra falhar no critério de redistribuição, usar `triage_rejected` com nota objetiva. Não usar `editorial_rejected`: ausência de licença redistribuível é falha de publicabilidade, não rejeição curatorial de uma obra publicável.
 - Categoria final: sempre folha
 - Sinopse: 3 parágrafos
 - Idioma padrão: português
 - Plano incompleto → volta para `waiting_editorial`
 - Capa: preferir fonte (capa original do PDF/editora); se a primeira página for só folha de rosto acadêmica sem valor de capa, gerar localmente com `scripts/covers/cover_generate.py` (gratuito, cross-platform) — gerar múltiplas variações e inspecionar visualmente antes de escolher. Gerar via API OpenAI **apenas com confirmação explícita do Raffa**.
+- Validação pós-publicação: confirmar `done` no importer, livro íntegro na API e página pública com capa, categoria e ação de download disponíveis.
 
 ---
 
