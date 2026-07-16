@@ -11,7 +11,7 @@ Uma skill. Uma porta. Sem teatro.
 
 - **`SKILL.md`** (este arquivo) — operação canônica, workflow, guardrails, hardening
 - **`windows-manual.md`** — ciclo completo no Windows para PDFs baixados manualmente
-- **`scripts.md`** — índice dos scripts operacionais
+- **`scripts/`** — scripts operacionais, indexados na seção **Scripts** deste arquivo
 
 ---
 
