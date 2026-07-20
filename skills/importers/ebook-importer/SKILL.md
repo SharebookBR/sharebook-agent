@@ -410,7 +410,7 @@ Scripts em `skills/importers/ebook-importer/scripts/`. Regra: se não está aqui
 |---|---|---|
 | `manual_triage_windows.py` | `python ... --ids <ids>` | Triagem: valida PDF, extrai texto, monta metadata → `waiting_editorial` |
 | `render_covers.py` | `python ... --ids <ids>` | Renderiza página 1 como PNG, atualiza `triage.preview_pages` |
-| `publish_fake_pdf.py` | `python ... --id <id>` | Publica com fake.pdf, faz S3 upload do real, marca `done` |
+| `publish_fake_pdf.py` | `python ... --id <id> [--pdf-path <pdf>] [--cover-path <capa>]` | Exceção para PDF grande: cria com fake.pdf, envia o PDF real ao S3, aprova e marca `done`; usa `IMPORTER_DB_DSN` e renova token expirado |
 
 > Plano editorial via `cli.py plan-set` — não por script.
 

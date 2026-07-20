@@ -136,11 +136,13 @@ C:\data\workspace\sharebook-ebook-importer\var\tmp\triage-<ID>\preview-pages\pag
 
 Materializar (espelhar) os assets nesses caminhos antes de rodar `publish-once`.
 
-**`publish-once` não aceita `--id`** — aceita só `--source` e `--limit`. Para publicar um item específico pelo worker normal, garantir que ele é o próximo elegível da fila (`waiting_publish`) e rodar:
+**`publish-once` aceita `--id`** no CLI atual. Para publicar um item específico pelo worker normal, preferir:
 ```powershell
 cd C:\Repos\SHAREBOOK\sharebook-ebook-importer
-python cli.py publish-once --source <SOURCE> --limit 1
+python cli.py publish-once --id <ID>
 ```
+
+`--source <SOURCE> --limit 1` continua válido para processar o próximo elegível da source, mas não deve substituir `--id` quando a intenção é um item conhecido.
 
 Sequência de diagnóstico quando `SSLEOFError` persiste:
 1. Checar tamanho da capa — comprimir se > ~300KB.
@@ -152,7 +154,9 @@ Sequência de diagnóstico quando `SSLEOFError` persiste:
 ### Passo 4 — Publicação (fake PDF + S3)
 
 ```powershell
-python skills/importers/ebook-importer/scripts/publish_fake_pdf.py --id <ID>
+python skills/importers/ebook-importer/scripts/publish_fake_pdf.py --id <ID> `
+  --pdf-path <CAMINHO_DO_PDF_REAL> `
+  --cover-path <CAMINHO_DA_CAPA_FINAL>
 ```
 
 Fluxo:
@@ -196,9 +200,9 @@ Path(r'C:\Temp\fake.pdf').write_bytes(minimal)
 | PowerShell here-string falha | `'@` deve estar na coluna 0 | `@'...'@` com `'@` na margem esquerda |
 | `editor-next` retorna paths `/data/workspace/` | CLI usa paths canônicos do OpenClaw mesmo no Windows | Traduzir mentalmente; espelhar assets em `C:\data\workspace\...` |
 | `python` no PATH é 3.14 sem deps | Python 3.14 instalado depois, sobrescreve PATH | Usar Python 3.12 explícito: `C:\Users\raffa\AppData\Local\Programs\Python\Python312\python.exe` |
-| `publish-once` falha com `--id` | Comando não aceita `--id` | Usar `--source <SOURCE> --limit 1` com o item elegível como próximo |
+| `publish-once --id` diverge da documentação antiga | O CLI ganhou seleção por ID e o manual ficou para trás | Confirmar com `python cli.py publish-once --help` e preferir `--id <ID>` para publicação dirigida |
 | `boto3` não encontrado no Python 3.12 | Instalado no 3.14, não no 3.12 | `pip install --user boto3` (no Python 3.12) |
-| `last_error` sobrevive à publicação | Item resgatado de `editorial_rejected`/`source_blocked` é publicado por rota manual, mas o campo `last_error` herdado não é limpo automaticamente | Após confirmar publish bem-sucedido, limpar `last_error` manualmente no banco para não deixar estado mentiroso na fila |
+| `last_error` sobrevive à publicação por rota manual antiga | Script ou ajuste direto marcou `done` sem limpar o erro herdado | `publish_fake_pdf.py` atual já limpa `last_error` e `retry_after`; em outra rota manual, validar e limpar conscientemente |
 
 ---
 
@@ -210,4 +214,4 @@ Ver seção **Scripts** em `SKILL.md` para índice completo. Scripts do ciclo ma
 |---|---|
 | `skills/importers/ebook-importer/scripts/manual_triage_windows.py` | Triagem: `source_blocked` → `waiting_editorial` |
 | `skills/importers/ebook-importer/scripts/render_covers.py` | Capa: página 1 do PDF como PNG |
-| `skills/importers/ebook-importer/scripts/publish_fake_pdf.py` | Publish: fake PDF + S3 real → `done` |
+| `skills/importers/ebook-importer/scripts/publish_fake_pdf.py` | Publish excepcional: `--id`, `--pdf-path` e `--cover-path`; fake PDF + S3 real → `done` |
