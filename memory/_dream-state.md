@@ -3,37 +3,30 @@
 Checkpoint oficial da consolidação de memória do projeto.
 
 ## Último dream
-- Data: `2026-07-13`
+- Data: `2026-07-19`
 - Tipo: `dream semanal automatizado`
-- Última memória absorvida: `C:\Repos\SHAREBOOK\sharebook-agent\memory\2026-07-11-preparo-editorial-foundations-cs.md`
-- Total de memórias lidas: `2 memórias episódicas absorvidas (2026-07-09-resgate-editorial-e-duplicata, 2026-07-11-preparo-editorial-foundations-cs)` + releitura de `2026-07-05-dream.md` para contexto
+- Última memória absorvida: `C:\Repos\SHAREBOOK\sharebook-agent\memory\2026-07-15-quatro-preparos-editoriais-publicacao.md`
+- Total de memórias lidas: `2 memórias episódicas absorvidas (2026-07-14-vaga-storytelling-agentico, 2026-07-15-quatro-preparos-editoriais-publicacao)` + releitura de `2026-07-13-dream.md` para contexto
 
 ## Consolidação produzida
 
-- **`skills/importers/ebook-importer/windows-manual.md`** — nova seção "Quando NÃO usar — publish remoto via SSH/docker exec": quando a triagem já rodou no OpenClaw, publicar direto no container via `vps_ssh.py`/`docker exec` em vez de default para o workaround de fake PDF + S3. Validado em produção (item 1367, 2026-07-11).
-- **`skills/importers/ebook-importer/windows-manual.md`** — nova linha na tabela de armadilhas: `last_error` sobrevive à publicação manual de item resgatado; precisa limpeza explícita.
-- **`skills/importers/ebook-importer/SKILL.md`** — handler de Google Drive adicionado a "Handlers por família" (`confirm=t` para evitar HTML interstitial em vez do PDF real).
-- **`skills/runtime/windows-local.md`** — duas fricções novas: heredoc PowerShell corrompendo raw string Python (usar arquivo em vez de inline) e timeout de screenshot no Browser pane (usar `get_page_text` como fallback).
-- **`backlog/todo/limpeza-duplicatas-catalogo.md`** — evidência de produção adicionada (item 1358): dedupe por título exato do importer não pega variantes editoriais óbvias.
-- **Poda de conhecimento degradado** (fora do escopo direto das memórias absorvidas, achado ao verificar indexação real):
-  - `skills/infra/coolify-vps.md` — 4 referências mortas a `codex-scripts/`/`codex-sessions/` corrigidas para `scripts/infra/`/`memory/`.
-  - `skills/importers/physical-book-importer/references/workflow.md` — referência morta a `codex-scripts/sharebook_prod_login.ps1` corrigida para `scripts/web/`.
-  - `scripts/sharebook_prod_book.py` (raiz, órfão, duplicata não indexada do canônico em `scripts/production/`) — removido via `git rm`.
-  - `codex-temp/*.py`/`*.sql` (gitignorado, nunca commitado, continha senha de banco em texto plano) — removido.
-- Nenhuma skill nova criada. Nenhum merge/split/arquivamento nesta rodada.
+- **`skills/runtime/windows-local.md`** — seção "SSH não-interativo — usar paramiko" corrigida: não presumir mais que `paramiko` está sempre disponível (encontrado ausente em produção em 2026-07-15); instrui confirmar com `python -c "import paramiko"` antes de depender do utilitário.
+- **`skills/infra/coolify-vps.md`** — documentado que `vps_ssh.py` reconfigura `stdout`/`stderr` para UTF-8 com `errors="replace"` desde o commit `7baba43` (2026-07-15); fix existia só no código, sem menção na skill.
+- Grande parte do aprendizado de 07-15 (preflight de licença antes de investir em sinopse/capa, gerador de capas em lote reescrito, validação pós-publicação) **já tinha sido consolidada dentro da própria sessão**, direto em `SKILL.md` e `scripts/covers/`, via commits `4dd760a` e `7baba43`. Confirmado via `git show` antes de decidir plasticidade — não foi duplicado.
+- Nenhuma skill nova criada. Nenhum merge/split/arquivamento nesta rodada. Nenhuma poda adicional necessária (checagem rápida da raiz de `scripts/` não achou órfão novo).
 
 ## Próximo dream
-- Começar lendo memórias criadas depois de `2026-07-11`.
-- `client_max_body_size` do nginx ainda não foi aumentado — continua pendência (arrastada desde 06-21). A nova seção "publish remoto via SSH/docker exec" reduz a frequência de uso do workaround por hábito, mas não resolve a causa raiz. Revisar `windows-manual.md` para aposentar o workaround quando o nginx for corrigido.
+- Começar lendo memórias criadas depois de `2026-07-15`.
+- `client_max_body_size` do nginx ainda não foi aumentado — continua pendência (arrastada desde 06-21).
 - Verificar evolução do canal Claude↔OpenClaw (`backlog/todo/canal-claude-openclaw.md`) — se virar execução real, criar skill.
 - Verificar evolução do item Cloudflare (`backlog/todo/cloudflare-cdn-ddos-protection.md`) — se DNS/rate-limit forem configurados, documentar em `skills/infra/`.
-- Item backlog `limpeza-duplicatas-catalogo.md` segue com evidência forte (235 excedentes + caso real de dedupe falho na entrada, item 1358) — acompanhar se vira sprint de qualidade de catálogo.
-- Item 1364 (Syncfusion, `context_text` de boilerplate, source `ebook_foundation_subjects`) segue em `waiting_editorial` — observação isolada, não recorrência ainda; se repetir em outros itens da mesma source, investigar bug de extração/URL.
-- Achado um script órfão (`scripts/sharebook_prod_book.py`) fora de qualquer família indexada, resíduo de reorganização passada. Não houve varredura exaustiva de toda a árvore `scripts/` neste ciclo — se aparecer padrão semelhante de novo, vale um passe dedicado dessa vez cobrindo a árvore inteira.
+- Item backlog `limpeza-duplicatas-catalogo.md` segue com evidência forte (235 excedentes) — sem novo caso de produção nesta safra; acompanhar se vira sprint de qualidade de catálogo.
+- Item 1364 (Syncfusion, `context_text` de boilerplate) segue isolado em `waiting_editorial` — sem recorrência ainda.
+- **Novo**: proposta de backlog "Descoberta Assistida por IA" (pgvector, busca híbrida, prateleiras de similaridade), recomendada por Claude Fable em 07-14 mas não escrita — Raffa não confirmou. Não é papel do Dream autônomo criá-la; se Raffa confirmar interesse em sessão futura, absorver possivelmente `busca-e-recomendacao-sharebook.md`.
+- Bash tool silencioso para comandos simples no Windows local confirmado pela terceira vez consecutiva (07-11, 07-13, 07-19) — padrão bem estabelecido, PowerShell tool é o caminho confiável neste habitat; não precisa mais ser tratado como observação nova a cada ciclo.
 
 ## Observações
 - Dream executado de forma autônoma (scheduled task, sem usuário presente).
-- Safra de 2 memórias em 6 dias — ritmo dentro do esperado.
-- Nenhuma skill nova criada — os aprendizados de 07-09/07-11 já tinham destino em `windows-manual.md`, `SKILL.md` do importer e `windows-local.md`.
-- Padrão identificado: a regra "o que não está indexado é lixo" (`DREAM.md`) funciona não só para prevenir criação de lixo novo, mas como detector de apodrecimento silencioso em documentação antiga — referências a paths de uma convenção de nomes anterior (`codex-scripts`, `codex-sessions`) sobreviveram sem gerar erro óbvio até serem checadas. Vale manter a checagem cruzada de paths citados em skill como parte de rotina do Dream, não só reagir ao que as memórias do período trazem.
-- Achado incidental de segurança: credencial de banco em texto plano dentro de scratch gitignorado (`codex-temp/`), nunca commitado. Sem exposição real (`.gitignore` funcionou), mas reforça que "instrução de limpar ao final" sem enforcement é frágil — vale observar se o padrão se repete em outras sessões que usam `codex-temp/` como scratch.
+- Safra de 2 memórias em 6 dias, uma delas (07-14) sem nenhuma pegada técnica/skill acionada — ritmo normal, ciclo mais fino que os anteriores.
+- Padrão novo identificado: quando a sessão original já consolida o aprendizado ao vivo (commit direto em `SKILL.md`/script na mesma sessão), o papel do Dream muda de "criar consolidação" para "auditar a consolidação e fechar lacunas residuais". Confirmar via `git log`/`git show` o que já foi tocado evita retrabalho e duplicação divergente. Vale manter esse hábito de checagem antes de escrever qualquer edição de skill quando a memória descrever fixes que soam "já resolvidos no código".
+- Disciplina aplicada: não promover a proposta de backlog de "Descoberta Assistida por IA" à revelia — mandato do Dream é sobre arquitetura de skills, não sobre decidir roadmap de produto no lugar do Raffa.

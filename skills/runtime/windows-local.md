@@ -148,7 +148,7 @@ Configurar em `.claude/settings.json` do projeto **não tem efeito** — Claude 
 
 ## SSH não-interativo — usar paramiko
 
-Autenticação por senha via Bash/PowerShell direto não funciona de forma não-interativa para SSH. Usar `paramiko` (biblioteca Python já disponível no ambiente):
+Autenticação por senha via Bash/PowerShell direto não funciona de forma não-interativa para SSH. Usar `paramiko`:
 ```python
 import paramiko
 client = paramiko.SSHClient()
@@ -156,6 +156,8 @@ client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 client.connect(hostname, username=user, password=pwd)
 stdin, stdout, stderr = client.exec_command("docker inspect container_name")
 ```
+
+Não presumir que `paramiko` já está instalado no Python 3.12 local — confirmar com `python -c "import paramiko"` antes de depender do utilitário canônico (`scripts/infra/vps_ssh.py`). Ausente em produção em 2026-07-15; instalar com `pip install --user paramiko` resolve.
 
 ## `PYTHONUTF8=1` para saída de subprocesso
 

@@ -51,6 +51,7 @@ python .\scripts\infra\vps_ssh.py `
 - `--script-file` do `vps_ssh.py` não executa um shell script multilinha; ele lê um comando remoto por linha. Heredoc, blocos SQL multilinha e scripts com várias linhas soltas vão quebrar feio.
 - Para `psql` via `docker exec ... sh -lc`, preferir `sh -lc "psql ... -c \"SQL...\""` com aspas duplas por fora e SQL em uma linha. Esse padrão sobrevive melhor quando a query tem `interval`, datas, `timezone(...)` e identificadores com aspas.
 - Limpar os arquivos temporários em `codex-temp/` ao final da investigação.
+- `vps_ssh.py` já reconfigura `stdout`/`stderr` para UTF-8 com `errors="replace"` (fix 2026-07-15) — saída remota com emoji/acentuação não deve mais estourar `UnicodeEncodeError` no console CP1252 do Windows. Se aparecer mesmo assim, o script está desatualizado localmente (sync com o repo).
 
 ## Reconhecimento do ambiente Sharebook
 - Confirmar cedo os containers com `docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'`.
