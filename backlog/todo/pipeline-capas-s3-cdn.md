@@ -107,12 +107,20 @@ O hostname `img.sharebook.com.br` deve isolar essa decisão. Se no futuro houver
 
 ### Etapa 1 — Quick wins antes da migração
 
-- [ ] Criar endpoint compacto da home que retorne apenas os livros realmente exibidos.
-- [ ] Não usar `AvailableBooks` completo para obter os poucos livros físicos da home.
-- [ ] Adicionar `loading="lazy"` e `decoding="async"` às capas fora da primeira dobra.
-- [ ] Definir `width` e `height` para reduzir layout shift.
+- [x] Criar endpoint compacto da home que retorne apenas os livros realmente exibidos.
+- [x] Não usar `AvailableBooks` completo para obter os poucos livros físicos da home.
+- [x] Adicionar `loading="lazy"` e `decoding="async"` às capas fora da primeira dobra.
+- [x] Definir `width` e `height` para reduzir layout shift.
 - [ ] Dar prioridade explícita somente à primeira capa relevante para LCP, se a medição confirmar benefício.
-- [ ] Configurar cache adequado para as imagens legadas enquanto a migração não termina.
+- [x] Configurar cache adequado para as imagens legadas enquanto a migração não termina.
+
+Resultado validado em produção em 2026-07-20:
+
+- contrato antigo removido, pois o frontend era seu único cliente;
+- payload dos livros físicos da home: de 2.070.745 bytes para 803 bytes com os dados atuais, redução de 99,96%;
+- frontend SSR saudável e emitindo 41 capas com `loading="lazy"` na home observada;
+- cache legado de capas configurado por 24 horas; benefício secundário porque as prateleiras variam, mas reaproveitável entre home, busca, categorias e PDP;
+- prioridade explícita da primeira capa mantida pendente: aplicar somente após confirmar que uma capa, e não o hero, é o elemento de LCP.
 
 ### Etapa 2 — Storage e geração de variantes
 
