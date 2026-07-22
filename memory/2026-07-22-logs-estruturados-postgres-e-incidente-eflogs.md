@@ -32,6 +32,8 @@ Build limpo, 94 testes unitários + 20 de integração passando. Três commits (
 
 Validação funcional final: Raffa fez downloads reais em produção. `Logs` capturou exatamente o esperado — `Allowed` com quota decrescendo (4→3), `BlockedThrottle` nos cliques rápidos entre downloads, tudo com IP real e `SourceContext` distinguindo throttle filter de controller.
 
+**Addendum**: depois de fechar, Raffa notou que faltava uma rota no `AGENTS.md` para "onde está o log de X" — não existia nada assim, checado antes de adicionar. Solução mínima: uma linha em "Cenários de Roteamento" apontando pra `skills/engineering/backend.md`, e o mapa de fato (`EFLogs`, `Logs`, `docker logs`, Rollbar) numa seção nova lá, "Onde estão os logs". Commit `f23e9f4`.
+
 ## 4. Decisões tomadas
 
 - Não logar todo o request HTTP (rejeitado depois de descoberto o volume real de ~150k req/41h) — só eventos explicitamente marcados.
