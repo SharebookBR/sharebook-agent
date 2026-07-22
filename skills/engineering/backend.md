@@ -9,6 +9,15 @@ Skill operacional para mudanças de backend no `sharebook-backend`, com foco esp
 - Diagnóstico de falha de deploy do backend
 - Bugs de startup ligados a banco, provider ou migrations
 
+## Onde estão os logs
+
+- **`EFLogs`** (Postgres) — auditoria de mudança de entidade (quem alterou o quê). Retenção indefinida.
+- **`Logs`** (Postgres) — eventos operacionais/segurança marcados explicitamente (hoje: rate limit de download). IP, `Outcome`, jsonb `Properties`. Retenção 15 dias (job `CleanupLogsTable`).
+- **`docker logs sharebook-api`** — request log bruto (Serilog console). Não tem IP. Morre a cada deploy/restart (json-file).
+- **Rollbar** — só exceções nível Error+.
+
+Ver `2026-07-22-logs-estruturados-postgres-e-incidente-eflogs.md` na memória episódica para o histórico de como a tabela `Logs` nasceu.
+
 ## Regras práticas
 
 - Rodar `git` sempre em `C:\REPOS\SHAREBOOK\sharebook-backend`.
