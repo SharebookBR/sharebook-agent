@@ -36,6 +36,7 @@ Skill operacional para mudanças de backend no `sharebook-backend`, com foco esp
 - Se a migration tiver sido criada no provider errado, remover e recomeçar. Não normalizar lixo.
 - Se precisar fazer migration manual, patchar o snapshot com extremo cuidado e depois validar se o app sobe de verdade.
 - `PendingModelChangesWarning` em runtime significa que modelo atual e snapshot versionado não batem. Isso pode derrubar a app no startup se o warning virar exceção.
+- **Tabelas anteriores ao port SQL Server → Postgres têm index/constraint com prefixo `idx_17657_`** (nome físico real, não o nome de convenção do EF). A ferramenta de port renomeou constraint/index, mas manteve o nome da tabela limpo. Qualquer `RenameIndex`/`RENAME CONSTRAINT` manual em migration precisa confirmar o nome real via `pg_indexes`/`pg_constraint` em produção antes de escrever a migration — confiar na convenção (`IX_Tabela_Coluna`, `PK_Tabela`) derruba o container no startup (migration falha, transação reverte sozinha, mas o deploy fica em crash loop até corrigir). Incidente real em 2026-07-22 (rename `LogEntries` → `EFLogs`).
 
 ## Lições da rodada de subcategoria
 
