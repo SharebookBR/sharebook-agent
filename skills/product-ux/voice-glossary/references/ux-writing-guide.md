@@ -52,6 +52,13 @@ Exemplos de erro:
 - sugerir espera por decisão manual quando o fluxo digital é imediato
 - induzir comportamento de livro físico em etapa digital sem motivo real
 
+## Templates reutilizáveis (emails, mensagens operacionais)
+
+Templates são genéricos por definição — nunca devem conter dados reais de uma doação/pessoa específica (nome, endereço, e-mail, título de livro real de um caso concreto). Ao editar um template:
+- Substituir dado real por **dado mockado plausível**, não por token `{PLACEHOLDER}` — o processo de envio aqui é manual (copy/paste), então o texto deve ler como um exemplo natural, não como campo de merge de sistema automatizado.
+- Usar uma identidade fictícia consistente entre os templates para não confundir (ex: ganhadora "Maria Silva", livro "Dom Casmurro", endereço claramente fictício como "Rua das Acácias, 123").
+- Exceção: destinatários/CC operacionais (ex: lista de colegas facilitadores) não devem ser mockados — são roteamento real, não conteúdo narrativo. Se um template tiver isso hardcoded, é sinal de que aquele dado não pertence ao corpo do template; remover e tratar como parte do envio, não do texto.
+
 ## Checklist de validação
 Antes de publicar qualquer texto, verifique:
 1. Usa os termos do glossário?
