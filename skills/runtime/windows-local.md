@@ -186,6 +186,8 @@ Token da API pode expirar. O script `scripts/production/sharebook_refresh_token.
 - Usar `publish-once --id` — o comando não aceita `--id`; usar `--source + --limit 1`.
 - Confiar no Bash tool para comandos longos do Windows (ex: `dotnet build`): já retornou saída vazia silenciosamente, inclusive em `echo`. Para build/git/dotnet, preferir o PowerShell tool (shell primário do habitat) e capturar log em arquivo com `*> $log`.
 - Empurrar código Python com aspas/raw string dentro de heredoc `@'...'@` de um `-c` do PowerShell: o heredoc pode corromper a string (ex: `r"...".env"` virou `rC:\...`). Escrever o script em arquivo via `Write` e chamar pelo path, nunca inline quando o código tiver aspas.
+- Abrir monitor de background (`run_in_background`) pra esperar deploy do Coolify. A notificação de conclusão já mentiu mais de uma vez (task "completed" com container ainda na imagem antiga) — a checagem direta (`docker ps`) é obrigatória de qualquer jeito, então o monitor não agrega nada, só risco de ficar órfão rodando por horas. Preferir checagem direta única; se não tiver terminado, avisar "ainda rodando" em vez de ficar em loop.
+- Se mesmo assim abrir um monitor de background, esquecer de pará-lo quando a confirmação vier por outro caminho (ex: checagem manual). Rodou uma sessão inteira com 4+ monitores órfãos de deploys já confirmados horas antes, porque cada checagem manual "resolvia" o problema sem nunca chamar `TaskStop` no monitor equivalente. Regra: toda confirmação de deploy, por qualquer via, encerra o monitor de background correspondente na hora, não só quando ele mesmo notifica.
 
 ## Quando promover aprendizado
 
