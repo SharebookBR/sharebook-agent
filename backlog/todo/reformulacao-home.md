@@ -6,6 +6,19 @@ Reformular a home com foco em descoberta de catálogo, especialmente no mobile.
 
 A home deixa de ser lista de categorias e passa a funcionar como vitrine inteligente de leitura — respondendo à pergunta **"Qual livro eu vou ler agora?"**.
 
+## Base entregue em 25/07/2026
+
+- title, description e H1 reposicionados para livros gratuitos digitais e físicos;
+- hero comunica dinamicamente o tamanho real do catálogo digital;
+- assinatura "Doe. Ganhe. Leia." preservada como marca;
+- prateleiras de novidades, livros físicos e categorias continuam SSR;
+- rodapé ganhou coluna dinâmica de categorias antes de páginas institucionais;
+- Home recebeu dados estruturados `Organization`, `WebSite` e `SearchAction`;
+- sitemap e robots passaram a sustentar a descoberta de PDPs e categorias.
+
+Essa entrega fecha a fundação de posicionamento e navegação. O backlog restante
+abaixo é evolução de curadoria e personalização, não correção da Home atual.
+
 ---
 
 ## Inspiração

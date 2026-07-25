@@ -1,6 +1,25 @@
 # 🌐 SEO v1 — Plano Atualizado
 
-> Última revisão: 2026-06-03 — dados reais do GSC e análise de PDP
+> Última revisão: 2026-07-25 — expansão do catálogo, auditoria real de Home/PDP e SEO técnico
+
+## Descoberta de 25/07/2026 — catálogo como base de conhecimento
+
+A expansão com mais de 1.000 livros digitais coincidiu com crescimento orgânico
+para títulos, livros digitais e também intenções amplas como "receber livros
+físicos grátis" e "ganhar livros grátis".
+
+Hipótese operacional: cada livro amplia a cobertura temática do domínio por
+meio de título, autoria, sinopse e conceitos extraídos do índice. O pipeline
+editorial de IA deixou de ser apenas melhoria de UX e passou a ser um ativo de
+aquisição orgânica.
+
+Próximos experimentos:
+- gerar e exibir "Você aprenderá" com 5–8 tópicos reais da obra;
+- persistir tópicos, nível, idioma e pré-requisitos antes de exibi-los;
+- cruzar coortes de publicação, consultas distintas por PDP e tempo até a
+  primeira impressão/clique no GSC;
+- usar o conhecimento estruturado em filtros, recomendações, páginas temáticas
+  e busca semântica.
 
 ---
 
@@ -61,9 +80,9 @@ Essas páginas já aparecem no Google — só não estão sendo clicadas. Meta d
 
 | Gap | Impacto | Status |
 |---|---|---|
-| Sem `meta description` | Google escolhe o trecho — às vezes funciona, mas perde controle do CTR | pendente |
+| `meta description` usa a sinopse inteira | Exemplo auditado tinha 1.373 caracteres; Google trunca ou reescreve | pendente — gerar resumo próprio de ~150–170 caracteres |
 | Schema.org `Book` (JSON-LD) | Rich results: estrelas, autor, tipo — aumenta CTR e confiança | **parcialmente feito** — `addStructuredData` já existe no `getBook()`, mas sem `isbn`, `numberOfPages`, `inLanguage` |
-| Open Graph tags | Compartilhamento social sem preview rico | pendente |
+| Open Graph tags | Preview específico por livro | **feito**, mas `og:description` ainda recebe a sinopse inteira |
 | Alt text da capa | Sinal de imagem desperdiçado (`alt="Book image"` genérico) | pendente |
 | Categoria "Conhecimento & Carreira" em livros religiosos | Sinal temático errado para o Google | editorial — corrigir no banco caso a caso |
 
@@ -71,11 +90,16 @@ Essas páginas já aparecem no Google — só não estão sendo clicadas. Meta d
 
 ## 📋 Escopo original (revisado)
 
-### 1. ~~Sitemap.xml dinâmico~~ — baixa prioridade
-Google já indexou 1.360 páginas sem sitemap. Útil para garantir cobertura dos ~841 restantes, mas não é o gargalo.
+### 1. Sitemap.xml dinâmico — **feito em 25/07/2026**
 
-### 2. robots.txt — manter no escopo
-Ainda vale orientar o Googlebot e bloquear áreas admin.
+Inclui páginas estáticas, PDPs, categorias raiz e subcategorias com conteúdo
+publicável. URLs canônicas usam `www`; livros e categorias recebem `lastmod`
+derivado do conteúdo real. Falha de API retorna 503, nunca sitemap parcial.
+
+### 2. robots.txt — **feito em 25/07/2026**
+
+Permite crawl público e aponta para o sitemap canônico. Não usa robots como
+mecanismo de segurança; áreas privadas continuam protegidas por autorização.
 
 ### 3. Breadcrumb JSON-LD — manter no escopo
 `BreadcrumbList` na PDP aumenta CTR via rich result de navegação.

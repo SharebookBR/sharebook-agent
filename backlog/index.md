@@ -10,11 +10,11 @@
 - **[Busca e Recomendação](backlog/todo/busca-e-recomendacao-sharebook.md)**: FTS, fuzzy matching e recomendações vetoriais via pgvector.
 - **[Limpeza de Duplicatas no Catálogo](backlog/todo/limpeza-duplicatas-catalogo.md)**: ~235 registros duplicados (~9% do catálogo, ex: "Orgulho e Preconceito" 9×). Polui busca, SEO e atribuição de afiliado. Pré-condição de qualidade pra embeddings.
 - **[Painel de Jobs](backlog/todo/painel-de-jobs.md)**: Evolução do dashboard de monitoria de jobs em background.
-- **[SEO v1](backlog/todo/seo-v1/_plano.md)**: Sitemap dinâmico, Breadcrumbs e melhorias de indexação.
+- **[SEO v1](backlog/todo/seo-v1/_plano.md)**: Sitemap e robots entregues; próximos ganhos estão em CTR, metadados curtos, schema completo e conhecimento estruturado nas PDPs.
 - **[Social e Reviews](backlog/todo/social/_plano.md)**: Comentários, avaliações de livros e login progressivo via Pegasus.
 - **[Dependências e Segurança](backlog/todo/seguranca-e-vulnerabilidades.md)**: Atualização de toolchain (Angular 13+) e correção de passivo de segurança.
 - **[Search Console Access](backlog/todo/search-console-access.md)**: Destravar acesso programático do agente ao Search Console, preferencialmente com service account e fallback para OAuth.
-- **[Reformulação da Home](backlog/todo/reformulacao-home.md)**: Home mobile-first com prateleiras temáticas estilo Netflix — foco em descoberta de catálogo e curadoria.
+- **[Reformulação da Home](backlog/todo/reformulacao-home.md)**: Fundação de posicionamento e navegação entregue; evolução restante é curadoria, ranking e personalização das prateleiras.
 - **[Pipeline de Capas: S3 + CDN](backlog/todo/pipeline-capas-s3-cdn.md)**: Move capas para object storage, gera variantes otimizadas e entrega por CDN sem depender do filesystem do backend.
 - **[Cloudflare: CDN + DDoS + Egress Grátis](backlog/todo/cloudflare-cdn-ddos-protection.md)**: Proteção L7 contra floods, rate limiting no edge, egress de download grátis. Alternativa mais barata que AWS CloudFront+WAF.
 - **[Nova source: conceptf1.blogspot / item 1327](backlog/todo/nova-source-conceptf1-blogspot.md)**: O item 1327 revelou uma source nova; tratar no nível de source, não como ebook unitário.
