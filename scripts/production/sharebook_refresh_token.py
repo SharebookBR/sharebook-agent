@@ -10,8 +10,8 @@ from sharebook_prod_auth import load_env, get_token  # noqa: E402
 def main() -> int:
     repo_root = Path(__file__).resolve().parent.parent
     env_values = load_env(repo_root)
-    token = get_token(env_values, repo_root=repo_root, force_refresh=True)
-    print(token)
+    get_token(env_values, repo_root=repo_root, force_refresh=True)
+    print("Token renovado e salvo no .env.")
     return 0
 
 
