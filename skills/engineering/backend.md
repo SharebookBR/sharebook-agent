@@ -18,6 +18,8 @@ Skill operacional para mudanças de backend no `sharebook-backend`, com foco esp
 
 Ver `2026-07-22-logs-estruturados-postgres-e-incidente-eflogs.md` na memória episódica para o histórico de como a tabela `Logs` nasceu.
 
+**Confirmar recuperação de incidente**: silêncio de alerta (Rollbar sem novo e-mail, sem nova entrada) não é prova de recuperação — alertas por marco (ex: 1ª e 10ª ocorrência) podem simplesmente parar de notificar enquanto o erro continua. Confirmar contra evidência positiva: uma execução posterior bem-sucedida em `JobHistories` para jobs, ou uma entrada `Allowed`/sucesso equivalente em `Logs` para o fluxo afetado. Caso real em 2026-07-23 (`MeetupSearch` / autenticação Google).
+
 ## Regras práticas
 
 - Rodar `git` sempre em `C:\REPOS\SHAREBOOK\sharebook-backend`.
@@ -46,6 +48,8 @@ Ver `2026-07-22-logs-estruturados-postgres-e-incidente-eflogs.md` na memória ep
 - Se precisar fazer migration manual, patchar o snapshot com extremo cuidado e depois validar se o app sobe de verdade.
 - `PendingModelChangesWarning` em runtime significa que modelo atual e snapshot versionado não batem. Isso pode derrubar a app no startup se o warning virar exceção.
 - **Tabelas anteriores ao port SQL Server → Postgres têm index/constraint com prefixo `idx_17657_`** (nome físico real, não o nome de convenção do EF). A ferramenta de port renomeou constraint/index, mas manteve o nome da tabela limpo. Qualquer `RenameIndex`/`RENAME CONSTRAINT` manual em migration precisa confirmar o nome real via `pg_indexes`/`pg_constraint` em produção antes de escrever a migration — confiar na convenção (`IX_Tabela_Coluna`, `PK_Tabela`) derruba o container no startup (migration falha, transação reverte sozinha, mas o deploy fica em crash loop até corrigir). Incidente real em 2026-07-22 (rename `LogEntries` → `EFLogs`).
+- **Env var `DatabaseProvider` não é honrada pelo `dotnet ef` no design-time neste projeto** (motivo não totalmente esclarecido — suspeita de como `HostFactoryResolver` resolve configuração para apps sem `IDesignTimeDbContextFactory`). Contorno: editar `appsettings.json` temporariamente (`DatabaseProvider: postgres` + connection string dummy sintaticamente válida), rodar o scaffold, reverter o arquivo depois. Não adianta só setar a env var no shell.
+- **`dotnet ef migrations remove` falha se não houver conexão real** (tenta checar histórico aplicado no banco). Para descartar um scaffold ruim antes de decidir contra qual banco aplicar, apagar os dois arquivos da migration manualmente é mais simples do que forçar uma conexão só para isso.
 
 ## Lições da rodada de subcategoria
 
@@ -170,6 +174,13 @@ dotnet build C:\REPOS\SHAREBOOK\sharebook-backend\ShareBook\ShareBook.Api\ShareB
 ### EF Core e Mapping
 - **Propriedades Ignoradas**: Propriedades marcadas com `.Ignore()` no mapeamento (ex: `BookMap.cs`) NÃO são populadas pelo repositório genérico, mesmo que existam na entidade. Se precisar desses dados, use colunas persistidas (como `ImageSlug` em vez de `ImageUrl`).
 - **Npgsql Resilience**: Ao ler colunas que podem ser `uuid`, `text` ou `varchar` no Postgres via Npgsql, prefira `reader.GetValue(i)?.ToString()` para evitar `InvalidCastException`.
+
+### SQL bruto (`SqlQueryRaw`/`FromSqlRaw`)
+- **Não terminar o SQL em `;`**. O EF Core compõe SQL adicional em cima do que foi passado (`SingleAsync`, `LIMIT`, paginação) — um `;` no fim quebra essa composição com "syntax error at or near ';'". Incidente real em 2026-07-24 no `DownloadLogsController`.
+- **Parâmetro `DateTime` exige `Kind` explícito mesmo quando o SQL só usa `::date`**. Npgsql rejeita `DateTime.Kind=Unspecified` independentemente do cast do lado SQL — usar `DateTime.SpecifyKind(valor, DateTimeKind.Utc)` mesmo quando a intenção é só uma data de calendário, não um timestamp.
+
+### Testes com `IMemoryCache` e relógio fake
+- Se o teste fixar um relógio manual (`ISystemClock`/similar) numa data no passado enquanto o `MemoryCache` real usa `DateTimeOffset.UtcNow` para expiração, as entradas somem imediatamente e o teste falha de um jeito que parece bug de lógica mas é descompasso de relógio. Iniciar o relógio manual em `DateTimeOffset.UtcNow` e avançá-lo explicitamente dentro do teste, nunca fixar em uma data literal antiga.
 
 ### Arquitetura e Persistência
 - **Bancos Isolados**: O banco do Importador e o banco da App são isolados na VPS. **NÃO tentar fazer JOIN SQL** entre eles. A composição de dados deve ser feita na camada de Serviço através de **Enriquecimento em Lote** (coletar IDs e fazer uma única consulta via repositório).

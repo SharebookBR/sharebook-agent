@@ -20,6 +20,7 @@ Cadastrar livro físico é parecido com ebook, mas não igual. Esta skill existe
 
 ## Regras
 
+- **A unidade de cadastro é a unidade da doação, não a unidade da foto.** Vários exemplares fotografados juntos não significam automaticamente vários anúncios — podem ser um kit doado como um só. Se a foto for ambígua sobre isso, confirmar com o usuário antes de decidir entre cadastros separados ou um kit único; quando for kit, deixar isso explícito no título e na sinopse (ex: "Kit com 2 volumes").
 - Duplicidade de livro físico é aceitável. Não bloquear cadastro só porque já existe exemplar parecido.
 - Usar a própria foto da capa do livro como imagem, salvo orientação contrária do usuário.
 - Livro físico exige `--freight-option`. Se o usuário disser que paga para todo o Brasil, usar `Country`.
