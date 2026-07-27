@@ -33,15 +33,15 @@ def required(values: dict[str, str], key: str) -> str:
 
 
 def build_psql_command(values: dict[str, str], sql: str, csv: bool, tuples_only: bool) -> str:
-    pg_host_container = required(values, "SHAREBOOK_PROD_PG_RO_HOST")
+    pg_host = required(values, "SHAREBOOK_PROD_PG_RO_HOST")
     pg_port = required(values, "SHAREBOOK_PROD_PG_RO_PORT")
     pg_db = required(values, "SHAREBOOK_PROD_PG_RO_DATABASE")
     pg_user = required(values, "SHAREBOOK_PROD_PG_RO_USER")
     pg_password = required(values, "SHAREBOOK_PROD_PG_RO_PASSWORD")
 
     psql_parts = [
-        "docker", "exec", "-e", f"PGPASSWORD={pg_password}", "-i", pg_host_container,
-        "psql", "-U", pg_user, "-d", pg_db, "-p", pg_port,
+        "env", f"PGPASSWORD={pg_password}",
+        "psql", "-h", pg_host, "-U", pg_user, "-d", pg_db, "-p", pg_port,
         "-v", "ON_ERROR_STOP=1",
         "-P", "pager=off",
     ]
@@ -85,7 +85,7 @@ def run_ssh_command(host: str, port: int, user: str, password: str, command: str
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Executa SQL read-only no Postgres de produção via SSH + docker exec (atalho enxuto)."
+        description="Executa SQL read-only no Postgres de produção via SSH (atalho enxuto)."
     )
     parser.add_argument(
         "--env-file",
