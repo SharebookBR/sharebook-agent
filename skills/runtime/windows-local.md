@@ -176,6 +176,7 @@ Token da API pode expirar. O script `scripts/production/sharebook_refresh_token.
 - Usar comandos PowerShell como se fossem shell POSIX.
 - Empurrar texto acentuado inline e depois fingir surpresa com encoding quebrado.
 - Tratar arquivo com BOM, quoting ou newline como detalhe irrelevante.
+- Usar `Invoke-WebRequest` em endpoint que responde HTTP 200 sem corpo e interpretar `Referência de objeto não definida para uma instância de um objeto` como falha certa da API. A mutação pode ter sido concluída e o erro vir apenas do cliente PowerShell ao processar a resposta vazia. Preferir `Invoke-RestMethod`; diante de resultado ambíguo, consultar o estado real por GET antes de repetir, principalmente quando a operação dispara e-mail ou outro efeito colateral.
 - Assumir que o ambiente local tem a mesma autonomia agentica do OpenClaw.
 - Confiar em memória de sessão quando o que precisava era registro durável.
 - Deixar regra específica de Windows poluir a camada genérica do `AGENTS.md`.
