@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
 Gera capa de livro localmente usando Pillow, sem API externa.
-Usa paleta e estilo do cover_roulette.py para consistência.
+Fallback independente para agentes sem geração de imagem nativa.
 
 Uso:
-    python3 cover_generate.py "Título do Livro" "Autor" [--paleta Tron] [--estilo terminal]
+    python3 cover_generate.py "Título do Livro" "Autor" [--paleta tron] [--efeito glow]
 
-Se paleta/estilo não forem informados, sorteia automaticamente.
+Se paleta/efeito não forem informados, sorteia automaticamente.
 """
 
 import argparse
