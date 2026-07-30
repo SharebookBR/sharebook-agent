@@ -1,34 +1,72 @@
 ---
 name: cover-direction
-description: Direção visual e prompt de capas do Sharebook com roleta cromática, papéis `background`/`primary`/`secondary`/`accent` e geração de prompt a partir da URL do livro. Use quando Raffa pedir "roda a roleta", quando precisar montar prompt de capa, revisar direção cromática ou evitar capa genérica/tech-clean.
+description: Gerar, selecionar, publicar e validar capas do Sharebook com roleta cromática e fluxo adaptado à capacidade do agente. Use quando Raffa pedir "roda a roleta", quando precisar criar ou trocar uma capa, revisar direção cromática ou evitar capa genérica/tech-clean.
 ---
 
 # Sharebook Cover Direction
 
 Usar direção visual, não improviso.
 
-## Fonte da verdade
+## Fontes da verdade
 
 - `sharebook-agent/scripts/covers/cover_prompt_from_url.py`
 - `sharebook-agent/scripts/covers/cover_roulette.py`
+- `sharebook-agent/scripts/covers/prepare_cover.py`
 - `sharebook-agent/scripts/covers/INDEX.md`
+- `sharebook-agent/scripts/production/sharebook_prod_book.py`
 
-Se a skill divergir dos scripts, os scripts mandam.
+Os scripts mandam nos detalhes mecânicos; esta skill manda na escolha do caminho por capacidade.
 
 ## Workflow canônico
 
-Quando Raffa disser "roda a roleta" ou "roda a roleta de estilos", exigir URL do livro e rodar:
+Exigir a URL do livro. Sem URL, não inventar roleta.
+
+Usar `cover_prompt_from_url.py` para extrair título, autor e sinopse e sortear a direção:
 
 ```bash
 python3 /data/workspace/sharebook-agent/scripts/covers/cover_prompt_from_url.py "<URL_DO_LIVRO>"
 ```
 
-O script já:
-- lê título, autor e sinopse da página do livro
-- sorteia direção cromática pela roleta
-- devolve prompt pedindo 3 conceitos distintos antes de gerar imagem
+### Agente com geração de imagem nativa
 
-Sem URL, não inventar roleta.
+1. Usar a ferramenta nativa de geração de imagem; não usar `cover_generate.py`.
+2. Tratar a saída de `cover_prompt_from_url.py` como briefing. Ignorar no gerador a meta-instrução “não gere a imagem ainda”: conceber internamente 3 direções e fazer uma chamada de imagem por direção.
+3. Gerar **3 capas independentes**. Não gerar triptych ou prancha.
+4. Tornar os conceitos estruturalmente distintos, não meras variações de layout.
+5. Preservar literalmente título e autoria.
+6. Inspecionar as três e escolher autonomamente a melhor por:
+   - legibilidade em miniatura;
+   - força conceitual e aderência à sinopse;
+   - hierarquia de capa real;
+   - fidelidade à paleta;
+   - ausência de clichê visual e de estética tech-clean genérica;
+   - texto correto e ausência de artefatos impeditivos.
+7. Se nenhuma passar nos requisitos duros, refazer apenas as candidatas defeituosas antes de publicar.
+8. Salvar a escolhida no workspace e prepará-la para upload:
+
+```bash
+python3 scripts/covers/prepare_cover.py "<CAPA_NATIVA>" "<CAPA_FINAL.jpg>"
+```
+
+O utilitário preserva a proporção e mantém o arquivo abaixo de 800 KB.
+
+9. Resolver o ID pelo livro real e atualizar **pela API**, nunca direto no banco:
+
+```bash
+python3 scripts/production/sharebook_prod_book.py update \
+  --id "<BOOK_ID>" \
+  --image-path "<CAPA_ESCOLHIDA>"
+```
+
+10. Validar o livro por GET e a PDP pública: título, capa nova, categoria e CTA devem permanecer íntegros.
+
+O pedido “roda a roleta” com URL autoriza esse fluxo fechado quando o agente possui geração nativa.
+
+### Agente sem geração de imagem nativa
+
+Usar `generate_covers.py`/`cover_generate.py` para gerar múltiplas opções locais e escolher visualmente a melhor. Se o ambiente só puder produzir direção, devolver o prompt completo de `cover_prompt_from_url.py` para geração manual.
+
+Não usar `sharebook_openai_cover.py` ou outra API cobrada sem confirmação explícita do Raffa.
 
 ## Gramática cromática durável
 
@@ -51,8 +89,6 @@ Regras:
 - não deixar a IA cair no tech-clean genérico
 - o próximo gargalo natural, depois da harmonia, é diversidade insuficiente de paletas e schemes
 
-## Preferência operacional do habitat
+## Regra de capacidade
 
-Para capa de livro, priorizar geração no ChatGPT web quando o objetivo for qualidade final superior.
-
-Esta skill organiza a direção e o prompt. Ela não obriga gerar a imagem localmente.
+Detectar a capacidade real do agente antes de escolher o gerador. O caminho nativo é preferencial quando disponível; o gerador Python local permanece como fallback importante para outros modelos e habitats.

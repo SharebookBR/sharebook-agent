@@ -128,7 +128,7 @@ Guardrails de publish:
 - Sinopse: 3 parágrafos
 - Idioma padrão: português
 - Plano incompleto → volta para `waiting_editorial`
-- Capa: preferir fonte (capa original do PDF/editora); se a primeira página for só folha de rosto acadêmica sem valor de capa, gerar localmente com `scripts/covers/cover_generate.py` (gratuito, cross-platform) — gerar múltiplas variações e inspecionar visualmente antes de escolher. Gerar via API OpenAI **apenas com confirmação explícita do Raffa**.
+- Capa: preferir fonte (capa original do PDF/editora). Se a primeira página for só folha de rosto acadêmica sem valor de capa, seguir `skills/product-ux/cover-direction/SKILL.md`: com geração nativa, criar 3 capas distintas e escolher criticamente a melhor; sem essa capacidade, usar `scripts/covers/cover_generate.py` como fallback local. Gerar via API OpenAI cobrada **apenas com confirmação explícita do Raffa**.
 - Validação pós-publicação: confirmar `done` no importer, livro íntegro na API e página pública com capa, categoria e ação de download disponíveis.
 
 ---

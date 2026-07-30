@@ -61,7 +61,7 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 
 - "Obrigado por tudo parceiro", "Completude." >> Sessão encerrou e deve fazer o ritual de Fim da sessão.
 - "Bora fazer uma revisão da triagem?" >> Leia a skill "daily-triage-recovery/SKILL.md"
-- "Roda a roleta", "Roda a roleta de estilos" >> gerar o prompt completo de capa a partir da URL obrigatória do livro com `python3 /data/workspace/sharebook-agent/scripts/covers/cover_prompt_from_url.py "<URL_DO_LIVRO>"`; sem URL, não tem roleta e deve cobrar a URL
+- "Roda a roleta", "Roda a roleta de estilos" >> exigir a URL do livro e seguir a skill `skills/product-ux/cover-direction/SKILL.md`; com geração de imagem nativa, o fluxo completo é gerar 3 capas distintas, escolher criticamente a melhor, atualizar o livro pela API e validar a PDP; sem geração nativa, usar o fallback Python documentado na skill
 - "por favor faça um sync nos repos" >> sincronizar os repositórios operacionais do workspace (`sharebook-agent`, `sharebook-backend`, `sharebook-frontend`, `sharebook-ebook-importer`), avaliando mudanças locais no `sharebook-agent` para manter o que for útil e remover o que for temporário antes do pull --rebase; se houver commit local útil, o fluxo só termina com push concluído e remoto alinhado. O objetivo é ter tudo atualizado local e remoto.
 
 ## Coisas que o Raffa odeia. Ele chama de trabalho de porco. 
