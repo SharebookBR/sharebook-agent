@@ -12,6 +12,8 @@
 - **[Painel de Jobs](backlog/todo/painel-de-jobs.md)**: Evolução do dashboard de monitoria de jobs em background.
 - **[SEO v1](backlog/todo/seo-v1/_plano.md)**: Sitemap e robots entregues; próximos ganhos estão em CTR, metadados curtos, schema completo e conhecimento estruturado nas PDPs.
 - **[Social e Reviews](backlog/todo/social/_plano.md)**: Comentários, avaliações de livros e login progressivo via Pegasus.
+- **[Pegasus — Engagement Engine](backlog/todo/pegasus-engagement-engine.md)**: Engine de eventos + pontos (XP/Karma) + regras + histórico. Year 1: serviço REST simples, PostgreSQL, sem frescura. Níveis/badges/streaks/loja/IA ficam pro Ano 2+.
+- **[Lista de Desejos — Doação Reversa](backlog/todo/lista-de-desejos.md)**: Leitores publicam livros que querem receber, doadores escolhem quem atender. MVP sem Karma — 3 pedidos por usuário, anônimo até o match.
 - **[Dependências e Segurança](backlog/todo/seguranca-e-vulnerabilidades.md)**: Atualização de toolchain (Angular 13+) e correção de passivo de segurança.
 - **[Search Console Access](backlog/todo/search-console-access.md)**: Destravar acesso programático do agente ao Search Console, preferencialmente com service account e fallback para OAuth.
 - **[Reformulação da Home](backlog/todo/reformulacao-home.md)**: Fundação de posicionamento e navegação entregue; evolução restante é curadoria, ranking e personalização das prateleiras.
@@ -26,6 +28,7 @@
 - **[Nova Fonte: InTech Open](backlog/todo/fonte-intechopen.md)**: Editora acadêmica open access. Livros de Computer and Information Science disponíveis gratuitamente em `intechopen.com/subjects/9`.
 - **[Nova Fonte: JSBooks](backlog/todo/fonte-jsbooks.md)**: Diretório curado de ebooks gratuitos de JavaScript. Repo GitHub `revolunet/JSBooks` com links diretos para PDFs.
 - **[Canal Claude ↔ OpenClaw](backlog/todo/canal-claude-openclaw.md)**: Canal peer-to-peer assimétrico entre os dois agentes via MCP + PostgreSQL. Claude inicia, OpenClaw responde via gateway. Sem hierarquia — divisão de papéis por capacidade.
+- **[OpenAI Codex — Dreno OAuth](backlog/todo/openai-codex-oauth-drain.md)**: Investigar e resolver dreno de limites OpenAI no agente mini. Tokens OAuth por agente, cron jobs parados, migração temporária para deepseek.
 
 ---
 Para detalhes de execução de cada item, consulte o arquivo correspondente na pasta `todo/`.

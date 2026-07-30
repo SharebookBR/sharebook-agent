@@ -117,9 +117,7 @@ conn = psycopg2.connect(
 )
 ```
 
-## Python no Windows — armadilhas de versão
-
-### `python3` no Windows = stub do Microsoft Store
+## `python3` no Windows = stub do Microsoft Store
 
 No Windows, o comando `python3` pode resolver para um stub do Microsoft Store que não executa nada (retorna rc=9009 silenciosamente). Isso se manifesta em scripts Python que chamam subprocessos com `["python3", ...]` — eles travam ou falham sem mensagem útil.
 
@@ -130,16 +128,6 @@ subprocess.run([sys.executable, "outro_script.py", ...])
 ```
 Isso funciona tanto no Windows quanto no Linux/OpenClaw sem condicionais.
 
-### `python` pode ser 3.14 sem dependências operacionais
-
-Se Python 3.14 for instalado depois, pode sobrescrever o `python` no PATH. O ambiente operacional com todas as dependências (`psycopg2`, `boto3`, `dotenv`, `pikepdf`) é o **Python 3.12**:
-
-```
-C:\Users\raffa\AppData\Local\Programs\Python\Python312\python.exe
-```
-
-Checar antes de operações críticas: `python --version`. Se retornar 3.14 e houver falha de importação, usar o path completo do 3.12. Instalar dep faltante no 3.12: `C:\Users\raffa\AppData\Local\Programs\Python\Python312\python.exe -m pip install --user <dep>`.
-
 ## bypassPermissions — onde configurar
 
 `defaultMode: bypassPermissions` + `skipDangerousModePermissionPrompt: true` **só funcionam em `~/.claude/settings.json`** (user settings).
@@ -148,7 +136,7 @@ Configurar em `.claude/settings.json` do projeto **não tem efeito** — Claude 
 
 ## SSH não-interativo — usar paramiko
 
-Autenticação por senha via Bash/PowerShell direto não funciona de forma não-interativa para SSH. Usar `paramiko`:
+Autenticação por senha via Bash/PowerShell direto não funciona de forma não-interativa para SSH. Usar `paramiko` (biblioteca Python já disponível no ambiente):
 ```python
 import paramiko
 client = paramiko.SSHClient()
@@ -156,8 +144,6 @@ client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 client.connect(hostname, username=user, password=pwd)
 stdin, stdout, stderr = client.exec_command("docker inspect container_name")
 ```
-
-Não presumir que `paramiko` já está instalado no Python 3.12 local — confirmar com `python -c "import paramiko"` antes de depender do utilitário canônico (`scripts/infra/vps_ssh.py`). Ausente em produção em 2026-07-15; instalar com `pip install --user paramiko` resolve.
 
 ## `PYTHONUTF8=1` para saída de subprocesso
 
@@ -176,19 +162,13 @@ Token da API pode expirar. O script `scripts/production/sharebook_refresh_token.
 - Usar comandos PowerShell como se fossem shell POSIX.
 - Empurrar texto acentuado inline e depois fingir surpresa com encoding quebrado.
 - Tratar arquivo com BOM, quoting ou newline como detalhe irrelevante.
-- Usar `Invoke-WebRequest` em endpoint que responde HTTP 200 sem corpo e interpretar `Referência de objeto não definida para uma instância de um objeto` como falha certa da API. A mutação pode ter sido concluída e o erro vir apenas do cliente PowerShell ao processar a resposta vazia. Preferir `Invoke-RestMethod`; diante de resultado ambíguo, consultar o estado real por GET antes de repetir, principalmente quando a operação dispara e-mail ou outro efeito colateral.
 - Assumir que o ambiente local tem a mesma autonomia agentica do OpenClaw.
 - Confiar em memória de sessão quando o que precisava era registro durável.
 - Deixar regra específica de Windows poluir a camada genérica do `AGENTS.md`.
 - Usar `python3` sem verificar se é o stub do Microsoft Store — usar `sys.executable` nos scripts.
-- Usar `python` sem verificar versão — pode ser 3.14 sem deps operacionais; o 3.12 é o ambiente canônico.
 - Configurar `bypassPermissions` no project settings em vez do user settings.
 - Tentar SSH não-interativo via shell sem paramiko.
-- Usar `publish-once --id` — o comando não aceita `--id`; usar `--source + --limit 1`.
-- Confiar no Bash tool para comandos longos do Windows (ex: `dotnet build`): já retornou saída vazia silenciosamente, inclusive em `echo`. Para build/git/dotnet, preferir o PowerShell tool (shell primário do habitat) e capturar log em arquivo com `*> $log`.
-- Empurrar código Python com aspas/raw string dentro de heredoc `@'...'@` de um `-c` do PowerShell: o heredoc pode corromper a string (ex: `r"...".env"` virou `rC:\...`). Escrever o script em arquivo via `Write` e chamar pelo path, nunca inline quando o código tiver aspas.
-- Abrir monitor de background (`run_in_background`) pra esperar deploy do Coolify. A notificação de conclusão já mentiu mais de uma vez (task "completed" com container ainda na imagem antiga) — a checagem direta (`docker ps`) é obrigatória de qualquer jeito, então o monitor não agrega nada, só risco de ficar órfão rodando por horas. Preferir checagem direta única; se não tiver terminado, avisar "ainda rodando" em vez de ficar em loop.
-- Se mesmo assim abrir um monitor de background, esquecer de pará-lo quando a confirmação vier por outro caminho (ex: checagem manual). Rodou uma sessão inteira com 4+ monitores órfãos de deploys já confirmados horas antes, porque cada checagem manual "resolvia" o problema sem nunca chamar `TaskStop` no monitor equivalente. Regra: toda confirmação de deploy, por qualquer via, encerra o monitor de background correspondente na hora, não só quando ele mesmo notifica.
+- **Inline Python no PowerShell com regex ou escaping**: comandos inline com `python -c "..."` quebram com regex, aspas aninhadas ou acentos. Sempre criar um arquivo `.py` temporário, escrever o código nele e executar. Limpar o temporário depois.
 
 ## Quando promover aprendizado
 
@@ -218,10 +198,6 @@ Token da API pode expirar. O script `scripts/production/sharebook_refresh_token.
 ## Outputs copiáveis
 
 No Windows, outputs longos de scripts (ex: prompt da roleta de estilos) devem ser exibidos dentro de um bloco de código markdown (``` ... ```) para facilitar a cópia. Nunca exibir só como texto narrativo.
-
-## Browser pane — screenshot pode travar
-
-`computer{action: screenshot}` no Browser pane já deu timeout sem modal aparente (confirmado 2026-07-11). Não insistir tentando diagnosticar — usar `get_page_text` como prova alternativa de validação; traz o conteúdo completo da página e costuma bastar para confirmar publicação/estado sem depender de captura visual.
 
 ## Prints
 

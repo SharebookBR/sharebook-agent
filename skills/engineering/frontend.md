@@ -40,7 +40,9 @@ Skill operacional para desenvolvimento, manutenção e evolução do `sharebook-
 
 ## SSR v2 (Angular Universal)
 
-O Sharebook utiliza SSR para SEO e performance. Siga estes padrões para evitar quebras no ambiente Node:
+O Sharebook utiliza Angular 13 Universal + Express (ngExpressEngine) para SSR de SEO e performance. Siga estes padrões para evitar quebras no ambiente Node:
+
+### Princípios gerais
 
 - **Zero `if (isBrowser)` espalhado**: Use o `TransferStateInterceptor` para automatizar o compartilhamento de dados entre servidor e browser.
 - **Abstração de Browser APIs**: Nunca use `window`, `localStorage` ou `document` diretamente. Use os serviços:
@@ -49,89 +51,79 @@ O Sharebook utiliza SSR para SEO e performance. Siga estes padrões para evitar 
 - **Meta Tags**: Garanta que as meta tags de redes sociais (OpenGraph) sejam renderizadas no servidor para correta indexação.
 - **Moment-timezone**: Cuidado com importações de `moment-timezone` no ambiente Node; prefira importações ES nativas quando possível.
 
-### SSR — Bugs Arquiteturais Pagos
+### SsrCacheService — escopo de módulo, não de classe
 
-**1. SsrCacheService: `_store` deve ser variável de módulo, não propriedade de instância**
+**Bug crítico corrigido em 2026-06-11**: O `SsrCacheService` original declarava `private store = new Map()` como propriedade de instância. Angular Universal cria novo contexto de injeção por request → o Map morria a cada requisição → o cache nunca funcionava.
 
-Angular Universal cria um contexto Angular novo por request → `private store = new Map()` como propriedade de instância morre a cada request → cache nunca funciona.
-
-Fix: declarar `_store` fora da classe (escopo de módulo JS):
+**Fix**: Mover o `_store` para escopo de módulo (fora da classe):
 ```typescript
-// Fora da classe:
-const _store = new Map<string, any>();
+// FORA da classe — persiste enquanto o processo Node.js estiver vivo
+const _store = new Map<string, { data: any; timestamp: number }>();
 
 @Injectable({ providedIn: 'root' })
 export class SsrCacheService {
   get(key: string) { return _store.get(key); }
-  set(key: string, value: any) { _store.set(key, value); }
-  has(key: string) { return _store.has(key); }
+  set(key: string, data: any) { _store.set(key, { data, timestamp: Date.now() }); }
+  // ...
 }
 ```
-Persiste enquanto o processo Node.js estiver vivo. `providedIn: 'root'` não é singleton entre requests no SSR — a variável de módulo é.
 
-**2. RESPONSE token ausente no `server.ts`**
+`providedIn: 'root'` **não é singleton entre requests no SSR** — a injeção de dependências do Angular é recriada por request. A única forma de persistir estado entre requests no mesmo processo Node.js é usar variável de módulo JavaScript.
 
-Sem `RESPONSE` nos providers do `res.render()`, todos os `@Optional() @Inject(RESPONSE)` nos componentes recebem `null` → `this.response?.status(404)` nunca dispara → soft 404 para Googlebot.
+### TransferState manual em cache hit
 
-Fix em `server.ts`:
+Quando um serviço retorna dados cacheados via `of(cached)`, ele **desvia do `HttpClient`** → o `TransferStateInterceptor` nunca roda → o `TransferState` fica vazio → o browser re-fetcha e re-renderiza (perdendo o benefício do SSR).
+
+**Sintoma**: conteúdo aparece igual no HTML SSR, mas o browser faz requests duplicados e pode sobrescrever dados sorteados (ex: categorias do showcase trocando a cada F5).
+
+**Fix**: no cache hit em ambiente servidor, popular o `TransferState` manualmente:
 ```typescript
-import { REQUEST, RESPONSE } from '@nguniversal/express-engine/tokens';
-
-app.get('*', (req, res) => {
-  res.render('index', {
-    req,
-    providers: [
-      { provide: REQUEST, useValue: req },
-      { provide: RESPONSE, useValue: res },
-    ],
-  });
-});
-```
-Sem isso, o SEO de 404 está invisível para crawlers.
-
-**3. TransferState: popular manualmente no cache hit**
-
-Quando `BookService` retorna `of(cached)` em vez de ir pelo `HttpClient`, o `TransferStateInterceptor` não roda → `angular-state` fica vazio → browser re-fetcha e re-sorteia (ex: categorias da home mudam a cada F5).
-
-Fix: no cache hit em ambiente servidor, popular `TransferState` com a mesma chave URL que o interceptor usa:
-```typescript
-import { TransferState, makeStateKey } from '@angular/platform-browser';
 import { isPlatformServer } from '@angular/common';
+import { TransferState, makeStateKey } from '@angular/platform-browser';
 
-// No serviço, ao retornar cache:
+// No método que retorna cache hit:
 if (isPlatformServer(this.platformId)) {
-  const key = makeStateKey<T>(url);
+  const key = makeStateKey('categories-showcase');
   this.transferState.set(key, cached);
 }
 return of(cached);
 ```
 
-**4. NotFoundPageComponent — 404 real vs. soft 404**
+A chave deve ser a mesma que o `TransferStateInterceptor` usaria se o `HttpClient` tivesse sido acionado. Validar inspecionando o bloco `<script id="angular-state">` no HTML SSR de produção.
 
-Usar `router.navigate(['/404'])` causa soft 404: URL muda, crawler recebe HTTP 200 para a URL original.
+### RESPONSE injection — server.ts
 
-Padrão correto: renderizar `NotFoundPageComponent` inline no URL original com HTTP 404:
+O token `@Inject(RESPONSE)` (usado para setar HTTP status code no SSR) só funciona se `server.ts` passar `RESPONSE` nos providers do `res.render()`:
+
 ```typescript
-// no componente com rota 404:
-@Optional() @Inject(RESPONSE) private response: any,
-
-ngOnInit() {
-  this.response?.status(404);
-  // renderizar conteúdo 404 sem redirecionar
-}
+// server.ts — dentro do res.render()
+providers: [
+  { provide: RESPONSE, useValue: res },
+  // ... outros providers
+]
 ```
-`NotFoundPageComponent` é o componente visual único (fonte da verdade). `NotFoundComponent` (rota `**`) é wrapper de 1 linha que o inclui. `BookDetailComponent` também o inclui quando livro não existe.
 
-## Chart.js atrás de `*ngIf`
+Sem isso, **todos** os `@Optional() @Inject(RESPONSE)` do app são `null` — HTTP 404 nunca chega ao Googlebot (soft 404). O fix é mínimo e resolve para todos os componentes de uma vez.
 
-Quando o `<canvas>` do gráfico vive atrás de `*ngIf="!loading && !error"`, montar o `Chart` em `ngAfterViewInit` corre uma corrida real contra a resposta HTTP: o elemento pode não existir ainda no DOM na primeira tentativa, e o gráfico simplesmente não aparece. Padrão que já se repetiu duas vezes (`analytics-dashboard`, depois `download-logs-dashboard`, 2026-07-24):
+### NotFoundPageComponent — 404 real, não redirect
 
-- Montar o gráfico em `ngAfterViewChecked` (não `ngAfterViewInit`), guardado por uma flag para não recriar a cada change detection.
-- Toda troca de filtro que force o Angular a destruir/recriar o `<canvas>` (mesmo `*ngIf`) também destrói a instância anterior do `Chart.js` — chamar `chart.destroy()` antes de montar de novo dentro do método que recarrega os dados, senão sobra uma instância órfã presa a um canvas que não existe mais.
+**Não redirecionar para `/404`**. Isso causa soft 404 para crawlers (o URL original retorna 200 com redirect, não 404).
 
-## Karma/Puppeteer — Chrome ausente no cache
+Padrão correto:
+- Criar `NotFoundPageComponent`: fonte da verdade visual + `this.response?.status(404)` + SEO meta tags
+- `NotFoundComponent` (rota `**`) vira wrapper de 1 linha que renderiza `<app-not-found-page>`
+- `BookDetailComponent` e outros componentes que detectam recurso inexistente renderizam `<app-not-found-page>` **no URL original**, sem redirect
+- O componente deve ser declarado no `AppModule`
 
-`ChromeHeadless` via Puppeteer pode ter `executablePath()` apontando para um binário que existe só às vezes (baixado, mas some do cache temporário do Windows antes da execução) — o teste falha sem mensagem útil. Fix aplicado em `karma.conf.js`: verificar se o candidato do Puppeteer existe de fato no disco antes de usá-lo; se não existir, usar o Chrome/Edge já instalado no Windows como fallback automático, sem exigir configuração manual por máquina.
+### HomeService showcase — Union para subcategorias
+
+A query de seleção de categorias para o showcase da home filtrava apenas `b.Category.ParentCategoryId == null` (categorias raiz). Categorias como Drama tinham quase todos os ebooks em subcategorias filhas → mostrava 1 livro.
+
+**Fix**: Union entre ebooks com categoria raiz direta e ebooks com categoria filha de categoria raiz:
+```typescript
+// books query:
+.where('b.Category.ParentCategoryId = :categoryId OR b.Category.Id = :categoryId', { categoryId })
+```
 
 ## Padrões de Layout
 
@@ -261,6 +253,21 @@ Regras de hierarquia na PDP:
 Sempre: `rel="noopener noreferrer sponsored"` (SEO correto para afiliado). GA event: `amazon_click` com `book_title` + `book_slug`.
 
 Máximo um `mat-flat-button accent` por página — Amazon nunca compete com "Receber livro digital".
+
+## Shelf arrows — visibilidade e estado inteligente
+
+Para controles de scroll horizontal (carrosséis, prateleiras):
+
+- **Usar SVG em vez de Unicode**: caracteres `‹` `›` variam entre fontes e plataformas. Substituir por `<polyline>` SVG com `stroke-width="2.5"`.
+- **Estado disabled via HTML**: inicializar a seta esquerda com classe `.shelf-arrow--disabled` direto no HTML (sem `AfterViewInit`). Método `updateArrows(wrapper)` toggle a classe com base em `scrollLeft` vs `scrollWidth`.
+- **Eventos**: chamar `updateArrows()` no evento `(scroll)` do track + `setTimeout(400)` após `scrollBy` programático.
+- **CSS disabled**: `opacity: 0.22` no hover, `pointer-events: none`.
+
+```html
+<button class="shelf-arrow shelf-arrow--left shelf-arrow--disabled">
+  <svg><!-- polyline chevron --></svg>
+</button>
+```
 
 ## Hover padrão em botões
 

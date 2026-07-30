@@ -111,6 +111,44 @@ Use o mecanismo mais nativo e menos improvisado que resolva o problema.
 - Contexto local da rodada → manter em memória episódica.
 - Não usar `AGENTS.md` como depósito de detalhe operacional que pertence a runtime ou skill específica.
 
+## Diagnóstico de sessões silenciosas / falhas de modelo
+
+Quando sessões de agente (especialmente subagentes/mini) completam sem output real, sem tools chamadas e com `usage: {}` (objeto vazio, não `{total: 0}`), suspeitar de token OAuth expirado/corrompido antes de culpar rate limit.
+
+### Assinatura de falha OAuth
+
+- Trajectory mostra `usage: {}` — objeto vazio, não zero
+- Zero tool calls (`tool.call: 0×`)
+- Duração ~2-4s (vs ~60s saudável)
+- Todo conteúdo pré-modelo (system prompt, tools, workspace) é byte-idêntico entre saudável e falho
+- Divergência está na resposta do modelo, não no input
+
+### Padrão de falha
+
+- **Intermitente**: mesma sessão pode funcionar em uma hora e falhar na seguinte
+- **Seletivo por agente**: agente principal funciona enquanto mini falha no mesmo dia (tokens OAuth são independentes por codex-home)
+- **Determinístico por sessão**: todas as runs de uma sessão falha mostram o mesmo padrão
+
+### Procedimento de diagnóstico
+
+1. Comparar codex-homes:
+   ```bash
+   diff /data/.openclaw/agents/main/agent/codex-home/.auth/ \
+        /data/.openclaw/agents/mini/agent/codex-home/.auth/
+   ```
+2. Reautenticar OAuth do agente afetado:
+   ```bash
+   openclaw models auth login --provider openai-codex --agent <agent-name>
+   ```
+3. Teste controlado: rodar 1 run do agente afetado com modelo DeepSeek (não OpenAI). Se produzir output real, o problema é específico do túnel OpenAI+OAuth.
+4. Mitigação imediata: trocar jobs cron para `deepseek/deepseek-v4-pro` até revalidar OAuth.
+
+### Referências
+
+- GitHub OpenClaw #50452: OAuth expiry → falso "rate limit"
+- GitHub OpenClaw #32828: Detecção agressiva de rate-limit
+- OpenAI Community: relatos de "credits draining while idle" com GPT-5.5 (assinatura OAuth, não API key)
+
 ## Diagnóstico rápido
 
 1. Ver estado real antes de opinar: logs, arquivos, banco, payloads, filas.
@@ -118,6 +156,7 @@ Use o mecanismo mais nativo e menos improvisado que resolva o problema.
 3. Se persistência parecer quebrada, checar volume, path real e espaço.
 4. Se automação parecer fantasma, checar cron, logs e estado persistido.
 5. Se houver dúvida sobre passado ou decisão já tomada, recuperar memória antes de responder.
+6. Se sessão de subagente completar sem tools e com `usage: {}`, suspeitar de OAuth expirado (ver seção de diagnóstico acima).
 
 ## Anti-padrões
 

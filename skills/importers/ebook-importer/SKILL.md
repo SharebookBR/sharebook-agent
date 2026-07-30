@@ -216,6 +216,7 @@ Não usar quando o caso for:
 
 Exemplos rápidos:
 - **Usar `editorial_rejected`**: manual introdutório real, com PDF e metadados íntegros, mas banal demais para entrar na curadoria final.
+- **Usar `editorial_rejected` com `structurally_incomplete`**: item sem `context_text`, sem `preview_pages` e sem PDF materializado — não há material suficiente para avaliação editorial. Diferente de `triage_rejected` porque a triagem não conseguiu nem chegar ao ponto de extrair conteúdo.
 - **Não usar**: URL do YouTube, landing page sem PDF, Leanpub sem PDF público, PDF corrompido, item já existente.
 
 ### Ação canônica para rejeição editorial
