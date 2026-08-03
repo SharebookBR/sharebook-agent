@@ -125,6 +125,17 @@ A query de seleção de categorias para o showcase da home filtrava apenas `b.Ca
 .where('b.Category.ParentCategoryId = :categoryId OR b.Category.Id = :categoryId', { categoryId })
 ```
 
+## Chart.js atrás de `*ngIf`
+
+Quando o `<canvas>` do gráfico vive atrás de `*ngIf="!loading && !error"`, montar o `Chart` em `ngAfterViewInit` corre uma corrida real contra a resposta HTTP: o elemento pode não existir ainda no DOM na primeira tentativa, e o gráfico simplesmente não aparece. Padrão que já se repetiu duas vezes (`analytics-dashboard`, depois `download-logs-dashboard`, 2026-07-24):
+
+- Montar o gráfico em `ngAfterViewChecked` (não `ngAfterViewInit`), guardado por uma flag para não recriar a cada change detection.
+- Toda troca de filtro que force o Angular a destruir/recriar o `<canvas>` (mesmo `*ngIf`) também destrói a instância anterior do `Chart.js` — chamar `chart.destroy()` antes de montar de novo dentro do método que recarrega os dados, senão sobra uma instância órfã presa a um canvas que não existe mais.
+
+## Karma/Puppeteer — Chrome ausente no cache
+
+`ChromeHeadless` via Puppeteer pode ter `executablePath()` apontando para um binário que existe só às vezes (baixado, mas some do cache temporário do Windows antes da execução) — o teste falha sem mensagem útil. Fix aplicado em `karma.conf.js`: verificar se o candidato do Puppeteer existe de fato no disco antes de usá-lo; se não existir, usar o Chrome/Edge já instalado no Windows como fallback automático, sem exigir configuração manual por máquina.
+
 ## Padrões de Layout
 
 ### Container
