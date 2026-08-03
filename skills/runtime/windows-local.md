@@ -184,7 +184,7 @@ Token da API pode expirar. O script `scripts/production/sharebook_refresh_token.
 - Usar `python` sem verificar versão — pode ser 3.14 sem deps operacionais; o 3.12 é o ambiente canônico.
 - Configurar `bypassPermissions` no project settings em vez do user settings.
 - Tentar SSH não-interativo via shell sem paramiko.
-- Usar `publish-once --id` — o comando não aceita `--id`; usar `--source + --limit 1`.
+- Assumir que `publish-once --id` não existe. A CLI canônica atual aceita `--id` e esse é o caminho preferencial para publicação manual cirúrgica; `--source + --limit 1` continua útil para processamento sequencial por source.
 - Confiar no Bash tool para comandos longos do Windows (ex: `dotnet build`): já retornou saída vazia silenciosamente, inclusive em `echo`. Para build/git/dotnet, preferir o PowerShell tool (shell primário do habitat) e capturar log em arquivo com `*> $log`.
 - **Inline Python no PowerShell com regex ou escaping**: comandos inline com `python -c "..."` quebram com regex, aspas aninhadas ou acentos (ex: heredoc `@'...'@` de um `-c` corrompendo `r"...".env"` em `rC:\...`). Sempre criar um arquivo `.py` temporário via `Write`, escrever o código nele e executar pelo path. Limpar o temporário depois.
 - Abrir monitor de background (`run_in_background`) pra esperar deploy do Coolify. A notificação de conclusão já mentiu mais de uma vez (task "completed" com container ainda na imagem antiga) — a checagem direta (`docker ps`) é obrigatória de qualquer jeito, então o monitor não agrega nada, só risco de ficar órfão rodando por horas. Preferir checagem direta única; se não tiver terminado, avisar "ainda rodando" em vez de ficar em loop.
