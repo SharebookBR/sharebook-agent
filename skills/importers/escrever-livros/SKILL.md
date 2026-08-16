@@ -134,10 +134,10 @@ Regra:
 
 Rota operacional recomendada no `sharebook-agent`:
 
-```bash
-node scripts/web/print_pdf_devtools.mjs \
-  /data/workspace/sharebook-agent/skills/importers/escrever-livros/<livro>-book.html \
-  /data/workspace/sharebook-agent/skills/importers/escrever-livros/<livro>-book-vX.pdf
+```powershell
+node scripts/web/print_pdf_devtools.mjs `
+  C:\Repos\SHAREBOOK\sharebook-agent\skills\importers\escrever-livros\<livro>-book.html `
+  C:\Repos\SHAREBOOK\sharebook-agent\skills\importers\escrever-livros\<livro>-book-vX.pdf
 ```
 
 Checklist pós-geração (rápido):

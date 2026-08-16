@@ -17,4 +17,4 @@ Item `1334` da fila (`source_blocked`) — worker baixou HTML do repo em vez do 
 3. Adicionar como source ou processar os links individualmente na fila
 
 ## Quem faz
-Heartbeat do OpenClaw.
+Sem executor definido. O heartbeat do OpenClaw, que era o dono desse tipo de expansão, ficou sem runtime com o desprovisionamento do container em 2026-08-16. Enquanto não houver substituto, isso só avança por execução manual no Windows local — decisão em aberto.

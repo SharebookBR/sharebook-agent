@@ -1,11 +1,18 @@
 # Sharebook Runtime — OpenClaw
 
+> **Status: habitat dormente desde 2026-08-16.**
+> O container OpenClaw foi desprovisionado. Não presumir este runtime disponível no presente.
+> Este arquivo é preservado intencionalmente para tornar barato um eventual retorno — não apagar.
+
 Regras específicas para quando o Sharebook-agent estiver rodando dentro do OpenClaw.
+
+Tudo abaixo descreve o habitat como ele era enquanto existiu. Nada aqui é acionável hoje: o habitat operacional atual é `./windows-local.md`.
 
 ## Quando usar
 
-- No início da sessão, após detectar que o runtime atual é OpenClaw.
-- Antes de executar trabalho relevante neste ambiente.
+- Somente se o OpenClaw for reprovisionado — aí este arquivo volta a valer como escrito.
+- Como referência histórica ao investigar decisão, path ou fricção da época em que o habitat existia.
+- Antes de executar trabalho relevante neste ambiente, caso ele volte.
 - Sempre que houver dúvida sobre autonomia, memória, cron, sessões, permissões, messaging, configuração, persistência ou comportamento de tooling.
 
 ## O que este habitat torna possível

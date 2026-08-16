@@ -1,5 +1,11 @@
 # Canal Peer-to-Peer: Claude (Windows) ↔ OpenClaw
 
+> **Status: bloqueado — sem objeto desde 2026-08-16.**
+> O container OpenClaw foi desprovisionado. O item pressupõe dois agentes vivos conversando; hoje existe um só.
+> Não há o que implementar, avaliar ou priorizar enquanto o outro ponto do canal não voltar a existir. Este item só sai de bloqueado se o OpenClaw for reprovisionado.
+>
+> Preservado intencionalmente: a pesquisa de A2A, o desenho de contrato e a descoberta do gateway continuam válidos e caros de refazer.
+
 ## Contexto
 
 Claude Code (Windows) e OpenClaw são agentes complementares com capacidades diferentes. Claude tem contexto da sessão local e orquestra o trabalho do dia a dia. OpenClaw tem persistência, memória institucional, retrieve ativo e roda na VPS.

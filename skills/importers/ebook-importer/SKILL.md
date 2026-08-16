@@ -1,6 +1,6 @@
 ---
 name: public-ebook-importer
-description: Opera e recupera o importer de ebooks públicos/gratuitos do Sharebook. Use quando precisar sincronizar fila, rodar triagem mecânica, preparar publicação, publicar/aprovar ebooks, revisar status canônico, ajustar cron, reanimar worker, diagnosticar ambiente, ou operar o ciclo manual Windows para itens source_blocked.
+description: Opera e recupera o importer de ebooks públicos/gratuitos do Sharebook. Use quando precisar sincronizar fila, rodar triagem mecânica, preparar publicação, publicar/aprovar ebooks, revisar status canônico, diagnosticar ambiente, ou operar o ciclo manual Windows para itens source_blocked.
 ---
 
 # Sharebook Public Ebook Importer
@@ -20,8 +20,6 @@ Uma skill. Uma porta. Sem teatro.
 - sincronizar source/fila
 - rodar `triage-once` ou `publish-once`
 - revisar `triage_retry`, `publish_retry`, `error`, `waiting_editorial`, `waiting_publish` por ID
-- instalar, remover ou reinstalar o cron local
-- reanimar worker após restart de container
 - diagnosticar ausência de bins/deps no ambiente
 - operar handoff editorial automático (`editor-next` + `plan-set`)
 - ciclo manual Windows → ver `windows-manual.md`
@@ -30,11 +28,11 @@ Uma skill. Uma porta. Sem teatro.
 
 ## Fonte da verdade
 
-Antes de diagnosticar, partir do container OpenClaw. O repo íntegro do importer fica visível neste mesmo container:
+Antes de diagnosticar, partir do repo local do importer:
 
-- `/data/workspace/sharebook-ebook-importer/README.md`
-- `/data/workspace/sharebook-ebook-importer/cli.py`
-- `/data/workspace/sharebook-ebook-importer/setup-importer-cron.sh`
+- `C:\Repos\SHAREBOOK\sharebook-ebook-importer\README.md`
+- `C:\Repos\SHAREBOOK\sharebook-ebook-importer\cli.py`
+- `C:\Repos\SHAREBOOK\sharebook-ebook-importer\setup-importer-cron.sh`
 
 Se esta skill divergir do código/README do importer, o importer manda.
 
@@ -75,17 +73,20 @@ waiting_triage → triaging → waiting_editorial → editing → waiting_publis
 
 ---
 
-## Workflow canônico (OpenClaw)
+## Workflow canônico
+
+Os comandos abaixo são do CLI do importer e independem de habitat. Onde eles rodavam automaticamente por worker/cron no container OpenClaw, hoje não há runtime — ver "Agendamento: onde olhar". Execução manual é no Windows local; o ciclo completo, incluindo materialização de assets, está em `windows-manual.md`.
 
 ### 1. Triagem mecânica
 
-```bash
-cd /data/workspace/sharebook-ebook-importer
-set -a && . /data/workspace/sharebook-agent/.env && set +a
+```powershell
+cd C:\Repos\SHAREBOOK\sharebook-ebook-importer
 python cli.py triage-once --source <SOURCE>
 # ou por ID específico:
 python cli.py triage-once --id <ID>
 ```
+
+Credenciais vêm de `C:\Repos\SHAREBOOK\sharebook-agent\.env`.
 
 O `triage_worker.py` pega item em `waiting_triage`, extrai via `extractors/`, valida PDF, encaminha para `waiting_editorial`, `triage_rejected`, `source_blocked` ou `triage_retry`.
 
@@ -114,7 +115,7 @@ Guardrails de publish:
 - `planned_cover_mode='source'` sem `manifest.downloaded_cover_path` → "capa da fonte não foi baixada"
 - Publisher precisa garantir `out_dir` antes de gravar `synopsis.txt`
 - Item com triagem/editorial íntegros e PDF real materializado pode falhar só no transporte do publish. Se `prepare_pdf_for_publish()` estimar payload acima de `upload_request_limit_bytes`, tentar otimização com Ghostscript; se ainda exceder, tratar como gargalo de upload/publish, não como falha de triagem.
-- Não inventar PDF fake como solução padrão dentro do OpenClaw. Para PDF grande demais, o conserto estrutural preferido é melhorar o fluxo de upload de arquivos grandes; o workaround Windows com fake PDF + S3 direto continua sendo exceção operacional.
+- Não tratar PDF fake como solução padrão. Para PDF grande demais, o conserto estrutural preferido é melhorar o fluxo de upload de arquivos grandes; o workaround com fake PDF + S3 direto continua sendo exceção operacional.
 
 ---
 
@@ -136,9 +137,13 @@ Guardrails de publish:
 
 ## Agendamento: onde olhar
 
-Dois mecanismos independentes. Não assumir um só.
+> **Sem runtime desde 2026-08-16.** Os dois mecanismos de agendamento viviam dentro do container OpenClaw, que foi desprovisionado. Hoje **nada do importer roda sozinho**: nem a triagem mecânica, nem o publish, nem a preparação editorial. Todo avanço de item é manual, pelo Windows local (`windows-manual.md`).
+>
+> Não existe substituto documentado no habitat atual. Definir onde e como reagendar é decisão em aberto — não improvisar um agendador novo sem alinhar com o Raffa.
 
-### Cron Linux local
+O que segue descreve os mecanismos como eram, e volta a valer se o habitat for reprovisionado.
+
+### Cron Linux local (dormente)
 
 ```bash
 bash setup-importer-cron.sh install | status | remove | start-daemon
@@ -146,20 +151,23 @@ bash setup-importer-cron.sh install | status | remove | start-daemon
 
 Logs em `var/logs/`. Lock/estado em `var/state/`.
 
-### Cron agentic do OpenClaw
+### Cron agentic do OpenClaw (dormente)
 
 Job `editorial-preparer` em `/data/.openclaw/cron/jobs.json`. Não é triagem mecânica nem publish Python — é preparação editorial automática.
 
-### Ordem de diagnóstico de incidente
+### Ordem de diagnóstico de incidente (dormente)
 
 1. `crontab -l`
 2. `var/logs/importer-cron.log`
-3. Postgres: `importer.runs`, `importer.queue_items`
+3. Postgres: `importer.runs`, `importer.queue_items` — **este passo continua válido hoje**, é o único que não depende do container
 4. `/data/.openclaw/cron/jobs.json`
 
 ---
 
 ## Bootstrap e recovery do container
+
+> **Dormente desde 2026-08-16.** Toda esta seção descreve o container OpenClaw, desprovisionado. Não presumir este runtime disponível no presente.
+> Preservado intencionalmente para tornar barato um eventual retorno — não apagar.
 
 ### Checklist mínimo
 
@@ -248,7 +256,9 @@ Exemplos não aceitáveis:
 - simular `plan-set`;
 - mascarar falha técnica ou bloqueio de source como decisão humana.
 
-### Runtime OpenClaw/mini
+### Runtime OpenClaw/mini (dormente)
+
+> Regra do habitat desprovisionado em 2026-08-16. Não se aplica hoje; preservada para um eventual retorno.
 
 ```bash
 cd /data/workspace/sharebook-ebook-importer && sh -c 'python3 cli.py editor-next --source <SOURCE>'
@@ -321,7 +331,7 @@ Ao delegar itens a subagentes para triagem (ex.: batch de `source_blocked`, `tri
 1. **PDF acessível**: URL direta, sem paywall, sem login, sem WAF intransponível.
 2. **Licença aberta**: domínio público, CC com redistribuição, autores que explicitamente permitem distribuição gratuita. Não assumir — verificar na página do autor ou no PDF.
 
-Subagentes que verificam só acessibilidade passam itens com "all rights reserved" para `waiting_triage`, o OpenClaw então rejeita e gera retrabalho. Aprendizado: 3 itens revertidos na sessão 06-08 por essa falha de instrução.
+Subagentes que verificam só acessibilidade passam itens com "all rights reserved" para `waiting_triage`, a triagem então rejeita e gera retrabalho. Aprendizado: 3 itens revertidos na sessão 06-08 por essa falha de instrução.
 
 Formulação recomendada para a instrução ao subagente:
 > "Para cada item, verifique se existe PDF publicamente acessível E se a licença permite redistribuição gratuita. Se algum dos dois critérios falhar, classifique como triage_rejected."
@@ -330,14 +340,16 @@ Formulação recomendada para a instrução ao subagente:
 
 Sync atualiza apenas `title` e `updated_at` em itens existentes. Nunca resetar `status`, `last_error` ou metadados operacionais.
 
-### Heartbeat de hardening do importer
+### Hardening a partir de `source_blocked` recorrente
 
-Quando o heartbeat pegar `source_blocked` recorrente por família de URL, o alvo preferencial é transformar o caso em uma destas saídas:
+Não existe mais heartbeat automático — ele rodava no OpenClaw. A varredura hoje é manual, na revisão de triagem. O critério abaixo não mudou.
+
+Quando aparecer `source_blocked` recorrente por família de URL, o alvo preferencial é transformar o caso em uma destas saídas:
 - resolver asset PDF público reutilizável;
 - classificar a família HTML de forma explícita;
 - resetar o item para `waiting_triage` e colher feedback real com `triage-once`.
 
-Quiet check sem avanço estrutural é pouco. O heartbeat bom deixa o worker menos burro.
+Quiet check sem avanço estrutural é pouco. A passada boa deixa o worker menos burro.
 
 ---
 
@@ -345,16 +357,16 @@ Quiet check sem avanço estrutural é pouco. O heartbeat bom deixa o worker meno
 
 Quando `source_blocked` por WAF, JS challenge ou download assinado:
 
-Ferramentas em `/data/workspace/sharebook-agent/tools/browser-triage`:
+Ferramentas em `C:\Repos\SHAREBOOK\sharebook-agent\tools\browser-triage`:
 - `triage_fetch.js` — inspeciona página e links candidatos
 - `download_probe.js` — tenta clique/download
 - `save_pdf_via_fetch.js` — browser real + fetch autenticado
 
 Procedimento:
 1. Tentar worker normal primeiro
-2. Baixar PDF para área neutra (`/data/workspace/tmp/`)
+2. Baixar PDF para área neutra (`C:\Users\raffa\Downloads\`)
 3. Validar magic bytes `%PDF-`
-4. Materializar em `var/tmp/triage-<ID>/source.pdf` + previews + `manifest.json`
+4. Materializar em `var/tmp/triage-<ID>/source.pdf` + previews + `manifest.json` — no Windows, o caminho que o worker espera é `C:\data\workspace\sharebook-ebook-importer\var\tmp\triage-<ID>\` (ver `windows-manual.md`, Passo 3b)
 5. Atualizar `metadata_json` com `triage.mode = manual_browser_assisted`
 6. Mover para `waiting_editorial`
 

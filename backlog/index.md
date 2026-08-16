@@ -27,8 +27,13 @@
 - **[Nova Fonte: InfoQ Minibooks](backlog/todo/fonte-infoq.md)**: Minibooks técnicos gratuitos da InfoQ — arquitetura, microserviços, DevOps, linguagens. Conteúdo de alta qualidade editorial.
 - **[Nova Fonte: InTech Open](backlog/todo/fonte-intechopen.md)**: Editora acadêmica open access. Livros de Computer and Information Science disponíveis gratuitamente em `intechopen.com/subjects/9`.
 - **[Nova Fonte: JSBooks](backlog/todo/fonte-jsbooks.md)**: Diretório curado de ebooks gratuitos de JavaScript. Repo GitHub `revolunet/JSBooks` com links diretos para PDFs.
-- **[Canal Claude ↔ OpenClaw](backlog/todo/canal-claude-openclaw.md)**: Canal peer-to-peer assimétrico entre os dois agentes via MCP + PostgreSQL. Claude inicia, OpenClaw responde via gateway. Sem hierarquia — divisão de papéis por capacidade.
-- **[OpenAI Codex — Dreno OAuth](backlog/todo/openai-codex-oauth-drain.md)**: Investigar e resolver dreno de limites OpenAI no agente mini. Tokens OAuth por agente, cron jobs parados, migração temporária para deepseek.
+
+### 🚧 Bloqueados — dependem do retorno do OpenClaw
+
+O container OpenClaw foi desprovisionado em 2026-08-16. Os itens abaixo ficaram sem objeto: não são prioridade, não são candidatos a execução, e só voltam à fila se o habitat for reprovisionado. Ver `skills/runtime/openclaw.md`.
+
+- **[Canal Claude ↔ OpenClaw](backlog/todo/canal-claude-openclaw.md)**: Canal peer-to-peer assimétrico entre os dois agentes via MCP + PostgreSQL. Pressupõe dois agentes vivos — hoje existe um só.
+- **[OpenAI Codex — Dreno OAuth](backlog/todo/openai-codex-oauth-drain.md)**: Dreno de limites OpenAI no agente `mini`, que vivia no container. Sem agente, sem cron job e sem dreno.
 
 ---
 Para detalhes de execução de cada item, consulte o arquivo correspondente na pasta `todo/`.

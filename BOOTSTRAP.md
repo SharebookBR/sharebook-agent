@@ -12,6 +12,12 @@ Não é onboarding humano.
 Não é documentação completa do Sharebook.
 É um checklist mínimo para o ambiente do agente ser operacional.
 
+## Escopo atual
+
+O habitat operacional hoje é o Windows local (`skills/runtime/windows-local.md`). O bloco **Ferramentas obrigatórias** vale para ele.
+
+As seções marcadas como dormentes descrevem o provisionamento do container OpenClaw, desprovisionado em 2026-08-16. Ficam aqui de propósito: se o habitat voltar, o roteiro já existe.
+
 ---
 
 ## Ferramentas obrigatórias
@@ -123,6 +129,10 @@ Validações esperadas:
 
 ## Memória semântica
 
+> **Status: dormente desde 2026-08-16.**
+> Era configuração do container OpenClaw, que foi desprovisionado. Não presumir este runtime disponível no presente.
+> Preservado intencionalmente para tornar barato um eventual retorno — não apagar.
+
 A memória semântica precisa ser configurada conforme abaixo:
 
 ```json
@@ -145,7 +155,11 @@ Validações esperadas:
 
 ## Active Memory
 
-Plugin obrigatório para recuperação automática de contexto recente.
+> **Status: dormente desde 2026-08-16.**
+> Plugin do container OpenClaw, que foi desprovisionado. Não presumir este runtime disponível no presente.
+> Preservado intencionalmente para tornar barato um eventual retorno — não apagar.
+
+Plugin de recuperação automática de contexto recente.
 
 Config geral:
 
@@ -168,6 +182,12 @@ Validações esperadas:
 ---
 
 ## Coolify / rede
+
+> **Status: dormente desde 2026-08-16.**
+> O container OpenClaw foi desprovisionado. Não presumir este runtime disponível no presente.
+> Preservado intencionalmente para tornar barato um eventual retorno — não apagar.
+>
+> Hoje o acesso ao Postgres de produção sai do Windows local direto pelo IP público da VPS — ver `skills/runtime/windows-local.md`, seção "Acesso ao banco de dados".
 
 Garanta que o container do OpenClaw tenha acesso à network interna do Coolify.
 
@@ -193,6 +213,12 @@ Atenção:
 
 ## Cron Linux no container OpenClaw
 
+> **Status: dormente desde 2026-08-16.**
+> O container OpenClaw foi desprovisionado, e com ele o cron que rodava o worker do importer. Não presumir este runtime disponível no presente.
+> Preservado intencionalmente para tornar barato um eventual retorno — não apagar.
+>
+> Consequência no presente: **o worker do importer não tem agendamento**. Ver `skills/importers/ebook-importer/SKILL.md`, seção "Agendamento: onde olhar".
+
 Cron observado:
 
 - execução a cada 30 minutos
@@ -216,6 +242,11 @@ Antes de considerar o novo ambiente pronto, validar:
 - `.NET SDK` instalado
 - `Netlify CLI` instalado
 - `Chrome DevTools MCP` configurado e funcional
+- acesso ao PostgreSQL de produção funcionando
+- endpoint da API Sharebook acessível
+
+Itens do runtime dormente (só voltam a valer se o container OpenClaw for reprovisionado):
+
 - container OpenClaw conectado à network interna correta
 - acesso ao PostgreSQL interno funcionando
 - memória semântica configurada
@@ -223,4 +254,3 @@ Antes de considerar o novo ambiente pronto, validar:
 - Active Memory habilitado
 - cron do importador configurado
 - cron executando no ambiente correto
-- endpoint da API Sharebook acessível

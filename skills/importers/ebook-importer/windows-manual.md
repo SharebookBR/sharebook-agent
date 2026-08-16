@@ -1,14 +1,20 @@
 # Ciclo Manual Windows
 
-Usado quando o worker automático falha (`source_blocked`, PDF grande demais) e o PDF precisa ser processado a partir do Windows local.
+Ciclo completo de processamento de um item a partir do Windows local, incluindo os casos em que o worker não dá conta sozinho (`source_blocked`, PDF grande demais).
+
+Desde 2026-08-16, com o OpenClaw dormente, **este é o único ciclo com runtime**. Não há worker agendado em lugar nenhum — todo item avança por execução manual daqui.
 
 ---
 
-## ⚠️ Regra crítica: não rodar triage no Windows (exceto validação)
+## ⚠️ Regra crítica sobre triage no Windows — pressuposto vencido
 
-**Nunca rodar `triage-once` no Windows para avançar um item de verdade.** O triage materializa arquivos localmente (`var/tmp/triage-<ID>/`). O worker de publish roda no OpenClaw e espera encontrar esses arquivos lá — se foram criados no Windows, o publish falha.
+A regra antiga era: **nunca rodar `triage-once` no Windows para avançar um item de verdade**, porque o triage materializa arquivos localmente (`var/tmp/triage-<ID>/`) e o worker de publish rodava no OpenClaw, esperando encontrá-los lá.
 
-**Exceção permitida**: rodar `triage-once` no Windows *apenas para validar* que o worker conseguiria processar o item (ex: confirmar que um PDF direto é acessível). Nesse caso, após a validação, resetar o item para `waiting_triage` e deixar o OpenClaw triá-lo de verdade.
+Esse pressuposto morreu com o container. Não existe mais publish remoto, então não existe mais a divisão que a regra protegia.
+
+O que continua verdadeiro: **triage e publish precisam ver os mesmos arquivos**. No Windows isso significa materializar os assets nos caminhos que o worker espera (Passo 3b) antes de chamar `publish-once`. Se os caminhos não baterem, o publish falha exatamente como antes — só que agora sem nenhum outro lugar para onde apontar.
+
+**Pendência aberta**: o ciclo `triage-once` → `publish-once` inteiramente no Windows nunca foi validado ponta a ponta. O que está validado em produção é o Passo 3b (assets espelhados em `C:\data\workspace\...` + `publish-once`) e o Passo 4 (fake PDF + S3). Não presumir que a triagem local encaixa sozinha no resto — validar antes de tratar como caminho canônico.
 
 ---
 
@@ -18,23 +24,29 @@ Usado quando o worker automático falha (`source_blocked`, PDF grande demais) e 
 - Item em `error` com "pdf grande demais" — nginx `client_max_body_size` bloqueia upload direto
 - PDF já disponível em `C:\Users\raffa\Downloads\<id>.pdf`
 
-## Quando NÃO usar — publish remoto via SSH/docker exec
+## Publish remoto via SSH/docker exec — dormente
 
-Se a triagem do item rodou normalmente no OpenClaw (não foi ciclo manual Windows), os assets (`source.pdf`, `preview-pages/`) já estão materializados no container do OpenClaw na VPS. Nesse caso **não** default para o workaround de fake PDF + S3 — ele existe para contornar limite do nginx, não é o caminho preferencial.
+> **Status: dormente desde 2026-08-16.**
+> O container OpenClaw foi desprovisionado. Não presumir este runtime disponível no presente.
+> Este trecho é preservado intencionalmente para tornar barato um eventual retorno — não apagar.
+>
+> **No presente**: não existe atalho remoto. Todo item cai no ciclo manual descrito abaixo. O `vps_ssh.py` continua útil para a VPS em si (containers de backend, frontend, banco), só não há mais container do agente para entrar.
 
-Antes de qualquer workaround Windows, checar se dá para publicar no lugar certo:
+Enquanto o habitat existiu, itens triados pelo worker do OpenClaw já tinham os assets (`source.pdf`, `preview-pages/`) materializados no container. Nesse caso **não** se defaultava para o workaround de fake PDF + S3 — ele existe para contornar limite do nginx, não é o caminho preferencial.
+
+Antes de qualquer workaround Windows, checava-se se dava para publicar no lugar certo:
 
 ```powershell
 python scripts/infra/vps_ssh.py --cmd "docker exec <container_openclaw> ls /data/workspace/sharebook-ebook-importer/var/tmp/triage-<ID>/"
 ```
 
-Se os assets existirem, disparar o worker canônico direto dentro do container (sem materializar nada no Windows):
+Existindo os assets, disparava-se o worker canônico direto dentro do container (sem materializar nada no Windows):
 
 ```powershell
 python scripts/infra/vps_ssh.py --cmd "docker exec <container_openclaw> sh -lc 'cd /data/workspace/sharebook-ebook-importer && python3 cli.py publish-once --source <SOURCE> --limit 1'"
 ```
 
-Item vai para `done` em uma única passada, sem fake PDF, sem upload manual de S3. Validado em produção (2026-07-11, item 1367). Só cair para o ciclo manual (Passo 3b ou fake PDF) quando os assets **não** estiverem no container — aí sim o item se qualifica para este documento.
+O item ia para `done` em uma única passada, sem fake PDF, sem upload manual de S3. Validado em produção em 2026-07-11 (item 1367).
 
 Após publicar, validar no catálogo real: rota do frontend é `/livros/:slug` (não `/livro/:slug`).
 
@@ -127,7 +139,7 @@ Atualizar o path da capa em `metadata_json.triage.preview_pages` após compress�
 
 ### Passo 3b — Worker normal (alternativa ao fake PDF)
 
-Quando o PDF não é grande demais para o nginx, é possível usar o worker normal no Windows. Para isso, o worker espera os assets nos caminhos que o OpenClaw usaria — que não existem naturalmente no Windows:
+Quando o PDF não é grande demais para o nginx, é possível usar o worker normal no Windows. Para isso, o worker espera os assets nos caminhos canônicos POSIX do importer — que não existem naturalmente no Windows e precisam ser espelhados:
 
 ```
 C:\data\workspace\sharebook-ebook-importer\var\tmp\triage-<ID>\source.pdf
@@ -169,7 +181,7 @@ Fluxo:
 
 ## Por que o workaround de PDF fake
 
-O nginx tem `client_max_body_size` restritivo na rota `/api/Book`. PDFs grandes falham com `WinError 10053/10054` quando o request vem de fora do servidor. Do OpenClaw funciona (conexão interna). Do Windows, não.
+O nginx tem `client_max_body_size` restritivo na rota `/api/Book`. PDFs grandes falham com `WinError 10053/10054` quando o request vem de fora do servidor — que é sempre o caso hoje, já que a operação é toda a partir do Windows. Enquanto existiu um runtime dentro da VPS, a conexão interna contornava o limite; essa saída não existe mais, então o limite do nginx virou gargalo estrutural (item de backlog aberto, arrastado desde 06-21).
 
 Criar `C:\Temp\fake.pdf` uma vez:
 ```python
@@ -198,7 +210,7 @@ Path(r'C:\Temp\fake.pdf').write_bytes(minimal)
 | pdftoppm não encontrado | winget atualiza PATH mas requer nova sessão | Usar path absoluto no script |
 | PNG com sufixo errado (`-001` em vez de `-1`) | pdftoppm usa N dígitos conforme total de páginas | `render_covers.py` já normaliza automaticamente |
 | PowerShell here-string falha | `'@` deve estar na coluna 0 | `@'...'@` com `'@` na margem esquerda |
-| `editor-next` retorna paths `/data/workspace/` | CLI usa paths canônicos do OpenClaw mesmo no Windows | Traduzir mentalmente; espelhar assets em `C:\data\workspace\...` |
+| `editor-next` retorna paths `/data/workspace/` | CLI usa paths canônicos POSIX independente do habitat; esses caminhos não existem em lugar nenhum hoje | Traduzir mentalmente; espelhar assets em `C:\data\workspace\...` |
 | `python` no PATH é 3.14 sem deps | Python 3.14 instalado depois, sobrescreve PATH | Usar Python 3.12 explícito: `C:\Users\raffa\AppData\Local\Programs\Python\Python312\python.exe` |
 | `publish-once --id` diverge da documentação antiga | O CLI ganhou seleção por ID e o manual ficou para trás | Confirmar com `python cli.py publish-once --help` e preferir `--id <ID>` para publicação dirigida |
 | `boto3` não encontrado no Python 3.12 | Instalado no 3.14, não no 3.12 | `pip install --user boto3` (no Python 3.12) |

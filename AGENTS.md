@@ -20,13 +20,11 @@ Ele não deve carregar regra específica de habitat quando isso puder viver em s
 
 ## Regra obrigatória de runtime
 
-No início da sessão, é **obrigatório** detectar o habitat/runtime atual.
+Existe **um** habitat operacional: o Windows local do Raffa.
 
-Detectado o habitat, é **obrigatório** ler o arquivo correspondente em `sharebook-agent/skills/runtime/` antes de executar trabalho relevante.
+No início da sessão, é **obrigatório** ler `sharebook-agent/skills/runtime/windows-local.md` antes de executar trabalho relevante.
 
-Mapeamento atual:
-- OpenClaw → `sharebook-agent/skills/runtime/openclaw.md`
-- Windows local → `sharebook-agent/skills/runtime/windows-local.md`
+O habitat OpenClaw está **dormente desde 2026-08-16** — o container foi desprovisionado. `sharebook-agent/skills/runtime/openclaw.md` é preservado de propósito, para tornar barato um eventual retorno, mas não descreve nada disponível hoje. Não presumir cron agentico, subagentes persistentes, memória ativa, volume `/data` ou execução remota.
 
 Em conflito entre convenção genérica e regra específica de runtime, a regra específica do runtime vence, exceto quando houver política superior do sistema.
 
@@ -108,7 +106,7 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 ## Início da sessão
 1. Fazer um sync nos repos.
 2. Ler memória episódica mais recente em `sharebook-agent/memory/`.
-3. Detectar o runtime atual e ler a skill correspondente em `skills/runtime/`.
+3. Ler `skills/runtime/windows-local.md`, a skill do habitat atual.
 
 ## Fim da sessão
 1. Criar memória episódica em `sharebook-agent/memory/YYYY-MM-DD-tema.md`
@@ -126,7 +124,7 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 ## Regras
 - Proibido responder por memória se existir fonte (Script ou Skill).
 - Para execução → abrir skill primeiro.
-- Para tarefa de runtime, ambiente, tooling ou autonomia → abrir primeiro a skill de runtime do habitat atual.
+- Para tarefa de runtime, ambiente, tooling ou autonomia → abrir primeiro `skills/runtime/windows-local.md`.
 - Para decisões de backlog → abrir `backlog/index.md`.
 
 ## Cenários de Roteamento
@@ -161,12 +159,12 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 ## Git
 - `sharebook-agent` → commit direto na master.
 - Preferir HTTPS (evitar SSH).
-- `/data/workspace` é só workspace compartilhado, **não** é repositório git.
-- Repositórios operacionais vivem em pastas irmãs dentro do workspace, pelo menos:
-  - `/data/workspace/sharebook-agent`
-  - `/data/workspace/sharebook-frontend`
-  - `/data/workspace/sharebook-backend`
-  - `/data/workspace/sharebook-ebook-importer`
+- `C:\Repos\SHAREBOOK` é só a pasta raiz do workspace, **não** é repositório git.
+- Repositórios operacionais vivem em pastas irmãs dentro dela, pelo menos:
+  - `C:\Repos\SHAREBOOK\sharebook-agent`
+  - `C:\Repos\SHAREBOOK\sharebook-frontend`
+  - `C:\Repos\SHAREBOOK\sharebook-backend`
+  - `C:\Repos\SHAREBOOK\sharebook-ebook-importer`
 - Antes de rodar `git status`, `git commit` ou mexer em branch/remote, entrar no repositório correto.
 - **Build antes de commit — obrigatório**: antes de qualquer commit em `sharebook-frontend` ou `sharebook-backend`, rodar o build local e confirmar zero erros. Não commitar código que não compila.
 
@@ -233,7 +231,7 @@ Sem isso, qualquer correção é chute. Um chute pode acertar por sorte, mas nã
   - Não tem o psql no ambiente? Isso é um indício forte que precisa rodar o BOOTSTRAP. Avise e alinhe com Raffa.
 
 ### Famílias de Skills
-- `sharebook-agent/skills/runtime/INDEX.md` — Habitat real do agente, OpenClaw, Windows local, permissões, volumes, cron, shell e fricções de execução.
+- `sharebook-agent/skills/runtime/INDEX.md` — Habitat real do agente (Windows local), permissões, caminhos, shell e fricções de execução. Guarda também o runtime dormente do OpenClaw, para consulta histórica.
 - `sharebook-agent/skills/product-ux/INDEX.md` — Voz oficial, sinopses, UX, interface, layout e percepção visível do catálogo. obrigatório ler skill de voz antes de escrever algo ao usuário final.
 - `sharebook-agent/skills/engineering/INDEX.md` — Frontend, backend, Postgres, analytics, SEO técnico, BI e performance de engenharia.
 - `sharebook-agent/skills/importers/INDEX.md` — Importers, triagem, preparo editorial, publicação, categorias e produção de ativos do catálogo.

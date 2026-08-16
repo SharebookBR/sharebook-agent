@@ -23,10 +23,10 @@ Exigir a URL do livro. Sem URL, não inventar roleta.
 
 Antes de rodar, inspecionar as 8 capas recentes quando houver acesso ao catálogo. Se uma linguagem inteira estiver dominando a prateleira, excluir o macrogrupo; se a repetição for pontual, excluir somente a família:
 
-```bash
-python3 /data/workspace/sharebook-agent/scripts/covers/cover_prompt_from_url.py \
-  "<URL_DO_LIVRO>" \
-  --avoid-group "<MACROGRUPO_DOMINANTE>" \
+```powershell
+python C:\Repos\SHAREBOOK\sharebook-agent\scripts\covers\cover_prompt_from_url.py `
+  "<URL_DO_LIVRO>" `
+  --avoid-group "<MACROGRUPO_DOMINANTE>" `
   --avoid-style "<ESTILO_RECENTE>"
 ```
 

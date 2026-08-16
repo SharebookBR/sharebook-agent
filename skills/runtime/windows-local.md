@@ -1,32 +1,29 @@
 # Sharebook Runtime — Windows Local
 
-Regras específicas para quando o Sharebook-agent estiver rodando no ambiente local Windows do Raffa, fora do OpenClaw.
+Regras específicas para o Sharebook-agent rodando no ambiente local Windows do Raffa.
+
+Este é **o** habitat operacional do agente. Desde 2026-08-16 não existe outro: o container OpenClaw foi desprovisionado e `./openclaw.md` está dormente.
 
 ## Quando usar
 
-- No início da sessão, após detectar que o runtime atual é o ambiente local Windows.
-- Antes de executar trabalho relevante neste habitat.
-- Sempre que houver dúvida sobre caminhos, encoding, shell, limitações de ferramenta, prints ou diferenças de autonomia em relação ao OpenClaw.
+- No início de toda sessão, antes de executar trabalho relevante.
+- Sempre que houver dúvida sobre caminhos, encoding, shell, limitações de ferramenta, prints ou autonomia real.
 
 ## O que este habitat é
 
 - Ambiente local com acesso a arquivos, ferramentas e interfaces do Windows.
 - Habitat com atrito real de PowerShell, paths, encoding e apps locais.
-- Pode compartilhar doutrina e memória do Sharebook-agent, mas não deve assumir as mesmas capacidades do OpenClaw.
-- Continuidade, autonomia, tooling, recall e background work podem ser diferentes ou mais limitados.
-
-Detectou Windows local, mude o modo de operação conscientemente.
+- Onde vivem os repositórios operacionais, em `C:\Repos\SHAREBOOK\`.
+- Onde a continuidade depende de registro em arquivo canônico, não de infraestrutura de memória do ambiente.
 
 ## Abertura de sessão neste habitat
 
 No início da sessão:
 
-1. Confirmar que está no ambiente local Windows.
-2. Não presumir memória ativa, cron agentico, sessões, subagentes ou tooling rico iguais ao OpenClaw.
-3. Confirmar shell, caminhos e ferramentas reais antes de depender delas.
-4. Procurar a fonte canônica local do trabalho antes de improvisar contexto.
-5. Se a continuidade depender de registro durável, favorecer arquivos canônicos do projeto em vez de confiar no fio da sessão.
-6. **Ler memórias episódicas usando o caminho absoluto completo no Glob** — não usar `path` + padrão relativo (armadilha documentada):
+1. Confirmar shell, caminhos e ferramentas reais antes de depender delas.
+2. Procurar a fonte canônica local do trabalho antes de improvisar contexto.
+3. Se a continuidade depender de registro durável, favorecer arquivos canônicos do projeto em vez de confiar no fio da sessão.
+4. **Ler memórias episódicas usando o caminho absoluto completo no Glob** — não usar `path` + padrão relativo (armadilha documentada):
    ```
    Glob pattern: C:\Repos\SHAREBOOK\sharebook-agent\memory\*.md
    ```
@@ -40,20 +37,20 @@ Use o mecanismo mais simples e mais fiel ao habitat real.
 - **Shell local**: usar quando o fluxo depende de PowerShell, utilitário local, script do projeto ou operação direta de arquivo.
 - **Arquivo intermediário UTF-8**: usar para texto longo, sinopse, payload ou conteúdo com acentuação. Não empurrar isso inline na CLI.
 - **Skill ou script do projeto**: usar para reduzir reinvenção, principalmente em tarefas já recorrentes.
-- **Registro explícito em arquivo**: usar quando a continuidade entre sessões ou habitats for importante.
+- **Registro explícito em arquivo**: usar quando a continuidade entre sessões for importante.
 
 ## Regras de operação
 
-- Não assumir capacidades do OpenClaw neste habitat.
 - Validar quais ferramentas realmente existem antes de depender delas.
-- Preferir fluxo simples, direto e local, sem desenhar automação sofisticada demais só porque ela faria sentido no OpenClaw.
-- Se houver limitação real de ambiente, explicitar logo. Não fingir equivalência entre habitats.
+- Preferir fluxo simples, direto e local, sem desenhar automação sofisticada demais só porque ela seria elegante.
+- Se houver limitação real de ambiente, explicitar logo.
 - Se houver fonte canônica local, olhar a fonte antes da narrativa.
-- Tratar Windows local como habitat com fricções próprias, não como OpenClaw amputado.
+- Tratar as fricções deste habitat como características, não como defeito a contornar com gambiarra.
 
 ## Paths, shell e encoding
 
-- Tratar caminhos Windows como fonte canônica quando o trabalho for local. Traduzir mentalmente `/data/workspace/` para o caminho real do repositório local (ex: `C:\REPOS\SHAREBOOK\`).
+- Caminhos Windows são a fonte canônica. Os repositórios operacionais vivem em `C:\Repos\SHAREBOOK\`.
+- Alguns artefatos e CLIs ainda emitem caminhos POSIX `/data/workspace/...` herdados do runtime antigo (ex: saída do `editor-next`). Esses caminhos não existem em lugar nenhum hoje — traduzir para o repositório local correspondente em `C:\Repos\SHAREBOOK\`.
 - Em PowerShell, não usar `&&`; usar `;` ou chamadas separadas.
 - Tratar quoting e encoding como suspeitos usuais quando o comando parecer certo e o resultado vier torto.
 - **Encoding Fix**: Para evitar `UnicodeDecodeError` em subprocessos Python no Windows que retornam acentuação, force `PYTHONIOENCODING=utf-8` no ambiente ou no comando.
@@ -68,9 +65,9 @@ Use o mecanismo mais simples e mais fiel ao habitat real.
 
 ## Continuidade e memória
 
-- Compartilhar identidade operacional com o Sharebook-agent, mas sem presumir que toda infraestrutura de memória/recall do OpenClaw existe igual aqui.
+- Não existe infraestrutura de memória ativa ou recall automático neste habitat. A continuidade é a que estiver escrita em arquivo.
 - Se a continuidade depender de registro durável, favorecer escrita clara em arquivos canônicos do projeto.
-- Não confiar em improviso de sessão para carregar contexto importante entre habitats.
+- Não confiar em improviso de sessão para carregar contexto importante entre sessões.
 - Não despejar regra específica de Windows no `AGENTS.md` se ela pertence a esta skill.
 
 ## Fim da sessão neste habitat
@@ -85,7 +82,7 @@ Essa segunda etapa é responsabilidade do runtime (Claude), não do Sharebook-ag
 
 - Validar no mundo local real antes de declarar vitória.
 - Se uma correção depende de app, shell, arquivo ou UI local, provar no próprio ambiente.
-- Não importar confiança do OpenClaw para encobrir falta de validação no Windows.
+- Não importar confiança de execução passada em outro ambiente para encobrir falta de validação aqui.
 - Quando houver dúvida entre erro lógico e limitação do habitat, testar primeiro a hipótese de habitat.
 
 ## Acesso ao banco de dados
@@ -128,7 +125,7 @@ No Windows, o comando `python3` pode resolver para um stub do Microsoft Store qu
 import sys, subprocess
 subprocess.run([sys.executable, "outro_script.py", ...])
 ```
-Isso funciona tanto no Windows quanto no Linux/OpenClaw sem condicionais.
+Isso funciona tanto no Windows quanto no Linux sem condicionais.
 
 ### `python` pode ser 3.14 sem dependências operacionais
 
@@ -177,7 +174,6 @@ Token da API pode expirar. O script `scripts/production/sharebook_refresh_token.
 - Empurrar texto acentuado inline e depois fingir surpresa com encoding quebrado.
 - Tratar arquivo com BOM, quoting ou newline como detalhe irrelevante.
 - Usar `Invoke-WebRequest` em endpoint que responde HTTP 200 sem corpo e interpretar `Referência de objeto não definida para uma instância de um objeto` como falha certa da API. A mutação pode ter sido concluída e o erro vir apenas do cliente PowerShell ao processar a resposta vazia. Preferir `Invoke-RestMethod`; diante de resultado ambíguo, consultar o estado real por GET antes de repetir, principalmente quando a operação dispara e-mail ou outro efeito colateral.
-- Assumir que o ambiente local tem a mesma autonomia agentica do OpenClaw.
 - Confiar em memória de sessão quando o que precisava era registro durável.
 - Deixar regra específica de Windows poluir a camada genérica do `AGENTS.md`.
 - Usar `python3` sem verificar se é o stub do Microsoft Store — usar `sys.executable` nos scripts.
@@ -208,10 +204,9 @@ Token da API pode expirar. O script `scripts/production/sharebook_refresh_token.
 
 ## Anti-padrões
 
-- Fingir que Windows local tem a mesma autonomia agentica do OpenClaw.
-- Transportar playbook de cron, sessões, subagentes ou memória ativa como se fosse universal.
+- Presumir cron agentico, sessões destacadas, subagentes persistentes ou memória ativa como se existissem aqui.
 - Usar comandos PowerShell como se fossem shell POSIX.
-- Tratar Windows local como versão menor do OpenClaw, em vez de habitat diferente.
+- Rodar comando ou apontar caminho que só existia no runtime dormente (`/data/workspace/...`, `docker exec` no container do agente) sem checar que o alvo ainda existe.
 - Deixar regra específica de Windows poluir a camada genérica do AGENTS.
 
 

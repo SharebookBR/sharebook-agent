@@ -131,17 +131,16 @@ Escalar se houver:
 - Se houver blocker editorial real, não chutar.
 - Para diagnóstico, preferir primeiro **query read-only no Postgres** em vez de sair batendo na API sem necessidade.
 
-## Operação no OpenClaw
+## Operação
 
 ### Exec de scripts Python
-- No OpenClaw, o preflight de `exec` pode bloquear **interpretador + shell complexo**.
-- Preferir sempre comando direto com `workdir` definido.
+- Preferir sempre comando direto com diretório de trabalho definido.
 - Exemplo certo:
-  - `python3 scripts/production/sharebook_prod_book.py categories`
-- Evitar:
-  - `cd ... && python3 ...`
-  - pipes, redirecionamentos e shell enfeitado no mesmo comando
-- Se precisar de script auxiliar, escrever um arquivo temporário curto e rodar com `python3 <arquivo>`.
+  - `python scripts/production/sharebook_prod_book.py categories`
+- Evitar pipes, redirecionamentos e shell enfeitado no mesmo comando.
+- Se precisar de script auxiliar, escrever um arquivo temporário curto e rodar pelo path — regra reforçada no Windows, onde `python -c` inline quebra com regex, aspas aninhadas ou acentos (ver `skills/runtime/windows-local.md`).
+
+> Nota histórica: esta seção nasceu de uma restrição do runtime OpenClaw (preflight de `exec` bloqueava interpretador + shell complexo). O habitat está dormente desde 2026-08-16, mas a prática se sustenta sozinha no Windows.
 
 ### Fonte de verdade para diagnóstico
 - Para medir volume, detectar duplicidade, checar categoria pai/filha e mapear livros, preferir **Postgres produção read-only** quando isso for mais rápido e confiável.
@@ -196,16 +195,18 @@ Tabela:
 
 ## Comandos úteis
 
-```bash
-python3 sharebook-agent/scripts/production/sharebook_prod_book.py categories
+Rodar a partir de `C:\Repos\SHAREBOOK`. Nunca usar `python3` no Windows — é stub do Microsoft Store.
+
+```powershell
+python sharebook-agent/scripts/production/sharebook_prod_book.py categories
 ```
 
-```bash
-python3 sharebook-agent/scripts/production/sharebook_prod_book.py find --title "..." --author "..."
+```powershell
+python sharebook-agent/scripts/production/sharebook_prod_book.py find --title "..." --author "..."
 ```
 
-```bash
-python3 sharebook-agent/scripts/production/sharebook_prod_book.py update --id <book_id> --category-id <subcategory_id>
+```powershell
+python sharebook-agent/scripts/production/sharebook_prod_book.py update --id <book_id> --category-id <subcategory_id>
 ```
 
 Para volume maior, preferir Postgres produção com consulta RO e execução RW controlada.

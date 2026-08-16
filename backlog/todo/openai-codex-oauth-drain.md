@@ -1,8 +1,12 @@
 # OpenAI Codex — Dreno de Limites (OAuth por Agente)
 
+> **Status: bloqueado — sem objeto desde 2026-08-16.**
+> O agente `mini`, os cron jobs e os codex-homes investigados aqui viviam no container OpenClaw, desprovisionado junto com seu volume. Não há dreno acontecendo e não há como executar nenhuma das ações abaixo.
+> Preservado intencionalmente: o diagnóstico (`usage: {}` vazio, 0 tool calls, tokens OAuth independentes por agente) volta a valer se o habitat for reprovisionado.
+
 **Origem**: Investigação em `memory/2026-06-12-openai-drain-investigation.md`  
 **Data**: 12/Jun/2026  
-**Prioridade**: Alta (cron jobs do mini agente estão parados)
+**Prioridade**: Suspensa (era Alta enquanto os cron jobs do mini existiam)
 
 ## Contexto
 O agente `mini` (usado para cron jobs como `preparer-baixelivros`) está queimando limites OpenAI sem produzir output real. Sintoma: `usage: {}` vazio, 0 tool calls, completion em <5s. O agente `main` funciona normalmente no mesmo horário.
