@@ -107,6 +107,10 @@ Deixar a porta aberta porque pode ser útil depois é o mesmo antipadrão do mon
 - **Bancos disponíveis**:
   - `sharebook` — banco transacional principal (user: `sharebook_ai_ro` para leitura, `sharebook_ai_rw` para escrita)
   - `sharebook_importer` — fila e runs do importer (schema `importer`, user: `sharebook_ai_rw`)
+- **Acesso de fora depende de um toggle do Coolify.** O Coolify tem a opção de expor (ou não) o Postgres na internet. Com ela desligada — postura mais segura, e o estado normal — a porta 5432 não é publicada no host e toda conexão direta do Windows morre com `Connection refused`, embora o container esteja sadio e o app o alcance pela rede interna do Docker.
+  - **Não confundir com firewall.** Em 2026-08-17 diagnostiquei `ufw` inativo, nenhuma regra DROP, e o sintoma real apareceu em `docker ps --format '{{.Ports}}'`: `5432/tcp` sozinho, sem `0.0.0.0:5432->`. Esse é o sinal de que a porta não está publicada.
+  - **O Raffa pode ligar o toggle temporariamente** quando o trabalho exigir. Pedir em vez de presumir indisponibilidade.
+  - **Alternativa sem reabrir a porta**: `python scripts/infra/pg_tunnel.py` levanta um túnel SSH até o container e o CLI canônico do importer funciona por ele sem alteração no servidor (`os.environ.setdefault` faz a variável exportada vencer o `.env`). Validado em 2026-08-17 com `cli.py status` e `cli.py status-set`.
 - **Script de exploração rápida**: `C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\explore_db.py`
 - **Atenção**: tabelas do `sharebook` têm nomes PascalCase — sempre usar aspas duplas nas queries: `SELECT * FROM "Books"`.
 
