@@ -3,41 +3,37 @@
 Checkpoint oficial da consolidação de memória do projeto.
 
 ## Último dream
-- Data: `2026-08-03`
+- Data: `2026-08-17`
 - Tipo: `dream semanal automatizado`
-- Última memória absorvida: `C:\Repos\SHAREBOOK\sharebook-agent\memory\2026-07-30-cover-diversity.md`
-- Total de memórias lidas: `4 memórias episódicas absorvidas (2026-07-27-cadastro-rastreios-doacoes, 2026-07-27-quatro-preparos-editoriais-publicacao, 2026-07-27-recuperacao-editorial-falsos-positivos, 2026-07-30-cover-diversity)` + releitura de `2026-07-27-dream.md` para contexto real do checkpoint anterior.
+- Última memória absorvida: `C:\Repos\SHAREBOOK\sharebook-agent\memory\2026-08-16-migracao-vps-e-openclaw-dormente.md`
+- Total de memórias lidas: `3 memórias episódicas absorvidas (2026-08-03-quatro-preparos-editoriais-publicacao, 2026-08-13-quatro-preparos-editoriais-publicacao, 2026-08-16-migracao-vps-e-openclaw-dormente)`.
 
 ## Consolidação produzida
 
-### Reparo de corrupção (prioridade deste ciclo)
-O commit `6c6bbfe` (30/07, sobre backlog de produto) sobrescreveu, como efeito colateral (aparentemente checkout/branch desatualizado no momento do commit), conteúdo bom e recente de três arquivos:
-- **`memory/_dream-state.md`** — regrediu para um checkpoint anterior a `2026-07-19`, apagando o registro do dream de `2026-07-27` (`59aa1a4`). Corrigido agora com o checkpoint real.
-- **`skills/runtime/windows-local.md`** — perdeu 8 guardrails reais e pagos: trap Python 3.14 vs 3.12, confirmação de `paramiko` antes de depender dele, guardrail `Invoke-WebRequest`/`Invoke-RestMethod` (adicionado por sessão viva em `48c28f1` no mesmo dia 27/07 e destruído 3 dias depois), guardrail `publish-once --id`, guardrail de Bash tool silencioso em comandos longos do Windows, exemplo específico de corrupção de heredoc Python no PowerShell, guardrail de monitor de background órfão (achado maior da sessão de 07-24, consolidado no dream de 07-27), seção "Browser pane — screenshot pode travar". Todos restaurados; o conteúdo novo e legítimo que o commit trouxe (nota sobre `paramiko` já disponível, bullet "Inline Python no PowerShell") foi preservado e mesclado.
-- **`skills/engineering/frontend.md`** — perdeu as duas seções que o dream de 07-27 tinha acabado de promover: padrão "Chart.js atrás de `*ngIf`" (recorrência real, 2ª ocorrência) e fallback Karma/Puppeteer Chrome ausente. Restauradas. O conteúdo novo e legítimo (reescrita mais detalhada da seção SSR, Shelf arrows, HomeService showcase Union) foi mantido — não foi revertido, só complementado.
+### Guardrail promovido
+- `skills/importers/ebook-importer/SKILL.md`, seção "Regras editoriais" — adicionado passo 4 ao preflight editorial: buscar a obra no catálogo (busca semântica, não só título) antes de `plan-set`. Recorrência real: item `1358` (07-09) e `Think Bayes`/`1594` (08-13), ambos duplicatas pegas antes da mutação pela mesma prática ainda não escrita como regra.
 
-Este não foi tratado como esquecimento seletivo ou poda deliberada — é reparo de dado perdido por acidente de commit, plenamente dentro do mandato do Dream de manter o corpus coerente. Guardrails já validados por recorrência real não são candidatos a esquecimento só porque desapareceram sem querer.
+### Reparo de roteamento
+- `AGENTS.md`, "Cenários de Roteamento" — adicionada linha distinguindo "produção de PDFs/capas autorais" (`skills/importers/INDEX.md`, obra nova) de "gerar/trocar capa de livro existente" (`skills/product-ux/INDEX.md`, `cover-direction`). Gap identificado na autocrítica estrutural da própria sessão de 08-16, confirmado por leitura direta dos dois `INDEX.md` antes de editar.
 
-### Consolidação de memórias novas
-- **`skills/importers/ebook-importer/SKILL.md`** — uma adição: `PurePosixPath` em vez de `Path` para qualquer caminho Windows que atravesse a fronteira para o container Linux (lição da sessão de recuperação editorial de 07-27; helper quebrou silenciosamente gravando barra invertida, dry-run falhou antes de qualquer publicação real).
-- `skills/product-ux/cover-direction/SKILL.md` — nenhuma ação. Toda a evolução da sessão de 07-30 (roleta com 14 famílias/7 macrogrupos, `--avoid-style`/`--avoid-group`, geração nativa preferencial) já tinha sido consolidada ao vivo nos commits `c28e485`/`208b288`/`9e308db`. Conferido via leitura do arquivo atual — nada faltando.
-- `scripts/production/INDEX.md` e os dois utilitários de leitura read-only — já corrigidos e indexados ao vivo no commit `a2511e1`. Sem ação.
+### Reparo de link morto
+- `backlog/todo/openai-codex-oauth-drain.md` — removida referência a `memory/2026-06-12-openai-drain-investigation.md`, confirmado via `git log --all` que esse arquivo nunca existiu no repo (não foi perdido, nunca foi escrito). Contexto da investigação preservado no próprio documento; texto agora deixa explícito para não recriar o arquivo por suposição.
 
-### Decisão consciente de não promover
-- A lição "recuperar antes de rejeitar quando o defeito é do resolvedor de PDF, não da obra" (sessão `2026-07-27-recuperacao-editorial-falsos-positivos.md`) **não foi promovida** para `skills/importers/ebook-importer/SKILL.md`. A própria memória registra que Raffa pediu uma conversa específica antes de qualquer mudança na skill de preparo editorial. Promover isso agora, de forma autônoma, contrariaria uma instrução explícita — fica como candidato para sonho manual ou para quando essa conversa acontecer.
-- Badge contraditório de livro físico já doado (fix `336bb29`, repo `sharebook-frontend`) — ocorrência única, sem repo/skill do `sharebook-agent` envolvido além do registro em memória. Não criou skill nem editou `frontend.md` por falta de recorrência.
+### Decisão consciente de não agir
+- **Feedback "silêncio operacional" (08-13)**: Raffa cobrou atualização por marco numa publicação longa. Primeira ocorrência clara desse feedback específico — sem recorrência anterior encontrada no corpus. Por doutrina (não promover por sessão isolada), não virou guardrail. Registrado em `2026-08-17-dream.md` para o próximo Dream cruzar; se repetir, promove para "Postura do Agente" em `AGENTS.md`.
+- **Trap de quoting aninhado no `vps_ssh.py` (08-16)**: já documentado extensivamente em `skills/infra/coolify-vps.md` (regra de uma linha por comando, UTF-8 sem BOM, preferência por `--script-file`). Recorrência de erro já coberto, não lacuna de documentação. Sem ação.
+- **BOOTSTRAP.md, seções "Memória semântica"/"Active Memory" marcadas dormentes por inferência**: pendente de confirmação explícita do Raffa, não é decisão do Dream autônomo.
+- **Cron do importer (onde/se renasce), `client_max_body_size` do nginx, convenção de commit vs. proteção de branch do GitHub**: decisões de produto/infra fora do mandato de arquitetura de skills do Dream.
 
 ## Próximo dream
-- Confirmar que o checkpoint deste ciclo (`2026-08-03`) sobrevive ao próximo commit externo — o incidente de `6c6bbfe` sugere que outra sessão (provavelmente Codex operando num checkout desatualizado) pode voltar a sobrescrever arquivos de skill/memória sem querer. Se acontecer de novo, vale considerar um guardrail estrutural (ex: checar `git log` do arquivo antes de qualquer commit que o edite "de passagem").
-- A lição de recuperação editorial (07-27) segue pendente de conversa com Raffa antes de virar skill — não é papel do Dream autônomo forçar isso.
-- `client_max_body_size` do nginx segue pendente (arrastada desde 06-21).
-- Canal Claude↔OpenClaw (A2A) segue sem execução real — sem novidade nesta safra.
-- Item backlog `limpeza-duplicatas-catalogo.md` (235 excedentes) segue sem novo caso de produção.
-- Novos itens de backlog nesta safra (Pegasus Engagement Engine, Lista de Desejos, OpenAI Codex OAuth drain) são decisão de produto, fora do mandato de arquitetura de skills do Dream — não tocar.
-- `skills/runtime/openclaw.md` ganhou uma seção nova e legítima de diagnóstico de OAuth/sessões silenciosas (via o mesmo commit `6c6bbfe`) — vale observar se esse padrão se repete, o que confirmaria a heurística e a tornaria candidata a endurecimento adicional.
+- Cruzar se o feedback de "silêncio operacional durante tarefa longa" (08-13) se repete. Se sim, promover a "Postura do Agente" em `AGENTS.md` — atualização por marco em tarefas longas, sem virar narração excessiva.
+- A safra de 08-16 listou lacunas adicionais fora do escopo do brief daquela sessão que não são de arquitetura de skill (link `openai-codex-oauth-drain.md` já corrigido aqui; roteamento de capas já corrigido aqui). As restantes (BOOTSTRAP.md dormência por inferência, cron do importer, nginx, convenção de commit) seguem como pendência de produto/confirmação humana, não de Dream.
+- Observar se o guardrail de duplicidade recém-formalizado em `ebook-importer/SKILL.md` reduz de fato a taxa de duplicata pega tarde, ou se ainda escapa alguma — sinal de que o preflight precisa de mais força (ex: script de checagem automática em vez de instrução em prosa).
+- `limpeza-duplicatas-catalogo.md` (235 excedentes) segue sem novo caso de produção.
+- Canal Claude↔OpenClaw (A2A) — sem objeto enquanto o OpenClaw estiver dormente; não é mais pendência ativa até reprovisionamento.
 
 ## Observações
 - Dream executado de forma autônoma (scheduled task, sem usuário presente).
-- Safra pequena em volume de memórias novas (4 em 4 dias), mas com achado estrutural maior que o normal: corrupção real de três arquivos por um commit externo não relacionado. A maior parte do esforço deste ciclo foi diagnóstico (`git log`/`git show` extensivo) e reparo, não promoção de aprendizado novo.
-- Padrão reconfirmado: quando a sessão original já consolida o aprendizado ao vivo (commit direto em skill/script na mesma sessão), o papel do Dream é auditar e fechar lacunas, não recriar — válido para `cover-direction` e para os utilitários de leitura read-only nesta safra.
-- Padrão novo: consolidação ao vivo não é permanente por padrão. Um commit não relacionado, de outra sessão/agente, pode reverter silenciosamente conteúdo já consolidado se operar sobre um checkout desatualizado. O Dream não deve mais presumir que "já foi commitado" significa "está seguro" — vale conferir o estado atual do arquivo, não só a existência de um commit passado que o tocou.
+- Safra de 3 memórias, mas com uma sessão estrutural grande (08-16) que já fez a maior parte da plasticidade ao vivo, incluindo autocrítica explícita das próprias lacunas. O papel deste ciclo foi auditar essa lista e fechar os itens que eram de fato arquitetura de skill (2 de 6 itens listados), não recriar o trabalho nem tratar as pendências de produto/processo como se fossem do mandato do Dream.
+- Padrão reconfirmado: quando uma sessão registra sua própria autocrítica estrutural com itens nomeados, o Dream deve tratar essa lista como backlog de auditoria prioritário — critério mais barato e mais confiável do que garimpar padrões em prosa solta.
+- Disciplina aplicada deste ciclo: feedback de comunicação vívido e citável (08-13) foi conscientemente **não** promovido a guardrail por ser ocorrência única — evitando o anti-padrão "criar skill para migalha isolada" mesmo quando a migalha é memorável.

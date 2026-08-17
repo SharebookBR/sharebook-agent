@@ -4,7 +4,7 @@
 > O agente `mini`, os cron jobs e os codex-homes investigados aqui viviam no container OpenClaw, desprovisionado junto com seu volume. Não há dreno acontecendo e não há como executar nenhuma das ações abaixo.
 > Preservado intencionalmente: o diagnóstico (`usage: {}` vazio, 0 tool calls, tokens OAuth independentes por agente) volta a valer se o habitat for reprovisionado.
 
-**Origem**: Investigação em `memory/2026-06-12-openai-drain-investigation.md`  
+**Origem**: Investigação de 12/Jun/2026 (achados resumidos abaixo). O arquivo `memory/2026-06-12-openai-drain-investigation.md` citado nas versões anteriores deste documento nunca existiu no repo — link morto de origem, não arquivo perdido depois. Não recriar por suposição.
 **Data**: 12/Jun/2026  
 **Prioridade**: Suspensa (era Alta enquanto os cron jobs do mini existiam)
 
@@ -51,5 +51,4 @@ A primeira sessão que falhou (09/Jun 14:00, MAIN, gpt-5.4). O que era? Heartbea
 - Migrar definitivamente os cron jobs para deepseek (reduzir dependência da OpenAI) ou manter OpenAI como primário?
 
 ## Referências
-- `memory/2026-06-12-openai-drain-investigation.md` — investigação completa
-- `memory/2026-06-12-openai-drain-investigation.md` — arquivos de evidência preservados
+- Achados registrados apenas neste documento (seção "Contexto" acima) — não há memória episódica correspondente no repo.

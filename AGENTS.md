@@ -134,7 +134,8 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 - SEO, GA4, GSC, funil, tráfego, landing pages ou auditoria de indexação → abrir `sharebook-agent/skills/engineering/INDEX.md`.
 - Performance do banco, slow query log, `pg_stat_statements` ou ofensores de Postgres → abrir `sharebook-agent/skills/engineering/INDEX.md`.
 - Gestão de categorias, taxonomia, migração de leaf category ou revisão de hierarquia → abrir `sharebook-agent/skills/importers/INDEX.md`.
-- Produção de PDFs, manuscritos, capas autorais ou artefatos editoriais → abrir `sharebook-agent/skills/importers/INDEX.md`.
+- Produção de PDFs, manuscritos, capas autorais ou artefatos editoriais (escrever obra nova) → abrir `sharebook-agent/skills/importers/INDEX.md`.
+- Gerar, trocar ou dirigir a capa de um livro já existente no catálogo (roleta de estilos) → abrir `sharebook-agent/skills/product-ux/INDEX.md`, skill `cover-direction`.
 - Diagnóstico de incidente, erro em produção ou "onde está o log de X" → abrir `sharebook-agent/skills/engineering/backend.md`, seção "Onde estão os logs".
 
 ---

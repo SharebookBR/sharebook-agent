@@ -124,7 +124,8 @@ Guardrails de publish:
 - **Preflight antes de investir em sinopse/capa**:
   1. confirmar que título da fila, conteúdo real do PDF e página oficial descrevem a mesma obra;
   2. confirmar em fonte oficial ou no próprio PDF que a licença permite redistribuição gratuita — PDF público não basta;
-  3. registrar a evidência de licença no contexto editorial quando ela não estiver explícita no payload.
+  3. registrar a evidência de licença no contexto editorial quando ela não estiver explícita no payload;
+  4. buscar a obra no catálogo principal (busca semântica, não só título exato) antes de `plan-set` — duplicidade já pegou dois itens em produção (`1358` em 07-09, `Think Bayes`/`1594` em 08-13), ambos substituídos antes da mutação por essa checagem.
 - Se a obra falhar no critério de redistribuição, usar `triage_rejected` com nota objetiva. Não usar `editorial_rejected`: ausência de licença redistribuível é falha de publicabilidade, não rejeição curatorial de uma obra publicável.
 - Categoria final: sempre folha
 - Sinopse: 3 parágrafos
