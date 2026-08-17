@@ -140,6 +140,46 @@ python .\scripts\infra\vps_ssh.py `
 5. Validar novamente durante navegação real.
 6. Persistir o ajuste no script operacional correspondente.
 
+## Migração de instância Coolify entre VPS
+
+Validado em 2026-08-17 (Hostinger → HostGator), Coolify 4.3.6 nos dois lados.
+
+### Duas caixas ao mesmo tempo
+- `vps_ssh.py` aceita `--prefix` (default `VPS_SSH`). Credenciais da caixa nova vivem em `VPS_HOSTGATOR_SSH_*` no `.env`.
+- Para mover volume de dados, criar confiança SSH **direta entre as caixas** — nunca trafegar conteúdo pelo contexto do agente. `ssh-keygen` na origem, **append** da pública no `authorized_keys` do destino.
+- **Nunca sobrescrever o `authorized_keys` de uma VPS HostGator.** Ela chega com ~11 chaves da plataforma; remover qualquer uma quebra o gerenciamento pelo painel deles. Só `>>`, nunca `>`.
+
+### O que dumpar
+- Dumpar **só o banco `coolify`** (`pg_dump -U coolify -d coolify --no-owner --no-acl`), **não `pg_dumpall`**. O dumpall arrasta roles com senha e conflita com a senha que a instalação nova gravou no volume do `coolify-db`.
+- Com o dump de banco único, o único segredo que precisa atravessar é o `APP_KEY`.
+
+### APP_KEY — a armadilha cara
+O `APP_KEY` de `/data/coolify/source/.env` decifra env vars e chaves de deploy no banco. Trocar o arquivo **não basta**:
+
+- `docker stop` + `docker start` **não relê `env_file`**. O container foi criado com a chave antiga e continua com ela na memória.
+- É obrigatório recriar: `cd /data/coolify/source && docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --force-recreate coolify soketi`
+- **Os nomes de serviço do compose não são os nomes dos containers.** Serviços: `redis`, `soketi`, `postgres`, `coolify`. O container `coolify-realtime` corresponde ao serviço `soketi`. Passar nome de container faz o compose abortar inteiro sem recriar nada — e o sintoma é idêntico ao de não ter feito nada.
+- Trocar o `APP_KEY` no arquivo com `sed` é frágil: o valor é base64 e contém `/` e `+`. Preferir `grep -v '^APP_KEY=' .env > novo && cat chave-antiga >> novo`.
+
+### Diagnóstico honesto de `DecryptException`
+Não presumir chave errada. Comparar por hash, sem imprimir segredo:
+```
+docker exec coolify printenv APP_KEY | tr -d '\n' | sha256sum | cut -c1-16
+grep '^APP_KEY=' /data/coolify/source/.env | cut -d= -f2- | tr -d '\n' | sha256sum | cut -c1-16
+```
+Hashes diferentes → problema é container, não chave.
+
+Validar a decifragem sem vazar valor:
+```
+docker exec coolify php artisan tinker --execute='try { $v = \App\Models\EnvironmentVariable::first()->value; echo "OK len=" . strlen($v); } catch (\Throwable $e) { echo "FALHOU: " . get_class($e); }'
+```
+
+### Certificados
+`/data/coolify/proxy/acme.json` guarda os certificados Let's Encrypt. **Certificado é vinculado a domínio, não a IP** — copiar o `acme.json` para a caixa nova faz o Traefik novo nascer com certificado válido, sem reemissão no corte e sem exposição a rate limit.
+
+### O que mais copiar
+`/data/coolify/ssh` (chaves de deploy), `/data/coolify/proxy`, `/data/coolify/databases` (nginx conf dos proxies de banco), `/data/coolify/services`. Pular `/data/coolify/backups` — é histórico, não estado.
+
 ## O que registrar depois
 - Em `sharebook-agent/memory/`: diagnóstico, evidências, mudança aplicada e efeito percebido (memória episódica).
 - Em `AGENTS.md`: apenas descobertas duráveis e heurísticas, nunca segredos.
