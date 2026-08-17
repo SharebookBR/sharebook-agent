@@ -140,6 +140,32 @@ python .\scripts\infra\vps_ssh.py `
 5. Validar novamente durante navegação real.
 6. Persistir o ajuste no script operacional correspondente.
 
+## Backup agendado — "success" não prova backup
+
+Descoberto em 2026-08-17, valendo desde pelo menos setembro de 2025.
+
+O backup agendado do Postgres da aplicação estava com `databases_to_backup = postgres` — o banco de manutenção **vazio**, não os bancos reais. Rodava toda noite, subia para o bucket e gravava `success`. Todos os arquivos tinham exatamente **1055 bytes**. Durante cerca de um ano não existiu backup de dado real, e o painel afirmava o contrário.
+
+**Regra: status `success` de backup não é evidência. Tamanho é.** Um dump do `sharebook` tem dezenas de MB; qualquer coisa na casa dos KB é banco vazio.
+
+Conferir com:
+```
+docker exec coolify-db psql -U coolify -d coolify -At -F" | " -c "select id, enabled, frequency, databases_to_backup from scheduled_database_backups"
+docker exec coolify-db psql -U coolify -d coolify -At -F" | " -c "select created_at, status, size, filename from scheduled_database_backup_executions order by id desc limit 5"
+```
+
+`databases_to_backup` é lista separada por vírgula. Valor correto neste ambiente:
+`sharebook,sharebook_importer,pegasus_core,simula_plus`
+
+Forçar uma execução real para validar:
+```
+docker exec coolify php artisan tinker --execute='$b = \App\Models\ScheduledDatabaseBackup::find(1); \App\Jobs\DatabaseBackupJob::dispatchSync($b); echo "OK";'
+```
+
+Ordens de grandeza esperadas hoje: `pegasus_core` ~76 MB, `sharebook` ~37 MB, `sharebook_importer` ~5 MB, `simula_plus` ~62 KB.
+
+Vale generalizar a desconfiança: qualquer rotina que reporta sucesso sem nunca ter sido restaurada é candidata ao mesmo defeito.
+
 ## Migração de instância Coolify entre VPS
 
 Validado em 2026-08-17 (Hostinger → HostGator), Coolify 4.3.6 nos dois lados.
