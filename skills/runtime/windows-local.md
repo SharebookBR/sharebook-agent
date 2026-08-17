@@ -99,7 +99,11 @@ Ambiente configurado em 2026-05-23. Não há fricção de setup — tudo já est
 
 A exposição pública é um **toggle do Coolify** no recurso do Postgres. O Raffa autorizou (17/08/2026) ligar temporariamente quando houver necessidade real.
 
-1. **Antes de pedir, checar se dá para não pedir.** Muita coisa se resolve por SSH sem expor nada: `docker exec` no container do Postgres, inspeção de env, contagem de linhas. Só pedir a abertura quando o que precisa provar for o acesso *externo* em si, ou quando for rodar os scripts locais em bloco.
+1. **Antes de pedir, checar se dá para não pedir.** Na maioria dos casos não precisa:
+   - `scripts/infra/pg_tunnel.py` — túnel SSH até o Postgres da VPS. Os scripts locais rodam normalmente contra `localhost`, sem expor nada. **É o caminho padrão.**
+   - `docker exec` no container do Postgres, via `scripts/infra/vps_ssh.py`, para inspeção pontual.
+
+   Só pedir a abertura quando o que precisa provar for o acesso *externo* em si.
 2. **Usar** — todo o trabalho de banco de uma vez. Não abrir para uma query e voltar a pedir dez minutos depois.
 3. **Desligar na hora** que terminar, e avisar. Não deixar ligado "por via das dúvidas".
 
@@ -135,18 +139,24 @@ conn = psycopg2.connect(
 
 A auditoria de 09/06/2026 varreu **só `skills/**/*.md`** e declarou o repo limpo. Em 17/08/2026 apareceram 9 scripts `.py` versionados com senha de banco e a senha root de SSH da VPS. O defeito não foi a busca, foi o filtro.
 
-**Regra: varredura de segredo é por conteúdo, não por extensão de documentação.** Cobrir no mínimo `.py`, `.ps1`, `.sh`, `.json`, `.yml` e `.md`.
+**Regra: varredura de segredo é por conteúdo, não por extensão de documentação.**
 
-Comando canônico (Bash tool, a partir da raiz do repo):
+Não improvisar grep — existe script canônico, `scripts/infra/sweep_secrets.py`:
+
 ```bash
-grep -rniE "password\s*[=:]\s*['\"][^'\"]{4,}|AKIA[0-9A-Z]{16}|sk-(proj|ant)-|ghp_|github_pat_|BEGIN [A-Z ]*PRIVATE KEY" \
-  --include=*.py --include=*.ps1 --include=*.sh --include=*.json --include=*.yml --include=*.md . \
-  | grep -v "\.venv\|node_modules\|os.getenv\|os.environ"
+python sharebook-agent/scripts/infra/sweep_secrets.py
 ```
 
-Complementar com uma varredura por valor: pegar cada senha real do `.env` e procurar literalmente pelo valor no repo. É o que pega o caso que o regex não prevê.
+Ele varre os 4 repos por **valor** (pega cada segredo do `.env` e procura literalmente) e por **padrão** (chave AWS, private key, DSN com senha). Sai com código 1 se achar algo. `--history` adiciona o pickaxe do git sobre todo o histórico — lento, mas é o que responde "isso já foi commitado alguma vez?".
 
-Depois de limpar, **checar o histórico** — `git log -S'<trecho>' --oneline`. Se o segredo já foi commitado num repo com remoto no GitHub, ele está comprometido e precisa de rotação; apagar do HEAD não desfaz nada.
+Rodar **antes de commit que mexa em credencial** e **depois de qualquer rotação**.
+
+Duas coisas que a varredura por valor pega e o regex não:
+
+- **Segredo em lugar que não parece código.** A allowlist do `.claude/settings.local.json` grava o comando aprovado por inteiro; um `$pass = "..."` aprovado uma vez fica lá para sempre. Foi assim que a senha root da VPS acabou num arquivo de config.
+- **Senha percent-encoded dentro de DSN.** Senha com `%` ou `#` aparece como `%25`/`%23` num DSN url-style, então busca literal pelo valor cru não acha. O script já testa as duas formas — e essa foi exatamente a armadilha que quase deixou o `IMPORTER_DB_DSN` com senha velha depois da rotação de 17/08/2026.
+
+Depois de limpar, lembrar: se o segredo já foi commitado num repo com remoto no GitHub, ele está comprometido e precisa de **rotação**. Apagar do HEAD não desfaz nada.
 
 ## Python no Windows — armadilhas de versão
 
