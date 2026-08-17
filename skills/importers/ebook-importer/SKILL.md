@@ -116,6 +116,8 @@ Guardrails de publish:
 - Publisher precisa garantir `out_dir` antes de gravar `synopsis.txt`
 - Item com triagem/editorial íntegros e PDF real materializado pode falhar só no transporte do publish. Se `prepare_pdf_for_publish()` estimar payload acima de `upload_request_limit_bytes`, tentar otimização com Ghostscript; se ainda exceder, tratar como gargalo de upload/publish, não como falha de triagem.
 - Não tratar PDF fake como solução padrão. Para PDF grande demais, o conserto estrutural preferido é melhorar o fluxo de upload de arquivos grandes; o workaround com fake PDF + S3 direto continua sendo exceção operacional.
+- **Tamanho de PDF não é motivo suficiente para desviar do worker normal.** Medido em 2026-08-17: 34,1 MB e 35,7 MB publicaram por `publish-once --id` do Windows, uma tentativa cada, sem erro de transporte. O teto útil é ~37 MB pelo estimador do importer. Sempre tentar o worker normal primeiro e exigir a falha observada antes de escalar para fake PDF.
+- **Item triado antes de 2026-08-16 precisa dos assets rematerializados** antes de qualquer publish — o manifest aponta para o container desprovisionado. Ver `windows-manual.md`, "Assets órfãos do runtime dormente".
 
 ---
 
@@ -424,8 +426,9 @@ Scripts em `skills/importers/ebook-importer/scripts/`. Regra: se não está aqui
 | Script | Comando | O que faz |
 |---|---|---|
 | `manual_triage_windows.py` | `python ... --ids <ids>` | Triagem: valida PDF, extrai texto, monta metadata → `waiting_editorial` |
-| `render_covers.py` | `python ... --ids <ids>` | Renderiza página 1 como PNG, atualiza `triage.preview_pages` |
-| `publish_fake_pdf.py` | `python ... --id <id> [--pdf-path <pdf>] [--cover-path <capa>]` | Exceção para PDF grande: cria com fake.pdf, envia o PDF real ao S3, aprova e marca `done`; usa `IMPORTER_DB_DSN` e renova token expirado |
+| `materialize_assets_windows.py` | `python ... --ids <ids> [--max-cover-bytes N]` | Reanima item triado no runtime dormente: baixa o PDF de `manifest.source_url`, renderiza e comprime a capa, reaponta os caminhos `/data/workspace/...` para Windows por merge. Idempotente |
+| `render_covers.py` | `python ... --ids <ids>` | Renderiza página 1 como PNG, atualiza `triage.preview_pages`. Procura o PDF em `triage-<id>\source.pdf` e depois em `Downloads\<id>.pdf` |
+| `publish_fake_pdf.py` | `python ... --id <id> [--pdf-path <pdf>] [--cover-path <capa>]` | **Exceção**, não rota de PDF grande: cria com fake.pdf, envia o PDF real ao S3, aprova e marca `done`; usa `IMPORTER_DB_DSN` e renova token expirado |
 
 > Plano editorial via `cli.py plan-set` — não por script.
 

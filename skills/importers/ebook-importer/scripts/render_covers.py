@@ -3,33 +3,66 @@
 # Uso:
 #     python render_covers.py --ids 1186 1302 1311
 #
-# PDFs esperados em C:\Users\raffa\Downloads\<id>.pdf
+# PDF procurado, nesta ordem:
+#   1. C:\data\workspace\sharebook-ebook-importer\var\tmp\triage-<id>\source.pdf  (Passo 3b)
+#   2. C:\Users\raffa\Downloads\<id>.pdf
 # PNGs gravados em sharebook-ebook-importer\var\triage\preview-pages\<id>-page-1.png
 # metadata_json.triage.preview_pages atualizado no banco.
+#
+# Credenciais vêm de C:\Repos\SHAREBOOK\sharebook-agent\.env — nunca hardcode.
 
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
 
 import psycopg2
+from dotenv import load_dotenv
 
 PDFTOPPM = (
     r"C:\Users\raffa\AppData\Local\Microsoft\WinGet\Packages"
     r"\oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe"
     r"\poppler-25.07.0\Library\bin\pdftoppm.exe"
 )
+ENV_PATH = Path(r"C:\Repos\SHAREBOOK\sharebook-agent\.env")
 DOWNLOADS_DIR = Path(r"C:\Users\raffa\Downloads")
+TRIAGE_TMP_DIR = Path(r"C:\data\workspace\sharebook-ebook-importer\var\tmp")
 PREVIEW_DIR = Path(r"C:\Repos\SHAREBOOK\sharebook-ebook-importer\var\triage\preview-pages")
 
 
+def build_dsn() -> str:
+    load_dotenv(ENV_PATH)
+    dsn = os.getenv("IMPORTER_DB_DSN")
+    if dsn:
+        return dsn
+    return (
+        f"host={os.getenv('SHAREBOOK_PROD_PG_RW_HOST')} "
+        f"port={os.getenv('SHAREBOOK_PROD_PG_RW_PORT')} "
+        f"dbname=sharebook_importer "
+        f"user={os.getenv('SHAREBOOK_PROD_PG_RW_USER')} "
+        f"password={os.getenv('SHAREBOOK_PROD_PG_RW_PASSWORD')} "
+        f"sslmode={os.getenv('SHAREBOOK_PROD_PG_RW_SSLMODE', 'disable')}"
+    )
+
+
+def locate_pdf(item_id: int) -> Path:
+    candidates = [
+        TRIAGE_TMP_DIR / f"triage-{item_id}" / "source.pdf",
+        DOWNLOADS_DIR / f"{item_id}.pdf",
+    ]
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    tried = " | ".join(str(c) for c in candidates)
+    raise FileNotFoundError(f"PDF não encontrado para item {item_id}. Tentado: {tried}")
+
+
 def render_one(item_id: int, cur) -> Path:
-    pdf = DOWNLOADS_DIR / f"{item_id}.pdf"
-    if not pdf.exists():
-        raise FileNotFoundError(f"PDF não encontrado: {pdf}")
+    pdf = locate_pdf(item_id)
 
     PREVIEW_DIR.mkdir(parents=True, exist_ok=True)
     for f in PREVIEW_DIR.glob(f"{item_id}-page*.png"):
@@ -72,10 +105,7 @@ def main() -> None:
     parser.add_argument("--ids", nargs="+", type=int, required=True)
     args = parser.parse_args()
 
-    conn = psycopg2.connect(
-        host="212.85.23.202", port=5432, dbname="sharebook_importer",
-        user="sharebook_ai_rw", password="F%Ljy9oxTA3iR#npW%4W9iaSaJKU", sslmode="disable"
-    )
+    conn = psycopg2.connect(build_dsn())
     cur = conn.cursor()
 
     ok, fail = 0, 0

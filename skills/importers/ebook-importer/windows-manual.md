@@ -14,15 +14,43 @@ Esse pressuposto morreu com o container. Não existe mais publish remoto, então
 
 O que continua verdadeiro: **triage e publish precisam ver os mesmos arquivos**. No Windows isso significa materializar os assets nos caminhos que o worker espera (Passo 3b) antes de chamar `publish-once`. Se os caminhos não baterem, o publish falha exatamente como antes — só que agora sem nenhum outro lugar para onde apontar.
 
-**Pendência aberta**: o ciclo `triage-once` → `publish-once` inteiramente no Windows nunca foi validado ponta a ponta. O que está validado em produção é o Passo 3b (assets espelhados em `C:\data\workspace\...` + `publish-once`) e o Passo 4 (fake PDF + S3). Não presumir que a triagem local encaixa sozinha no resto — validar antes de tratar como caminho canônico.
+**Pendência aberta**: a metade `publish-once` está validada em produção — 4 itens (1553, 1502, 1582, 1471) publicados em 2026-08-17 direto do Windows, uma tentativa cada, com os assets espelhados pelo Passo 3b. O que **continua não validado** é a metade `triage-once`: nessas quatro publicações a triagem já existia no banco (feita pelo runtime antigo) e só os arquivos foram materializados na mão. Rodar `triage-once` no Windows e emendar no publish sem intervenção segue sem prova.
 
 ---
 
 ## Quando usar
 
 - Item em `source_blocked` com PDF baixável manualmente (WAF, signed URL, domínio migrado)
-- Item em `error` com "pdf grande demais" — nginx `client_max_body_size` bloqueia upload direto
+- Item em `error` com "pdf grande demais" — mas confirmar o limite real antes, ver Passo 4
 - PDF já disponível em `C:\Users\raffa\Downloads\<id>.pdf`
+- **Item triado antes de 2026-08-16 com assets apontando para `/data/workspace/...`** — o caso mais comum hoje, ver "Assets órfãos do runtime dormente"
+
+---
+
+## Assets órfãos do runtime dormente
+
+Itens triados pelo container OpenClaw têm `metadata_json.manifest.downloaded_pdf_path` e
+`triage.preview_pages` apontando para `/data/workspace/sharebook-ebook-importer/var/tmp/triage-<ID>/`.
+Esse caminho não existe em lugar nenhum desde o desprovisionamento. A triagem no banco está íntegra
+(`context_text`, `mode`, `reason`), mas o publisher resolve o PDF por caminho absoluto do manifest e
+falha com **"item sem PDF materializado pela triagem"**.
+
+Em 2026-08-17 havia 96 itens em `waiting_editorial` nessa situação. O conserto é baixar o PDF de novo
+de `manifest.source_url` e reapontar os caminhos:
+
+```powershell
+cd C:\Repos\SHAREBOOK\sharebook-agent
+python skills/importers/ebook-importer/scripts/materialize_assets_windows.py --ids <id1> <id2>
+```
+
+O script é idempotente (reaproveita PDF já baixado) e faz merge no `metadata_json` — não sobrescreve
+`context_text` nem os campos de triagem. Depois dele o item publica pelo worker normal.
+
+**Atenção**: `manifest.source_url` não é sempre a URL final do asset. Já apareceram duas falhas:
+- Springer (`link.springer.com/content/pdf/...`) devolve HTML; o PDF real do mesmo livro estava em
+  `automl.org`. O script aborta com "resposta não é PDF" em vez de gravar lixo — resolver a URL na mão.
+- URLs `.php?chapter=...` (opentextbookstore) penduram sem responder. Não insistir; tratar como fonte
+  a resolver manualmente.
 
 ## Publish remoto via SSH/docker exec — dormente
 
@@ -163,7 +191,17 @@ Sequência de diagnóstico quando `SSLEOFError` persiste:
 4. Verificar catálogo e importer (`sharebook_prod_book.py`, SELECT no banco) após cada tentativa.
 5. Não fazer retries cegos sem mudar a hipótese entre tentativas.
 
-### Passo 4 — Publicação (fake PDF + S3)
+### Passo 4 — Publicação (fake PDF + S3) — **exceção, não default**
+
+> **Limite real medido em 2026-08-17**: PDFs de **34,1 MB e 35,7 MB** subiram pelo worker normal
+> (`publish-once --id`) direto do Windows, em uma tentativa, sem `WinError 10053/10054` e sem
+> Ghostscript. O nginx **não** barrou. A hipótese antiga de que PDF grande obriga o fake PDF estava
+> calibrada errada — provavelmente por confundir o limite do nginx com o estimador do próprio importer.
+>
+> **Sempre tentar `publish-once --id` primeiro**, independente do tamanho. O teto conhecido do importer
+> é `upload_request_limit_bytes` (default 52.428.800), com expansão base64 de 1,37 e margem de
+> 1.500.000 — ou seja, PDF útil de ~37 MB. Acima disso o próprio worker tenta Ghostscript antes de
+> desistir. Só cair para o fake PDF diante de falha real e observada.
 
 ```powershell
 python skills/importers/ebook-importer/scripts/publish_fake_pdf.py --id <ID> `
@@ -181,7 +219,11 @@ Fluxo:
 
 ## Por que o workaround de PDF fake
 
-O nginx tem `client_max_body_size` restritivo na rota `/api/Book`. PDFs grandes falham com `WinError 10053/10054` quando o request vem de fora do servidor — que é sempre o caso hoje, já que a operação é toda a partir do Windows. Enquanto existiu um runtime dentro da VPS, a conexão interna contornava o limite; essa saída não existe mais, então o limite do nginx virou gargalo estrutural (item de backlog aberto, arrastado desde 06-21).
+A justificativa histórica: o nginx teria `client_max_body_size` restritivo na rota `/api/Book`, e PDFs grandes falhariam com `WinError 10053/10054` vindos de fora do servidor. Enquanto existiu runtime dentro da VPS, a conexão interna contornava o limite.
+
+**Revisão de 2026-08-17**: esse diagnóstico não se sustenta na faixa em que era invocado. Dois PDFs de ~34 e ~36 MB subiram do Windows sem nenhum erro de transporte. Ou o limite do nginx é bem mais alto do que se supunha, ou foi afrouxado em algum momento sem o corpus registrar. O gargalo real do fluxo hoje é o estimador do importer (`upload_request_limit_bytes`), não o proxy.
+
+Portanto: o fake PDF continua existindo para PDF genuinamente acima do teto do importer, mas **deixou de ser a rota esperada para "PDF grande"**. Antes de usá-lo, é obrigatório ter em mãos a falha observada — traceback ou log real —, não a expectativa de falha.
 
 Criar `C:\Temp\fake.pdf` uma vez:
 ```python
@@ -203,8 +245,11 @@ Path(r'C:\Temp\fake.pdf').write_bytes(minimal)
 
 | Problema | Causa | Solução |
 |---|---|---|
+| "item sem PDF materializado pela triagem" | manifest aponta para `/data/workspace/...` do container morto | `materialize_assets_windows.py --ids <id>`, depois `publish-once --id` |
 | Worker reseta para `waiting_triage` | "item sem PDF materializado" — PDF no Windows, não no servidor | Ignorar, `publish_fake_pdf.py` bypassa o worker |
-| `WinError 10053/10054` no publish | nginx `client_max_body_size` | PDF fake + S3 direto |
+| `WinError 10053/10054` no publish | Antes atribuído ao nginx; **não reproduzido em 34–36 MB em 2026-08-17** | Coletar o erro real antes de concluir; só então PDF fake + S3 |
+| Capa é folha de rosto, não capa | Página 1 de livro acadêmico costuma ser título + sumário | Gerar capa com `scripts/covers/generate_covers.py` e passar `--cover-path` no `plan-set` |
+| `head_object` do S3 não acha a capa | Capa não vive no S3 — é servida por `api.sharebook.com.br/Images/Books/<slug>.jpg` | Validar a capa pela URL da API, não pelo bucket |
 | `SSLEOFError` no publish com fake PDF | Capa PNG grande (>300KB) fecha a conexão | Comprimir capa para JPEG ~86KB antes de publicar |
 | 401 no publish | Token expirado | `sharebook_refresh_token.py` |
 | pdftoppm não encontrado | winget atualiza PATH mas requer nova sessão | Usar path absoluto no script |
