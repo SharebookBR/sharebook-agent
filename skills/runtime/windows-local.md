@@ -92,7 +92,7 @@ Ambiente configurado em 2026-05-23. Não há fricção de setup — tudo já est
 - **Python 3.12**: instalado em `C:\Users\raffa\AppData\Local\Programs\Python\Python312\` e no PATH permanente do usuário.
 - **psycopg2-binary**: instalado. `import psycopg2` funciona direto.
 - **Credenciais**: todas em `C:\Repos\SHAREBOOK\sharebook-agent\.env`. Carregar com `python-dotenv` ou ler manualmente.
-- **Host**: `212.85.23.202:5432` (IP público da VPS — acessível direto, sem tunnel).
+- **Host**: `129.121.36.220:5432` (IP público da VPS de produção — acessível direto, sem tunnel). Mudou em **17/08/2026** com a migração Hostinger → HostGator; o antigo `212.85.23.202` ainda responde na caixa velha, mas com dado **congelado no momento do corte**. Se uma query parecer desatualizada, conferir o host antes de desconfiar do dado.
 - **Bancos disponíveis**:
   - `sharebook` — banco transacional principal (user: `sharebook_ai_ro` para leitura, `sharebook_ai_rw` para escrita)
   - `sharebook_importer` — fila e runs do importer (schema `importer`, user: `sharebook_ai_rw`)

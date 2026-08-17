@@ -26,14 +26,24 @@
 
  - Confirmar cedo se `paramiko` já está instalado com `python -c "import paramiko; print(paramiko.__version__)"`.
 
+## Qual VPS é a produção
+
+Desde **17/08/2026** a produção roda na **HostGator**: `129.121.36.220`, SSH na porta **22022**, credenciais no `.env` sob o prefixo `VPS_HOSTGATOR_SSH_*`.
+
+A caixa antiga da Hostinger (`212.85.23.202`, prefixo `VPS_SSH_*`) ficou desligada como rollback até o cancelamento do plano. **Não presumir que `VPS_SSH_*` é produção** — esse prefixo ainda aponta para a máquina velha.
+
 ## Script Base para Windows
 - Script reutilizável: `scripts/infra/vps_ssh.py`
+- `--prefix` escolhe o conjunto de credenciais no `.env`. Padrão: `VPS_SSH` (caixa antiga).
 - Exemplo de uso:
 
 ```powershell
+# produção (HostGator)
+python .\scripts\infra\vps_ssh.py --prefix VPS_HOSTGATOR_SSH --cmd "uptime"
+python .\scripts\infra\vps_ssh.py --prefix VPS_HOSTGATOR_SSH --cmd "docker ps"
+
+# caixa antiga (Hostinger), enquanto existir
 python .\scripts\infra\vps_ssh.py --cmd "uptime"
-python .\scripts\infra\vps_ssh.py --cmd "docker ps"
-python .\scripts\infra\vps_ssh.py --cmd "docker stats --no-stream"
 ```
 
 - Para rodar vários comandos na mesma conexão:
