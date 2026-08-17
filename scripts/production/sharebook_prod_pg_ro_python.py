@@ -28,12 +28,16 @@ def main():
     
     user = env.get("SHAREBOOK_PROD_PG_RO_USER", "postgres")
     password = env.get("SHAREBOOK_PROD_PG_RO_PASSWORD")
-    host = env.get("SHAREBOOK_PROD_PG_RO_HOST", "212.85.23.202")
+    host = env.get("SHAREBOOK_PROD_PG_RO_HOST")
     port = int(env.get("SHAREBOOK_PROD_PG_RO_PORT", 5432))
     database = env.get("SHAREBOOK_PROD_PG_RO_DATABASE", "postgres")
 
     if not password:
         print("Erro: SHAREBOOK_PROD_PG_RO_PASSWORD não encontrada no .env", file=sys.stderr)
+        return 1
+
+    if not host:
+        print("Erro: SHAREBOOK_PROD_PG_RO_HOST não encontrada no .env", file=sys.stderr)
         return 1
 
     if args.sql_file:

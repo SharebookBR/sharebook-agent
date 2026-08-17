@@ -3,18 +3,25 @@ waiting_triage na tabela importer.queue_items.
 
 Uso:
     python crawl_baixelivros_quadrinhos.py [--dry-run]
+
+Credenciais vêm de C:\\Repos\\SHAREBOOK\\sharebook-agent\\.env — nunca hardcode.
 """
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import ssl
 import sys
 import urllib.request
 from html import unescape
+from pathlib import Path
 from urllib.parse import urljoin
 
 import psycopg2
+from dotenv import load_dotenv
+
+ENV_PATH = Path(r"C:\Repos\SHAREBOOK\sharebook-agent\.env")
 
 SOURCE_NAME = "baixelivros_quadrinhos"
 SOURCE_URL  = "https://www.baixelivros.com.br/biblioteca/quadrinhos"
@@ -24,6 +31,21 @@ PAGE_TPL    = f"{SOURCE_URL}/page/{{n}}"
 UA          = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 
 ssl_ctx = ssl._create_unverified_context()
+
+
+def build_dsn() -> str:
+    load_dotenv(ENV_PATH)
+    dsn = os.getenv("IMPORTER_DB_DSN")
+    if dsn:
+        return dsn
+    return (
+        f"host={os.getenv('SHAREBOOK_PROD_PG_RW_HOST')} "
+        f"port={os.getenv('SHAREBOOK_PROD_PG_RW_PORT')} "
+        f"dbname=sharebook_importer "
+        f"user={os.getenv('SHAREBOOK_PROD_PG_RW_USER')} "
+        f"password={os.getenv('SHAREBOOK_PROD_PG_RW_PASSWORD')} "
+        f"sslmode={os.getenv('SHAREBOOK_PROD_PG_RW_SSLMODE', 'disable')}"
+    )
 
 
 def fetch(url: str) -> str:
@@ -91,10 +113,7 @@ def main() -> int:
         return 0
 
     # Conectar ao banco
-    conn = psycopg2.connect(
-        host="212.85.23.202", port=5432, dbname="sharebook_importer",
-        user="sharebook_ai_rw", password="F%Ljy9oxTA3iR#npW%4W9iaSaJKU", sslmode="disable"
-    )
+    conn = psycopg2.connect(build_dsn())
     conn.autocommit = False
     cur = conn.cursor()
 

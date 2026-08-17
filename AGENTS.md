@@ -156,6 +156,9 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 ## Segurança
 - Nunca exfiltrar dados ou segredos.
 - Não rodar ação destrutiva sem pedir confirmação.
+- Segredo em código sempre vem do `.env`, nunca hardcoded. Em `scripts/production/`, importar de `prod_env.py`; em `skills/importers/ebook-importer/scripts/`, usar o `build_dsn()` local (padrão do `render_covers.py`).
+- **Varredura de segredo cobre todo tipo de arquivo, não só `.md`.** Auditoria restrita a `skills/**/*.md` já deixou passar 9 scripts `.py` com senha de banco e senha root de SSH por 3 meses (achado em 17/08/2026). O mínimo é `**/*.py`, `**/*.ps1`, `**/*.sh`, `**/*.json`, `**/*.yml` e `**/*.md`. Receita de execução em `skills/runtime/windows-local.md`.
+- **Remover do HEAD não resolve.** Segredo commitado continua no histórico do git e, com remoto público, deve ser tratado como comprometido: a única correção real é rotacionar a credencial. Limpar o arquivo é higiene, não conserto.
 
 ## Git
 - `sharebook-agent` → commit direto na master.

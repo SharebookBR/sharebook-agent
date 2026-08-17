@@ -3,10 +3,13 @@ import json
 import boto3
 from collections import Counter
 
+from prod_env import ssh_credentials
+
 # SSH para pegar credenciais SQS do container
+ssh_user, ssh_host, ssh_port, ssh_password = ssh_credentials()
 client = paramiko.SSHClient()
 client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-client.connect('212.85.23.202', port=22, username='root', password='ecoECO4321@@@', timeout=15)
+client.connect(ssh_host, port=ssh_port, username=ssh_user, password=ssh_password, timeout=15)
 
 cmd = "docker inspect sharebook-api"
 stdin, stdout, stderr = client.exec_command(cmd)

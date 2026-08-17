@@ -1,9 +1,6 @@
-import psycopg2
+from prod_env import pg_ro
 
-conn = psycopg2.connect(
-    host="212.85.23.202", port=5432, dbname="sharebook",
-    user="sharebook_ai_ro", password="3-nbj0bw3STVkxlcCeEO2ZFwtvyn", sslmode="disable"
-)
+conn = pg_ro()
 cur = conn.cursor()
 
 cur.execute('SELECT COUNT(*) FROM "Books" WHERE "Type" = 1')

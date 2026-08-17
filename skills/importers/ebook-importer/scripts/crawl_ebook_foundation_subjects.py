@@ -3,16 +3,23 @@ entradas com link direto de PDF como waiting_triage no banco do importer.
 
 Uso:
     python crawl_ebook_foundation_subjects.py [--dry-run]
+
+Credenciais vêm de C:\\Repos\\SHAREBOOK\\sharebook-agent\\.env — nunca hardcode.
 """
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import urllib.request
+from pathlib import Path
 from urllib.request import Request, urlopen
 
 import psycopg2
+from dotenv import load_dotenv
+
+ENV_PATH = Path(r"C:\Repos\SHAREBOOK\sharebook-agent\.env")
 
 SOURCE_NAME = "ebook_foundation_subjects"
 RAW_MD_URL  = "https://raw.githubusercontent.com/EbookFoundation/free-programming-books/main/books/free-programming-books-subjects.md"
@@ -20,6 +27,21 @@ USER_AGENT  = "Mozilla/5.0"
 
 ITEM_RE    = re.compile(r"^\* \[(?P<title>.+?)\]\((?P<url>https?://[^)]+)\)(?: - (?P<rest>.*))?$")
 HEADING_RE = re.compile(r"^(#{3,4})\s+(?P<name>.+?)\s*$")  # ### subject, #### sub-subject
+
+
+def build_dsn() -> str:
+    load_dotenv(ENV_PATH)
+    dsn = os.getenv("IMPORTER_DB_DSN")
+    if dsn:
+        return dsn
+    return (
+        f"host={os.getenv('SHAREBOOK_PROD_PG_RW_HOST')} "
+        f"port={os.getenv('SHAREBOOK_PROD_PG_RW_PORT')} "
+        f"dbname=sharebook_importer "
+        f"user={os.getenv('SHAREBOOK_PROD_PG_RW_USER')} "
+        f"password={os.getenv('SHAREBOOK_PROD_PG_RW_PASSWORD')} "
+        f"sslmode={os.getenv('SHAREBOOK_PROD_PG_RW_SSLMODE', 'disable')}"
+    )
 
 
 def fetch_markdown(url: str) -> str:
@@ -110,10 +132,7 @@ def main() -> int:
             print(f"  ... (+{len(entries) - 20} mais)")
         return 0
 
-    conn = psycopg2.connect(
-        host="212.85.23.202", port=5432, dbname="sharebook_importer",
-        user="sharebook_ai_rw", password="F%Ljy9oxTA3iR#npW%4W9iaSaJKU", sslmode="disable"
-    )
+    conn = psycopg2.connect(build_dsn())
     conn.autocommit = False
     cur = conn.cursor()
 

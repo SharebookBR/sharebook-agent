@@ -1,4 +1,4 @@
-import psycopg2
+from prod_env import pg_ro, pg_rw
 
 def query(conn, sql):
     cur = conn.cursor()
@@ -21,15 +21,7 @@ def explore(label, conn):
     conn.close()
 
 # sharebook principal (RO)
-c1 = psycopg2.connect(
-    host="212.85.23.202", port=5432, dbname="sharebook",
-    user="sharebook_ai_ro", password="3-nbj0bw3STVkxlcCeEO2ZFwtvyn", sslmode="disable"
-)
-explore("sharebook", c1)
+explore("sharebook", pg_ro())
 
-# sharebook_importer (RW — mesmo user)
-c2 = psycopg2.connect(
-    host="212.85.23.202", port=5432, dbname="sharebook_importer",
-    user="sharebook_ai_rw", password="F%Ljy9oxTA3iR#npW%4W9iaSaJKU", sslmode="disable"
-)
-explore("sharebook_importer", c2)
+# sharebook_importer (RW)
+explore("sharebook_importer", pg_rw(dbname="sharebook_importer"))

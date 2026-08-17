@@ -92,7 +92,18 @@ Ambiente configurado em 2026-05-23. Não há fricção de setup — tudo já est
 - **Python 3.12**: instalado em `C:\Users\raffa\AppData\Local\Programs\Python\Python312\` e no PATH permanente do usuário.
 - **psycopg2-binary**: instalado. `import psycopg2` funciona direto.
 - **Credenciais**: todas em `C:\Repos\SHAREBOOK\sharebook-agent\.env`. Carregar com `python-dotenv` ou ler manualmente.
-- **Host**: `129.121.36.220:5432` (IP público da VPS de produção — acessível direto, sem tunnel). Mudou em **17/08/2026** com a migração Hostinger → HostGator; o antigo `212.85.23.202` ainda responde na caixa velha, mas com dado **congelado no momento do corte**. Se uma query parecer desatualizada, conferir o host antes de desconfiar do dado.
+- **Host**: `129.121.36.220:5432`. Mudou em **17/08/2026** com a migração Hostinger → HostGator; o antigo `212.85.23.202` está desligado.
+- **A porta 5432 fica FECHADA por padrão** (desde 17/08/2026). Não presumir acesso direto: `Connection refused` no 5432 é o firewall, **não** senha errada nem banco fora do ar. Antes de diagnosticar credencial, confirmar se a porta está aberta.
+
+### Protocolo do 5432: abrir, usar, fechar
+
+Quem abre e fecha o firewall é o **Raffa**. O agente não mexe nisso.
+
+1. **Pedir** a abertura, dizendo para quê e por quanto tempo.
+2. **Usar** — fazer todo o trabalho de banco de uma vez, em bloco. Não abrir para uma query e voltar a pedir dez minutos depois.
+3. **Avisar que terminou**, na hora, para ele fechar. Não deixar aberto "por via das dúvidas".
+
+Deixar a porta aberta porque pode ser útil depois é o mesmo antipadrão do monitor de background órfão: conveniência do agente virando risco permanente do Raffa. O passo 3 é obrigatório e é meu, não dele.
 - **Bancos disponíveis**:
   - `sharebook` — banco transacional principal (user: `sharebook_ai_ro` para leitura, `sharebook_ai_rw` para escrita)
   - `sharebook_importer` — fila e runs do importer (schema `importer`, user: `sharebook_ai_rw`)
@@ -113,6 +124,23 @@ conn = psycopg2.connect(
     sslmode=os.getenv("SHAREBOOK_PROD_PG_RO_SSLMODE", "disable")
 )
 ```
+
+## Varredura de segredo — receita
+
+A auditoria de 09/06/2026 varreu **só `skills/**/*.md`** e declarou o repo limpo. Em 17/08/2026 apareceram 9 scripts `.py` versionados com senha de banco e a senha root de SSH da VPS. O defeito não foi a busca, foi o filtro.
+
+**Regra: varredura de segredo é por conteúdo, não por extensão de documentação.** Cobrir no mínimo `.py`, `.ps1`, `.sh`, `.json`, `.yml` e `.md`.
+
+Comando canônico (Bash tool, a partir da raiz do repo):
+```bash
+grep -rniE "password\s*[=:]\s*['\"][^'\"]{4,}|AKIA[0-9A-Z]{16}|sk-(proj|ant)-|ghp_|github_pat_|BEGIN [A-Z ]*PRIVATE KEY" \
+  --include=*.py --include=*.ps1 --include=*.sh --include=*.json --include=*.yml --include=*.md . \
+  | grep -v "\.venv\|node_modules\|os.getenv\|os.environ"
+```
+
+Complementar com uma varredura por valor: pegar cada senha real do `.env` e procurar literalmente pelo valor no repo. É o que pega o caso que o regex não prevê.
+
+Depois de limpar, **checar o histórico** — `git log -S'<trecho>' --oneline`. Se o segredo já foi commitado num repo com remoto no GitHub, ele está comprometido e precisa de rotação; apagar do HEAD não desfaz nada.
 
 ## Python no Windows — armadilhas de versão
 

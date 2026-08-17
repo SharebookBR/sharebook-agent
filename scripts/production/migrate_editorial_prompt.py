@@ -1,9 +1,6 @@
-import psycopg2
+from prod_env import pg_rw
 
-conn = psycopg2.connect(
-    host="212.85.23.202", port=5432, dbname="sharebook_importer",
-    user="sharebook_ai_rw", password="F%Ljy9oxTA3iR#npW%4W9iaSaJKU", sslmode="disable"
-)
+conn = pg_rw(dbname="sharebook_importer")
 conn.autocommit = False
 cur = conn.cursor()
 

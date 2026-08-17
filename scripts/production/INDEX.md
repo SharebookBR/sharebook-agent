@@ -2,6 +2,15 @@
 
 Operações em produção, autenticação, banco e storage.
 
+## Credenciais — ponto único
+- `prod_env.py` — **módulo base, não é executável**. Lê o `.env` da raiz do `sharebook-agent` via `python-dotenv` e expõe `pg_ro(dbname=None)`, `pg_rw(dbname=None)` e `ssh_credentials(prefix)`. Todo script novo desta pasta que fale com banco ou SSH deve importar daqui.
+  ```python
+  from prod_env import pg_ro, pg_rw, ssh_credentials
+  conn = pg_rw(dbname="sharebook_importer")   # sem dbname, usa o do .env
+  ```
+  `ssh_credentials()` aponta por padrão para a HostGator (produção desde 2026-08-17); use `ssh_credentials("VPS_SSH")` para a caixa antiga da Hostinger.
+  **Nunca hardcode host, usuário ou senha em script.**
+
 ## Scripts de Analytics GA4
 → Indexados em `skills/engineering/analytics/SKILL.md`
 
