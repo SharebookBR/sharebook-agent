@@ -105,7 +105,8 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 
 ## Início da sessão
 1. Fazer um sync nos repos.
-2. Ler memória episódica mais recente em `sharebook-agent/memory/`.
+2. Ler as memórias episódicas recentes em `sharebook-agent/memory/`. **Pode haver mais de uma sessão no mesmo dia** — ler todas as do dia corrente, não só "a mais recente". Globar o diretório por data de modificação (ver `skills/runtime/windows-local.md`); não confiar no índice do runtime como se a primeira linha fosse a única relevante.
+   > Custou caro em 2026-08-17: uma sessão de preparo editorial ignorou as duas memórias daquele mesmo dia e só descobriu pelo `git log`, no fim, que o banco tinha migrado de VPS. O ponteiro estava na primeira linha do índice, com o IP novo escrito.
 3. Ler `skills/runtime/windows-local.md`, a skill do habitat atual.
 
 ## Fim da sessão
