@@ -129,6 +129,32 @@ Guardrails de publish:
   3. registrar a evidência de licença no contexto editorial quando ela não estiver explícita no payload;
   4. buscar a obra no catálogo principal (busca semântica, não só título exato) antes de `plan-set` — duplicidade já pegou dois itens em produção (`1358` em 07-09, `Think Bayes`/`1594` em 08-13), ambos substituídos antes da mutação por essa checagem.
 - Se a obra falhar no critério de redistribuição, usar `triage_rejected` com nota objetiva. Não usar `editorial_rejected`: ausência de licença redistribuível é falha de publicabilidade, não rejeição curatorial de uma obra publicável.
+
+### Licença: só publicar com certeza (regra confirmada pelo Raffa em 2026-08-17)
+
+O padrão é **certeza, não ausência de proibição**. O ônus é provar que podemos redistribuir, não supor que ninguém se opõe.
+
+**Publicável** — existe licença explícita que autoriza redistribuição: domínio público, Creative Commons (inclusive NC e ND, que restringem uso comercial e derivados, não a redistribuição), MIT/Apache/GFDL, ou declaração do detentor autorizando distribuição livre por terceiros.
+
+**Não publicável** — inclui casos que parecem verdes e não são:
+
+| Sinal | Por que não basta |
+|---|---|
+| PDF acessível publicamente | Disponibilidade não é licença |
+| Autor hospeda o livro inteiro de graça no site oficial | É distribuição *pelo autor*, não permissão para nós hospedarmos cópia |
+| "Available for downloading" impresso no livro | Autoriza baixar, não redistribuir |
+| Ausência de qualquer aviso de copyright | Silêncio não é concessão; copyright é o default legal |
+| Gratuito mediante cadastro de e-mail | Distribuição condicionada pelo fornecedor |
+| Leitura online liberada, com "no part may be reproduced" | Proibição explícita |
+
+**Precedentes trabalhados (2026-08-17)** — úteis porque três deles tinham o PDF completo em mãos e ainda assim foram rejeitados:
+
+- `Planning Algorithms` (1371): autor oferece "Download the whole book" na página oficial; livro traz só "Copyright Steven M. LaValle 2006 — Available for downloading". Sem concessão a terceiro → **rejeitado**.
+- `LEDA` (1369): `Master.pdf` completo, 1033 páginas, hospedado pelos autores no MPI, sem página de copyright e sem licença declarada. Silêncio não é permissão → **rejeitado**.
+- `Calculus I` (1610): registro do Caltech declara exigência de permissão escrita da Springer → **rejeitado**, caso duro.
+- `PAIP` (1384) e `The Public Domain` (1498): trazem "all rights reserved" da edição original, mas o texto adiante concede MIT e CC BY-NC-SA respectivamente → **publicáveis**. Ler o entorno antes de rejeitar por substring.
+
+**Método**: buscar a licença no PDF *e* na fonte oficial antes de decidir; nunca concluir por busca de substring isolada; na dúvida honesta, rejeitar com nota que registre a evidência e o caminho de reversão (URL do asset, o que faltou), para revisão barata se a política mudar.
 - Categoria final: sempre folha
 - Sinopse: 3 parágrafos
 - Idioma padrão: português
