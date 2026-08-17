@@ -18,7 +18,7 @@ except ImportError as exc:  # pragma: no cover - runtime guidance
     ) from exc
 
 
-def parse_env(env_path: Path) -> tuple[str, str, int, str]:
+def parse_env(env_path: Path, prefix: str = "VPS_SSH") -> tuple[str, str, int, str]:
     values: dict[str, str] = {}
     for raw_line in env_path.read_text(encoding="utf-8").splitlines():
         line = raw_line.strip()
@@ -29,24 +29,25 @@ def parse_env(env_path: Path) -> tuple[str, str, int, str]:
         key, value = line.split("=", 1)
         values[key.strip()] = value.strip()
 
-    required_keys = [
-        "VPS_SSH_HOST",
-        "VPS_SSH_USER",
-        "VPS_SSH_PASSWORD",
-    ]
+    host_key = f"{prefix}_HOST"
+    user_key = f"{prefix}_USER"
+    password_key = f"{prefix}_PASSWORD"
+    port_key = f"{prefix}_PORT"
+
+    required_keys = [host_key, user_key, password_key]
     missing_keys = [key for key in required_keys if not values.get(key)]
     if missing_keys:
         missing = ", ".join(missing_keys)
         raise SystemExit(f"Variáveis obrigatórias ausentes no .env: {missing}")
 
-    host = values["VPS_SSH_HOST"]
-    user = values["VPS_SSH_USER"]
-    password = values["VPS_SSH_PASSWORD"]
+    host = values[host_key]
+    user = values[user_key]
+    password = values[password_key]
 
     try:
-        port = int(values.get("VPS_SSH_PORT", "22"))
+        port = int(values.get(port_key, "22"))
     except ValueError as exc:
-        raise SystemExit("VPS_SSH_PORT inválida no .env.") from exc
+        raise SystemExit(f"{port_key} inválida no .env.") from exc
 
     return user, host, port, password
 
@@ -58,7 +59,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--env-file",
         default=".env",
-        help="Caminho para o arquivo .env com VPS_SSH_HOST, VPS_SSH_PORT, VPS_SSH_USER e VPS_SSH_PASSWORD.",
+        help="Caminho para o arquivo .env com <PREFIX>_HOST, <PREFIX>_PORT, <PREFIX>_USER e <PREFIX>_PASSWORD.",
+    )
+    parser.add_argument(
+        "--prefix",
+        default="VPS_SSH",
+        help="Prefixo das variáveis de conexão no .env. Padrão: VPS_SSH (Hostinger). "
+        "Use VPS_HOSTGATOR_SSH para a caixa da HostGator.",
     )
     parser.add_argument(
         "--cmd",
@@ -108,7 +115,7 @@ def main() -> int:
         raise SystemExit(f"Arquivo .env não encontrado: {env_path}")
 
     commands = load_commands(args)
-    user, host, port, password = parse_env(env_path)
+    user, host, port, password = parse_env(env_path, args.prefix)
 
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
