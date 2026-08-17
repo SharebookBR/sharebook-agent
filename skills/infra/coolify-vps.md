@@ -184,6 +184,34 @@ Ordens de grandeza esperadas hoje: `pegasus_core` ~76 MB, `sharebook` ~37 MB, `s
 
 Vale generalizar a desconfiança: qualquer rotina que reporta sucesso sem nunca ter sido restaurada é candidata ao mesmo defeito.
 
+## Backup das imagens (wwwroot) — backup de diretório
+
+As capas dos livros vivem **só no disco da VPS**, em `/data/coolify/applications/sharebook-wwwroot/Images/Books` (~2.900 arquivos, 1,1 GB). O banco guarda apenas o nome do arquivo em `Books.ImageSlug`; a imagem é servida por `https://api.sharebook.com.br/Images/Books/<slug>`. **Não estão no S3 do Sharebook** — lá ficam os PDFs.
+
+Até 2026-08-17 não existia backup nenhum delas. O `wwwrootbackup.zip` que morava dentro da própria pasta não era backup: era o pacote de *restore* usado para trazer as imagens na migração de setembro/2025 (confirmado no `.bash_history`). Nome de backup, função de veículo, e guardado no disco que deveria proteger.
+
+Configurado via Coolify 4.3.x: **Persistent Storage → o mount → Configure Backup**. Grava em `scheduled_volume_backups` / `scheduled_volume_backup_executions`.
+
+**Armadilha da interface**: marcar "Save to S3" sem que o combo de storage persista deixa `save_s3=false` e `s3_storage_id=null`. O job roda, gera o `.tar.gz` **no disco local**, e reporta `success`. Mesmo teatro do backup de banco. Conferir sempre no banco, não na tela:
+```
+docker exec coolify-db psql -U coolify -d coolify -At -F" | " -c "select save_s3, s3_storage_id, retention_amount_locally from scheduled_volume_backups"
+docker exec coolify-db psql -U coolify -d coolify -At -F" | " -c "select id, status, size, s3_uploaded from scheduled_volume_backup_executions order by id desc limit 3"
+```
+`s3_uploaded = true` é o campo que importa; `status = success` não distingue local de remoto.
+
+Disparar execução manual:
+```
+docker exec coolify php artisan tinker --execute='$b = \App\Models\ScheduledVolumeBackup::find(1); \App\Jobs\VolumeBackupJob::dispatchSync($b); echo "FIM";'
+```
+
+**Verificação final que vale (olhar dentro do bucket, não confiar em flag)** — script PHP montando um disk com a credencial que o Coolify já tem, executado por stdin (`php artisan tinker <arquivo>` cai no REPL interativo em vez de executar):
+```
+docker cp script.php coolify:/tmp/x.php && docker exec -i coolify sh -lc 'php artisan tinker < /tmp/x.php'
+```
+No script: `\App\Models\S3Storage::find(1)`, montar `config(['filesystems.disks.verif' => [...]])` e listar com `\Storage::disk('verif')->allFiles()`.
+
+Tamanho esperado do tar.gz: ~1,16 GB. Qualquer coisa muito menor é backup vazio.
+
 ## Migração de instância Coolify entre VPS
 
 Validado em 2026-08-17 (Hostinger → HostGator), Coolify 4.3.6 nos dois lados.
