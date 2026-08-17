@@ -66,6 +66,11 @@ python .\scripts\infra\vps_ssh.py `
 ## Reconhecimento do ambiente Sharebook
 - Confirmar cedo os containers com `docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'`.
 - Não presumir que o banco da aplicação é o `coolify-db`; no ambiente atual ele é o Postgres do próprio Coolify.
+- **Achar o Postgres da aplicação pela IMAGE, não pelo nome.** O Coolify gera nomes aleatórios (hoje `fgsgwsckccgk8sccc4gg0gg0`), então qualquer `grep postgres | head -1` acerta o `coolify-db` e devolve "role does not exist" — erro que parece de credencial e é de container errado:
+  ```
+  docker ps --filter ancestor=postgres:17-alpine --format '{{.Names}}'
+  ```
+  O Coolify roda `postgres:15-alpine`; a aplicação, `postgres:17-alpine`.
 - Descobrir o banco real da aplicação inspecionando as envs do `sharebook-api`, principalmente `DatabaseProvider` e `ConnectionStrings__PostgresConnection`.
 - O `ConnectionStrings__DefaultConnection` pode continuar apontando para SQL Server legado. Não assumir que ele ainda é o banco ativo só porque está preenchido.
 
@@ -93,6 +98,18 @@ python .\scripts\infra\vps_ssh.py `
 - Se o Postgres ainda não estiver guardando slow queries, priorizar isso cedo no ciclo operacional.
 - Para o estágio atual do Sharebook, `log_min_duration_statement = 1000` é um bom ponto de partida: pega casos gritantes sem transformar log em lixão.
 - `pg_stat_statements` continua valioso para análise agregada, mas não é pré-requisito para começar a enxergar consultas ruins de verdade.
+
+## Testar credencial de banco — o falso verde do `trust`
+
+O `pg_hba` deste Postgres tem `host all all 127.0.0.1 trust`. **Por loopback a senha é ignorada**: `psql -h 127.0.0.1` conecta com qualquer senha, inclusive uma errada. Testar credencial por ali dá verde sempre e não prova nada.
+
+Para exercitar a autenticação de verdade, usar o **IP do container**, que cai na regra `host all all all scram-sha-256` — a mesma que o mundo externo usa:
+```
+IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container>)
+docker exec -e PGPASSWORD='<senha>' <container> psql -h $IP -U <user> -d <db> -tAc 'SELECT current_user'
+```
+
+**Todo teste de credencial precisa das duas pontas**: a senha certa conectando *e* uma senha errada sendo rejeitada. Sem a prova negativa, não dá para distinguir "a senha está certa" de "ninguém checou a senha". Foi assim que o `trust` apareceu — a senha vazada "funcionou". Mesma classe do backup que reportava `success` gerando arquivo de 1 KB: verde que não mede o que se pensa que mede.
 
 ## Leitura segura do Postgres da aplicação
 - Antes de consultar tabelas, confirmar `current_database()` e `current_user`.

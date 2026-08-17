@@ -97,13 +97,15 @@ Ambiente configurado em 2026-05-23. Não há fricção de setup — tudo já est
 
 ### Protocolo do 5432: abrir, usar, fechar
 
-Quem abre e fecha o firewall é o **Raffa**. O agente não mexe nisso.
+A exposição pública é um **toggle do Coolify** no recurso do Postgres. O Raffa autorizou (17/08/2026) ligar temporariamente quando houver necessidade real.
 
-1. **Pedir** a abertura, dizendo para quê e por quanto tempo.
-2. **Usar** — fazer todo o trabalho de banco de uma vez, em bloco. Não abrir para uma query e voltar a pedir dez minutos depois.
-3. **Avisar que terminou**, na hora, para ele fechar. Não deixar aberto "por via das dúvidas".
+1. **Antes de pedir, checar se dá para não pedir.** Muita coisa se resolve por SSH sem expor nada: `docker exec` no container do Postgres, inspeção de env, contagem de linhas. Só pedir a abertura quando o que precisa provar for o acesso *externo* em si, ou quando for rodar os scripts locais em bloco.
+2. **Usar** — todo o trabalho de banco de uma vez. Não abrir para uma query e voltar a pedir dez minutos depois.
+3. **Desligar na hora** que terminar, e avisar. Não deixar ligado "por via das dúvidas".
 
 Deixar a porta aberta porque pode ser útil depois é o mesmo antipadrão do monitor de background órfão: conveniência do agente virando risco permanente do Raffa. O passo 3 é obrigatório e é meu, não dele.
+
+Para testar credencial sem abrir nada, ver "Testar credencial de banco — o falso verde do `trust`" em `skills/infra/coolify-vps.md`.
 - **Bancos disponíveis**:
   - `sharebook` — banco transacional principal (user: `sharebook_ai_ro` para leitura, `sharebook_ai_rw` para escrita)
   - `sharebook_importer` — fila e runs do importer (schema `importer`, user: `sharebook_ai_rw`)
