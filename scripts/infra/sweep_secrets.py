@@ -69,6 +69,7 @@ CONHECIDOS = {
     "sharebook-ebook-importer/.env.example",
     "sharebook-backend/ShareBook/ShareBook.Test.Unit/Services/UserServiceTests.cs",
     "sharebook-backend/ShareBook/ShareBook.Test.Unit/Validators/UserValidatorTests.cs",
+    "sharebook-backend/README.md",  # exemplo de dev: Host=localhost, postgres/postgres
 }
 
 
