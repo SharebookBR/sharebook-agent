@@ -103,13 +103,23 @@ python .\scripts\infra\vps_ssh.py `
 
 O `pg_hba` deste Postgres tem `host all all 127.0.0.1 trust`. **Por loopback a senha é ignorada**: `psql -h 127.0.0.1` conecta com qualquer senha, inclusive uma errada. Testar credencial por ali dá verde sempre e não prova nada.
 
+> **Isto não é vulnerabilidade — é o padrão da imagem oficial do `postgres`, e foi auditado em 17/08/2026.** O `trust` vale só para socket local, `127.0.0.1/32` e `::1/128`; todo o resto cai em `scram-sha-256`. O container roda em rede bridge (`coolify`), então o loopback dele é namespace próprio: o `127.0.0.1` de outro container **não** alcança o Postgres (testado). A porta não está publicada no host. Para explorar o `trust` é preciso já executar código dentro do container — na prática, já ser root na VPS, e root não precisa de senha de Postgres para nada.
+>
+> **Não trocar essa linha para `scram`.** É ela que faz `docker exec ... pg_dump -U postgres` funcionar sem senha, que é como o backup do Coolify roda. Mexer ali troca uma não-vulnerabilidade por backup quebrado.
+>
+> O risco real nunca foi o `trust`: era `host all all all scram-sha-256` somado ao toggle de exposição pública do Coolify ligado. Com o toggle desligado, senha vazada não é alcançável de fora.
+
 Para exercitar a autenticação de verdade, usar o **IP do container**, que cai na regra `host all all all scram-sha-256` — a mesma que o mundo externo usa:
 ```
 IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container>)
 docker exec -e PGPASSWORD='<senha>' <container> psql -h $IP -U <user> -d <db> -tAc 'SELECT current_user'
 ```
 
-**Todo teste de credencial precisa das duas pontas**: a senha certa conectando *e* uma senha errada sendo rejeitada. Sem a prova negativa, não dá para distinguir "a senha está certa" de "ninguém checou a senha". Foi assim que o `trust` apareceu — a senha vazada "funcionou". Mesma classe do backup que reportava `success` gerando arquivo de 1 KB: verde que não mede o que se pensa que mede.
+**Todo teste de credencial precisa das duas pontas**: a senha certa conectando *e* uma senha errada sendo rejeitada. Sem a prova negativa, não dá para distinguir "a senha está certa" de "ninguém checou a senha".
+
+Foi assim que o `trust` apareceu, em 17/08/2026: eu testava uma senha recém-rotacionada e a senha antiga passou junto. **Cuidado com a leitura desse sintoma** — a frase certa é "o teste não verificava senha nenhuma", não "a senha antiga ainda funciona". O defeito estava no teste, não no banco; a senha antiga era rejeitada normalmente pelo caminho `scram`. Descrever isso errado gera susto de segurança à toa.
+
+Mesma classe do backup que reportava `success` gerando arquivo de 1 KB: verde que não mede o que se pensa que mede.
 
 ## Leitura segura do Postgres da aplicação
 - Antes de consultar tabelas, confirmar `current_database()` e `current_user`.
