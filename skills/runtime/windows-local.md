@@ -151,6 +151,13 @@ Ele varre os 4 repos por **valor** (pega cada segredo do `.env` e procura litera
 
 Rodar **antes de commit que mexa em credencial** e **depois de qualquer rotação**.
 
+**`--history` não é opcional depois de incidente.** Ele lê os blobs de arquivos de config que já existiram e sumiram. Foi assim que apareceu, em 17/08/2026, a senha de `sharebook_user_dev` dentro de um `appsettings.Development.json` copiado para `temp/` em abril, commitado no repo **público** e removido do HEAD depois. A busca por valor nunca acharia: a senha não estava no `.env`, e o arquivo não existe mais na árvore.
+
+Duas lições que vieram junto:
+
+- **Pasta `temp/` com config de outro projeto é vetor de vazamento.** Copiar `appsettings.json` do backend para dentro do repo do agente para uma build de teste levou junto a connection string com senha.
+- **Senha dentro de connection string ADO.NET não é pega por regex de chave JSON.** `"PostgresConnection": "Host=...;Password=xxx;"` — a senha vem sem aspas, dentro de um valor maior. O `sweep_secrets.py` tem padrão específico para isso desde então.
+
 Duas coisas que a varredura por valor pega e o regex não:
 
 - **Segredo em lugar que não parece código.** A allowlist do `.claude/settings.local.json` grava o comando aprovado por inteiro; um `$pass = "..."` aprovado uma vez fica lá para sempre. Foi assim que a senha root da VPS acabou num arquivo de config.

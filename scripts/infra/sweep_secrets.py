@@ -56,6 +56,10 @@ PATTERNS = [
     ("private key", re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----")),
     ("senha inline", re.compile(r"""(?i)\b(password|senha|pwd)\s*[=:]\s*["'][^"'\s]{6,}["']""")),
     ("DSN com senha", re.compile(r"""(?i)postgres(ql)?://[^:\s"']+:[^@\s"']{6,}@""")),
+    # Connection string ADO.NET: a senha vem SEM aspas, dentro de um valor maior.
+    # O padrao "senha inline" acima nao pega, e foi assim que a senha de
+    # sharebook_user_dev ficou publica dentro de "PostgresConnection": "Host=...;Password=...".
+    ("senha em connection string", re.compile(r"(?i)[;\"']\s*(password|pwd)\s*=\s*[^;\"'\s]{6,}\s*;")),
 ]
 
 # Falsos positivos ja triados em 17/08/2026 — placeholder e fixture de teste.
@@ -136,6 +140,64 @@ def varrer_arvore(root: Path, env_path: Path, alvos: dict[str, set[str]]) -> lis
     return achados_valor
 
 
+CONFIG_HINTS = (
+    ".env", "appsettings", "environment.", "secrets", "docker-compose",
+    "web.config", "app.config", "launchsettings", "credentials", "connectionstrings",
+)
+CONFIG_IGNORA = (".venv", "node_modules", "/obj/", "/bin/", "packages/",
+                 ".example", ".template", ".sample")
+
+
+def varrer_configs_historicos(root: Path) -> list[str]:
+    """Le os blobs de arquivos de CONFIG que ja existiram e aplica os padroes.
+
+    E a varredura que encontra o que a busca por valor nao encontra: segredo que
+    foi commitado, depois apagado, e que nunca esteve no .env. Foi assim que a
+    senha de sharebook_user_dev apareceu, num appsettings temporario commitado
+    no repo publico em abril/2026 e removido depois.
+    """
+    print("\n=== D) Segredo em arquivo de config que ja existiu no historico ===")
+    achados: list[str] = []
+    for repo in REPOS:
+        path = root / repo
+        if not (path / ".git").exists():
+            continue
+        listagem = subprocess.run(
+            ["git", "log", "--all", "--diff-filter=A", "--name-only", "--format="],
+            cwd=path, capture_output=True, text=True, errors="replace",
+        )
+        arquivos_cfg = sorted({
+            ln.strip() for ln in listagem.stdout.splitlines()
+            if ln.strip()
+            and any(t in ln.lower() for t in CONFIG_HINTS)
+            and not any(g in ln.lower() for g in CONFIG_IGNORA)
+        })
+        for arq in arquivos_cfg:
+            revs = subprocess.run(
+                ["git", "log", "--all", "--format=%H", "--", arq],
+                cwd=path, capture_output=True, text=True, errors="replace",
+            ).stdout.split()
+            for sha in revs:
+                blob = subprocess.run(
+                    ["git", "show", f"{sha}:{arq}"],
+                    cwd=path, capture_output=True, text=True, errors="replace",
+                )
+                if blob.returncode != 0:
+                    continue
+                for nome, rx in PATTERNS:
+                    if rx.search(blob.stdout):
+                        achados.append(f"  {repo} {sha[:8]} {arq}  <- {nome}")
+                        break
+                else:
+                    continue
+                break  # uma revisao suja ja basta para sinalizar o arquivo
+    print("\n".join(sorted(set(achados))) if achados else "  nenhum")
+    if achados:
+        print("\n  Config com segredo no historico = credencial comprometida.")
+        print("  Conferir se o valor ainda autentica; se sim, rotacionar ou remover o role.")
+    return achados
+
+
 def varrer_historico(root: Path, alvos: dict[str, set[str]]) -> list[str]:
     print("\n=== C) Segredo vivo no historico do git (pickaxe) ===")
     achados: list[str] = []
@@ -181,6 +243,7 @@ def main() -> int:
 
     achados = varrer_arvore(root, env_path, alvos)
     if args.history:
+        achados += varrer_configs_historicos(root)
         achados += varrer_historico(root, alvos)
     return 1 if achados else 0
 
