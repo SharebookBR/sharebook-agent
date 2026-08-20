@@ -23,7 +23,8 @@ Cadastrar livro físico é parecido com ebook, mas não igual. Esta skill existe
 
 - **Livro físico sem facilitador quebra os jobs de lembrete. Cadastro só termina com facilitador definido.**
   - `POST /api/Book` não tem campo de facilitador — o `CreateBookVM` simplesmente não expõe `UserIdFacilitator`. Não existe jeito de nascer certo pela criação; é sempre um segundo passo.
-  - Quem aceita o campo é o `PUT /api/Book/{id}` (`UpdateBookVM.UserIdFacilitator`). O `update` do `sharebook_prod_book.py` hoje só **preserva** o valor que já existe: não tem flag para definir um novo. Então o caminho é a edição do livro no admin do site — ou, com o Raffa junto, `UPDATE "Books" SET "UserIdFacilitator" = ...` direto no banco.
+  - Quem aceita o campo é o `PUT /api/Book/{id}` (`UpdateBookVM.UserIdFacilitator`). Use `--facilitator-id` no `sharebook_prod_book.py`: no `create` ele encadeia o PUT logo depois de aprovar, no `update` ele troca o facilitador e confere o resultado por GET antes de retornar.
+  - **Essa flag depende do backend com a correção do `ImageSlug` (`12368a2`) deployado.** Antes dela, todo PUT sem imagem nova apagava a capa do livro — o `UpdateBookVM` não carrega `ImageSlug` e o service copiava o nulo por cima. Se o deploy ainda não rodou, definir o facilitador pelo admin do site em vez do script.
   - Na dúvida sobre quem é o facilitador de um livro doado pelo próprio Raffa: é ele mesmo.
   - **Incidente de 20/08/2026** — o livro físico "A volta", cadastrado em 26/07 por esta skill, chegou ao `ChooseDate` com 50 interessados e `UserIdFacilitator` NULL. O job `ChooseDateReminder` monta o e-mail lendo `book.UserFacilitator.Name` sem proteção e estourou `NullReferenceException`. Como `GenericJob.HasWork()` só para quando existe um `JobHistory` **de sucesso**, o job foi reexecutado a cada 5 minutos por 11 horas: **138 execuções falhas**, 100+ alertas no Rollbar (itens `#2936`/`#2937`) e o lembrete de escolha do ganhador nunca enviado. Destravou no minuto em que o facilitador entrou no banco.
   - O estrago é maior que um job: `LateDonationNotification` e `RemoveBookFromShowcase` leem o facilitador do mesmo jeito. Um livro sem facilitador é uma bomba-relógio de três gatilhos, e cada um deles abre seu próprio loop de retentativa.
@@ -48,6 +49,7 @@ Cadastrar livro físico é parecido com ebook, mas não igual. Esta skill existe
   - Para físico, usar `create --type Printed --freight-option ...`.
   - Para ebook, usar `create --type Eletronic --pdf-path ...`.
   - Aceita `--synopsis` ou `--synopsis-file`.
+  - `--facilitator-id` funciona no `create` (encadeia o PUT depois de aprovar) e no `update` (troca o facilitador e confere por GET). Adicionado em 20/08/2026 — **validação ponta a ponta ainda pendente**, ver a regra de facilitador acima.
   - `find-many --pairs-file` é útil para validar vários cadastros com um único login.
 - `C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\sharebook_refresh_token.py`
   - Renova `SHAREBOOK_PROD_ACCESS_TOKEN`, salva no `.env` automaticamente.
@@ -70,7 +72,16 @@ python C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\sharebook_prod_book
   --freight-option Country `
   --synopsis-file "C:\Repos\SHAREBOOK\codex-temp\<slug>\synopsis.txt" `
   --image-path "C:\Users\raffa\Downloads\<foto-da-capa.jpeg>" `
+  --facilitator-id "<ID_DO_FACILITADOR>" `
   --approve
+```
+
+Para corrigir um livro já cadastrado que ficou sem facilitador:
+
+```powershell
+python C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\sharebook_prod_book.py update `
+  --id "<ID_DO_LIVRO>" `
+  --facilitator-id "<ID_DO_FACILITADOR>"
 ```
 
 ## Referências
