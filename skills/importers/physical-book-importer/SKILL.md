@@ -16,10 +16,18 @@ Cadastrar livro físico é parecido com ebook, mas não igual. Esta skill existe
 5. Antes de cadastrar, consultar `GET /api/Category` e confirmar que a categoria escolhida é folha (`children` vazio). Em caso de homônimo, usar sempre `--category-id`.
 6. Cadastrar com `C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\sharebook_prod_book.py create --type Printed --freight-option ... --approve`, preferindo `--synopsis-file` em UTF-8.
 7. Validar o retorno publicado com `find-many` ou pelo próprio payload do script.
-8. Reflita sobre as fricções nessa sessão e fique a vontade pra melhorar essa skill ou scripts.
+8. **Definir o facilitador do livro.** O `create` não faz isso e o livro nasce com `UserIdFacilitator` NULL — ver a regra abaixo. Sem esse passo o cadastro está incompleto, mesmo com a página pública no ar.
+9. Reflita sobre as fricções nessa sessão e fique a vontade pra melhorar essa skill ou scripts.
 
 ## Regras
 
+- **Livro físico sem facilitador quebra os jobs de lembrete. Cadastro só termina com facilitador definido.**
+  - `POST /api/Book` não tem campo de facilitador — o `CreateBookVM` simplesmente não expõe `UserIdFacilitator`. Não existe jeito de nascer certo pela criação; é sempre um segundo passo.
+  - Quem aceita o campo é o `PUT /api/Book/{id}` (`UpdateBookVM.UserIdFacilitator`). O `update` do `sharebook_prod_book.py` hoje só **preserva** o valor que já existe: não tem flag para definir um novo. Então o caminho é a edição do livro no admin do site — ou, com o Raffa junto, `UPDATE "Books" SET "UserIdFacilitator" = ...` direto no banco.
+  - Na dúvida sobre quem é o facilitador de um livro doado pelo próprio Raffa: é ele mesmo.
+  - **Incidente de 20/08/2026** — o livro físico "A volta", cadastrado em 26/07 por esta skill, chegou ao `ChooseDate` com 50 interessados e `UserIdFacilitator` NULL. O job `ChooseDateReminder` monta o e-mail lendo `book.UserFacilitator.Name` sem proteção e estourou `NullReferenceException`. Como `GenericJob.HasWork()` só para quando existe um `JobHistory` **de sucesso**, o job foi reexecutado a cada 5 minutos por 11 horas: **138 execuções falhas**, 100+ alertas no Rollbar (itens `#2936`/`#2937`) e o lembrete de escolha do ganhador nunca enviado. Destravou no minuto em que o facilitador entrou no banco.
+  - O estrago é maior que um job: `LateDonationNotification` e `RemoveBookFromShowcase` leem o facilitador do mesmo jeito. Um livro sem facilitador é uma bomba-relógio de três gatilhos, e cada um deles abre seu próprio loop de retentativa.
+  - Os três livros de 26/07 eram, juntos, os **únicos** livros físicos do catálogo sem facilitador. O buraco é do fluxo desta skill, não do catálogo.
 - **A unidade de cadastro é a unidade da doação, não a unidade da foto.** Vários exemplares fotografados juntos não significam automaticamente vários anúncios — podem ser um kit doado como um só. Se a foto for ambígua sobre isso, confirmar com o usuário antes de decidir entre cadastros separados ou um kit único; quando for kit, deixar isso explícito no título e na sinopse (ex: "Kit com 2 volumes").
 - Duplicidade de livro físico é aceitável. Não bloquear cadastro só porque já existe exemplar parecido.
 - Usar a própria foto da capa do livro como imagem, salvo orientação contrária do usuário.

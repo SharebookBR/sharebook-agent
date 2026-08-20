@@ -8,7 +8,8 @@
 6. Escrever a sinopse em arquivo UTF-8.
 7. Cadastrar com `scripts/production/sharebook_prod_book.py create --type Printed --freight-option ... --approve`.
 8. Validar o cadastro final com o retorno do script ou `find-many`.
-9. Converter toda dor recorrente em melhoria concreta da skill ou dos scripts.
+9. Definir o facilitador do livro (o `create` não define, e sem ele os jobs de lembrete quebram).
+10. Converter toda dor recorrente em melhoria concreta da skill ou dos scripts.
 
 ## Fricções reais já validadas
 
@@ -17,3 +18,4 @@
 - Foto da capa sozinha nem sempre basta para escrever sinopse forte sem inventar. Pesquisa pública é parte do fluxo, não perfumaria.
 - Se a pesquisa pública for fraca, usar formulações honestas e prudentes em vez de preencher lacunas com imaginação.
 - Em Windows, texto longo com acento direto na CLI continua sendo uma má ideia. Usar `--synopsis-file`.
+- O cadastro parece completo bem antes de estar: página pública no ar, imagem certa, categoria folha, e ainda assim sem facilitador. A conta chega semanas depois, no `ChooseDate`, quando o job de lembrete estoura em produção — foi o que aconteceu em 20/08/2026 com "A volta". A validação de cadastro só é honesta se olhar o `UserIdFacilitator` junto com o resto.
