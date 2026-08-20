@@ -14,9 +14,12 @@ Skill operacional para mudanças de backend no `sharebook-backend`, com foco esp
 - **`EFLogs`** (Postgres) — auditoria de mudança de entidade (quem alterou o quê). Retenção indefinida.
 - **`Logs`** (Postgres) — eventos operacionais/segurança marcados explicitamente (hoje: rate limit de download). IP, `Outcome`, jsonb `Properties`. Retenção 15 dias (job `CleanupLogsTable`).
 - **`docker logs sharebook-api`** — request log bruto (Serilog console). Não tem IP. Morre a cada deploy/restart (json-file).
+- **`JobHistories`** (Postgres) — uma linha por execução de job, com `IsSuccess`, `Details` e `TimeSpentSeconds`. O `JobExecutor` também grava a própria linha, então dá para ler a cadência real do agendador contando execuções por hora. É a fonte que diz se um job **concluiu**; o Rollbar só diz que ele estourou.
 - **Rollbar** — só exceções nível Error+.
 
 Ver `2026-07-22-logs-estruturados-postgres-e-incidente-eflogs.md` na memória episódica para o histórico de como a tabela `Logs` nasceu.
+
+**Alerta repetido de job não é erro repetido — costuma ser o mesmo erro preso em loop.** `GenericJob.HasWork()` só para quando existe um `JobHistory` **de sucesso** posterior ao horário esperado. Um job que estoura nunca grava esse sucesso, então é reexecutado a cada rodada do `JobExecutor` (hoje, a cada 5 minutos) até o dia seguinte. Diante de dezenas ou centenas de ocorrências do mesmo item no Rollbar, a primeira pergunta não é "o que mudou para falhar tanto?" e sim "esse job chegou a concluir alguma vez?" — a resposta está em `JobHistories`. Caso real em 20/08/2026: um único livro sem facilitador gerou 138 execuções falhas e 100+ alertas em 11 horas. Efeito colateral a lembrar: se a exceção acontece no meio de um loop de envio, os destinatários processados antes dela recebem o e-mail de novo a cada retentativa.
 
 **Confirmar recuperação de incidente**: silêncio de alerta (Rollbar sem novo e-mail, sem nova entrada) não é prova de recuperação — alertas por marco (ex: 1ª e 10ª ocorrência) podem simplesmente parar de notificar enquanto o erro continua. Confirmar contra evidência positiva: uma execução posterior bem-sucedida em `JobHistories` para jobs, ou uma entrada `Allowed`/sucesso equivalente em `Logs` para o fluxo afetado. Caso real em 2026-07-23 (`MeetupSearch` / autenticação Google).
 
