@@ -249,6 +249,50 @@ No script: `\App\Models\S3Storage::find(1)`, montar `config(['filesystems.disks.
 
 Tamanho esperado do tar.gz: ~1,16 GB. Qualquer coisa muito menor é backup vazio.
 
+## O auto-update do Coolify mata backup em andamento
+
+Descoberto em 20/08/2026, três dias depois da migração.
+
+O Coolify vem com **auto-update ligado** (`instance_settings.is_auto_update_enabled = true`) e, por padrão, agendado no **mesmo minuto dos backups**: `auto_update_frequency = '0 0 * * *'`. Quando sai versão nova, ele **recria o container `coolify`** — e todo job que estiver rodando na fila naquele momento morre no meio.
+
+O estrago não é óbvio, porque o backup não some: ele fica **pela metade**, na ordem em que os jobs foram despachados. Nas noites de 18 e 19/08:
+
+| | 18/08 | 19/08 | 20/08 |
+|---|---|---|---|
+| `sharebook` | ok | ok | ok |
+| `sharebook_importer` | ok | ok | ok |
+| `pegasus_core` | morreu | morreu | ok |
+| `simula_plus` | nem rodou | nem rodou | ok |
+| volume das imagens (1,16 GB) | nem rodou | nem rodou | ok |
+
+Os dois primeiros bancos, menores e mais rápidos, sempre passam. Quem paga é o final da fila — inclusive o backup de imagens, que é o mais caro de perder.
+
+**Sinal diagnóstico**: execução com `status = failed` e `message = 'Marked as failed during Coolify startup - job was interrupted'`. Essa mensagem é escrita quando o Coolify **sobe**, não quando o job quebra — então a data do incidente pode ser dias antes de alguém notar. Confirmar cruzando com a criação do container:
+
+```
+docker inspect coolify --format 'created={{.Created}}'
+```
+
+Se o `Created` cair a segundos do início do backup, é isto. Em 19/08 o container foi criado às 00:00:46, dezoito segundos depois do dump começar — e a versão saiu de 4.3.6 para 4.3.9.
+
+**Correção aplicada**: mover o auto-update para longe da meia-noite.
+
+```
+docker exec coolify-db psql -U coolify -d coolify -c "update instance_settings set auto_update_frequency = '0 4 * * *' where id = 0"
+```
+
+Não precisa restart: o agendador do Laravel relê a cada minuto. Validar no agendador, não no banco — e **lembrar que o `schedule:list` mostra em UTC**, enquanto o campo é gravado em horário local:
+
+```
+docker exec coolify sh -lc 'php artisan schedule:list --no-ansi' | grep UpdateCoolifyJob
+```
+
+Saída esperada: `0 7 * * *` para `UpdateCoolifyJob`, que é 07:00 UTC = 04:00 local. Ver `0 7` e concluir que ficou errado é o engano fácil aqui.
+
+Ao escolher o horário novo, conferir o `crontab -l` do host: neste ambiente o `limitar-coolify.sh` roda `0 */6` (00, 06, 12 e 18h), então 4h da manhã é uma das poucas janelas realmente vazias.
+
+**Generalização que vale para além do Coolify**: toda rotina que se auto-atualiza reiniciando a si mesma é incompatível com o horário em que ela também executa trabalho longo. Não é bug — é agenda mal desenhada, e o default é que sejam o mesmo minuto.
+
 ## Migração de instância Coolify entre VPS
 
 Validado em 2026-08-17 (Hostinger → HostGator), Coolify 4.3.6 nos dois lados.
