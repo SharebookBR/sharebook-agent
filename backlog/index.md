@@ -19,6 +19,7 @@
 - **[Reformulação da Home](backlog/todo/reformulacao-home.md)**: Fundação de posicionamento e navegação entregue; evolução restante é curadoria, ranking e personalização das prateleiras.
 - **[Pipeline de Capas: S3 + CDN](backlog/todo/pipeline-capas-s3-cdn.md)**: Move capas para object storage, gera variantes otimizadas e entrega por CDN sem depender do filesystem do backend.
 - **[Cloudflare: CDN + DDoS + Egress Grátis](backlog/todo/cloudflare-cdn-ddos-protection.md)**: Proteção L7 contra floods, rate limiting no edge, egress de download grátis. Alternativa mais barata que AWS CloudFront+WAF.
+- **[Retenção de Backup no S3 Quebrada](backlog/todo/retencao-backup-s3-quebrada.md)**: `CleanupInstanceStuffsJob` falha em todo delete no bucket do GCS a cada 30 min. Backup grava normal, mas nada é apagado — storage acumula indefinidamente. Provável falta de permissão de delete na credencial.
 - **[Nova source: conceptf1.blogspot / item 1327](backlog/todo/nova-source-conceptf1-blogspot.md)**: O item 1327 revelou uma source nova; tratar no nível de source, não como ebook unitário.
 
 - **[Nova Fonte: dBooks.org](backlog/todo/fonte-dbooks.md)**: `dbooks.org` tem catálogo navegável por subject (`/subject/computer-science/`, etc.), API em `/api/` e RSS. Vale criar extractor dedicado para expandir o corpus técnico.
