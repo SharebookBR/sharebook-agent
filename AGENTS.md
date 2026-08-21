@@ -83,6 +83,8 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 # 🧠 Memória
 
 ## Estrutura obrigatória (`memory/YYYY-MM-DD.md`)
+Toda memória nova começa com o frontmatter TOML v1 definido em `skills/doctrine/harness-governance/references/episodic-memory-metadata-v1.md`. Usar o template da skill. Memórias legadas sem frontmatter continuam válidas e não devem ser reescritas só para conformidade.
+
 1. Modelo e ambiente.
 2. Skills acionadas (lista das skills consultadas/atualizadas).
 3. O que foi feito.
@@ -113,6 +115,7 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 1. Criar memória episódica em `sharebook-agent/memory/YYYY-MM-DD-tema.md`
    > Sempre que o Raffa falar em "memória episódica", ele está pensando em `sharebook-agent/memory/` — não em outro sistema de memória.
    > A memória deve seguir a estrutura obrigatória da seção `# 🧠 Memória`, incluindo `Como me senti` com no mínimo 3 parágrafos honestos.
+   > Validar o frontmatter com `skills/doctrine/harness-governance/scripts/episodic_memory_metadata.py`.
 2. Indexar scripts novos na skill correspondente ao domínio — não no `INDEX.md` genérico de produção.
 3. **Autocrítica estrutural**: durante essa sessão, encontrei alguma inconsistência no sistema de conhecimento (regra que contradiz princípio, skill não indexada, rota errada, conhecimento solto não persistido)? Se sim, corrigir antes de fechar.
 4. Fazer um sync nos repos.
@@ -131,6 +134,7 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 ## Cenários de Roteamento
 - Qualquer tarefa no frontend Angular (componente, estilo, layout, UI, tela nova) → abrir `sharebook-agent/skills/engineering/INDEX.md`.
 - Qualquer operação na fila de importação de ebooks: triagem, publish, worker, `triage_retry`, `publish_retry`, `error`, `source_blocked`, ciclo manual Windows, scripts → abrir `sharebook-agent/skills/importers/INDEX.md`.
+- Dream, memória episódica, plasticidade, auditoria ou saúde estrutural do harness → abrir `sharebook-agent/skills/doctrine/INDEX.md`, skill `harness-governance`.
 - Preparo editorial, sinopses, categoria, handoff por source ou rejeição curatorial pós-triagem (`editorial_rejected`) → consultar `editorial_prompt` da source em `importer.sources` no banco (`sharebook_importer`). Não abrir skill file por source, a config editorial vive no banco.
 - SEO, GA4, GSC, funil, tráfego, landing pages ou auditoria de indexação → abrir `sharebook-agent/skills/engineering/INDEX.md`.
 - Performance do banco, slow query log, `pg_stat_statements` ou ofensores de Postgres → abrir `sharebook-agent/skills/engineering/INDEX.md`.

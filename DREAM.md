@@ -100,9 +100,17 @@ O Dream deve pensar em arquitetura de famílias, não apenas em arquivos soltos.
 
 ---
 
-## 🔁 Rastro de uso como evidência
+## 🔁 Rastro estruturado como evidência
 
-Toda memória episódica deve registrar **skills acionadas**.
+Toda memória episódica nova deve registrar no frontmatter TOML v1:
+- skills acionadas, não acionadas e atualizadas
+- fatos alterados
+- loops ainda abertos
+- candidatos a memória durável
+- relações de supersessão
+- evidências verificáveis
+
+A prosa continua soberana para nuance, contexto e experiência. O frontmatter existe para tornar sinais recorrentes observáveis sem fingir que métricas substituem julgamento. Memórias legadas permanecem válidas; o relatório extrai delas apenas o rastro que conseguir provar.
 
 Esse rastro é uma fonte de verdade para plasticidade.
 Com ele, o Dream pode observar:
@@ -207,12 +215,14 @@ Ele tem mandato para:
 
 ### Como executar
 1. Ler este `DREAM.md` para realinhar com a doutrina.
-2. Ler memórias desde o último checkpoint.
-3. Observar as **skills acionadas** e o padrão de uso.
-4. Identificar fricções recorrentes, lacunas e redundâncias.
-5. Atualizar, criar, dividir, fundir ou arquivar Skills conforme necessário.
-6. Registrar na memória episódica o que foi alterado e por quê.
-7. Atualizar o checkpoint do ciclo.
+2. Abrir `skills/doctrine/harness-governance/SKILL.md` e gerar o relatório de evidências da safra.
+3. Ler as memórias desde o último checkpoint, usando o relatório como mapa, não como veredito.
+4. Observar uso, misses, atualizações, fatos, loops, candidatos e supersessões.
+5. Identificar fricções recorrentes, lacunas e redundâncias.
+6. Atualizar, criar, dividir, fundir ou arquivar Skills conforme necessário.
+7. Rodar o Harness Doctor e corrigir regressões estruturais introduzidas no ciclo.
+8. Registrar na memória episódica o que foi alterado, por quê e com qual evidência.
+9. Atualizar o checkpoint do ciclo.
 
 ---
 
@@ -273,6 +283,8 @@ Esta é a regra mais simples e mais ousada do corpus. Ela não exige julgamento 
 ### Corolário
 
 Antes de criar qualquer artefato novo, indexá-lo no mesmo commit. Criar sem indexar é criar lixo com data de validade.
+
+O Harness Doctor torna essa regra observável. Ele relata; não apaga. Achado estrutural ainda exige distinguir regressão, dívida histórica e artefato deliberado antes de agir.
 
 ---
 
