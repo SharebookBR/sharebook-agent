@@ -2,34 +2,32 @@
 
 ### 🌟 Visão Geral
 - **North star do produto**: tornar o Sharebook o melhor hub de livros gratuitos do Brasil. Detalhes em `backlog/todo/maior-site-livros/_plano.md`.
-- **[Unificação Scripts + Renomeação do Corpus](backlog/todo/unificacao-scripts-memory-durable.md)**: Scripts viram artefatos subordinados a knowledge; `skills/` → `memory-durable/`, `memory/` → `memory-episodic/`.
 
-### 🎯 TODO
+### 🎯 Ordem de prioridade
 
-- **[Maior Site de Livros](backlog/todo/maior-site-livros/_plano.md)**: Meta de 1000 livros curados e sistema de curadoria de elite.
-- **[Busca e Recomendação](backlog/todo/busca-e-recomendacao-sharebook.md)**: FTS, fuzzy matching e recomendações vetoriais via pgvector.
-- **[Limpeza de Duplicatas no Catálogo](backlog/todo/limpeza-duplicatas-catalogo.md)**: ~235 registros duplicados (~9% do catálogo, ex: "Orgulho e Preconceito" 9×). Polui busca, SEO e atribuição de afiliado. Pré-condição de qualidade pra embeddings.
-- **[Painel de Jobs](backlog/todo/painel-de-jobs.md)**: Evolução do dashboard de monitoria de jobs em background.
-- **[SEO v1](backlog/todo/seo-v1/_plano.md)**: Sitemap e robots entregues; próximos ganhos estão em CTR, metadados curtos, schema completo e conhecimento estruturado nas PDPs.
-- **[Social e Reviews](backlog/todo/social/_plano.md)**: Comentários, avaliações de livros e login progressivo via Pegasus.
-- **[Pegasus — Engagement Engine](backlog/todo/pegasus-engagement-engine.md)**: Engine de eventos + pontos (XP/Karma) + regras + histórico. Year 1: serviço REST simples, PostgreSQL, sem frescura. Níveis/badges/streaks/loja/IA ficam pro Ano 2+.
-- **[Lista de Desejos — Doação Reversa](backlog/todo/lista-de-desejos.md)**: Leitores publicam livros que querem receber, doadores escolhem quem atender. MVP sem Karma — 3 pedidos por usuário, anônimo até o match.
-- **[Dependências e Segurança](backlog/todo/seguranca-e-vulnerabilidades.md)**: Atualização de toolchain (Angular 13+) e correção de passivo de segurança.
-- **[Search Console Access](backlog/todo/search-console-access.md)**: Destravar acesso programático do agente ao Search Console, preferencialmente com service account e fallback para OAuth.
-- **[Reformulação da Home](backlog/todo/reformulacao-home.md)**: Fundação de posicionamento e navegação entregue; evolução restante é curadoria, ranking e personalização das prateleiras.
-- **[Pipeline de Capas: S3 + CDN](backlog/todo/pipeline-capas-s3-cdn.md)**: Move capas para object storage, gera variantes otimizadas e entrega por CDN sem depender do filesystem do backend.
-- **[Cloudflare: CDN + DDoS + Egress Grátis](backlog/todo/cloudflare-cdn-ddos-protection.md)**: Proteção L7 contra floods, rate limiting no edge, egress de download grátis. Alternativa mais barata que AWS CloudFront+WAF.
-- **[Retenção de Backup no S3 Quebrada](backlog/todo/retencao-backup-s3-quebrada.md)**: `CleanupInstanceStuffsJob` falha em todo delete no bucket do GCS a cada 30 min. Backup grava normal, mas nada é apagado — storage acumula indefinidamente. Provável falta de permissão de delete na credencial.
-- **[Nova source: conceptf1.blogspot / item 1327](backlog/todo/nova-source-conceptf1-blogspot.md)**: O item 1327 revelou uma source nova; tratar no nível de source, não como ebook unitário.
+Revisada em **2026-08-20**, considerando valor atual para produto/operação e esforço relativo.
 
-- **[Nova Fonte: dBooks.org](backlog/todo/fonte-dbooks.md)**: `dbooks.org` tem catálogo navegável por subject (`/subject/computer-science/`, etc.), API em `/api/` e RSS. Vale criar extractor dedicado para expandir o corpus técnico.
-- **[Nova Fonte: Goalkicker.com](backlog/todo/fonte-goalkicker.md)**: PDFs técnicos gratuitos de alta qualidade, um por linguagem/tecnologia (JavaScript, Python, Git, SQL, etc.). PDFs diretos e bem estruturados. Alto valor para o corpus técnico.
-- **[Nova Fonte: FreeTechBooks.com](backlog/todo/fonte-freetechbooks.md)**: Agregador de livros técnicos gratuitos em várias categorias. Descoberto como item `source_blocked` da EbookFoundation — homepage apontada como item, mas o site em si é candidato a fonte.
-- **[Nova Fonte: InfoQ Minibooks](backlog/todo/fonte-infoq.md)**: Minibooks técnicos gratuitos da InfoQ — arquitetura, microserviços, DevOps, linguagens. Conteúdo de alta qualidade editorial.
-- **[Nova Fonte: InTech Open](backlog/todo/fonte-intechopen.md)**: Editora acadêmica open access. Livros de Computer and Information Science disponíveis gratuitamente em `intechopen.com/subjects/9`.
-- **[Nova Fonte: JSBooks](backlog/todo/fonte-jsbooks.md)**: Diretório curado de ebooks gratuitos de JavaScript. Repo GitHub `revolunet/JSBooks` com links diretos para PDFs.
+1. **[Retenção de Backup no S3 Quebrada](backlog/todo/retencao-backup-s3-quebrada.md)** — alto valor, baixo esforço. Corrigir o acúmulo silencioso e o erro recorrente do Coolify.
+2. **[Bugs de API, filtros e rotas](backlog/todo/maior-site-livros/_plano.md#-tech-debt--bugs-priorizar)** — alto valor, esforço baixo–médio. Corrigir Category PUT, filtros de Book, rota ambígua e identidade operacional do importer.
+3. **[Limpeza de Duplicatas no Catálogo](backlog/todo/limpeza-duplicatas-catalogo.md)** — alto valor, esforço médio. Melhora busca, SEO e analytics e prepara o catálogo para embeddings.
+4. **[SEO v1](backlog/todo/seo-v1/_plano.md)** — alto valor, esforço baixo–médio. Atacar CTR, metadados curtos e schema completo nas PDPs.
+5. **[Busca textual: FTS + fuzzy](backlog/todo/busca-e-recomendacao-sharebook.md)** — alto valor, esforço médio. Centralizar disponibilidade e melhorar relevância antes de introduzir vetores.
+6. **[Painel de Jobs](backlog/todo/painel-de-jobs.md)** — alto valor, esforço médio. Tornar falhas, atrasos e fluxo de filas visíveis e acionáveis.
+7. **[Expansão curada do acervo](backlog/todo/maior-site-livros/_plano.md)** — alto valor, esforço médio contínuo. Priorizar fontes simples e editoriais antes das fontes incertas:
+   1. [Goalkicker](backlog/todo/fonte-goalkicker.md), [JSBooks](backlog/todo/fonte-jsbooks.md) e [dBooks](backlog/todo/fonte-dbooks.md).
+   2. [InTech Open](backlog/todo/fonte-intechopen.md) e [InfoQ Minibooks](backlog/todo/fonte-infoq.md).
+   3. [FreeTechBooks](backlog/todo/fonte-freetechbooks.md) e o bloco de [novas sources revelado pelo conceptf1](backlog/todo/nova-source-conceptf1-blogspot.md).
+8. **[Dependências e Segurança](backlog/todo/seguranca-e-vulnerabilidades.md)** — alto valor, alto esforço. Modernizar incrementalmente, sem salto cego de major.
+9. **[Search Console Access](backlog/todo/search-console-access.md)** — valor médio, esforço baixo–médio. Melhorar a qualidade das decisões de SEO.
+10. **[Pipeline de Capas: S3 + CDN](backlog/todo/pipeline-capas-s3-cdn.md)** — alto valor, alto esforço. Os quick wins já reduziram a urgência da migração completa.
+11. **[Reformulação da Home](backlog/todo/reformulacao-home.md)** — valor médio, esforço médio. Evoluir curadoria e ranking depois de busca e dados.
+12. **[Lista de Desejos — Doação Reversa](backlog/todo/lista-de-desejos.md)** — valor potencialmente alto, esforço alto. Validar demanda antes de construir o MVP.
+13. **[Recomendações vetoriais](backlog/todo/busca-e-recomendacao-sharebook.md#fase-3--recomendações-na-pdp-com-embeddings--pgvector)** — valor médio, esforço alto. Só iniciar após busca textual e limpeza do catálogo.
+14. **[Social e Reviews](backlog/todo/social/_plano.md) + [Pegasus](backlog/todo/pegasus-engagement-engine.md)** — valor ainda incerto, esforço muito alto. Adiar até existir sinal real de retenção.
+15. **[Cloudflare: CDN + DDoS](backlog/todo/cloudflare-cdn-ddos-protection.md)** — baixo valor na escala atual, esforço médio. Retomar quando tráfego ou risco justificarem.
+16. **[Unificação Scripts + Renomeação do Corpus](backlog/todo/unificacao-scripts-memory-durable.md)** — baixo valor para produto, esforço médio. Não competir com trabalho de produto e operação.
 
-### 🚧 Bloqueados — dependem do retorno do OpenClaw
+### 🚫 Fora da fila — OpenClaw dormente
 
 O container OpenClaw foi desprovisionado em 2026-08-16. Os itens abaixo ficaram sem objeto: não são prioridade, não são candidatos a execução, e só voltam à fila se o habitat for reprovisionado. Ver `skills/runtime/openclaw.md`.
 
