@@ -6,12 +6,12 @@ model = "GPT-5"
 runtime = "windows-local"
 skills_used = ["runtime/windows-local", "engineering/backend", "engineering/frontend", "infra/coolify-vps", "browser:control-in-app-browser", "doctrine/harness-governance"]
 skills_missed = []
-skills_updated = ["engineering/frontend"]
-facts_changed = ["A rota exata / voltou a ter cache do HTML SSR completo por 30 minutos.", "O container sharebook-frontend em produção passou a executar o commit 2ba162cc3f0b202809316dd4e7e67e8fb660aace.", "Depois do aquecimento do cache, o healthcheck da home deixou de repetir as chamadas às APIs de dados."]
-open_loops = ["Avaliar futuramente a troca do healthcheck da raiz por um endpoint leve dedicado; ficou fora do escopo desta sessão por decisão do Raffa."]
+skills_updated = ["engineering/frontend", "doctrine/harness-governance"]
+facts_changed = ["A rota exata / voltou a ter cache do HTML SSR completo por 30 minutos.", "O container sharebook-frontend em produção passou a executar o commit 2ba162cc3f0b202809316dd4e7e67e8fb660aace.", "Depois do aquecimento do cache, o healthcheck da home deixou de repetir as chamadas às APIs de dados.", "O Dream passou a executar o Harness Doctor na abertura e no fechamento e a investigar individualmente todos os achados."]
+open_loops = ["Avaliar futuramente a troca do healthcheck da raiz por um endpoint leve dedicado; ficou fora do escopo desta sessão por decisão do Raffa.", "O próximo Dream deve triar profundamente os 54 achados presentes na fotografia estrutural de 22/08/2026."]
 durable_candidates = ["Healthchecks não devem usar uma rota SSR cara quando existe ou puder existir um endpoint leve dedicado."]
 supersedes = []
-evidence = ["sharebook-frontend/server.ts", "sharebook-agent/skills/engineering/frontend.md", "sharebook-frontend@2ba162cc3f0b202809316dd4e7e67e8fb660aace", "sharebook-agent@97cd3d5", "Coolify deployment mumflpx7jtnfejgxbmpmpj4d", "Produção: X-SSR-Cache=HIT e Cache-Control=public,max-age=1800", "Logs de sharebook-api entre 2026-08-22T15:24:06Z e 2026-08-22T15:28:40Z: zero chamadas aos endpoints de dados da home"]
+evidence = ["sharebook-frontend/server.ts", "sharebook-agent/skills/engineering/frontend.md", "sharebook-agent/DREAM.md", "sharebook-agent/skills/doctrine/harness-governance/SKILL.md", "sharebook-frontend@2ba162cc3f0b202809316dd4e7e67e8fb660aace", "sharebook-agent@97cd3d5", "Coolify deployment mumflpx7jtnfejgxbmpmpj4d", "Produção: X-SSR-Cache=HIT e Cache-Control=public,max-age=1800", "Logs de sharebook-api entre 2026-08-22T15:24:06Z e 2026-08-22T15:28:40Z: zero chamadas aos endpoints de dados da home", "Harness Doctor em 22/08/2026: fotografia de abertura com 54 achados"]
 +++
 
 # Cache integral da home após incidente de conexões
@@ -47,6 +47,8 @@ O cache cobre o HTML inteiro, em vez de serviços ou blocos isolados. Isso atend
 Foi adotado single-flight para evitar que uma expiração sob concorrência gere múltiplos renders e uma nova rajada contra o banco. O cache é local ao processo frontend; um novo container começa vazio e faz um único aquecimento.
 
 O contrato foi promovido para `skills/engineering/frontend.md`, junto com a validação obrigatória de build SSR, concorrência, `HIT` e ausência de chamadas a `/api/*` na hidratação.
+
+Depois da criação da memória, uma conversa com o Raffa revelou uma lacuna no próprio ciclo de Dream: o procedimento rodava o Doctor apenas no final e exigia corrigir regressões do ciclo, o que permitia que dívida histórica atravessasse sonhos sucessivos sem investigação. `DREAM.md` e `skills/doctrine/harness-governance/SKILL.md` foram atualizados para tornar obrigatória a fotografia de abertura, a triagem individual e profunda de cada achado, a correção da causa ou o registro de um bloqueio explícito, e uma segunda execução do Doctor no fechamento.
 
 ## Contexto relevante
 

@@ -215,14 +215,28 @@ Ele tem mandato para:
 
 ### Como executar
 1. Ler este `DREAM.md` para realinhar com a doutrina.
-2. Abrir `skills/doctrine/harness-governance/SKILL.md` e gerar o relatório de evidências da safra.
+2. Abrir `skills/doctrine/harness-governance/SKILL.md`, gerar o relatório de evidências da safra e rodar o Harness Doctor para obter a fotografia estrutural de abertura.
 3. Ler as memórias desde o último checkpoint, usando o relatório como mapa, não como veredito.
 4. Observar uso, misses, atualizações, fatos, loops, candidatos e supersessões.
-5. Identificar fricções recorrentes, lacunas e redundâncias.
-6. Atualizar, criar, dividir, fundir ou arquivar Skills conforme necessário.
-7. Rodar o Harness Doctor e corrigir regressões estruturais introduzidas no ciclo.
-8. Registrar na memória episódica o que foi alterado, por quê e com qual evidência.
-9. Atualizar o checkpoint do ciclo.
+5. Triar **cada achado** do Doctor. Para cada um, inspecionar origem, destino, referências, histórico Git e evidência de uso; classificar como regressão, dívida histórica, artefato deliberado ou falso positivo do detector.
+6. Tratar a causa, não apenas silenciar o sintoma: corrigir regressões e dívidas seguras; indexar e documentar artefatos deliberados; corrigir o Doctor e adicionar teste quando for falso positivo; levar ao sonho manual qualquer deleção ou decisão de uso que dependa do Raffa.
+7. Identificar fricções recorrentes, lacunas e redundâncias reveladas tanto pelas memórias quanto pelo Doctor.
+8. Atualizar, criar, dividir, fundir ou arquivar Skills conforme necessário.
+9. Rodar novamente o Harness Doctor. O ciclo não termina com achado acionável sem triagem; bloqueios legítimos devem virar `open_loops` explícitos, com evidência e decisão necessária, nunca apenas uma contagem copiada para a memória.
+10. Registrar na memória episódica o que foi investigado e alterado, por quê, a classificação dos achados e a evidência do Doctor final.
+11. Atualizar o checkpoint do ciclo.
+
+### Profundidade obrigatória sobre o Doctor
+
+O Doctor não é uma verificação cosmética de fim de ciclo. Sua saída é uma fonte de evidência do Dream com o mesmo peso operacional das memórias da safra.
+
+- **Regressão:** corrigir no mesmo ciclo e provar com teste ou nova execução do Doctor.
+- **Dívida histórica:** investigar e corrigir quando a ação for segura; idade não é justificativa para ignorar.
+- **Artefato deliberado:** tornar a intenção observável por indexação ou documentação, para que não permaneça indistinguível de lixo.
+- **Falso positivo:** reparar o detector e cobrir o caso com teste; não ensinar o Dream a conviver com ruído recorrente.
+- **Decisão bloqueada:** escalar ao sonho manual e registrar exatamente qual evidência falta ou qual decisão humana é necessária.
+
+Um Dream não pode declarar o harness saudável apenas porque não criou novos problemas. Ele deve explicar o estado de todos os achados que recebeu e reduzir ativamente a dívida acionável.
 
 ---
 
