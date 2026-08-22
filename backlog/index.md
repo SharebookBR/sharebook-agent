@@ -25,7 +25,8 @@ Revisada em **2026-08-20**, considerando valor atual para produto/operação e e
 13. **[Recomendações vetoriais](backlog/todo/busca-e-recomendacao-sharebook.md#fase-3--recomendações-na-pdp-com-embeddings--pgvector)** — valor médio, esforço alto. Só iniciar após busca textual e limpeza do catálogo.
 14. **[Social e Reviews](backlog/todo/social/_plano.md) + [Pegasus](backlog/todo/pegasus-engagement-engine.md)** — valor ainda incerto, esforço muito alto. Adiar até existir sinal real de retenção.
 15. **[Cloudflare: CDN + DDoS](backlog/todo/cloudflare-cdn-ddos-protection.md)** — baixo valor na escala atual, esforço médio. Retomar quando tráfego ou risco justificarem.
-16. **[Unificação Scripts + Renomeação do Corpus](backlog/todo/unificacao-scripts-memory-durable.md)** — baixo valor para produto, esforço médio. Não competir com trabalho de produto e operação.
+16. **[Aposentadoria completa do facilitador](backlog/todo/aposentadoria-completa-facilitador.md)** — valor baixo após a retirada da experiência visível, esforço médio. Fechar domínio, banco, jobs, contratos e documentação numa rodada própria.
+17. **[Unificação Scripts + Renomeação do Corpus](backlog/todo/unificacao-scripts-memory-durable.md)** — baixo valor para produto, esforço médio. Não competir com trabalho de produto e operação.
 
 ### 🚫 Fora da fila — OpenClaw dormente
 

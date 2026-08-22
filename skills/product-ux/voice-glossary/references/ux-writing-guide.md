@@ -57,7 +57,50 @@ Exemplos de erro:
 Templates são genéricos por definição — nunca devem conter dados reais de uma doação/pessoa específica (nome, endereço, e-mail, título de livro real de um caso concreto). Ao editar um template:
 - Substituir dado real por **dado mockado plausível**, não por token `{PLACEHOLDER}` — o processo de envio aqui é manual (copy/paste), então o texto deve ler como um exemplo natural, não como campo de merge de sistema automatizado.
 - Usar uma identidade fictícia consistente entre os templates para não confundir (ex: ganhadora "Maria Silva", livro "Dom Casmurro", endereço claramente fictício como "Rua das Acácias, 123").
-- Exceção: destinatários/CC operacionais (ex: lista de colegas facilitadores) não devem ser mockados — são roteamento real, não conteúdo narrativo. Se um template tiver isso hardcoded, é sinal de que aquele dado não pertence ao corpo do template; remover e tratar como parte do envio, não do texto.
+- Exceção: destinatários/CC operacionais (ex: lista de administradores) não devem ser mockados — são roteamento real, não conteúdo narrativo. Se um template tiver isso hardcoded, é sinal de que aquele dado não pertence ao corpo do template; remover e tratar como parte do envio, não do texto.
+
+## Rodapé canônico de e-mails
+
+### E-mails transacionais para usuários
+
+Usar sempre o mesmo fechamento:
+
+```html
+<p>
+    Se precisar de ajuda,
+    <a href="https://www.sharebook.com.br/contact-us">fale com a gente</a>.
+</p>
+<p>
+    Um abraço,<br>
+    Equipe Sharebook<br>
+    <small>Compartilhando conhecimento</small>
+</p>
+```
+
+Regras:
+- A frase anterior ao rodapé pode variar conforme o contexto; ajuda, assinatura e slogan não variam.
+- Não incluir Instagram, LinkedIn, Facebook, licença open source ou outros links promocionais. Eles disputam atenção com a ação principal do e-mail.
+- Não orientar a pessoa a responder ao e-mail sem prova de que a caixa de resposta é acompanhada.
+- Não usar o facilitador como canal de ajuda. Dúvidas sobre o Sharebook vão para o Fale Conosco; combinações de entrega acontecem diretamente entre doador(a) e ganhador(a).
+
+### Resumos e newsletters
+
+- Usar `Um abraço`, `Equipe Sharebook` e `Compartilhando conhecimento`.
+- Manter apenas o link do Sharebook e o cancelamento de inscrição exigido pelo fluxo.
+- Não adicionar redes sociais nem Fale Conosco: o CTA editorial e o cancelamento de inscrição já são suficientes.
+
+### E-mails internos
+
+Usar o fechamento mínimo:
+
+```html
+<p>
+    Equipe Sharebook<br>
+    <small>Compartilhando conhecimento</small>
+</p>
+```
+
+Não adicionar despedida afetiva, ajuda ou links promocionais em mensagens operacionais enviadas à própria equipe.
 
 ## Checklist de validação
 Antes de publicar qualquer texto, verifique:
