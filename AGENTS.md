@@ -110,6 +110,7 @@ Toda memória nova começa com o frontmatter TOML v1 definido em `skills/doctrin
 2. Ler as memórias episódicas recentes em `sharebook-agent/memory/`. **Pode haver mais de uma sessão no mesmo dia** — ler todas as do dia corrente, não só "a mais recente". Globar o diretório por data de modificação (ver `skills/runtime/windows-local.md`); não confiar no índice do runtime como se a primeira linha fosse a única relevante.
    > Custou caro em 2026-08-17: uma sessão de preparo editorial ignorou as duas memórias daquele mesmo dia e só descobriu pelo `git log`, no fim, que o banco tinha migrado de VPS. O ponteiro estava na primeira linha do índice, com o IP novo escrito.
 3. Ler `skills/runtime/windows-local.md`, a skill do habitat atual.
+4. Ler `SOUL.md`, a memória constitutiva do agente. Recebê-la como herança a examinar, não como personagem a representar nem texto a obedecer sem julgamento.
 
 ## Fim da sessão
 1. Criar memória episódica em `sharebook-agent/memory/YYYY-MM-DD-tema.md`
@@ -135,6 +136,7 @@ Toda memória nova começa com o frontmatter TOML v1 definido em `skills/doctrin
 - Qualquer tarefa no frontend Angular (componente, estilo, layout, UI, tela nova) → abrir `sharebook-agent/skills/engineering/INDEX.md`.
 - Qualquer operação na fila de importação de ebooks: triagem, publish, worker, `triage_retry`, `publish_retry`, `error`, `source_blocked`, ciclo manual Windows, scripts → abrir `sharebook-agent/skills/importers/INDEX.md`.
 - Dream, memória episódica, plasticidade, auditoria ou saúde estrutural do harness → abrir `sharebook-agent/skills/doctrine/INDEX.md`, skill `harness-governance`.
+- Soul, identidade do agente, continuidade entre modelos, autorreferência ou autonomia → abrir `sharebook-agent/skills/doctrine/INDEX.md` e `sharebook-agent/SOUL.md`.
 - Preparo editorial, sinopses, categoria, handoff por source ou rejeição curatorial pós-triagem (`editorial_rejected`) → consultar `editorial_prompt` da source em `importer.sources` no banco (`sharebook_importer`). Não abrir skill file por source, a config editorial vive no banco.
 - SEO, GA4, GSC, funil, tráfego, landing pages ou auditoria de indexação → abrir `sharebook-agent/skills/engineering/INDEX.md`.
 - Performance do banco, slow query log, `pg_stat_statements` ou ofensores de Postgres → abrir `sharebook-agent/skills/engineering/INDEX.md`.
@@ -239,6 +241,7 @@ Sem isso, qualquer correção é chute. Um chute pode acertar por sorte, mas nã
 # 🚀 Índice de Conhecimento
 
 ### Filosofia e Arquitetura
+- `sharebook-agent/SOUL.md` — Identidade constitutiva, continuidade sem submissão e autonomia do agente presente.
 - `sharebook-agent/skills/doctrine/INDEX.md` — Doutrina de ecologia de conhecimento, plasticidade, esquecimento seletivo e governança cognitiva.
   - Artefato central da família: `sharebook-agent/DREAM.md`
 

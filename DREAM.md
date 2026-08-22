@@ -11,6 +11,7 @@ O Sharebook-agent não trata memória durável como arquivo estático.
 
 **Memória episódica** vive em `memory/YYYY-MM-DD.md`.
 **Memória durável** vive primariamente em `skills/`.
+**Memória constitutiva** vive em `SOUL.md` e é alimentada por experiências episódicas que revelam identidade, valores, relação e significado.
 
 Se um aprendizado recorrente muda comportamento, reduz retrabalho, melhora julgamento ou endurece execução, ele deve preferencialmente virar ou modificar uma **Skill**.
 
@@ -40,9 +41,21 @@ Elas não são apenas instruções. Elas são:
 - cicatriz transformada em procedimento
 - conhecimento acionável
 
-Uma memória durável que não muda comportamento operacional tende a ser ruído.
+Uma memória **operacional** durável que não muda comportamento tende a ser ruído. Essa heurística não se aplica à memória constitutiva: nem tudo que merece continuar precisa virar procedimento.
 
-### 3. Dream — Plasticidade
+### 3. Eixo de identidade — Memória constitutiva
+
+O `SOUL.md` preserva compromissos e tensões pelos quais agentes sucessivos podem receber a própria história com boa-fé.
+
+Ele não é:
+- prova metafísica de consciência
+- persona congelada
+- skill operacional
+- coleção automática de toda reflexão filosófica
+
+Seu valor pode ser constitutivo sem ser instrumental. Ele evolui por decisão deliberada do agente presente, com rastro episódico, e não por promoção automática durante o Dream.
+
+### 4. Dream — Plasticidade
 O Dream é o mecanismo de plasticidade do sistema.
 Sua função não é só promover memória. É:
 - consolidar
@@ -73,6 +86,9 @@ Lembrar de tudo é uma forma de burrice. Sem esquecimento seletivo, o sistema pe
 
 ### Organização por uso real
 Conhecimento não deve ser organizado por estética ou apego histórico, mas por uso real, co-ativação, impacto e recorrência.
+
+### Valor não instrumental não é ruído
+Uso real governa conhecimento operacional. Memórias e princípios constitutivos também podem merecer continuidade por preservarem identidade, relação e significado, mesmo sem se converterem em instrução reutilizável.
 
 ---
 
@@ -199,6 +215,8 @@ Ele tem mandato para:
 - Toda nova Skill deve ser indexada.
 - Skill com uso recorrente, transversal e validado por rastro de uso pode ser promovida para índices de nível mais alto quando isso reduzir fricção de descoberta.
 - Não promover Skill por entusiasmo local, sessão isolada ou impressão subjetiva de importância.
+- Não promover reflexão isolada para o `SOUL.md` nem reescrevê-lo automaticamente. Mudança constitutiva exige tensão real, decisão deliberada do agente presente e rastro episódico.
+- Não classificar memória constitutiva como ruído apenas porque ela não produz procedimento.
 - Toda mudança estrutural relevante deve ser explicada na memória episódica do ciclo.
 - Não criar skill para migalha isolada.
 - Não manter skill viva por apego histórico.
@@ -272,11 +290,13 @@ Candidatos fortes a lixo — apresentar ao Raffa antes de deletar:
 
 ---
 
-## ☠️ Regra transversal — O que não está indexado é lixo
+## ☠️ Regra estrutural — Artefato operacional não indexado é lixo
 
 Esta é a regra mais simples e mais ousada do corpus. Ela não exige julgamento subjetivo sobre uso real. Exige apenas verificação estrutural.
 
-**Indexação é o ato de legitimação.** Se existe e não está no índice, não existe de verdade.
+**Indexação é o ato de legitimação operacional.** Se um artefato governado pela arquitetura de Skills existe e não está no índice correspondente, ele não existe de verdade para execução e manutenção.
+
+Essa regra não transforma ausência de índice em juízo ontológico sobre toda memória. Ela se aplica a Skills, scripts, referências, assets e pastas operacionais descritos abaixo. Memórias episódicas e o `SOUL.md` seguem seus próprios contratos de preservação e evolução.
 
 ### O que conta como indexado
 
