@@ -1,0 +1,89 @@
+# Missão — SMTP próprio com Stalwart
+
+## Objetivo
+
+Avaliar e, se a entregabilidade for comprovada, migrar o envio transacional do Sharebook da Hostinger para um SMTP próprio baseado em Stalwart no Coolify, reduzindo custo recorrente sem perder bounces, supressão ou capacidade de rollback.
+
+## Contexto atual
+
+- Produção usa `smtp.hostinger.com:465` com SSL no plano Business Starter.
+- A Hostinger permite 1.000 mensagens por caixa em uma janela móvel de 24 horas.
+- `EmailSettings__MaxEmailsPerHour=50`, mas o `MailSender` roda a cada 5 minutos e usa divisão inteira (`50 / 12`), resultando nominalmente em 4 envios por ciclo, 48 por hora ou 1.152 por dia.
+- O backoff self-healing atual deve ser preservado: ao receber `Ratelimit`, o worker espera progressivamente 5, 10, 15, 20 e 25 minutos.
+- A VPS atual tem recursos suficientes, as portas de e-mail estão livres e a saída TCP 25 foi validada.
+- O PTR atual da VPS é genérico e precisa ser substituído por um hostname de e-mail com resolução direta e reversa coerentes antes de qualquer envio direto.
+- O backend reutiliza `EmailSettings.HostName`, credenciais e SSL tanto para SMTP quanto para ler bounces por IMAP. Trocar apenas o host SMTP quebraria o processamento atual de bounces.
+
+## Direção recomendada
+
+- Usar Stalwart em um único container no Coolify.
+- Começar somente com envio transacional; sem webmail, POP3, calendários ou colaboração.
+- Manter o limitador do Sharebook inicialmente no ritmo atual e aumentar apenas com evidência de entregabilidade.
+- Não publicar a porta de submissão para a internet se somente os containers do Sharebook precisarem usá-la; conectar pela rede interna do Coolify com autenticação obrigatória.
+- Manter a Hostinger como rollback durante o período de aquecimento e validação.
+
+## Plano de execução
+
+### 1. Pré-flight de infraestrutura
+
+- [ ] Confirmar com a HostGator que o PTR do IP da VPS pode ser alterado para `mail.sharebook.com.br`.
+- [ ] Validar reputação atual do IP em listas de bloqueio relevantes.
+- [ ] Confirmar que a porta TCP 25 de saída continua liberada.
+- [ ] Definir limites de CPU, memória, disco e rotação de logs do container.
+
+### 2. Deploy seguro do Stalwart
+
+- [ ] Criar o serviço pelo template do Coolify com tag de imagem fixada, não `latest`.
+- [ ] Persistir configuração, fila e dados em volumes com backup remoto validado.
+- [ ] Expor o painel administrativo somente por HTTPS via Traefik.
+- [ ] Restringir SMTP de submissão à rede interna ou a origens explicitamente autorizadas.
+- [ ] Provar que o servidor não funciona como open relay.
+
+### 3. DNS e autenticação
+
+- [ ] Criar `A` para `mail.sharebook.com.br` apontando para a VPS.
+- [ ] Configurar PTR com correspondência direta e reversa.
+- [ ] Atualizar o SPF existente sem criar um segundo registro SPF.
+- [ ] Gerar e publicar DKIM de 2.048 bits.
+- [ ] Validar alinhamento DMARC e preservar os demais emissores autorizados do domínio.
+- [ ] Configurar TLS válido para SMTP.
+
+### 4. Bounces e supressão
+
+- [ ] Decidir entre manter a Hostinger para IMAP/bounces ou migrar uma caixa mínima de bounces para o Stalwart.
+- [ ] Se os serviços permanecerem separados, dividir `EmailSettings` em configurações independentes de SMTP e IMAP.
+- [ ] Garantir que bounces assíncronos continuem alimentando `MailBounces` e a lista de supressão.
+- [ ] Validar que destinatários em estado de bounce não voltam a receber tentativas.
+
+### 5. Aquecimento e corte
+
+- [ ] Testar SPF, DKIM, DMARC, TLS, PTR e conteúdo em ferramentas de diagnóstico.
+- [ ] Fazer envios graduais para Gmail, Outlook e outros provedores relevantes.
+- [ ] Medir entrega em caixa de entrada, spam, rejeições temporárias e definitivas.
+- [ ] Manter troca rápida de configuração para retornar à Hostinger durante o período de observação.
+- [ ] Só cancelar o serviço anterior depois de bounces, filas, backups e entregabilidade permanecerem saudáveis.
+
+## Critérios de aceite
+
+- SPF, DKIM e DMARC passam e estão alinhados em mensagens reais.
+- PTR e resolução direta apontam um para o outro.
+- Nenhum teste externo consegue usar o servidor como relay não autenticado.
+- Gmail e Outlook aceitam os envios sem degradação relevante para spam.
+- A fila retenta falhas temporárias sem duplicar mensagens nem gerar tempestade de tentativas.
+- O processamento de bounces e a lista de supressão continuam funcionando.
+- Volumes e configuração têm backup remoto cujo conteúdo foi inspecionado.
+- Existe rollback documentado e testado para o SMTP anterior.
+
+## Fora de escopo
+
+- Webmail e caixas postais para uso humano.
+- Campanhas de marketing ou gestão de contatos.
+- Substituir o rate limit do Sharebook antes de medir a reputação do novo emissor.
+
+## Riscos principais
+
+- IP novo ou com reputação ruim cair em spam mesmo com DNS correto.
+- Configuração incorreta de SPF/DMARC afetar outros emissores do domínio.
+- Open relay causar abuso e bloqueio imediato do IP.
+- Cancelar a Hostinger antes de substituir corretamente o fluxo IMAP de bounces.
+- Tratar aceite SMTP como prova de entrega em caixa de entrada.
