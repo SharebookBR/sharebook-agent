@@ -51,6 +51,20 @@ O Sharebook utiliza Angular 13 Universal + Express (ngExpressEngine) para SSR de
 - **Meta Tags**: Garanta que as meta tags de redes sociais (OpenGraph) sejam renderizadas no servidor para correta indexação.
 - **Moment-timezone**: Cuidado com importações de `moment-timezone` no ambiente Node; prefira importações ES nativas quando possível.
 
+### Cache integral da home — contrato de 30 minutos
+
+A rota exata `/` usa microcache do HTML SSR completo em `server.ts`, com TTL de 30 minutos e armazenamento em escopo de módulo Node.js.
+
+- `MISS`: uma única renderização Angular consulta as APIs e armazena o HTML final.
+- `COALESCED`: acessos simultâneos durante o `MISS` aguardam a mesma Promise; nunca iniciar renders concorrentes para preencher o mesmo cache.
+- `HIT`: enviar o HTML armazenado sem inicializar o Angular SSR. Isso precisa produzir zero chamadas a `/api/*` no servidor.
+- O HTML cacheado deve preservar o `TransferState` da primeira renderização. Assim, um carregamento direto no navegador também hidrata sem repetir chamadas a `/api/*`.
+- Capas em `/Images/*` continuam sendo assets carregados pelo navegador; não confundir esses GETs estáticos com chamadas de dados ou conexões ao Postgres.
+- Não ampliar o cache para outras rotas sem decisão explícita. Páginas privadas, personalizadas e respostas diferentes de HTTP 200 não podem entrar no cache público.
+- Deploy ou restart naturalmente esvazia o cache. Na expiração, o single-flight garante uma única atualização.
+
+Validação mínima após mudança no fluxo: build SSR, rajada concorrente comprovando `1 MISS + N COALESCED`, acesso posterior `HIT` e navegador headless comprovando zero requests para `https://api.sharebook.com.br/api/*` durante a hidratação do `HIT`.
+
 ### SsrCacheService — escopo de módulo, não de classe
 
 **Bug crítico corrigido em 2026-06-11**: O `SsrCacheService` original declarava `private store = new Map()` como propriedade de instância. Angular Universal cria novo contexto de injeção por request → o Map morria a cada requisição → o cache nunca funcionava.
