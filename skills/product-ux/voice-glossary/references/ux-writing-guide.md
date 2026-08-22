@@ -59,6 +59,27 @@ Templates são genéricos por definição — nunca devem conter dados reais de 
 - Usar uma identidade fictícia consistente entre os templates para não confundir (ex: ganhadora "Maria Silva", livro "Dom Casmurro", endereço claramente fictício como "Rua das Acácias, 123").
 - Exceção: destinatários/CC operacionais (ex: lista de administradores) não devem ser mockados — são roteamento real, não conteúdo narrativo. Se um template tiver isso hardcoded, é sinal de que aquele dado não pertence ao corpo do template; remover e tratar como parte do envio, não do texto.
 
+## Corpo e assunto dos e-mails
+
+- O assunto deve antecipar o evento ou a ação principal em sentence case. Evitar prefixos como `Sharebook -`, caixa alta, `URGENTE!` e nomes internos de template.
+- O corpo deve dizer, nesta ordem: o que aconteceu, o que a pessoa precisa fazer e onde fazer.
+- Não atribuir intenção, emoção ou necessidade sem evidência. Exemplos proibidos: afirmar que o doador escolheu quem “mais precisava”, prometer que um encontro será agradável ou dizer que um livro mudará uma vida.
+- Não usar culpa, estigma social ou paternalismo para produzir ação.
+- Emojis não são assinatura de voz. Evitar decoração; usar somente quando acrescentarem significado real.
+- Preservar a mecânica exata do fluxo. Cancelamento, não seleção, atraso e renovação são eventos diferentes e devem receber mensagens diferentes.
+
+### Avisos firmes e consequências
+
+O Sharebook pode e deve ser firme quando existe atraso grave, abandono ou risco para outras pessoas.
+
+Um aviso duro deve conter:
+1. o estado e o tempo de atraso, de forma factual;
+2. a ação disponível, como concluir ou cancelar;
+3. a indicação de que é o último aviso, quando for verdade;
+4. a consequência objetiva da falta de resposta.
+
+Firmeza não autoriza humilhação. Não usar expressões como “pessoas humildes”, abreviações como `vc`, culpa emocional ou julgamento moral. O tom pode ser desconfortável sem deixar de ser simples, respeitoso e confiável.
+
 ## Rodapé canônico de e-mails
 
 ### E-mails transacionais para usuários
