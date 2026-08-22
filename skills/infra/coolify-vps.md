@@ -249,6 +249,31 @@ No script: `\App\Models\S3Storage::find(1)`, montar `config(['filesystems.disks.
 
 Tamanho esperado do tar.gz: ~1,16 GB. Qualquer coisa muito menor é backup vazio.
 
+## Retenção remota — lifecycle do GCS, não dupla retenção no Coolify
+
+Validado em 2026-08-22 no bucket `pegasus-coolify-backups`.
+
+O storage é Google Cloud Storage acessado pelo Coolify pela API S3-compatível. A expiração remota pertence ao próprio bucket: existe uma regra nativa de Object Lifecycle Management com ação `Delete` e condição `Age = 60` dias.
+
+Não manter uma segunda retenção S3 no Coolify para esse bucket. A combinação gerava, a cada execução do `CleanupInstanceStuffsJob`, o erro genérico `One or more S3 backup files could not be deleted`, embora upload, leitura e `DeleteObject` direto funcionassem. A configuração operacional correta é:
+
+- lifecycle do GCS: `Delete` após 60 dias;
+- retenção S3 do backup de banco no Coolify: amount, days e max storage iguais a zero;
+- retenção S3 do backup de volume no Coolify: amount, days e max storage iguais a zero;
+- retenção local continua independente e pode permanecer ativa.
+
+No código do Coolify, três critérios remotos em zero fazem `deleteOldBackupsFromS3()` retornar sem tentar apagar. Isso elimina o ruído sem afetar a geração nem o upload dos backups.
+
+Para confirmar o TTL, não confiar cegamente no parse do AWS SDK: a resposta XML do GCS com `<Condition><Age>60</Age></Condition>` pode aparecer como `Rules: [[]]`, porque `Age` é específico do formato XML do GCS. Ler a resposta XML bruta ou conferir a política diretamente no GCS.
+
+Validação mínima depois de qualquer mudança:
+
+1. confirmar a regra nativa `Delete / Age 60` no bucket;
+2. confirmar os seis critérios remotos do Coolify em zero;
+3. executar `CleanupInstanceStuffsJob` de forma controlada;
+4. comparar o timestamp do último erro antes e depois da execução;
+5. confirmar que os uploads continuam habilitados e que a retenção local não foi alterada.
+
 ## O auto-update do Coolify mata backup em andamento
 
 Descoberto em 20/08/2026, três dias depois da migração.
