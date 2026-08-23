@@ -80,6 +80,24 @@ python .\scripts\infra\vps_ssh.py `
 - Ler `crontab -l`.
 - Verificar scripts operacionais customizados em `/usr/local/bin/`.
 
+## Deploy manual quando o webhook não enfileira
+
+Se o push chegou ao GitHub mas não apareceu em `application_deployment_queues`, enfileirar pelo helper interno do próprio Coolify. Usar sempre o SHA completo de 40 caracteres retornado por `git rev-parse HEAD`:
+
+```bash
+docker exec coolify php artisan tinker --execute='$app=\App\Models\Application::where("name","NOME-DA-APP")->firstOrFail(); $result=queue_application_deployment(application:$app,deployment_uuid:new_public_id(),commit:"SHA-COMPLETO-DE-40-CARACTERES"); echo json_encode($result);'
+```
+
+Não usar SHA curto. O Coolify aceita o valor na fila, mas depois executa `git fetch --depth=1 origin <sha>`; o GitHub não resolve o SHA abreviado como ref remota e o deploy falha com `fatal: couldn't find remote ref` antes do build.
+
+Validar em três camadas:
+
+1. `application_deployment_queues`: `status = finished` para o UUID retornado;
+2. `docker ps`: imagem com o SHA completo esperado e container `healthy`;
+3. estado funcional real: endpoint ou página servindo o contrato novo. Imagem correta sem prova funcional ainda não encerra a publicação.
+
+Enfileirar backend e frontend em sequência quando ambos mudarem, para não disputar CPU de build no mesmo servidor.
+
 ## Containers que merecem atenção
 - `coolify`: aplicação web do painel. Primeiro suspeito em lentidão da interface.
 - `coolify-proxy`: Traefik/proxy reverso. Observar, mas não culpar no escuro.
