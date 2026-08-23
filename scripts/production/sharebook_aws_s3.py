@@ -18,7 +18,7 @@ import re
 import sys
 from pathlib import Path
 
-ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
+ENV_PATH = Path(__file__).resolve().parents[2] / ".env"
 
 
 def load_env() -> dict[str, str]:

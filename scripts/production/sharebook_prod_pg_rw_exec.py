@@ -31,7 +31,7 @@ def req(env: dict[str, str], key: str) -> str:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="Executa SQL RW no Postgres de produção (uso explícito e controlado).")
-    ap.add_argument("--env-file", default="/data/workspace/sharebook-agent/.env")
+    ap.add_argument("--env-file", default=str(Path(__file__).resolve().parents[2] / ".env"))
     src = ap.add_mutually_exclusive_group(required=True)
     src.add_argument("--sql")
     src.add_argument("--sql-file")

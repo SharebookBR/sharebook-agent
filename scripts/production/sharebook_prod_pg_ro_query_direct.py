@@ -80,7 +80,7 @@ def run_with_psycopg(
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="Query read-only direta no Postgres de produção (sem SSH).")
-    ap.add_argument("--env-file", default="/data/workspace/sharebook-agent/.env")
+    ap.add_argument("--env-file", default=str(Path(__file__).resolve().parents[2] / ".env"))
     src = ap.add_mutually_exclusive_group(required=True)
     src.add_argument("--sql")
     src.add_argument("--sql-file")
