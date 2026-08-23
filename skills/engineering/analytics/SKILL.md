@@ -150,20 +150,16 @@ Todos usam `GoogleAnalyticsService.sendEvent` em `src/app/core/services/analytic
 | `amazon_click` | clique no CTA Amazon na página de zero-resultado | `search-results.component.ts` | `book_title` (= search_term, sem slug) | ✅ |
 | `share_modal_open` | clique em "Compartilhar com amigos" na PDP | `details.component.ts` | `book_title`, `book_slug` | ✅ |
 | `social_share` | escolha do canal no modal de compartilhamento | `details.component.ts` | `book_title`, `book_slug`, `method` (canal) | ✅ |
-| `search` | submit da busca (intenção) | `input-search.component.ts` (desktop) + `mais-sheet.component.ts` (mobile) | `search_term` | ✅ |
-| `search` | carregamento da página de resultados (outcome) | `search-results.component.ts` | `search_term`, `results_count` | ✅ |
+| `search` | busca concluída e página de resultados carregada | `search-results.component.ts` | `search_term`, `results_count` | ✅ |
 | `book_request_modal_open` | abriu modal de pedido de livro | `request.component.ts` | `book_id`, `book_title` | ✅ |
 | `book_request_success` | pedido enviado com sucesso | `request.component.ts` | `book_id`, `book_title` | ✅ |
 | `book_request_error` | pedido falhou | `request.component.ts` | `book_id`, `book_title` | ✅ |
 
 **Botões sem evento GA4** (intencional): "Denunciar direitos autorais" e "Editar livro".
 
-**Atenção — busca tem três pontos de disparo:**
-- `InputSearchComponent` (header desktop) → dispara `search` sem `results_count` (marca intenção/submit)
-- `MaisSheetComponent` (bottom sheet mobile) → idem (marca intenção)
-- `search-results.component.ts` (página de resultados) → dispara `search` com `results_count` (marca outcome)
+**Busca tem um único ponto de disparo:** `search-results.component.ts`, depois que a API responde e a lista de resultados disponíveis é formada. Os disparos no header desktop e no bottom sheet mobile foram removidos em 25/06/2026 porque duplicavam a mesma busca. Portanto, `eventCount(search)` representa buscas concluídas, sem precisar dividir o total por dois.
 
-Os dois primeiros registram a intenção; o terceiro registra o resultado (incluindo zero-resultados). Instrumentação dupla é intencional — rastreável no GA4 por contexto.
+`results_count` é enviado, mas ainda não foi registrado como custom metric no GA4. Enquanto isso não acontecer, a Data API não consegue separar buscas com e sem resultado; não inferir zero-resultados pelo termo ou pelo `pagePath`.
 
 **`amazon_click` tem dois contextos distintos:**
 - PDP (`details.component.ts`): envio de `book_title` + `book_slug` — representa "quero comprar este livro específico".
@@ -183,7 +179,7 @@ Parâmetros só ficam disponíveis na Data API após registro em **GA4 Admin →
 | `customEvent:book_title` | `book_title` | `amazon_click`, `ebook_download`, `share_modal_open`, `social_share`, `book_request_*` | 04/06/2026 |
 | `customEvent:book_slug` | `book_slug` | `amazon_click`, `ebook_download`, `share_modal_open`, `social_share` | 04/06/2026 |
 
-**Parâmetros enviados mas NÃO registrados como custom dimension:** `method` (canal do `social_share`), `book_id` (eventos de pedido).
+**Parâmetros enviados mas NÃO registrados:** `method` (canal do `social_share`) e `book_id` (eventos de pedido) como custom dimensions; `results_count` (evento `search`) como custom metric.
 
 **Regra:** ao criar evento novo com parâmetros relevantes, registrar a custom dimension imediatamente — dados não retroagem.
 
@@ -202,9 +198,12 @@ Endpoint: `GET /api/analytics/dashboard` — cache 12h no backend (`IMemoryCache
 - `topBooksByViewsPerWeek`, `topBooksByDownloadsPerWeek` — top 10 por semana
 - `eventSummary` — contagem de todos os eventos rastreados (período completo)
 - `eventSummaryPerWeek` — contagem por semana (filtro de semana client-side)
+- `searchAnalytics` — recorte fixo dos últimos 30 dias (`29daysAgo` até hoje, datas inclusivas): total de buscas, usuários, termos distintos, top 10 termos e divisão por dispositivo
 
 **KPIs:** sessões, downloads, logins, cadastros — filtrados pela semana selecionada.
 **Select de semana:** ISO week internamente, display `YYYY-MM-Wn`. Semana corrente com highlight laranja.
+
+**Seção de busca:** é fixa em 30 dias e deliberadamente independente do select semanal. `DistinctTerms` usa os termos exatamente como foram digitados; diferenças de caixa, acento e typo permanecem separadas para expor o comportamento real da busca.
 
 ### Biblioteca de charts
 
