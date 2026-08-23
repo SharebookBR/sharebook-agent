@@ -210,12 +210,12 @@ Abrimos `Filosofia` seguindo a lógica correta:
 
 ---
 
-## 🐛 Tech Debt / Bugs (priorizar)
+## ✅ Tech Debt / Bugs resolvidos ou reclassificados
 
-- **API Category PUT bug**: endpoint `PUT /api/Category/{id}` retorna `AutoMapperMappingException`. Impede renomear categorias via API. Necessário corrigir mapeamento `Result<Category>` → `Category` no AutoMapper.
-- **API Book filter bug**: endpoint `GET /api/Book` com parâmetros `categoryId`, `title` etc. ignora filtros e retorna lista fixa (15 livros). Isso é comportamento esperado? Se sim, documentar; se não, corrigir.
-- **Ambiguous route**: `GET /api/Category/{id}` conflita com `GET /api/Category/{page}/{items}` causando `AmbiguousMatchException`. Corrigir routing.
-- **Aposentar `position` como referência operacional de item no importer**: `position` não deve mais ser usado para falar, buscar, abrir ou operar itens. A fonte da verdade para identidade do item deve ser apenas `id`. Se `position` continuar existindo internamente para ordenação por source, que seja metadado secundário e nunca identificador visível principal na UI. Impacto esperado: importer, backend e frontend.
+- [x] **API Category PUT corrigido em 2026-08-23**: o controller genérico passou a mapear `result.Value`, preservando mensagens de validação e sucesso. Regressão coberta por testes unitários. Commit: `sharebook-backend@c227dcb`.
+- [x] **Routing de Category desambiguado em 2026-08-23**: a ação `GET {id}` herdada foi suprimida no controller de Category e as rotas receberam constraints explícitas para GUID e inteiros. Os contratos usados pelo frontend permaneceram iguais e foram cobertos por testes de integração. Commit: `sharebook-backend@0ea0548`.
+- [x] **Contrato legado de `GET /api/Book` auditado em 2026-08-23**: o endpoint sem parâmetros retorna deliberadamente a primeira página com 15 livros. O frontend não envia `categoryId`, `title` ou filtros para essa rota; usa `/api/Book/Admin`, `/api/Book/Category...` e `/api/Book/FullSearch...` conforme o caso. Portanto, não havia bug de produto a corrigir.
+- [x] **`position` aposentado como identidade operacional em 2026-05-15**: importer, backend, frontend e skills passaram a usar apenas `id`. Commits de referência: `sharebook-ebook-importer@eca45e8`, `sharebook-backend@9284ef3`, `sharebook-frontend@8f079a1` e `sharebook-agent@626edfe`. Referências restantes vivem somente em logs históricos e não são contrato operacional.
 
 ---
 
