@@ -8,6 +8,7 @@ Conhecimento de produto, voz, interface, layout, catálogo visível e experiênc
 - `./web-design-reviewer/SKILL.md` — Layout, CSS e correções visuais.
 - `./catalog-premium-scan/SKILL.md` — Ritual diário de revisão do catálogo e curadoria premium.
 - `./cover-direction/SKILL.md` — Roleta cromática e prompt canônico de capas a partir da URL do livro.
+- `./winner-selection/SKILL.md` — Triagem anônima, shortlist e escolha de ganhador(a) pela API oficial.
 
 ## Uso
 - Ler quando a tarefa envolver copy, percepção do catálogo, interface, experiência do usuário, leitura editorial de superfície ou direção visual de capas.
