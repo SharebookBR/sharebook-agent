@@ -330,7 +330,7 @@ Exceções existem: WAF agressivo, fluxo assinado, domínio quebrado de forma ú
 
 ### Handlers por família
 
-- **Wikibooks**: `en.wikibooks.org/wiki/X` → REST API `/api/rest_v1/page/pdf/X`
+- **Wikibooks**: `en.wikibooks.org/wiki/X` → REST API `/api/rest_v1/page/pdf/X`. O endpoint pode retornar um PDF com magic bytes válidos que contém apenas a página-raiz/índice, sem os capítulos transcluídos (observado em 2026-08-24: itens 1426 e 1464). No preflight editorial, conferir contagem de páginas e presença real dos capítulos; PDF raso não é obra completa e deve virar `editorial_rejected` com `structurally_incomplete`, nunca publicação.
 - **GitHub raw**: normalizar `github.com/.../raw/{branch}/` → `raw.githubusercontent.com` via `_normalize_github_raw_url()`
 - **GitHub repo raiz**: buscar PDF na última release via `api.github.com/repos/{repo}/releases/latest`
 - **Wayback**: modificador `if_` força entrega do binário sem toolbar HTML
