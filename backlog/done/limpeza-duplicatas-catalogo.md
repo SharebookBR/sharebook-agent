@@ -38,5 +38,5 @@ Durante a auditoria também foram corrigidos dois tipos de colisão de PDF, sem 
 
 ## Pendências separadas
 
-- [Corrigir colisão de slugs dos volumes HPC](../todo/corrigir-colisao-slugs-hpc.md): são livros distintos, não duplicatas.
+- [A colisão de slugs dos volumes HPC foi corrigida](corrigir-colisao-slugs-hpc.md): são livros distintos, não duplicatas.
 - [Dedupe preventivo no importer](../todo/dedupe-preventivo-importer.md): impedir reintrodução sem bloquear exemplares físicos ou edições digitais legítimas.
