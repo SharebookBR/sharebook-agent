@@ -7,7 +7,7 @@
 
 Revisada em **2026-08-24**, considerando valor atual para produto/operação e esforço relativo.
 
-1. **[SEO v1](backlog/todo/seo-v1/_plano.md)** — alto valor, esforço baixo–médio. Atacar CTR, metadados curtos e schema completo nas PDPs.
+1. **[SEO v1 — próxima fatia: meta descriptions das PDPs](backlog/todo/seo-v1/_plano.md)** — alto valor, esforço baixo. Substituir sinopses integrais por resumos programáticos úteis; o épico permanece em um único arquivo e só a fatia atual compete por prioridade.
 2. **[Busca textual: FTS + fuzzy](backlog/todo/busca-e-recomendacao-sharebook.md)** — alto valor, esforço médio. Centralizar disponibilidade e melhorar relevância antes de introduzir vetores.
 3. **[Painel de Jobs](backlog/todo/painel-de-jobs.md)** — alto valor, esforço médio. Tornar falhas, atrasos e fluxo de filas visíveis e acionáveis.
 4. **[Expansão curada do acervo](backlog/todo/maior-site-livros/_plano.md)** — alto valor, esforço médio contínuo. Priorizar fontes simples e editoriais antes das fontes incertas:

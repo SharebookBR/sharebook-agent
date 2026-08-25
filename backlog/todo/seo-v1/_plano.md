@@ -1,148 +1,108 @@
-# 🌐 SEO v1 — Plano Atualizado
+# SEO v1 — épico
 
-> Última revisão: 2026-07-25 — expansão do catálogo, auditoria real de Home/PDP e SEO técnico
+> Última revisão: 24/08/2026 — auditoria do código, banco e HTML SSR de produção
 
-## Descoberta de 25/07/2026 — catálogo como base de conhecimento
+## Objetivo
 
-A expansão com mais de 1.000 livros digitais coincidiu com crescimento orgânico
-para títulos, livros digitais e também intenções amplas como "receber livros
-físicos grátis" e "ganhar livros grátis".
+Transformar o catálogo público do ShareBook em aquisição orgânica sustentável, com páginas tecnicamente corretas, conteúdo útil e decisões mensuradas por dados reais.
 
-Hipótese operacional: cada livro amplia a cobertura temática do domínio por
-meio de título, autoria, sinopse e conceitos extraídos do índice. O pipeline
-editorial de IA deixou de ser apenas melhoria de UX e passou a ser um ativo de
-aquisição orgânica.
+Este arquivo é a única unidade de backlog do épico. As fatias abaixo orientam a execução sem criar um arquivo ou uma entrada no índice para cada microtarefa.
 
-Próximos experimentos:
-- gerar e exibir "Você aprenderá" com 5–8 tópicos reais da obra;
-- persistir tópicos, nível, idioma e pré-requisitos antes de exibi-los;
-- cruzar coortes de publicação, consultas distintas por PDP e tempo até a
-  primeira impressão/clique no GSC;
-- usar o conhecimento estruturado em filtros, recomendações, páginas temáticas
-  e busca semântica.
+## Fotografia atual
 
----
+- 2.225 livros têm PDP pública e slug.
+- 1.073 estão disponíveis; 1.152 PDPs históricas continuam públicas e indexáveis.
+- 2.058 PDPs usam meta description acima de 170 caracteres; 1.933 passam de 300.
+- A sinopse usada como description tem média de 888 e mediana de 865 caracteres.
+- 173 títulos, já com o sufixo `| ShareBook`, passam de 60 caracteres.
+- O sitemap publica 2.278 entradas e contém 17 URLs duplicadas, cobrindo 36 registros.
+- 15 categorias disponíveis têm mais de 24 livros.
+- Os números de impressões, cliques, CTR e indexação do GSC ainda são de junho de 2026; não servem como fotografia atual.
 
-## 📊 Estado atual do catálogo (GSC + banco, jun/2026)
+## Concluído
 
-| Métrica | Valor |
-|---|---|
-| Livros com slug no banco | 2.576 |
-| Páginas indexadas pelo Google | 1.360 |
-| Páginas não indexadas | 375 |
-| Páginas ainda não descobertas | ~841 |
-| Cliques orgânicos (mar–jun/2026) | 384 |
-| Tendência | ↑ crescendo desde abril |
+- SSR real nas rotas públicas, com conteúdo e metadados no HTML inicial.
+- HTTP `404` real para PDP inexistente.
+- Sitemap dinâmico com páginas estáticas, PDPs, categorias e `lastmod`.
+- `robots.txt` público apontando para o sitemap canônico.
+- PDP com title, canonical, Open Graph, Twitter e JSON-LD `Book`.
+- Home e catálogo com links internos para descoberta de PDPs e categorias.
+- Busca interna mostra somente livros disponíveis; PDPs enviadas/recebidas continuam públicas e no sitemap. A decisão que antes estava pendente já foi implementada.
+- Categorias, subcategorias, lista de categorias e novidades digitais usam canonical, Open Graph e Twitter coerentes com a própria URL.
+- Alt da capa da PDP descreve título e autoria: `Capa do livro {título}, de {autor}`.
 
-O spike de indexação aconteceu em ~06/04/2026 — quando o Google processou o bulk import de março (home passou a linkar para livros). Antes: ~300 páginas. Depois: ~1.800.
+## Fatia 1 — Meta descriptions das PDPs — próxima
 
-**Conclusão:** o problema não é mais descoberta/indexação. É qualidade de conteúdo e CTR.
+### Problema
 
----
+A PDP envia a sinopse inteira para `description`, `og:description` e `twitter:description`. Isso não é um resumo: em produção, a mediana é 865 caracteres.
 
-## 🔑 Hipótese dos Keypoints (alta confiança, não validada estatisticamente)
+O Google não define um limite rígido. A solução não deve ser cortar cegamente no caractere 160, e sim gerar uma descrição curta, legível, específica e única com título, autoria, tipo do livro e uma síntese segura da sinopse.
 
-**Observação:** "Como andar no poder sobrenatural de Deus" (Cash Luna) ranqueia top 1 no Google para o termo exato — acima de Sebo Viana e Touché Livros que são e-commerces com domínio velho.
+### Critério de pronto
 
-**O que diferencia essa página:** o Google usou os bullet points dos keypoints como snippet nos resultados:
-> *"Recursos — Entender e operar no sobrenatural; — Promover cura aos enfermos; — Ouvir a voz de Deus..."*
+- PDPs novas e antigas recebem description programática útil e sem corte no meio de palavra.
+- Meta description, Open Graph e Twitter compartilham o mesmo resumo curto.
+- Casos sem sinopse degradam para uma descrição válida baseada em título, autoria e tipo.
+- Testes cobrem sinopse longa, curta, vazia e texto com quebra de linha.
+- HTML SSR de amostras físicas e digitais confirma o contrato.
 
-**Hipótese:** keypoints ricos funcionam como mini índice temático do livro. O Google mapeia subtópicos que aparecem em buscas relacionadas, gerando cobertura semântica ampla com uma única página.
+## Fatia 2 — Breadcrumb e arquitetura de JSON-LD
 
-**Implicação:** livros sem keypoints ou com keypoints genéricos provavelmente não ranqueiam. Livros com keypoints densos e específicos têm vantagem desproporcional.
+Adicionar `BreadcrumbList` à PDP e às páginas de categoria.
 
-**Como validar:**
-```sql
-SELECT
-  COUNT(*) FILTER (WHERE "KeyPoints" IS NOT NULL AND "KeyPoints" != '[]') as com_keypoints,
-  COUNT(*) FILTER (WHERE "KeyPoints" IS NULL OR "KeyPoints" = '[]') as sem_keypoints
-FROM "Books"
-WHERE "Status" = 1; -- Available
-```
-Cruzar com dados de posição no GSC por URL para confirmar correlação.
+Antes disso, o `SeoService` precisa suportar múltiplos dados estruturados ou um `@graph`: hoje `addStructuredData()` usa um ID fixo e a segunda chamada substituiria o schema `Book`.
 
----
+### Critério de pronto
 
-## 🎯 Oportunidades identificadas no GSC (jun/2026)
+- `Book` e `BreadcrumbList` coexistem no HTML SSR.
+- Hierarquia reflete Home → categoria → subcategoria → livro.
+- O markup passa em validação estrutural e usa somente informação visível ou verdadeira.
 
-### Alta impressão, baixo CTR — ganho imediato sem melhorar ranking
+## Fatia 3 — Higiene do sitemap
 
-| Query | Impressões | Cliques | CTR | Ação |
-|---|---|---|---|---|
-| ponto de impacto | 242 | 1 | 0,4% | Meta description + title melhores |
-| arraiá na floresta vem cá | 150 | 1 | 0,7% | Idem |
+O sitemap repete 17 URLs porque 36 registros públicos compartilham slugs. Livros físicos repetidos podem ser legítimos; URL duplicada no sitemap não agrega descoberta.
 
-Essas páginas já aparecem no Google — só não estão sendo clicadas. Meta description controlada pode multiplicar cliques sem mudança de posição.
+### Critério de pronto
 
----
+- Cada `<loc>` aparece uma vez.
+- A correção não apaga, cancela nem funde exemplares físicos.
+- Colisões de slug continuam registradas como diagnóstico de catálogo separado da emissão do sitemap.
 
-## 🛠️ Gaps técnicos da PDP (identificados em análise de página)
+## Fatia 4 — Search Console e mensuração
 
-| Gap | Impacto | Status |
-|---|---|---|
-| `meta description` usa a sinopse inteira | Exemplo auditado tinha 1.373 caracteres; Google trunca ou reescreve | pendente — gerar resumo próprio de ~150–170 caracteres |
-| Schema.org `Book` (JSON-LD) | Rich results: estrelas, autor, tipo — aumenta CTR e confiança | **parcialmente feito** — `addStructuredData` já existe no `getBook()`, mas sem `isbn`, `numberOfPages`, `inLanguage` |
-| Open Graph tags | Preview específico por livro | **feito**, mas `og:description` ainda recebe a sinopse inteira |
-| Alt text da capa | Sinal de imagem desperdiçado (`alt="Book image"` genérico) | pendente |
-| Categoria "Conhecimento & Carreira" em livros religiosos | Sinal temático errado para o Google | editorial — corrigir no banco caso a caso |
+Resolver o acesso programático descrito em [`search-console-access.md`](../search-console-access.md) antes de priorizar por CTR, posição ou indexação.
 
----
+Depois do acesso:
 
-## 📋 Escopo original (revisado)
+- atualizar a fotografia de queries, páginas, cliques, impressões, CTR e posição;
+- cruzar coortes de publicação com tempo até primeira impressão e primeiro clique;
+- medir as mudanças de meta description por grupo de páginas, sem atribuir causalidade cedo demais.
 
-### 1. Sitemap.xml dinâmico — **feito em 25/07/2026**
+## Fatia 5 — Conhecimento estruturado — futura
 
-Inclui páginas estáticas, PDPs, categorias raiz e subcategorias com conteúdo
-publicável. URLs canônicas usam `www`; livros e categorias recebem `lastmod`
-derivado do conteúdo real. Falha de API retorna 503, nunca sitemap parcial.
+Keypoints, idioma, nível, pré-requisitos, ISBN, páginas e gênero não existem hoje no schema de `Books`. Isso não é preenchimento de JSON-LD: exige decisão de produto, persistência e pipeline editorial antes de exposição pública.
 
-### 2. robots.txt — **feito em 25/07/2026**
+Também não presumir que enriquecer o JSON-LD isolado produzirá estrelas ou rich results de livros. O recurso Book Actions do Google depende de feed, identificadores e participação aceita do provedor.
 
-Permite crawl público e aponta para o sitemap canônico. Não usa robots como
-mecanismo de segurança; áreas privadas continuam protegidas por autorização.
+Só iniciar esta fatia quando os dados tiverem fonte confiável e uso além de SEO, como filtros, busca, recomendações ou experiência da PDP.
 
-### 3. Breadcrumb JSON-LD — manter no escopo
-`BreadcrumbList` na PDP aumenta CTR via rich result de navegação.
+## Hipóteses preservadas, ainda não provadas
 
-### 4. Meta description dinâmica — **nova prioridade alta**
-Gerar a partir dos primeiros ~160 chars da sinopse ou dos keypoints. Controla o snippet no Google.
+- Keypoints específicos podem ampliar cobertura semântica e melhorar snippets.
+- O catálogo maior pode aumentar aquisição orgânica por cobertura temática.
+- PDPs históricas podem converter em afiliado Amazon mesmo quando o livro não está disponível para solicitação.
 
-### 5. Schema `Book` completo — **nova prioridade média**
-Expandir o que já existe: adicionar `isbn`, `inLanguage`, `numberOfPages`, `genre`.
+Essas hipóteses dependem de Search Console e coortes; não devem virar implementação por entusiasmo.
 
-### 6. Alt text dinâmico na capa — **nova prioridade baixa**
-Substituir `"Book image"` por `"Capa do livro {título} de {autor}"`.
+## Ordem interna
 
-### 7. Decisão pendente: livros doados devem aparecer na busca interna? — **discussão necessária**
+1. Meta descriptions das PDPs.
+2. Breadcrumb + múltiplos JSON-LD.
+3. Dedupe da emissão do sitemap.
+4. Search Console antes de experimentos orientados por CTR.
+5. Conhecimento estruturado somente após desenho de dados e produto.
 
-Temos 1.647 livros físicos já doados (Received/Sent/Canceled) indexados e com PDP funcionando.
-Agora que as PDPs desses livros têm o botão Amazon, elas têm valor real — não são mais becos sem saída.
+## Posição no backlog
 
-**Trade-offs a discutir:**
-
-| Abordagem | Prós | Contras |
-|---|---|---|
-| Mostrar normalmente na busca | Mais conteúdo indexável, mais chance de rankear, Amazon button ativo | Frustra usuário que quer receber o livro e não pode |
-| Não mostrar na busca interna | Busca interna só retorna livros acionáveis | Perde tráfego orgânico do Google em livros populares já doados |
-| Mostrar por último (depois dos disponíveis) | Equilíbrio — disponíveis primeiro, doados como fallback | Complexidade de ordenação, pode ainda frustrar |
-| Mostrar com label claro "já doado" | Expectativa gerenciada desde a listagem | Usuário pode ignorar e não chegar na PDP |
-
-**Perguntas que precisam de resposta antes de decidir:**
-- Qual % dos cliques orgânicos do Google vai pra livros já doados vs. disponíveis?
-- O usuário que chega via Google numa PDP de livro doado converte no Amazon? (monitorar com GA `amazon_click`)
-- A busca interna e o tráfego orgânico do Google são públicos diferentes com intenções diferentes?
-
-**Hipótese:** busca interna = intenção de receber grátis → filtrar doados faz sentido. Tráfego orgânico Google = descoberta/informação → manter indexado e com Amazon button é o correto. As duas estratégias podem coexistir.
-
----
-
-## 📊 Métricas de sucesso
-
-- Páginas indexadas: de 1.360 → 2.000+
-- CTR médio das PDPs: de ~0,3% → 1%+
-- "ponto de impacto" e "arraiá na floresta": de 1 clique → 5+ cliques/mês
-- Rich results aparecendo para livros com Schema `Book` completo
-
-## 📌 Status
-
-**Atualizado.** Prioridade: **média-alta** — base indexada, hora de otimizar qualidade.
+O épico inteiro não é uma tarefa executável e não deve competir como bloco. A **Fatia 1 — Meta descriptions das PDPs** permanece no topo por combinar impacto amplo, evidência direta e esforço baixo. Quando ela terminar, o índice deve apontar para a próxima fatia real ou retirar SEO da primeira posição, conforme o valor relativo naquele momento.
