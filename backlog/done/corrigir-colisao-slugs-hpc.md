@@ -23,4 +23,3 @@ Em produção, a API resolvia esse slug para o volume 1. Os volumes 2 e 3 não t
 - As três PDPs respondem `200`.
 - A API do slug antigo responde `404`, eliminando a resolução ambígua no backend.
 - Existem zero grupos de slug duplicado entre ebooks ativos.
-
