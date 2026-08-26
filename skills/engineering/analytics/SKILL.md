@@ -20,6 +20,8 @@ Retorna em uma chamada: sessões por semana (13 semanas), downloads, logins, cad
 
 Usar as APIs GA4 ou Search Console diretamente só quando precisar de granularidade, filtros ou métricas que o endpoint não expõe.
 
+Para investigação ad hoc no Search Console — queries, páginas, comparação de períodos, canibalização e oportunidades — ler e usar [`../search-console-explorer/SKILL.md`](../search-console-explorer/SKILL.md). Esta skill de analytics permanece como visão consolidada e ponte entre GA4, GSC e produto.
+
 ## Fonte da verdade
 
 - **GCP Key:** `sharebook-agent/scripts/production/ga4-key.json` (protegida)

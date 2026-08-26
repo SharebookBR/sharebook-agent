@@ -8,6 +8,7 @@ Conhecimento de frontend, backend, banco, analytics e performance técnica.
 - `./postgres-ro/SKILL.md` — Consultas SQL seguras e exploração de dados.
 - `./postgres-slow-query-analysis/SKILL.md` — Diagnóstico e otimização de performance no banco.
 - `./analytics/SKILL.md` — GA4, GSC, SEO e Business Intelligence.
+- `./search-console-explorer/SKILL.md` — investigação ad hoc de aquisição orgânica, comparação de períodos e oportunidades de SEO no GSC.
 
 ## Uso
 - Ler quando a tarefa envolver implementação, diagnóstico técnico, queries, analytics, SEO técnico ou performance.
