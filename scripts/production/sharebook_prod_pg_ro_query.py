@@ -33,15 +33,11 @@ def required(values: dict[str, str], key: str) -> str:
 
 
 def build_psql_command(values: dict[str, str], sql: str, csv: bool, tuples_only: bool) -> str:
-    pg_host = required(values, "SHAREBOOK_PROD_PG_RO_HOST")
-    pg_port = required(values, "SHAREBOOK_PROD_PG_RO_PORT")
     pg_db = required(values, "SHAREBOOK_PROD_PG_RO_DATABASE")
     pg_user = required(values, "SHAREBOOK_PROD_PG_RO_USER")
-    pg_password = required(values, "SHAREBOOK_PROD_PG_RO_PASSWORD")
 
     psql_parts = [
-        "env", f"PGPASSWORD={pg_password}",
-        "psql", "-h", pg_host, "-U", pg_user, "-d", pg_db, "-p", pg_port,
+        "psql", "-U", pg_user, "-d", pg_db,
         "-v", "ON_ERROR_STOP=1",
         "-P", "pager=off",
     ]
@@ -52,7 +48,13 @@ def build_psql_command(values: dict[str, str], sql: str, csv: bool, tuples_only:
         psql_parts += ["-t"]
 
     psql_parts += ["-c", sql]
-    return " ".join(shlex.quote(part) for part in psql_parts)
+    psql_command = " ".join(shlex.quote(part) for part in psql_parts)
+    return (
+        "container=$(docker ps --filter ancestor=postgres:17-alpine "
+        "--format '{{.Names}}' | head -n 1); "
+        "test -n \"$container\" || { echo 'Postgres da aplicação não encontrado.' >&2; exit 1; }; "
+        f"docker exec \"$container\" {psql_command}"
+    )
 
 
 def run_ssh_command(host: str, port: int, user: str, password: str, command: str, timeout: int) -> int:
@@ -92,6 +94,11 @@ def build_parser() -> argparse.ArgumentParser:
         default=str(Path(__file__).resolve().parents[2] / ".env"),
         help="Caminho do .env com credenciais SSH e PG read-only.",
     )
+    parser.add_argument(
+        "--ssh-prefix",
+        default="VPS_HOSTGATOR_SSH",
+        help="Prefixo das credenciais SSH no .env (padrão: VPS_HOSTGATOR_SSH).",
+    )
 
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--sql", help="SQL inline para executar.")
@@ -111,10 +118,11 @@ def main() -> int:
 
     values = parse_env(env_path)
 
-    ssh_host = required(values, "VPS_SSH_HOST")
-    ssh_user = required(values, "VPS_SSH_USER")
-    ssh_password = required(values, "VPS_SSH_PASSWORD")
-    ssh_port = int(values.get("VPS_SSH_PORT", "22"))
+    ssh_prefix = args.ssh_prefix.rstrip("_")
+    ssh_host = required(values, f"{ssh_prefix}_HOST")
+    ssh_user = required(values, f"{ssh_prefix}_USER")
+    ssh_password = required(values, f"{ssh_prefix}_PASSWORD")
+    ssh_port = int(values.get(f"{ssh_prefix}_PORT", "22"))
 
     if args.sql_file:
         sql = Path(args.sql_file).read_text(encoding="utf-8")

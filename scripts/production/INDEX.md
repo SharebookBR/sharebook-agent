@@ -28,7 +28,7 @@ Operações em produção, autenticação, banco e storage.
 - `sharebook_aws_s3.py` — upload, download, list e delete no bucket S3 de ebooks.
 - `sharebook_prod_auth.py` — autenticação para operações em produção.
 - `sharebook_prod_book.py` — find/create/update/delete/approve de livros em produção.
-- `sharebook_prod_pg_ro_query.py` — consulta read-only no Postgres de produção via SSH, usando o `psql` do host remoto.
+- `sharebook_prod_pg_ro_query.py` — fallback read-only via SSH na HostGator; descobre o container Postgres da aplicação e usa seu `psql` interno sem publicar a porta do banco.
 - `sharebook_prod_pg_ro_query_direct.py` — consulta direta read-only no Postgres de produção; usa `psql` quando disponível e recorre a `psycopg2` no Windows.
 - `sharebook_prod_pg_rw_exec.py` — executor SQL write-controlled em produção.
 - `sharebook_refresh_token.py` — refresh de token operacional.

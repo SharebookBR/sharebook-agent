@@ -11,7 +11,7 @@ Executar consulta de banco com segurança e velocidade, sem improvisar SQL de ri
 
 1. Preferir caminho direto (sem SSH):
    - `sharebook-agent/scripts/production/sharebook_prod_pg_ro_query_direct.py`
-2. Se o direto falhar por rede, usar fallback SSH:
+2. Se o direto falhar por rede, usar fallback SSH pela HostGator; o script descobre o container Postgres da aplicação e executa o `psql` interno com o papel read-only, sem publicar a porta do banco:
    - `sharebook-agent/scripts/production/sharebook_prod_pg_ro_query.py`
 3. Começar por descoberta mínima quando houver dúvida de schema:
    - tabelas (`information_schema.tables`)
