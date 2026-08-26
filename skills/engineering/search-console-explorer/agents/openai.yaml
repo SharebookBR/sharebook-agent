@@ -1,4 +1,0 @@
-interface:
-  display_name: "Search Console Explorer"
-  short_description: "Investigue aquisição orgânica do Sharebook"
-  default_prompt: "Use $search-console-explorer para encontrar as oportunidades orgânicas de maior impacto no Sharebook."

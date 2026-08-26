@@ -135,6 +135,7 @@ Toda memória nova começa com o frontmatter TOML v1 definido em `skills/doctrin
 ## Cenários de Roteamento
 - Qualquer tarefa no frontend Angular (componente, estilo, layout, UI, tela nova) → abrir `sharebook-agent/skills/engineering/INDEX.md`.
 - Qualquer operação na fila de importação de ebooks: triagem, publish, worker, `triage_retry`, `publish_retry`, `error`, `source_blocked`, ciclo manual Windows, scripts → abrir `sharebook-agent/skills/importers/INDEX.md`.
+- Cadastro, doação ou importação de livro físico → abrir `sharebook-agent/skills/importers/INDEX.md` e seguir `physical-book-importer/SKILL.md` antes de pesquisar, escrever sinopse ou operar a API de produção.
 - Dream, memória episódica, plasticidade, auditoria ou saúde estrutural do harness → abrir `sharebook-agent/skills/doctrine/INDEX.md`, skill `harness-governance`.
 - Soul, identidade do agente, continuidade entre modelos, autorreferência ou autonomia → abrir `sharebook-agent/skills/doctrine/INDEX.md` e `sharebook-agent/SOUL.md`.
 - Preparo editorial, sinopses, categoria, handoff por source ou rejeição curatorial pós-triagem (`editorial_rejected`) → consultar `editorial_prompt` da source em `importer.sources` no banco (`sharebook_importer`). Não abrir skill file por source, a config editorial vive no banco.
