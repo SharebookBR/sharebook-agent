@@ -1,6 +1,6 @@
 # SEO v1 — épico
 
-> Última revisão: 25/08/2026 — meta descriptions programáticas validadas em produção
+> Última revisão: 25/08/2026 — unicidade dos slugs restaurada e validada em produção
 
 ## Objetivo
 
@@ -10,11 +10,12 @@ Este arquivo é a única unidade de backlog do épico. As fatias abaixo orientam
 
 ## Fotografia atual
 
-- 2.225 livros têm PDP pública e slug.
+- 2.225 livros têm PDP pública e slug único.
 - 1.073 estão disponíveis; 1.152 PDPs históricas continuam públicas e indexáveis.
 - As PDPs agora usam meta descriptions programáticas, preservando título, autoria, tipo e uma síntese curta. Antes da correção, 2.058 passavam de 170 caracteres e 1.933 passavam de 300; a mediana era 865.
 - 173 títulos, já com o sufixo `| ShareBook`, passam de 60 caracteres.
-- O sitemap publica 2.278 entradas e contém 17 URLs duplicadas, cobrindo 36 registros.
+- O sitemap publica 2.278 entradas e todas as `<loc>` são distintas.
+- Os 2.729 registros de `Books` têm slugs distintos e o banco possui índice único preventivo.
 - 15 categorias disponíveis têm mais de 24 livros.
 - Os números de impressões, cliques, CTR e indexação do GSC ainda são de junho de 2026; não servem como fotografia atual.
 
@@ -30,6 +31,7 @@ Este arquivo é a única unidade de backlog do épico. As fatias abaixo orientam
 - Categorias, subcategorias, lista de categorias e novidades digitais usam canonical, Open Graph e Twitter coerentes com a própria URL.
 - Alt da capa da PDP descreve título e autoria: `Capa do livro {título}, de {autor}`.
 - Meta description, Open Graph e Twitter da PDP compartilham um resumo determinístico, normalizado e seguro no limite de palavra. A sinopse visível e o JSON-LD `Book` permanecem integrais.
+- Slugs públicos são únicos no catálogo inteiro. A URL que cada colisão resolvia foi preservada; os demais exemplares receberam o primeiro sufixo `_copyN` disponível.
 
 ## Fatia 1 — Meta descriptions das PDPs — concluída em 25/08/2026
 
@@ -68,15 +70,15 @@ Antes disso, o `SeoService` precisa suportar múltiplos dados estruturados ou um
 - Hierarquia reflete Home → categoria → subcategoria → livro.
 - O markup passa em validação estrutural e usa somente informação visível ou verdadeira.
 
-## Fatia 3 — Restaurar unicidade dos slugs públicos
+## Fatia 3 — Restaurar unicidade dos slugs públicos — concluída em 25/08/2026
 
-Produção tem 2.225 registros no endpoint do sitemap, mas somente 2.206 slugs distintos: 17 slugs estão repetidos em 36 livros.
+Antes da entrega, produção tinha 2.225 registros no endpoint do sitemap, mas somente 2.206 slugs distintos: 17 slugs estavam repetidos em 36 livros.
 
-O problema não nasce no sitemap. `Books.Slug` não possui índice nem constraint única no Postgres, e o `BookMap` define apenas o tamanho máximo. O gerador atual trunca o título em 45 caracteres e procura exemplares pelo título completo, não por colisão do slug final. A rota por slug retorna uma única linha, tornando ambígua a resolução quando há duplicata.
+O problema não nascia no sitemap. `Books.Slug` não possuía índice nem constraint única no Postgres, e o `BookMap` definia apenas o tamanho máximo. O gerador truncava o título em 45 caracteres e procurava exemplares pelo título completo, não por colisão do slug final. A rota por slug retornava uma única linha, tornando ambígua a resolução quando havia duplicata.
 
 Livros e exemplares físicos repetidos continuam legítimos; o que precisa ser único é a chave pública de rota de cada registro.
 
-### Ordem de correção
+### Ordem de correção executada
 
 1. Identificar, em cada grupo, qual registro a URL atual resolve e preservar essa continuidade.
 2. Dar slugs próprios aos demais registros, com redirects apenas onde existir uma URL histórica inequívoca a preservar.
@@ -92,6 +94,16 @@ Livros e exemplares físicos repetidos continuam legítimos; o que precisa ser �
 - A geração cria slugs distintos mesmo para títulos longos com os mesmos 45 caracteres iniciais e em criações concorrentes.
 - A correção não apaga, cancela nem funde exemplares físicos.
 - Cada `<loc>` aparece uma vez no sitemap como consequência do dado íntegro.
+
+### Entrega
+
+- Inventário encontrou 41 grupos duplicados no catálogo inteiro: 87 registros envolvidos e 46 slugs a corrigir. Os 17 grupos visíveis no sitemap eram apenas a parcela pública do problema.
+- A migration preservou em cada grupo o registro que a rota já resolvia e atribuiu aos demais o primeiro slug livre no padrão existente: base, `_copy1`, `_copy2` etc.
+- Novos livros calculam colisão pelo slug final, inclusive quando títulos diferentes truncam para os mesmos 45 caracteres.
+- Corridas de criação são contidas pelo índice único `UX_Books_Slug`; a tentativa perdedora recalcula o próximo `_copyN` e repete a persistência.
+- Edição de título não altera mais a URL pública do livro.
+- Commit backend `0b86ee7284ebe272c67a1235e093d49fcbab0653`; deployment Coolify `q5tx8gmbq0aybbyyscckiwoz`, imagem exata saudável.
+- Produção validada: 2.729 livros / 2.729 slugs distintos, zero sufixos GUID, maior slug com 51 caracteres, 2.225 slugs distintos no endpoint do sitemap e 2.278 `<loc>` distintas no XML.
 
 ## Fatia 4 — Search Console e mensuração
 
@@ -123,10 +135,10 @@ Essas hipóteses dependem de Search Console e coortes; não devem virar implemen
 
 1. Meta descriptions das PDPs. **Concluída.**
 2. Breadcrumb + múltiplos JSON-LD. **Próxima dentro do épico.**
-3. Restaurar unicidade dos slugs públicos; dedupe do sitemap sozinho não é solução.
+3. Restaurar unicidade dos slugs públicos. **Concluída.**
 4. Search Console antes de experimentos orientados por CTR.
 5. Conhecimento estruturado somente após desenho de dados e produto.
 
 ## Posição no backlog
 
-O épico inteiro não é uma tarefa executável e não deve competir como bloco. Com a fatia de meta descriptions concluída, SEO saiu do topo: breadcrumb + múltiplos JSON-LD não supera o valor imediato da busca textual, do Painel de Jobs e do crescimento curado do catálogo. O índice aponta para a próxima fatia real, mas na posição compatível com seu valor relativo.
+O épico inteiro não é uma tarefa executável e não deve competir como bloco. Com meta descriptions e unicidade de slugs concluídas, SEO continua fora do topo: breadcrumb + múltiplos JSON-LD não supera o valor imediato da busca textual, do Painel de Jobs e do crescimento curado do catálogo. O índice aponta para a próxima fatia real, mas na posição compatível com seu valor relativo.

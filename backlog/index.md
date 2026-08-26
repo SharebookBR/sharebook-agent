@@ -5,7 +5,7 @@
 
 ### 🎯 Ordem de prioridade
 
-Revisada em **2026-08-25**, após a entrega das meta descriptions programáticas das PDPs.
+Revisada em **2026-08-25**, após a entrega das meta descriptions programáticas e da unicidade dos slugs públicos.
 
 1. **[Busca textual: FTS + fuzzy](backlog/todo/busca-e-recomendacao-sharebook.md)** — alto valor, esforço médio. Centralizar disponibilidade e melhorar relevância antes de introduzir vetores.
 2. **[Painel de Jobs](backlog/todo/painel-de-jobs.md)** — alto valor, esforço médio. Tornar falhas, atrasos e fluxo de filas visíveis e acionáveis.
