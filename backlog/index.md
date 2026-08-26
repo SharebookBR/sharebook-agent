@@ -5,18 +5,18 @@
 
 ### 🎯 Ordem de prioridade
 
-Revisada em **2026-08-24**, considerando valor atual para produto/operação e esforço relativo.
+Revisada em **2026-08-25**, após a entrega das meta descriptions programáticas das PDPs.
 
-1. **[SEO v1 — próxima fatia: meta descriptions das PDPs](backlog/todo/seo-v1/_plano.md)** — alto valor, esforço baixo. Substituir sinopses integrais por resumos programáticos úteis; o épico permanece em um único arquivo e só a fatia atual compete por prioridade.
-2. **[Busca textual: FTS + fuzzy](backlog/todo/busca-e-recomendacao-sharebook.md)** — alto valor, esforço médio. Centralizar disponibilidade e melhorar relevância antes de introduzir vetores.
-3. **[Painel de Jobs](backlog/todo/painel-de-jobs.md)** — alto valor, esforço médio. Tornar falhas, atrasos e fluxo de filas visíveis e acionáveis.
-4. **[Expansão curada do acervo](backlog/todo/maior-site-livros/_plano.md)** — alto valor, esforço médio contínuo. Priorizar fontes simples e editoriais antes das fontes incertas:
+1. **[Busca textual: FTS + fuzzy](backlog/todo/busca-e-recomendacao-sharebook.md)** — alto valor, esforço médio. Centralizar disponibilidade e melhorar relevância antes de introduzir vetores.
+2. **[Painel de Jobs](backlog/todo/painel-de-jobs.md)** — alto valor, esforço médio. Tornar falhas, atrasos e fluxo de filas visíveis e acionáveis.
+3. **[Expansão curada do acervo](backlog/todo/maior-site-livros/_plano.md)** — alto valor, esforço médio contínuo. Priorizar fontes simples e editoriais antes das fontes incertas:
    1. [Goalkicker](backlog/todo/fonte-goalkicker.md), [JSBooks](backlog/todo/fonte-jsbooks.md) e [dBooks](backlog/todo/fonte-dbooks.md).
    2. [InTech Open](backlog/todo/fonte-intechopen.md) e [InfoQ Minibooks](backlog/todo/fonte-infoq.md).
    3. [FreeTechBooks](backlog/todo/fonte-freetechbooks.md) e o bloco de [novas sources revelado pelo conceptf1](backlog/todo/nova-source-conceptf1-blogspot.md).
-5. **[Dependências e Segurança](backlog/todo/seguranca-e-vulnerabilidades.md)** — alto valor, alto esforço. Modernizar incrementalmente, sem salto cego de major.
-6. **[Dedupe preventivo no importer](backlog/todo/dedupe-preventivo-importer.md)** — valor médio–alto, esforço médio. Impedir nova duplicata digital sem bloquear exemplares físicos ou edições legítimas.
-7. **[Search Console Access](backlog/todo/search-console-access.md)** — valor médio, esforço baixo–médio. Melhorar a qualidade das decisões de SEO.
+4. **[Dependências e Segurança](backlog/todo/seguranca-e-vulnerabilidades.md)** — alto valor, alto esforço. Modernizar incrementalmente, sem salto cego de major.
+5. **[Dedupe preventivo no importer](backlog/todo/dedupe-preventivo-importer.md)** — valor médio–alto, esforço médio. Impedir nova duplicata digital sem bloquear exemplares físicos ou edições legítimas.
+6. **[Search Console Access](backlog/todo/search-console-access.md)** — valor médio, esforço baixo–médio. Melhorar a qualidade das decisões de SEO e medir a nova geração de descriptions.
+7. **[SEO v1 — próxima fatia: breadcrumb + múltiplos JSON-LD](backlog/todo/seo-v1/_plano.md)** — valor médio, esforço baixo–médio. Fazer `Book` e `BreadcrumbList` coexistirem no SSR sem recolocar o épico inteiro no topo.
 8. **[Pipeline de Capas: S3 + CDN](backlog/todo/pipeline-capas-s3-cdn.md)** — alto valor, alto esforço. Os quick wins já reduziram a urgência da migração completa.
 9. **[Reformulação da Home](backlog/todo/reformulacao-home.md)** — valor médio, esforço médio. Evoluir curadoria e ranking depois de busca e dados.
 10. **[Lista de Desejos — Doação Reversa](backlog/todo/lista-de-desejos.md)** — valor potencialmente alto, esforço alto. Validar demanda antes de construir o MVP.
