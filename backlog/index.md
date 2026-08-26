@@ -14,18 +14,19 @@ Revisada em **2026-08-25**, após a entrega das meta descriptions programáticas
    2. [InTech Open](backlog/todo/fonte-intechopen.md) e [InfoQ Minibooks](backlog/todo/fonte-infoq.md).
    3. [FreeTechBooks](backlog/todo/fonte-freetechbooks.md) e o bloco de [novas sources revelado pelo conceptf1](backlog/todo/nova-source-conceptf1-blogspot.md).
 4. **[Dependências e Segurança](backlog/todo/seguranca-e-vulnerabilidades.md)** — alto valor, alto esforço. Modernizar incrementalmente, sem salto cego de major.
-5. **[Dedupe preventivo no importer](backlog/todo/dedupe-preventivo-importer.md)** — valor médio–alto, esforço médio. Impedir nova duplicata digital sem bloquear exemplares físicos ou edições legítimas.
-6. **[Search Console Access](backlog/todo/search-console-access.md)** — valor médio, esforço baixo–médio. Melhorar a qualidade das decisões de SEO e medir a nova geração de descriptions.
-7. **[SEO v1 — próxima fatia: breadcrumb + múltiplos JSON-LD](backlog/todo/seo-v1/_plano.md)** — valor médio, esforço baixo–médio. Fazer `Book` e `BreadcrumbList` coexistirem no SSR sem recolocar o épico inteiro no topo.
-8. **[Pipeline de Capas: S3 + CDN](backlog/todo/pipeline-capas-s3-cdn.md)** — alto valor, alto esforço. Os quick wins já reduziram a urgência da migração completa.
-9. **[Reformulação da Home](backlog/todo/reformulacao-home.md)** — valor médio, esforço médio. Evoluir curadoria e ranking depois de busca e dados.
-10. **[Lista de Desejos — Doação Reversa](backlog/todo/lista-de-desejos.md)** — valor potencialmente alto, esforço alto. Validar demanda antes de construir o MVP.
-11. **[Recomendações vetoriais](backlog/todo/busca-e-recomendacao-sharebook.md#fase-3--recomendações-na-pdp-com-embeddings--pgvector)** — valor médio, esforço alto. Só iniciar após busca textual e limpeza do catálogo.
-12. **[Social e Reviews](backlog/todo/social/_plano.md) + [Pegasus](backlog/todo/pegasus-engagement-engine.md)** — valor ainda incerto, esforço muito alto. Adiar até existir sinal real de retenção.
-13. **[Cloudflare: CDN + DDoS](backlog/todo/cloudflare-cdn-ddos-protection.md)** — baixo valor na escala atual, esforço médio. Retomar quando tráfego ou risco justificarem.
-14. **[Aposentadoria completa do facilitador](backlog/todo/aposentadoria-completa-facilitador.md)** — valor baixo após a retirada da experiência visível, esforço médio. Fechar domínio, banco, jobs, contratos e documentação numa rodada própria.
-15. **[Unificação Scripts + Renomeação do Corpus](backlog/todo/unificacao-scripts-memory-durable.md)** — baixo valor para produto, esforço médio. Não competir com trabalho de produto e operação.
-16. **[SMTP próprio com Stalwart](backlog/todo/smtp-proprio-stalwart.md)** — economia potencial, esforço e risco operacional médios. Retomar quando o custo do provedor justificar PTR próprio, aquecimento de reputação e desacoplamento SMTP/IMAP dos bounces.
+5. **[Recuperar a suíte de testes do frontend](backlog/todo/recuperar-suite-testes-frontend.md)** — valor médio–alto, esforço ainda incerto. Corrigir as causas-raiz das 47 falhas sem transformar cada cascata em item separado.
+6. **[Dedupe preventivo no importer](backlog/todo/dedupe-preventivo-importer.md)** — valor médio–alto, esforço médio. Impedir nova duplicata digital sem bloquear exemplares físicos ou edições legítimas.
+7. **[Search Console Access](backlog/todo/search-console-access.md)** — valor médio, esforço baixo–médio. Melhorar a qualidade das decisões de SEO e medir a nova geração de descriptions.
+8. **[SEO v1 — próxima fatia: breadcrumb + múltiplos JSON-LD](backlog/todo/seo-v1/_plano.md)** — valor médio, esforço baixo–médio. Fazer `Book` e `BreadcrumbList` coexistirem no SSR sem recolocar o épico inteiro no topo.
+9. **[Pipeline de Capas: S3 + CDN](backlog/todo/pipeline-capas-s3-cdn.md)** — alto valor, alto esforço. Os quick wins já reduziram a urgência da migração completa.
+10. **[Reformulação da Home](backlog/todo/reformulacao-home.md)** — valor médio, esforço médio. Evoluir curadoria e ranking depois de busca e dados.
+11. **[Lista de Desejos — Doação Reversa](backlog/todo/lista-de-desejos.md)** — valor potencialmente alto, esforço alto. Validar demanda antes de construir o MVP.
+12. **[Recomendações vetoriais](backlog/todo/busca-e-recomendacao-sharebook.md#fase-3--recomendações-na-pdp-com-embeddings--pgvector)** — valor médio, esforço alto. Só iniciar após busca textual e limpeza do catálogo.
+13. **[Social e Reviews](backlog/todo/social/_plano.md) + [Pegasus](backlog/todo/pegasus-engagement-engine.md)** — valor ainda incerto, esforço muito alto. Adiar até existir sinal real de retenção.
+14. **[Cloudflare: CDN + DDoS](backlog/todo/cloudflare-cdn-ddos-protection.md)** — baixo valor na escala atual, esforço médio. Retomar quando tráfego ou risco justificarem.
+15. **[Aposentadoria completa do facilitador](backlog/todo/aposentadoria-completa-facilitador.md)** — valor baixo após a retirada da experiência visível, esforço médio. Fechar domínio, banco, jobs, contratos e documentação numa rodada própria.
+16. **[Unificação Scripts + Renomeação do Corpus](backlog/todo/unificacao-scripts-memory-durable.md)** — baixo valor para produto, esforço médio. Não competir com trabalho de produto e operação.
+17. **[SMTP próprio com Stalwart](backlog/todo/smtp-proprio-stalwart.md)** — economia potencial, esforço e risco operacional médios. Retomar quando o custo do provedor justificar PTR próprio, aquecimento de reputação e desacoplamento SMTP/IMAP dos bounces.
 
 ### 🚫 Fora da fila — OpenClaw dormente
 
