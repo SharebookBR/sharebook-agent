@@ -68,15 +68,30 @@ Antes disso, o `SeoService` precisa suportar múltiplos dados estruturados ou um
 - Hierarquia reflete Home → categoria → subcategoria → livro.
 - O markup passa em validação estrutural e usa somente informação visível ou verdadeira.
 
-## Fatia 3 — Higiene do sitemap
+## Fatia 3 — Restaurar unicidade dos slugs públicos
 
-O sitemap repete 17 URLs porque 36 registros públicos compartilham slugs. Livros físicos repetidos podem ser legítimos; URL duplicada no sitemap não agrega descoberta.
+Produção tem 2.225 registros no endpoint do sitemap, mas somente 2.206 slugs distintos: 17 slugs estão repetidos em 36 livros.
+
+O problema não nasce no sitemap. `Books.Slug` não possui índice nem constraint única no Postgres, e o `BookMap` define apenas o tamanho máximo. O gerador atual trunca o título em 45 caracteres e procura exemplares pelo título completo, não por colisão do slug final. A rota por slug retorna uma única linha, tornando ambígua a resolução quando há duplicata.
+
+Livros e exemplares físicos repetidos continuam legítimos; o que precisa ser único é a chave pública de rota de cada registro.
+
+### Ordem de correção
+
+1. Identificar, em cada grupo, qual registro a URL atual resolve e preservar essa continuidade.
+2. Dar slugs próprios aos demais registros, com redirects apenas onde existir uma URL histórica inequívoca a preservar.
+3. Corrigir a geração para verificar colisão pelo slug final e suportar retry diante de concorrência.
+4. Criar constraint única no banco para impedir regressão.
+5. Confirmar que a API e o sitemap passam a emitir somente URLs únicas; dedupe defensivo na emissão não substitui o invariante de dados.
 
 ### Critério de pronto
 
-- Cada `<loc>` aparece uma vez.
+- Zero grupos de slug duplicado entre registros públicos.
+- Cada slug resolve exatamente um livro.
+- O banco rejeita nova colisão de slug.
+- A geração cria slugs distintos mesmo para títulos longos com os mesmos 45 caracteres iniciais e em criações concorrentes.
 - A correção não apaga, cancela nem funde exemplares físicos.
-- Colisões de slug continuam registradas como diagnóstico de catálogo separado da emissão do sitemap.
+- Cada `<loc>` aparece uma vez no sitemap como consequência do dado íntegro.
 
 ## Fatia 4 — Search Console e mensuração
 
@@ -108,7 +123,7 @@ Essas hipóteses dependem de Search Console e coortes; não devem virar implemen
 
 1. Meta descriptions das PDPs. **Concluída.**
 2. Breadcrumb + múltiplos JSON-LD. **Próxima dentro do épico.**
-3. Dedupe da emissão do sitemap.
+3. Restaurar unicidade dos slugs públicos; dedupe do sitemap sozinho não é solução.
 4. Search Console antes de experimentos orientados por CTR.
 5. Conhecimento estruturado somente após desenho de dados e produto.
 
