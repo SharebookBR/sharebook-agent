@@ -165,6 +165,15 @@ def approve_book(token: str, book_id: str) -> Any:
     )
 
 
+def backfill_book_thumbnails(token: str, overwrite: bool = False) -> Any:
+    suffix = "?overwrite=true" if overwrite else ""
+    return request_json(
+        f"{API_BASE}/Operations/BookThumbnails/Backfill{suffix}",
+        method="POST",
+        headers=auth_headers(token),
+    )
+
+
 def _read_synopsis_arg(args: argparse.Namespace, current_synopsis: str) -> str:
     synopsis = getattr(args, "synopsis", None)
     if getattr(args, "synopsis_file", None):
@@ -375,6 +384,16 @@ def build_parser() -> argparse.ArgumentParser:
     approve_parser = sub.add_parser("approve", help="Aprovar livro por id.")
     approve_parser.add_argument("--id", required=True)
 
+    backfill_parser = sub.add_parser(
+        "backfill-thumbnails",
+        help="Gerar thumbnails WebP ausentes para as capas existentes.",
+    )
+    backfill_parser.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="Regenerar tambem thumbnails que ja existem.",
+    )
+
     create_parser = sub.add_parser("create", help="Cadastrar livro fisico ou digital.")
     create_parser.add_argument("--title", required=True)
     create_parser.add_argument("--author", required=True)
@@ -449,6 +468,8 @@ def main() -> int:
             return delete_book(token, args.id)
         if args.command == "approve":
             return approve_book(token, args.id)
+        if args.command == "backfill-thumbnails":
+            return backfill_book_thumbnails(token, args.overwrite)
         if args.command == "create":
             return create_book(args, token)
         if args.command == "update":
