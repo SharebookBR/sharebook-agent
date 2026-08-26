@@ -1,11 +1,11 @@
 ---
 name: analytics
-description: Especialista em Google Analytics 4 para o Sharebook. Use para extrair métricas de tráfego, investigar comportamento em PDPs, comparar `page_view` vs `ebook_download`, inferir busca interna pela rota `/buscar/:criteria`, cruzar `buscar -> PDP` por `pageReferrer`, analisar origem orgânica (`sessionSourceMedium`, `sessionDefaultChannelGroup`) e explicar limites do GA4 versus tracing/observability.
+description: Especialista em Google Analytics 4 e Google Search Console para o Sharebook. Use para extrair métricas de tráfego e busca orgânica, investigar comportamento em PDPs, comparar `page_view` vs `ebook_download`, inferir busca interna, cruzar queries com landing pages e explicar limites do GA4 versus GSC e tracing/observability.
 ---
 
 # Sharebook Analytics Expert
 
-Operar o GA4 como ferramenta de investigação, não como painel decorativo.
+Operar GA4 e Search Console como ferramentas de investigação, não como painel decorativo.
 
 ## Atalho operacional — endpoint consolidado
 
@@ -16,15 +16,20 @@ GET https://api.sharebook.com.br/api/analytics/dashboard
 Authorization: Bearer <SHAREBOOK_PROD_ACCESS_TOKEN>
 ```
 
-Retorna em uma chamada: sessões por semana (13 semanas), downloads, logins, cadastros, top 10 livros por views e downloads (acumulado e por semana). Cache de 12h no backend — resposta instantânea na maioria das vezes.
+Retorna em uma chamada: sessões por semana (13 semanas), downloads, logins, cadastros, top 10 livros por views e downloads (acumulado e por semana), busca interna e visão orgânica do Search Console. Cache de 12h no backend — resposta instantânea na maioria das vezes.
 
-Usar a API GA4 diretamente só quando precisar de granularidade, filtros ou métricas que o endpoint não expõe.
+Usar as APIs GA4 ou Search Console diretamente só quando precisar de granularidade, filtros ou métricas que o endpoint não expõe.
 
 ## Fonte da verdade
 
 - **GCP Key:** `sharebook-agent/scripts/production/ga4-key.json` (protegida)
 - **Property ID:** `386966473`
-- **API:** Google Analytics Data API v1beta
+- **GA4 API:** Google Analytics Data API v1beta
+- **Search Console property:** `sc-domain:sharebook.com.br`
+- **Search Console API:** Search Analytics REST API, escopo readonly
+- **Service account:** `sharebook-analytics-agent@sharebook-a174c.iam.gserviceaccount.com`
+
+As duas integrações reutilizam a mesma credencial via `GA4__CredentialsBase64`. Não criar um segundo segredo para o Search Console.
 
 ## Perguntas que esta skill deve responder bem
 
@@ -199,11 +204,16 @@ Endpoint: `GET /api/analytics/dashboard` — cache 12h no backend (`IMemoryCache
 - `eventSummary` — contagem de todos os eventos rastreados (período completo)
 - `eventSummaryPerWeek` — contagem por semana (filtro de semana client-side)
 - `searchAnalytics` — recorte fixo dos últimos 30 dias (`29daysAgo` até hoje, datas inclusivas): total de buscas, usuários, termos distintos, top 10 termos e divisão por dispositivo
+- `searchConsole` — disponibilidade, datas, KPIs do período atual e anterior, série diária e até cinco oportunidades por query + landing page
 
 **KPIs:** sessões, downloads, logins, cadastros — filtrados pela semana selecionada.
 **Select de semana:** ISO week internamente, display `YYYY-MM-Wn`. Semana corrente com highlight laranja.
 
 **Seção de busca:** é fixa em 30 dias e deliberadamente independente do select semanal. `DistinctTerms` usa os termos exatamente como foram digitados; diferenças de caixa, acento e typo permanecem separadas para expor o comportamento real da busca.
+
+**Seção Google orgânico:** usa os últimos 28 dias consolidados, encerrando 3 dias antes de hoje, e compara com os 28 dias anteriores. Exibe cliques, impressões, CTR, posição média, série diária e até cinco oportunidades. Uma oportunidade precisa ter pelo menos 20 impressões, CTR abaixo de 5% e posição média até 20; a ordenação estima cliques perdidos até o limiar de 5%.
+
+O Search Console é buscado em paralelo ao GA4. Se falhar, `searchConsole.available` fica falso e o restante do dashboard continua disponível. Não remover esse isolamento ao evoluir a integração.
 
 ### Biblioteca de charts
 
