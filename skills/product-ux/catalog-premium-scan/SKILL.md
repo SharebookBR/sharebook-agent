@@ -25,17 +25,18 @@ Entregar, em uma resposta só:
 
 ## Workflow
 
-1. Ler primeiro a skill `sharebook-agent/skills/engineering/postgres-ro/SKILL.md`.
-2. Consultar o importer (`importer.queue_items`) para descobrir os `sharebook_book_id` marcados como `done` na janela pedida.
-3. Consultar o banco read-only de produção do Sharebook para buscar, para esses IDs:
+1. Ler primeiro `../catalog-strategy/SKILL.md` para alinhar o julgamento editorial.
+2. Ler a skill `sharebook-agent/skills/engineering/postgres-ro/SKILL.md`.
+3. Consultar o importer (`importer.queue_items`) para descobrir os `sharebook_book_id` marcados como `done` na janela pedida.
+4. Consultar o banco read-only de produção do Sharebook para buscar, para esses IDs:
    - título
    - autor
    - data/hora de criação
    - categoria folha
    - categoria pai
-4. Ordenar por data/hora de criação em ordem decrescente.
-5. Montar a tabela.
-6. Ler a lista com critério editorial e destacar os premiums.
+5. Ordenar por data/hora de criação em ordem decrescente.
+6. Montar a tabela.
+7. Ler a lista com os critérios da estratégia do catálogo e destacar os premiums.
 
 ## Janela padrão
 

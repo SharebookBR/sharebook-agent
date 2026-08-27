@@ -144,6 +144,7 @@ Toda memória nova começa com o frontmatter TOML v1 definido em `skills/doctrin
 - Gestão de categorias, taxonomia, migração de leaf category ou revisão de hierarquia → abrir `sharebook-agent/skills/importers/INDEX.md`.
 - Produção de PDFs, manuscritos, capas autorais ou artefatos editoriais (escrever obra nova) → abrir `sharebook-agent/skills/importers/INDEX.md`.
 - Gerar, trocar ou dirigir a capa de um livro já existente no catálogo (roleta de estilos) → abrir `sharebook-agent/skills/product-ux/INDEX.md`, skill `cover-direction`.
+- Estratégia do acervo, priorização de títulos ou sources, criação de categoria por intenção editorial, público prioritário ou qualidade percebida do catálogo → abrir `sharebook-agent/skills/product-ux/INDEX.md`, skill `catalog-strategy`.
 - Escolher ganhador(a) de uma doação, triar solicitações ou montar shortlist de interessados → abrir `sharebook-agent/skills/product-ux/INDEX.md`, skill `winner-selection`.
 - Diagnóstico de incidente, erro em produção ou "onde está o log de X" → abrir `sharebook-agent/skills/engineering/backend.md`, seção "Onde estão os logs".
 

@@ -13,4 +13,5 @@ Fluxos de ingestão, triagem, preparo editorial e publicação no catálogo.
 ## Uso
 
 - Ler quando a tarefa envolver fila, triagem, preparo editorial, publicação, categorias ou produção de ativos do catálogo.
+- Quando a tarefa também decidir quais títulos, sources ou categorias merecem prioridade, ler antes `../product-ux/catalog-strategy/SKILL.md`.
 - Para qualquer coisa relacionada à fila de importação de ebooks: abrir `./ebook-importer/SKILL.md` — ela contém tudo.
