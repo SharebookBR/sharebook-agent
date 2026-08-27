@@ -5,34 +5,26 @@
 
 ### 🎯 Ordem de prioridade
 
-Revisada em **2026-08-26**, após a integração do Search Console ao painel de analytics.
+Revisada em **2026-08-27**, após a revisão crítica dos itens já entregues, da dívida de testes e da capacidade atual do importer.
 
 1. **[Busca textual: FTS + fuzzy](backlog/todo/busca-e-recomendacao-sharebook.md)** — alto valor, esforço médio. Centralizar disponibilidade e melhorar relevância antes de introduzir vetores.
-2. **[Painel de Jobs](backlog/todo/painel-de-jobs.md)** — alto valor, esforço médio. Tornar falhas, atrasos e fluxo de filas visíveis e acionáveis.
-3. **[Expansão curada do acervo](backlog/todo/maior-site-livros/_plano.md)** — alto valor, esforço médio contínuo. Priorizar fontes simples e editoriais antes das fontes incertas:
-   1. [Goalkicker](backlog/todo/fonte-goalkicker.md), [JSBooks](backlog/todo/fonte-jsbooks.md) e [dBooks](backlog/todo/fonte-dbooks.md).
-   2. [InTech Open](backlog/todo/fonte-intechopen.md) e [InfoQ Minibooks](backlog/todo/fonte-infoq.md).
-   3. [FreeTechBooks](backlog/todo/fonte-freetechbooks.md) e o bloco de [novas sources revelado pelo conceptf1](backlog/todo/nova-source-conceptf1-blogspot.md).
+2. **[Tornar a busca encontrável no mobile](backlog/todo/busca-encontravel-mobile.md)** — alto valor, esforço baixo–médio. Discutir o desenho antes de implementar; a busca não pode continuar escondida, especialmente para visitantes deslogados.
+3. **[Recuperar e tornar útil a suíte de testes do frontend](backlog/todo/recuperar-suite-testes-frontend.md)** — alto valor, esforço médio. Corrigir as causas-raiz, remover sem apego testes que não protegem valor e fazer a suíte bloquear o pipeline quando houver regressão real.
 4. **[Dependências e Segurança](backlog/todo/seguranca-e-vulnerabilidades.md)** — alto valor, alto esforço. Modernizar incrementalmente, sem salto cego de major.
-5. **[Recuperar a suíte de testes do frontend](backlog/todo/recuperar-suite-testes-frontend.md)** — valor médio–alto, esforço ainda incerto. Corrigir as causas-raiz das 47 falhas sem transformar cada cascata em item separado.
-6. **[Dedupe preventivo no importer](backlog/todo/dedupe-preventivo-importer.md)** — valor médio–alto, esforço médio. Impedir nova duplicata digital sem bloquear exemplares físicos ou edições legítimas.
-7. **[SEO v1 — próxima fatia: breadcrumb + múltiplos JSON-LD](backlog/todo/seo-v1/_plano.md)** — valor médio, esforço baixo–médio. Fazer `Book` e `BreadcrumbList` coexistirem no SSR; é o último item executável da SEO v1.
-8. **[Pipeline de Capas: S3 + CDN](backlog/todo/pipeline-capas-s3-cdn.md)** — alto valor, alto esforço. Os quick wins já reduziram a urgência da migração completa.
-9. **[Reformulação da Home](backlog/todo/reformulacao-home.md)** — valor médio, esforço médio. Evoluir curadoria e ranking depois de busca e dados.
-10. **[Lista de Desejos — Doação Reversa](backlog/todo/lista-de-desejos.md)** — valor potencialmente alto, esforço alto. Validar demanda antes de construir o MVP.
-11. **[Recomendações vetoriais](backlog/todo/busca-e-recomendacao-sharebook.md#fase-3--recomendações-na-pdp-com-embeddings--pgvector)** — valor médio, esforço alto. Só iniciar após busca textual e limpeza do catálogo.
-12. **[Social e Reviews](backlog/todo/social/_plano.md) + [Pegasus](backlog/todo/pegasus-engagement-engine.md)** — valor ainda incerto, esforço muito alto. Adiar até existir sinal real de retenção.
-13. **[Cloudflare: CDN + DDoS](backlog/todo/cloudflare-cdn-ddos-protection.md)** — baixo valor na escala atual, esforço médio. Retomar quando tráfego ou risco justificarem.
-14. **[Aposentadoria completa do facilitador](backlog/todo/aposentadoria-completa-facilitador.md)** — valor baixo após a retirada da experiência visível, esforço médio. Fechar domínio, banco, jobs, contratos e documentação numa rodada própria.
-15. **[Unificação Scripts + Renomeação do Corpus](backlog/todo/unificacao-scripts-memory-durable.md)** — baixo valor para produto, esforço médio. Não competir com trabalho de produto e operação.
-16. **[SMTP próprio com Stalwart](backlog/todo/smtp-proprio-stalwart.md)** — economia potencial, esforço e risco operacional médios. Retomar quando o custo do provedor justificar PTR próprio, aquecimento de reputação e desacoplamento SMTP/IMAP dos bounces.
+5. **[Dedupe preventivo no importer](backlog/todo/dedupe-preventivo-importer.md)** — valor médio–alto, esforço médio. Impedir nova duplicata digital sem bloquear exemplares físicos ou edições legítimas.
+6. **[SEO v1 — próxima fatia: breadcrumb + múltiplos JSON-LD](backlog/todo/seo-v1/_plano.md)** — valor médio, esforço baixo–médio. Fazer `Book` e `BreadcrumbList` coexistirem no SSR; é o último item executável da SEO v1.
+7. **[Painel de Jobs v2](backlog/todo/painel-de-jobs.md)** — valor médio, esforço médio. A v1 já está publicada; falta calcular saúde, expor histórico paginado e distinguir melhor quem enfileira de quem consome.
+8. **[Lista de Desejos — Doação Reversa](backlog/todo/lista-de-desejos.md)** — valor potencialmente alto, esforço alto. Validar demanda antes de construir o MVP.
+9. **[Recomendações vetoriais](backlog/todo/busca-e-recomendacao-sharebook.md#fase-3--recomendações-na-pdp-com-embeddings--pgvector)** — valor médio, esforço alto. Só iniciar após busca textual e limpeza do catálogo.
+10. **[Home v2 — curadoria e ranking](backlog/todo/home-v2-curadoria-ranking.md)** — valor médio, esforço médio. A reformulação estrutural está concluída; evoluir apenas com dados e hipóteses claras de descoberta.
+11. **[Social e Reviews](backlog/todo/social/_plano.md) + [Pegasus](backlog/todo/pegasus-engagement-engine.md)** — valor ainda incerto, esforço muito alto. Adiar até existir sinal real de retenção.
+12. **[Expansão de sources do acervo](backlog/todo/maior-site-livros/_plano.md)** — valor baixo no momento, esforço contínuo. O marco de 1.000 ebooks foi superado e a fila ativa já sustenta meses de processamento deliberadamente lento.
+13. **[Capas v2 — S3 + CDN](backlog/todo/pipeline-capas-s3-cdn.md)** — valor baixo na escala atual, esforço alto. As thumbnails locais reduziram em 94,8% o peso das capas da home; retomar storage externo quando escala, custo ou operação justificarem.
+14. **[Cloudflare: CDN + DDoS](backlog/todo/cloudflare-cdn-ddos-protection.md)** — baixo valor na escala atual, esforço médio. Retomar quando tráfego ou risco justificarem.
+15. **[Aposentadoria completa do facilitador](backlog/todo/aposentadoria-completa-facilitador.md)** — valor baixo após a retirada da experiência visível, esforço médio. Fechar domínio, banco, jobs, contratos e documentação numa rodada própria.
+16. **[Unificação Scripts + Renomeação do Corpus](backlog/todo/unificacao-scripts-memory-durable.md)** — baixo valor para produto, esforço médio. Não competir com trabalho de produto e operação.
+17. **[SMTP próprio com Stalwart](backlog/todo/smtp-proprio-stalwart.md)** — economia potencial, esforço e risco operacional médios. Retomar quando o custo do provedor justificar PTR próprio, aquecimento de reputação e desacoplamento SMTP/IMAP dos bounces.
 
-### 🚫 Fora da fila — OpenClaw dormente
-
-O container OpenClaw foi desprovisionado em 2026-08-16. Os itens abaixo ficaram sem objeto: não são prioridade, não são candidatos a execução, e só voltam à fila se o habitat for reprovisionado. Ver `skills/runtime/openclaw.md`.
-
-- **[Canal Claude ↔ OpenClaw](backlog/todo/canal-claude-openclaw.md)**: Canal peer-to-peer assimétrico entre os dois agentes via MCP + PostgreSQL. Pressupõe dois agentes vivos — hoje existe um só.
-- **[OpenAI Codex — Dreno OAuth](backlog/todo/openai-codex-oauth-drain.md)**: Dreno de limites OpenAI no agente `mini`, que vivia no container. Sem agente, sem cron job e sem dreno.
 
 ---
 Para detalhes de execução de cada item, consulte o arquivo correspondente na pasta `todo/`.

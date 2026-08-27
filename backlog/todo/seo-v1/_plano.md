@@ -147,4 +147,4 @@ Essas hipóteses dependem de Search Console e coortes; não devem virar implemen
 
 ## Posição no backlog
 
-O épico inteiro não é uma tarefa executável e não deve competir como bloco. Com meta descriptions, unicidade de slugs e Search Console concluídos, breadcrumb + múltiplos JSON-LD é a única fatia executável restante da SEO v1. Ela não supera o valor imediato da busca textual, do Painel de Jobs e do crescimento curado do catálogo; o índice a mantém na posição compatível com seu valor relativo.
+O épico inteiro não é uma tarefa executável e não deve competir como bloco. Com meta descriptions, unicidade de slugs e Search Console concluídos, breadcrumb + múltiplos JSON-LD é a única fatia executável restante da SEO v1. O índice geral é a fonte de verdade para sua prioridade relativa; expansão de sources e Painel de Jobs v2 não devem ser promovidos por referências históricas deste plano.

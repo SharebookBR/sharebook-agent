@@ -14,7 +14,8 @@ Ser "o maior" aqui não significa despejar PDF aos montes. Significa construir o
 - 02 reorganizar categorias e subcatorias ........................... ok
 - 03 missão "mínimo 5 livros pra cada categoria" .................... ok
 - 04 paginação na tela "admin livros" ............................... ok
-- 05 fazer a curadoria de elite e cadastrar 1000 livros! ............ wip
+- 05 fazer a curadoria de elite e superar 1000 livros ............... ok
+- 05 contínuo: processar com qualidade a fila ativa ................. wip
 - 06 feature de tags ................................................ `backlog/todo/maior-site-livros/etapa-06-tags.md`
 ## Ideias features
 - PDP: navegar por categoria ......................................... ok
@@ -43,9 +44,14 @@ Ser "o maior" aqui não significa despejar PDF aos montes. Significa construir o
 ## 📦 Etapa 05 — Acervo
 
 ### Objetivo
-- Alcançar **1000 livros digitais**
-- Cadastrar 10 livros por dia.
-- Em 3 meses batemos essa meta!
+- O marco de **1.000 livros digitais** foi superado em produção em 2026-08-26.
+- Processar a fila ativa com curadoria e ritmo deliberadamente lento.
+- Preservar qualidade editorial, categoria, capa e sinopse acima de volume diário.
+- Adicionar novas sources somente quando a capacidade de processamento ou a diversidade do acervo justificarem.
+
+### Estado operacional — 2026-08-27
+
+A fila ativa já sustenta meses de trabalho no ritmo escolhido. Por isso, expansão de sources é baixa prioridade neste momento. A estratégia não é interromper o crescimento; é evitar ampliar inventário pendente sem necessidade enquanto o importer processa o material existente.
 - Fazer o usuário pensar: "esse acervo foi montado por alguém com gosto", não "jogaram tudo aqui".
 
 ### Estratégia
@@ -146,9 +152,8 @@ Abrimos `Filosofia` seguindo a lógica correta:
 
 ### Ajuste no Mailling
 - Temos um email semanal de livros digitais.
-- Cadastrando 10 livros por dia, dá 70 por semana.
-- O email ficaria horroroso. Precisamos de uma forma de listar apenas 5 aleatórios.
-- Já ajustamos essa parte. DONE!
+- O mailing já foi limitado a 5 livros aleatórios para não crescer junto com o volume de publicação.
+- Ajuste concluído.
 
 ### Features
 - [x] Home aberta
@@ -199,7 +204,7 @@ Abrimos `Filosofia` seguindo a lógica correta:
 ### Atual
 - Download livre
 
-### Futuro (com 1000 livros)
+### Futuro (com catálogo acima de 1000 livros)
 - Login progressivo (soft gate)
 - Consistência da experiência entre livros físicos e digitais.
 

@@ -1,11 +1,22 @@
-# Missão — Painel de Jobs
+# Missão — Painel de Jobs v2
+
+## Base entregue
+
+A v1 está publicada em `/admin/jobs` e já oferece:
+
+- resumo de jobs cadastrados, ativos, inativos e com histórico;
+- última execução do `JobExecutor`;
+- periodicidade, horário, última execução, duração e último detalhe por job;
+- tela administrativa somente leitura.
+
+Essa base é útil e está concluída. O item permanece no backlog porque os critérios abaixo são evolução v2, não porque o painel esteja ausente.
 
 ## Objetivo
 Evoluir a monitoria e o diagnóstico dos jobs do Sharebook (Hangfire/Background Jobs), tornando a saúde da operação visível e acionável.
 
 ## Detalhes Técnicos
 
-### Painel de Jobs (v2)
+### Saúde calculada
 - Adicionar status calculado por job (`Saudável`, `Atrasado`, `Com erro`, `Inativo`) com base no intervalo esperado e na última execução registrada.
 
 ### Histórico
