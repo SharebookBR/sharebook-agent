@@ -1,4 +1,24 @@
-# Pipeline de capas: S3 + CDN + variantes otimizadas
+# Pipeline de capas: thumbnails locais agora; S3 + CDN depois
+
+## Decisao de escopo — 2026-08-26
+
+A entrega foi dividida em duas fases para capturar primeiro o maior ganho com a menor complexidade:
+
+- **V1 local (implementada):** preservar a capa original e gerar uma miniatura WebP para cards no filesystem atual.
+- **V2 (backlog):** migrar originais e variantes para S3 + CDN quando escala, custo ou operacao justificarem.
+
+Convencao da V1:
+
+```text
+Images/Books/o-mar-de-monstros.png
+Images/Books/Thumbs/o-mar-de-monstros.webp
+```
+
+A miniatura cabe em `360 x 540`, preserva a proporcao original, nunca amplia imagens pequenas, nao recorta nem adiciona padding e recebe sharpen sutil depois do redimensionamento. A codificacao inicial e WebP lossy, qualidade 78.
+
+Home, busca, categorias e dashboard do importador recebem `thumbnailUrl`, com fallback para a capa original. A busca permanece com ate 100 resultados e a primeira pagina de categoria sobe de 24 para 100 livros; assim o ganho de peso nao reduz a superficie de descoberta nem o conteudo SSR.
+
+Validacao local com a transformacao exata sobre 53 capas da home dinamica: **42,75 MB de originais para 1,59 MB de miniaturas**, reducao de **96,3%**, mediana de **22,2 KB** e maior arquivo de **75,2 KB**.
 
 ## Problema
 
@@ -122,7 +142,28 @@ Resultado validado em produção em 2026-07-20:
 - cache legado de capas configurado por 24 horas; benefício secundário porque as prateleiras variam, mas reaproveitável entre home, busca, categorias e PDP;
 - prioridade explícita da primeira capa mantida pendente: aplicar somente após confirmar que uma capa, e não o hero, é o elemento de LCP.
 
-### Etapa 2 — Storage e geração de variantes
+### V1 — thumbnails locais
+
+- [x] Gerar WebP no cadastro e na troca de capa.
+- [x] Preservar proporcao, impedir upscale e aplicar sharpen sutil.
+- [x] Expor `thumbnailUrl` sem alterar o schema do banco.
+- [x] Usar thumbnail em home, busca, categorias e dashboard do importador, com fallback.
+- [x] Criar backfill idempotente, retomavel e em lotes.
+- [x] Aumentar categorias para 100 itens e manter busca em 100.
+- [x] Publicar backend e executar o backfill das capas existentes.
+- [x] Publicar frontend e validar o contrato e as imagens em producao.
+
+Resultado em producao em 2026-08-26:
+
+- backend `1c92ebd` e frontend `404e5d2` saudaveis no Coolify;
+- `2.811` thumbnails criados em `59` lotes, de `1.073.790.124` bytes de origem para `79.585.048` bytes em WebP;
+- `91` arquivos legados reportados sem sobrescrita ambigua: pares com o mesmo nome-base e extensoes diferentes, mais um PDF orfao na pasta de capas;
+- fallback para a capa original preserva os poucos registros afetados ate a higienizacao do legado;
+- amostra dinamica da home em producao: `47` capas unicas, de `26,27 MiB` para `1,36 MiB`, reducao de `94,8%`;
+- SSR validado emitindo URLs em `/Images/Books/Thumbs/*.webp` na home e em categorias;
+- thumbnail publico validado com `Content-Type: image/webp` e `Cache-Control: public, max-age=86400`.
+
+### V2 — Storage e geração de variantes em S3 + CDN
 
 - [ ] Criar bucket exclusivo de capas com bloqueio de acesso público.
 - [ ] Criar distribuição CloudFront com Origin Access Control.

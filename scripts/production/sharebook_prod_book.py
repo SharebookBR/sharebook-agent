@@ -165,13 +165,46 @@ def approve_book(token: str, book_id: str) -> Any:
     )
 
 
-def backfill_book_thumbnails(token: str, overwrite: bool = False) -> Any:
-    suffix = "?overwrite=true" if overwrite else ""
-    return request_json(
-        f"{API_BASE}/Operations/BookThumbnails/Backfill{suffix}",
-        method="POST",
-        headers=auth_headers(token),
-    )
+def backfill_book_thumbnails(
+    token: str,
+    overwrite: bool = False,
+    batch_size: int = 50,
+) -> dict[str, Any]:
+    offset = 0
+    summary: dict[str, Any] = {
+        "sourceFiles": 0,
+        "processed": 0,
+        "created": 0,
+        "updated": 0,
+        "skipped": 0,
+        "sourceBytes": 0,
+        "thumbnailBytes": 0,
+        "failures": [],
+        "batches": 0,
+    }
+
+    while True:
+        payload = request_json(
+            f"{API_BASE}/Operations/BookThumbnails/Backfill"
+            f"?overwrite={'true' if overwrite else 'false'}"
+            f"&offset={offset}&batchSize={batch_size}",
+            method="POST",
+            headers=auth_headers(token),
+        )
+
+        summary["sourceFiles"] = payload.get("sourceFiles", summary["sourceFiles"])
+        for key in ("processed", "created", "updated", "skipped", "sourceBytes", "thumbnailBytes"):
+            summary[key] += payload.get(key, 0)
+        summary["failures"].extend(payload.get("failures") or [])
+        summary["batches"] += 1
+
+        if not payload.get("hasMore"):
+            return summary
+
+        next_offset = payload.get("nextOffset")
+        if not isinstance(next_offset, int) or next_offset <= offset:
+            raise SystemExit("Backfill interrompido: a API nao informou um proximo lote valido.")
+        offset = next_offset
 
 
 def _read_synopsis_arg(args: argparse.Namespace, current_synopsis: str) -> str:
@@ -393,6 +426,14 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Regenerar tambem thumbnails que ja existem.",
     )
+    backfill_parser.add_argument(
+        "--batch-size",
+        type=int,
+        default=50,
+        choices=range(1, 201),
+        metavar="1..200",
+        help="Quantidade de capas processadas por chamada (padrao: 50).",
+    )
 
     create_parser = sub.add_parser("create", help="Cadastrar livro fisico ou digital.")
     create_parser.add_argument("--title", required=True)
@@ -469,7 +510,7 @@ def main() -> int:
         if args.command == "approve":
             return approve_book(token, args.id)
         if args.command == "backfill-thumbnails":
-            return backfill_book_thumbnails(token, args.overwrite)
+            return backfill_book_thumbnails(token, args.overwrite, args.batch_size)
         if args.command == "create":
             return create_book(args, token)
         if args.command == "update":
