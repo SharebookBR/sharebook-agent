@@ -1,12 +1,12 @@
-# SEO v1 — épico
+# SEO v1 — concluída
 
-> Última revisão: 26/08/2026 — Search Console integrado ao painel administrativo
+> Encerrada em 27/08/2026 após revisão crítica das pendências restantes.
 
 ## Objetivo
 
 Transformar o catálogo público do ShareBook em aquisição orgânica sustentável, com páginas tecnicamente corretas, conteúdo útil e decisões mensuradas por dados reais.
 
-Este arquivo é a única unidade de backlog do épico. As fatias abaixo orientam a execução sem criar um arquivo ou uma entrada no índice para cada microtarefa.
+Este arquivo preserva o histórico das fatias entregues no épico.
 
 ## Fotografia atual
 
@@ -16,7 +16,7 @@ Este arquivo é a única unidade de backlog do épico. As fatias abaixo orientam
 - 173 títulos, já com o sufixo `| ShareBook`, passam de 60 caracteres.
 - O sitemap publica 2.278 entradas e todas as `<loc>` são distintas.
 - Os 2.729 registros de `Books` têm slugs distintos e o banco possui índice único preventivo.
-- 15 categorias disponíveis têm mais de 24 livros.
+- 2 categorias-folha disponíveis têm mais de 100 livros, com apenas 6 livros além da primeira página; paginação indexável não justificou prioridade própria.
 - Nos 28 dias consolidados de 27/07/2026 a 23/08/2026, o GSC registrou 1.167 cliques, 24.103 impressões, CTR de 4,84% e posição média de 9,11.
 - Nos 28 dias anteriores, de 29/06/2026 a 26/07/2026, foram 981 cliques, 25.785 impressões, CTR de 3,80% e posição média de 5,04.
 
@@ -60,19 +60,7 @@ O Google não define um limite rígido. A solução não deve ser cortar cegamen
 - Deployment Coolify `nfyd3svzxougvcdjruffw5e8`, imagem exata saudável.
 - HTML de produção validado em três PDPs reais: ebook longo, ebook institucional e livro físico; as três tags ficaram idênticas e o JSON-LD preservou a sinopse completa.
 
-## Fatia 2 — Breadcrumb e arquitetura de JSON-LD
-
-Adicionar `BreadcrumbList` à PDP e às páginas de categoria.
-
-Antes disso, o `SeoService` precisa suportar múltiplos dados estruturados ou um `@graph`: hoje `addStructuredData()` usa um ID fixo e a segunda chamada substituiria o schema `Book`.
-
-### Critério de pronto
-
-- `Book` e `BreadcrumbList` coexistem no HTML SSR.
-- Hierarquia reflete Home → categoria → subcategoria → livro.
-- O markup passa em validação estrutural e usa somente informação visível ou verdadeira.
-
-## Fatia 3 — Restaurar unicidade dos slugs públicos — concluída em 25/08/2026
+## Fatia 2 — Restaurar unicidade dos slugs públicos — concluída em 25/08/2026
 
 Antes da entrega, produção tinha 2.225 registros no endpoint do sitemap, mas somente 2.206 slugs distintos: 17 slugs estavam repetidos em 36 livros.
 
@@ -107,7 +95,7 @@ Livros e exemplares físicos repetidos continuam legítimos; o que precisa ser �
 - Commit backend `0b86ee7284ebe272c67a1235e093d49fcbab0653`; deployment Coolify `q5tx8gmbq0aybbyyscckiwoz`, imagem exata saudável.
 - Produção validada: 2.729 livros / 2.729 slugs distintos, zero sufixos GUID, maior slug com 51 caracteres, 2.225 slugs distintos no endpoint do sitemap e 2.278 `<loc>` distintas no XML.
 
-## Fatia 4 — Search Console e mensuração — concluída em 26/08/2026
+## Fatia 3 — Search Console e mensuração — concluída em 26/08/2026
 
 O acesso programático foi resolvido com a service account existente e a propriedade de domínio `sc-domain:sharebook.com.br`. A Search Analytics API agora alimenta o endpoint consolidado e uma visão simples em `/admin/analytics`.
 
@@ -117,7 +105,7 @@ O acesso programático foi resolvido com a service account existente e a proprie
 - KPIs de cliques, impressões, CTR e posição média, além de série diária.
 - Até cinco oportunidades de CTR por query e landing page, priorizadas pelo potencial estimado de cliques perdidos.
 - Falha isolada: indisponibilidade do Search Console não derruba o restante do painel de GA4.
-- Detalhes operacionais e evidências em [`backlog/done/search-console-access.md`](../../done/search-console-access.md).
+- Detalhes operacionais e evidências em [`search-console-access.md`](search-console-access.md).
 
 Coortes de publicação e mensuração longitudinal das meta descriptions continuam como análises futuras orientadas pelos dados; não são bloqueios técnicos desta fatia.
 
@@ -128,13 +116,9 @@ Coortes de publicação e mensuração longitudinal das meta descriptions contin
 
 Essas hipóteses dependem de Search Console e coortes; não devem virar implementação por entusiasmo.
 
-## Ordem interna
+## Encerramento
 
-1. Meta descriptions das PDPs. **Concluída.**
-2. Breadcrumb + múltiplos JSON-LD. **Próxima dentro do épico.**
-3. Restaurar unicidade dos slugs públicos. **Concluída.**
-4. Search Console antes de experimentos orientados por CTR. **Concluída.**
-
-## Posição no backlog
-
-O épico inteiro não é uma tarefa executável e não deve competir como bloco. Com meta descriptions, unicidade de slugs e Search Console concluídos, breadcrumb + múltiplos JSON-LD é a única fatia executável restante da SEO v1. O índice geral é a fonte de verdade para sua prioridade relativa; expansão de sources e Painel de Jobs v2 não devem ser promovidos por referências históricas deste plano.
+- Meta descriptions das PDPs, unicidade dos slugs públicos e mensuração pelo Search Console foram entregues.
+- `BreadcrumbList` e suporte genérico a múltiplos JSON-LD foram avaliados e cancelados: o possível ganho de apresentação no resultado de busca é incerto e não justifica competir com problemas de produto comprovados.
+- Conhecimento estruturado da PDP também foi removido do backlog; qualquer retomada futura exige evidência nova, não herança deste épico.
+- As hipóteses acima permanecem como perguntas analíticas, não como tarefas de implementação.
