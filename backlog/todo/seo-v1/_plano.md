@@ -121,17 +121,8 @@ O acesso programático foi resolvido com a service account existente e a proprie
 
 Coortes de publicação e mensuração longitudinal das meta descriptions continuam como análises futuras orientadas pelos dados; não são bloqueios técnicos desta fatia.
 
-## Fatia 5 — Conhecimento estruturado — futura
-
-Keypoints, idioma, nível, pré-requisitos, ISBN, páginas e gênero não existem hoje no schema de `Books`. Isso não é preenchimento de JSON-LD: exige decisão de produto, persistência e pipeline editorial antes de exposição pública.
-
-Também não presumir que enriquecer o JSON-LD isolado produzirá estrelas ou rich results de livros. O recurso Book Actions do Google depende de feed, identificadores e participação aceita do provedor.
-
-Só iniciar esta fatia quando os dados tiverem fonte confiável e uso além de SEO, como filtros, busca, recomendações ou experiência da PDP.
-
 ## Hipóteses preservadas, ainda não provadas
 
-- Keypoints específicos podem ampliar cobertura semântica e melhorar snippets.
 - O catálogo maior pode aumentar aquisição orgânica por cobertura temática.
 - PDPs históricas podem converter em afiliado Amazon mesmo quando o livro não está disponível para solicitação.
 
@@ -143,7 +134,6 @@ Essas hipóteses dependem de Search Console e coortes; não devem virar implemen
 2. Breadcrumb + múltiplos JSON-LD. **Próxima dentro do épico.**
 3. Restaurar unicidade dos slugs públicos. **Concluída.**
 4. Search Console antes de experimentos orientados por CTR. **Concluída.**
-5. Conhecimento estruturado somente após desenho de dados e produto.
 
 ## Posição no backlog
 
