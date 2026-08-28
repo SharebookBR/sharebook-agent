@@ -265,7 +265,7 @@ Verificar no Google Search Console > Cobertura > "Soft 404" — tendência deve 
 
 ### Paginação de categorias — risco conhecido
 
-11+ categorias com mais de 24 livros digitais. Livros além da página 1 ficam sem link acessível para o Google. Risco documentado, não atacado ainda.
+A listagem pública de uma categoria-folha carrega 100 livros por página. Em 27/08/2026, apenas duas categorias-folha ultrapassavam esse limite (`Geral`, com 104, e `Valores e Emoções`, com 102), deixando 6 livros além da primeira página. Categorias-raiz maiores exibem subcategorias, não a grade paginada. Como todas as PDPs continuam no sitemap, paginação indexável foi avaliada e não justificou prioridade própria nessa escala. Reavaliar somente quando o volume tornar material a perda de navegação ou linkagem interna.
 
 ---
 
