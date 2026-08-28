@@ -7,7 +7,7 @@
 
 Revisada em **2026-08-27**, após a revisão crítica dos itens já entregues, da dívida de testes e da capacidade atual do importer.
 
-1. **[Busca textual: FTS + fuzzy](backlog/todo/busca-e-recomendacao-sharebook.md)** — alto valor, esforço médio. Centralizar disponibilidade e melhorar relevância antes de introduzir vetores.
+1. **[Busca textual: FTS + fuzzy](backlog/todo/busca-e-recomendacao-sharebook/index.md)** — alto valor, esforço médio. A disponibilidade pública já foi corrigida; o próximo passo é definir a régua de relevância e implementar FTS antes do fallback fuzzy.
 2. **[Tornar a busca encontrável no mobile](backlog/todo/busca-encontravel-mobile.md)** — alto valor, esforço baixo–médio. Discutir o desenho antes de implementar; a busca não pode continuar escondida, especialmente para visitantes deslogados.
 3. **[Recuperar e tornar útil a suíte de testes do frontend](backlog/todo/recuperar-suite-testes-frontend.md)** — alto valor, esforço médio. Corrigir as causas-raiz, remover sem apego testes que não protegem valor e fazer a suíte bloquear o pipeline quando houver regressão real.
 4. **[Dependências e Segurança](backlog/todo/seguranca-e-vulnerabilidades.md)** — alto valor, alto esforço. Modernizar incrementalmente, sem salto cego de major.
@@ -15,7 +15,7 @@ Revisada em **2026-08-27**, após a revisão crítica dos itens já entregues, d
 6. **[Painel de Jobs v2](backlog/todo/painel-de-jobs.md)** — valor médio, esforço médio. A v1 já está publicada; falta calcular saúde, expor histórico paginado e distinguir melhor quem enfileira de quem consome.
 7. **[Lista de Desejos — Doação Reversa](backlog/todo/lista-de-desejos.md)** — valor potencialmente alto, esforço alto. Validar demanda antes de construir o MVP.
 8. **[Tags e conhecimento estruturado](backlog/todo/tags-e-conhecimento-estruturado.md)** — valor médio–alto, esforço alto. Começar com vocabulário controlado e tags navegáveis; estruturar tópicos, nível e pré-requisitos em fatia posterior.
-9. **[Recomendações vetoriais](backlog/todo/busca-e-recomendacao-sharebook.md#fase-3--recomendações-na-pdp-com-embeddings--pgvector)** — valor médio, esforço alto. Só iniciar após busca textual e limpeza do catálogo.
+9. **[Recomendações vetoriais](backlog/todo/busca-e-recomendacao-sharebook/tarefa04-recomendacoes-semanticas-pdp.md)** — valor médio, esforço alto. Só iniciar após busca textual, tolerância a erro e limpeza do catálogo.
 10. **[Home v2 — curadoria e ranking](backlog/todo/home-v2-curadoria-ranking.md)** — valor médio, esforço médio. A reformulação estrutural está concluída; evoluir apenas com dados e hipóteses claras de descoberta.
 11. **[Social e Reviews](backlog/todo/social/_plano.md) + [Pegasus](backlog/todo/pegasus-engagement-engine.md)** — valor ainda incerto, esforço muito alto. Adiar até existir sinal real de retenção.
 12. **[Expansão de sources do acervo](backlog/todo/expansao-sources-acervo.md)** — valor baixo no momento, esforço contínuo. A fila ativa já sustenta meses de processamento deliberadamente lento.
