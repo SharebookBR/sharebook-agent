@@ -37,9 +37,9 @@ For each item, classify it before touching the database:
 
 - `recoverable`: official/public PDF exists or the source URL can be corrected.
 - `hardening_candidate`: the fix is likely to repeat and belongs in extractor/worker/crawler logic.
-- `triage_rejected`: source is HTML-only, video, platform page, paywall, non-ebook, pirated source, or no redistributable PDF.
-- `editorial_rejected`: a human curator later decides the item should not enter the catalog even though triage succeeded.
-- `true_blocked`: WAF, signed download, browser-only flow, broken host, or access restriction that is not worth automating now.
+- `triage_rejected`: there is concrete proof the item cannot be published, such as an explicit redistribution prohibition, confirmed piracy, or a definitively non-ebook asset.
+- `editorial_rejected`: Raffa explicitly decides that the item should not enter the catalog after triage; never infer this from age, legacy, shallowness, low popularity, or license uncertainty.
+- `true_blocked`: WAF, signed download, browser-only flow, broken host, incomplete/wrong asset, or access restriction still awaiting recovery.
 - `new_source_candidate`: the item itself is not a book, but reveals a reusable source worth adding later.
 
 Prefer transforming manual recovery into worker hardening when the pattern is repeatable. Do not force automation for rare, expensive, or impossible cases.
@@ -51,7 +51,7 @@ Prefer transforming manual recovery into worker hardening when the pattern is re
 1. Query the item, source, status, `last_error`, history, and recent runs.
 2. Inspect the source URL and any official alternatives. Prefer primary/official sources over random mirrors.
 3. Validate candidate PDFs with status, content type, content length, and `%PDF` magic bytes.
-4. Check license/redistribution enough to avoid pirated or restricted material.
+4. Search the PDF and official source for concrete redistribution prohibitions. Missing or ambiguous license text does not block publication.
 5. Discuss the intended action with Raffa before changing production state, unless he explicitly asked to execute.
 6. If hardening is worthwhile, patch the worker/extractor first and validate locally.
 7. Return the item to `waiting_triage`, run `triage-once --id <ID>`, and collect feedback.
@@ -83,15 +83,21 @@ Result: patch code, run local focused test, reset item, run worker, collect feed
 
 ### Clean Rejection
 
-Use when there is no public/redistributable PDF or the item is not a book.
+Use only when there is affirmative evidence that the item cannot be published: explicit redistribution prohibition, confirmed piracy, or a definitively incompatible non-book asset.
 
 Result: prefer worker-based `triage_rejected` with readable `last_error` / `triage.detail`; avoid leaving semantic failures as `source_blocked`.
 
-HTML-book families sem PDF público direto entram aqui ou em `true_blocked` conforme o caso, mas sempre com classificação explícita. Não voltar para o erro genérico de "conteúdo inválido sem %PDF".
+License uncertainty is not affirmative evidence. HTML-book families without a direct PDF and sources not yet recovered remain `source_blocked` with explicit context; do not collapse them into the generic error "conteúdo inválido sem %PDF".
+
+### Recover Wrong or Incomplete Asset
+
+Use when the downloaded file is a preface, isolated chapter, order form, unrelated document, or otherwise not the complete work.
+
+Before any terminal decision, search official author/publisher pages, repositories and releases, universities, legitimate archives, alternate titles, editions, and filenames. When authorized and available, delegate independent searches to subagents. If recovered, correct the source and return to `waiting_triage`; otherwise preserve the evidence in `source_blocked` so a future pass can resume cheaply.
 
 ### Editorial Rejection
 
-Use only after the item has legitimately reached editorial handoff and the curator makes a human selection call.
+Use only after the item has legitimately reached editorial handoff and Raffa makes an explicit human selection call. Old technology, legacy value, low popularity, redundancy, or uncertainty are not rejection criteria.
 
 Result: run `python cli.py editorial-reject --id <ID> --reason "<motivo humano>"` so the human rationale is recorded in the importer itself. Do not retroactively call this `triage_rejected`, and do not use generic `status-set` as the canonical playbook.
 

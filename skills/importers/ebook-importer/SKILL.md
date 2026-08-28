@@ -53,7 +53,8 @@ Se esta skill divergir do código/README do importer, o importer manda.
 - **Paths para o container usam `PurePosixPath`, não `Path`**: um helper Windows que monta caminho consumido pelo container Linux (ex: registrar asset materializado) quebra silenciosamente se usar `pathlib.Path` — ele grava barra invertida (`\`), e o dry-run falha com algo como "item sem PDF materializado pela triagem" sem publicar nada. Usar `pathlib.PurePosixPath` para qualquer caminho que cruze a fronteira Windows→container.
 - **Sync de schema → varrer scripts/**: ao redesenhar nomes de status ou colunas, varrer `skills/importers/ebook-importer/scripts/` além dos arquivos `.md`. Scripts Python dependem dos mesmos nomes e quebram silenciosamente se ficarem desatualizados.
 - **Sync de schema também alcança `scripts/production/`**: scripts de preparo editorial Windows local (`inspect_item.py`, `plan_set.py`) leem/escrevem no mesmo schema `importer.queue_items` mas vivem fora de `skills/importers/ebook-importer/scripts/` — fácil esquecer na varredura. Incidente real (2026-06-30): `inspect_item.py` quebrou consultando coluna removida `qi.attempts`, corrigida para `triage_attempts`/`publish_attempts`. Ao redesenhar schema, varrer também `scripts/production/*.py`.
-- **Editorial por source vive no banco**: `importer.sources.editorial_prompt` é a fonte da verdade.
+- **Editorial por source vive no banco**: `importer.sources.editorial_prompt` é a fonte da verdade para instruções específicas daquela fonte. A política global de inclusão desta skill prevalece: prompt de source não pode exigir licença positiva, rejeitar tecnologia legada ou descartar obra por mera incerteza sem nova decisão explícita do Raffa.
+- **Viés de inclusão**: fortalecer o catálogo é o padrão. Dúvida não é motivo de rejeição; rejeitar por direitos autorais somente com evidência concreta de que o Sharebook não pode distribuir a obra.
 - **Categorias sempre folha**: consultar `GET /api/category/Counts` antes de mapear. Nunca inventar.
 
 ---
@@ -125,36 +126,37 @@ Guardrails de publish:
 
 - **Preflight antes de investir em sinopse/capa**:
   1. confirmar que título da fila, conteúdo real do PDF e página oficial descrevem a mesma obra;
-  2. confirmar em fonte oficial ou no próprio PDF que a licença permite redistribuição gratuita — PDF público não basta;
-  3. registrar a evidência de licença no contexto editorial quando ela não estiver explícita no payload;
+  2. procurar no PDF e na fonte oficial eventual proibição explícita de redistribuição; ausência de licença, copyright genérico ou silêncio não bloqueiam publicação;
+  3. registrar no contexto editorial a evidência encontrada, inclusive quando o resultado for `sem proibição explícita encontrada`;
   4. buscar a obra no catálogo principal (busca semântica, não só título exato) antes de `plan-set` — duplicidade já pegou dois itens em produção (`1358` em 07-09, `Think Bayes`/`1594` em 08-13), ambos substituídos antes da mutação por essa checagem.
-- Se a obra falhar no critério de redistribuição, usar `triage_rejected` com nota objetiva. Não usar `editorial_rejected`: ausência de licença redistribuível é falha de publicabilidade, não rejeição curatorial de uma obra publicável.
+- Se houver proibição concreta e inequívoca de redistribuição aplicável à edição analisada, usar `triage_rejected` com a citação e a fonte da evidência. Não usar `editorial_rejected`: impedimento comprovado de distribuição é falha de publicabilidade, não rejeição curatorial.
 
-### Licença: só publicar com certeza (regra confirmada pelo Raffa em 2026-08-17)
+### Licença: publicar na incerteza, rejeitar somente com proibição comprovada (regra do Raffa em 2026-08-27)
 
-O padrão é **certeza, não ausência de proibição**. O ônus é provar que podemos redistribuir, não supor que ninguém se opõe.
+O Sharebook assume conscientemente o risco operacional de casos incertos para fortalecer o catálogo. O padrão é **publicar quando não houver proibição concreta**, apoiado pelo botão de denúncia na PDP e pela capacidade de remover rapidamente uma obra. Ausência de prova de permissão não é prova de proibição.
 
-**Publicável** — existe licença explícita que autoriza redistribuição: domínio público, Creative Commons (inclusive NC e ND, que restringem uso comercial e derivados, não a redistribuição), MIT/Apache/GFDL, ou declaração do detentor autorizando distribuição livre por terceiros.
+**Publicável** — domínio público, licença explícita de redistribuição, declaração do detentor, PDF disponibilizado publicamente sem vedação clara ou qualquer caso em que a investigação termine em incerteza honesta. Registrar a proveniência e seguir com a publicação.
 
-**Não publicável** — inclui casos que parecem verdes e não são:
+**Não publicável por direitos autorais** — exige evidência afirmativa e aplicável à edição analisada, como proibição expressa de reproduzir/redistribuir, exigência explícita de autorização prévia ou confirmação confiável do titular de que o Sharebook não pode hospedar a obra.
 
-| Sinal | Por que não basta |
+| Sinal | Decisão operacional |
 |---|---|
-| PDF acessível publicamente | Disponibilidade não é licença |
-| Autor hospeda o livro inteiro de graça no site oficial | É distribuição *pelo autor*, não permissão para nós hospedarmos cópia |
-| "Available for downloading" impresso no livro | Autoriza baixar, não redistribuir |
-| Ausência de qualquer aviso de copyright | Silêncio não é concessão; copyright é o default legal |
-| Gratuito mediante cadastro de e-mail | Distribuição condicionada pelo fornecedor |
-| Leitura online liberada, com "no part may be reproduced" | Proibição explícita |
+| PDF acessível publicamente, sem vedação localizada | Publicar; registrar a fonte |
+| Autor hospeda o livro inteiro gratuitamente | Publicar; a fonte oficial fortalece a proveniência |
+| "Available for downloading" impresso no livro | Publicar se não houver proibição adicional |
+| Ausência de aviso de copyright ou de licença | Incerteza não bloqueia; publicar |
+| Gratuito mediante cadastro de e-mail | A limitação de acesso pode exigir recuperação manual, mas não prova proibição de redistribuição |
+| "No part may be reproduced/distributed" ou autorização prévia obrigatória | Rejeitar, salvo se outra licença posterior ou específica autorizar a edição |
 
-**Precedentes trabalhados (2026-08-17)** — úteis porque três deles tinham o PDF completo em mãos e ainda assim foram rejeitados:
+**Precedentes reinterpretados em 2026-08-27**:
 
-- `Planning Algorithms` (1371): autor oferece "Download the whole book" na página oficial; livro traz só "Copyright Steven M. LaValle 2006 — Available for downloading". Sem concessão a terceiro → **rejeitado**.
-- `LEDA` (1369): `Master.pdf` completo, 1033 páginas, hospedado pelos autores no MPI, sem página de copyright e sem licença declarada. Silêncio não é permissão → **rejeitado**.
+- `Planning Algorithms` (1371): autor oferece "Download the whole book" e não há vedação localizada → **publicável** sob a política de risco assumido.
+- `LEDA` (1369): PDF completo hospedado pelos autores no MPI, sem licença declarada nem vedação localizada → **publicável** sob a política de risco assumido.
 - `Calculus I` (1610): registro do Caltech declara exigência de permissão escrita da Springer → **rejeitado**, caso duro.
 - `PAIP` (1384) e `The Public Domain` (1498): trazem "all rights reserved" da edição original, mas o texto adiante concede MIT e CC BY-NC-SA respectivamente → **publicáveis**. Ler o entorno antes de rejeitar por substring.
 
-**Método**: buscar a licença no PDF *e* na fonte oficial antes de decidir; nunca concluir por busca de substring isolada; na dúvida honesta, rejeitar com nota que registre a evidência e o caminho de reversão (URL do asset, o que faltou), para revisão barata se a política mudar.
+**Método**: procurar proibições no PDF e na fonte oficial; nunca concluir por substring isolada; distinguir copyright genérico de vedação explícita; em dúvida honesta, registrar a proveniência e publicar. O botão de denúncia e a remoção rápida são parte deliberada da gestão de risco, mas qualquer denúncia recebida deve ser tratada com prioridade.
+- Idade, tecnologia legada, edição antiga ou aparente obsolescência nunca são critérios de rejeição. Uma obra antiga pode ser essencial para manutenção de legado e preservação de conhecimento.
 - Categoria final: sempre folha
 - Sinopse: 3 parágrafos
 - Idioma padrão: português
@@ -239,23 +241,32 @@ bash setup-importer-cron.sh install && bash setup-importer-cron.sh status
 
 ### `editorial_rejected` — doutrina
 
-Usar quando a triagem já aprovou material suficiente para handoff, mas a curadoria humana decide conscientemente não publicar o item.
+É uma saída excepcional. Usar somente quando houver decisão humana explícita de não publicar um item que chegou ao handoff e não existir status canônico mais preciso. Dúvida, idade, legado, baixa prioridade, redundância temática ou gosto editorial não bastam.
 
-É para casos como:
-- livro real e publicável, mas fraco demais para a linha editorial atual;
-- conteúdo válido porém redundante, raso ou desalinhado com a coleção, sem ser duplicata técnica/canônica;
-- item que passou na mecânica, mas perde na avaliação humana de qualidade, adequação ou prioridade editorial.
+O viés é preservar e publicar: todo livro pode ter valor para alguém. Se o Raffa não tiver determinado a rejeição e não houver impedimento comprovado, seguir com o preparo editorial.
 
 Não usar quando o caso for:
-- `triage_rejected`: não é livro publicável, não há PDF redistribuível, é vídeo, curso, página HTML, plataforma paga, pirataria, etc.;
+- `triage_rejected`: existe impedimento comprovado, asset definitivamente incompatível com a missão ou proibição explícita de distribuição;
 - `source_blocked`: existe possível valor, mas o acesso/asset falhou ou ficou bloqueado;
 - `duplicate`: já existe no catálogo pela regra operacional de duplicidade;
 - `error`/retry: falha técnica, transitória ou bug de processo.
 
 Exemplos rápidos:
-- **Usar `editorial_rejected`**: manual introdutório real, com PDF e metadados íntegros, mas banal demais para entrar na curadoria final.
-- **Usar `editorial_rejected` com `structurally_incomplete`**: item sem `context_text`, sem `preview_pages` e sem PDF materializado — não há material suficiente para avaliação editorial. Diferente de `triage_rejected` porque a triagem não conseguiu nem chegar ao ponto de extrair conteúdo.
+- **Usar `editorial_rejected`**: somente após uma decisão curatorial explícita do Raffa sobre aquele item ou uma classe inequívoca de itens.
+- **Não usar para PDF errado ou incompleto**: iniciar recuperação da obra e manter o item recuperável; se a busca não resolver, usar `source_blocked` com evidências e próximos caminhos, não uma rejeição terminal.
 - **Não usar**: URL do YouTube, landing page sem PDF, Leanpub sem PDF público, PDF corrompido, item já existente.
+
+### Recuperação obrigatória de obra incompleta ou asset incorreto
+
+Antes de desistir de um item cujo PDF esteja incompleto, seja apenas prefácio/capítulo, ou pertença a outra obra:
+
+1. procurar a edição completa na página oficial do autor/editora, repositórios e releases, universidades e acervos legítimos;
+2. testar títulos alternativos, nome do arquivo, edição e autoria;
+3. quando subagentes estiverem autorizados e disponíveis, delegar buscas independentes em paralelo;
+4. se encontrar o asset correto, atualizar a proveniência e devolver o item a `waiting_triage`;
+5. se a tentativa razoável não encontrar o PDF completo, registrar fontes consultadas e mover para `source_blocked`, preservando caminho barato de retomada.
+
+Não publicar um fragmento fingindo ser a obra completa. O objetivo da recuperação é salvar a obra, não maquiar o asset.
 
 ### Ação canônica para rejeição editorial
 
@@ -330,7 +341,7 @@ Exceções existem: WAF agressivo, fluxo assinado, domínio quebrado de forma ú
 
 ### Handlers por família
 
-- **Wikibooks**: `en.wikibooks.org/wiki/X` → REST API `/api/rest_v1/page/pdf/X`. O endpoint pode retornar um PDF com magic bytes válidos que contém apenas a página-raiz/índice, sem os capítulos transcluídos (observado em 2026-08-24: itens 1426 e 1464). No preflight editorial, conferir contagem de páginas e presença real dos capítulos; PDF raso não é obra completa e deve virar `editorial_rejected` com `structurally_incomplete`, nunca publicação.
+- **Wikibooks**: `en.wikibooks.org/wiki/X` → REST API `/api/rest_v1/page/pdf/X`. O endpoint pode retornar um PDF com magic bytes válidos que contém apenas a página-raiz/índice, sem os capítulos transcluídos (observado em 2026-08-24: itens 1426 e 1464). No preflight editorial, conferir contagem de páginas e presença real dos capítulos; PDF raso dispara recuperação obrigatória e, se não houver solução, `source_blocked` com evidências — nunca publicação como obra completa nem rejeição terminal imediata.
 - **GitHub raw**: normalizar `github.com/.../raw/{branch}/` → `raw.githubusercontent.com` via `_normalize_github_raw_url()`
 - **GitHub repo raiz**: buscar PDF na última release via `api.github.com/repos/{repo}/releases/latest`
 - **Wayback**: modificador `if_` força entrega do binário sem toolbar HTML
@@ -353,17 +364,18 @@ Tentativas por fase (não mais global `retry_count`):
 - Backoff indexado pelo número de tentativas da fase: 30 min (1) → 2h (2) → 12h (3+)
 - **Threshold**: 5 tentativas em qualquer fase → `source_blocked`
 
-### Triagem por subagentes — critério duplo obrigatório
+### Triagem e recuperação por subagentes
 
-Ao delegar itens a subagentes para triagem (ex.: batch de `source_blocked`, `triage_rejected`), a instrução deve incluir **dois critérios como condição de "recuperável"**, não apenas acessibilidade:
+Ao delegar itens a subagentes para triagem ou recuperação (ex.: batch de `source_blocked`, PDF incompleto ou asset incorreto), a instrução deve incluir:
 
 1. **PDF acessível**: URL direta, sem paywall, sem login, sem WAF intransponível.
-2. **Licença aberta**: domínio público, CC com redistribuição, autores que explicitamente permitem distribuição gratuita. Não assumir — verificar na página do autor ou no PDF.
+2. **Proibição comprovada**: procurar vedação explícita de reprodução/redistribuição no PDF e na fonte oficial. Licença ausente ou ambígua não bloqueia.
+3. **Integridade**: confirmar que o arquivo corresponde ao título e contém a obra, não apenas capa, prefácio, capítulo ou documento diferente.
 
-Subagentes que verificam só acessibilidade passam itens com "all rights reserved" para `waiting_triage`, a triagem então rejeita e gera retrabalho. Aprendizado: 3 itens revertidos na sessão 06-08 por essa falha de instrução.
+Em caso de asset errado ou incompleto, o subagente deve tentar localizar a versão correta antes de devolver o item. Dúvida de licença não é motivo de rejeição; proibição explícita deve vir acompanhada da evidência e da URL.
 
 Formulação recomendada para a instrução ao subagente:
-> "Para cada item, verifique se existe PDF publicamente acessível E se a licença permite redistribuição gratuita. Se algum dos dois critérios falhar, classifique como triage_rejected."
+> "Para cada item, localize e valide o PDF completo correspondente à obra. Procure eventual proibição explícita de redistribuição no arquivo e na fonte oficial. Na ausência de proibição comprovada, trate como publicável. Se o asset estiver errado ou incompleto, tente recuperar a versão correta e registre as fontes consultadas antes de usar `source_blocked`."
 
 ### `sync_queue` — comportamento correto
 
