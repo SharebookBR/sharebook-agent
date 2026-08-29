@@ -1,4 +1,4 @@
-# Tarefa 6 — Personalização por usuário
+# Tarefa 7 — Personalização por usuário
 
 ## Status
 

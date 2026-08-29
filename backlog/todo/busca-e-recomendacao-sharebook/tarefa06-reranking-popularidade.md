@@ -1,8 +1,8 @@
-# Tarefa 5 — Re-ranking com popularidade
+# Tarefa 6 — Re-ranking com popularidade
 
 ## Status
 
-**Horizonte v2. Só ativar após a Tarefa 4 produzir uso observável.**
+**Horizonte v2. Só ativar após a Tarefa 5 produzir uso observável.**
 
 ## Objetivo
 
@@ -27,7 +27,7 @@ Popularidade não deve transformar recomendação em ranking geral dos mesmos li
 
 ## Pré-condições
 
-- recomendação simples da PDP validada;
+- recomendação semântica da PDP validada;
 - eventos e métricas confiáveis;
 - volume suficiente para distinguir tração de ruído;
 - hipótese de produto explícita.

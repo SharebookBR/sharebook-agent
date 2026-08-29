@@ -3,10 +3,10 @@
 ## Estado
 
 - **Status:** em andamento, com núcleo e recomendação pragmática publicados
-- **Prioridade:** fatiada no backlog; tarefa 3 em 4º e evolução semântica da tarefa 4 em 8º
+- **Prioridade:** fatiada no backlog; tarefa 3 em 4º e tarefa 5 em 8º
 - **Valor:** altíssimo
 - **Marco atual:** busca lexical e recomendações pragmáticas na PDP publicadas e validadas
-- **Próxima tarefa:** [Tarefa 3 — Tolerância a erro](tarefa03-tolerancia-a-erro.md) ou fase semântica da [Tarefa 4](tarefa04-recomendacoes-semanticas-pdp.md), conforme evidência
+- **Próxima tarefa:** [Tarefa 3 — Tolerância a erro](tarefa03-tolerancia-a-erro.md) ou [Tarefa 5 — Recomendações semânticas com embeddings](tarefa05-recomendacoes-semanticas-embeddings.md), conforme evidência
 - **Critério de retomada:** buscas sem resultado mostrarem custo real de typos ou recomendações lexicais mostrarem limite editorial recorrente
 
 ## Objetivo
@@ -27,9 +27,10 @@ A ordem importa. Primeiro a busca pública precisa ser correta. Depois ganha rel
 | 1 | [Disponibilidade pública canônica](tarefa01-disponibilidade-publica.md) | **Concluída** em 2026-08-28 | — | Público recebe somente `Available`; admin preserva escopo ampliado. |
 | 2 | [Busca textual com Full-Text Search](tarefa02-busca-textual-fts.md) | **Concluída** em 2026-08-29 | 1 | Busca lexical ranqueada, normalizada e validada em 40 consultas reais. |
 | 3 | [Tolerância a erro com trigram e fallback fuzzy](tarefa03-tolerancia-a-erro.md) | **Pendente** | 2 | Typos e pequenas variações deixam de produzir falso zero. |
-| 4 | [Recomendações na PDP](tarefa04-recomendacoes-semanticas-pdp.md) | **Fase pragmática concluída** em 2026-08-29; semântica pendente | 2 | Seis livros disponíveis por obra, tema e metadados; embeddings preservados como evolução. |
-| 5 | [Re-ranking com popularidade](tarefa05-reranking-popularidade.md) | **Horizonte v2** | 4 + evidência de uso | Similaridade recebe sinal moderado de tração real. |
-| 6 | [Personalização por usuário](tarefa06-personalizacao.md) | **Horizonte v2** | 4 + sinais confiáveis | Recomendações combinam contexto do livro e gosto do usuário. |
+| 4 | [Recomendações pragmáticas na PDP](tarefa04-recomendacoes-pragmaticas-pdp.md) | **Concluída** em 2026-08-29 | 2 | Seis livros disponíveis por obra, tema e metadados, com navegação e analytics publicados. |
+| 5 | [Recomendações semânticas com embeddings](tarefa05-recomendacoes-semanticas-embeddings.md) | **Pendente** | 4 + evidência de limite lexical | Similaridade vetorial aproxima livros por significado editorial. |
+| 6 | [Re-ranking com popularidade](tarefa06-reranking-popularidade.md) | **Horizonte v2** | 5 + evidência de uso | Similaridade recebe sinal moderado de tração real. |
+| 7 | [Personalização por usuário](tarefa07-personalizacao.md) | **Horizonte v2** | 5 + sinais confiáveis | Recomendações combinam contexto do livro e gosto do usuário. |
 
 ## Fronteira da v1
 
