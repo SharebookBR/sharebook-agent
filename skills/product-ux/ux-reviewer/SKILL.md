@@ -35,6 +35,7 @@ Use **voice-glossary** antes ou junto desta skill quando a dúvida principal for
 - **Vocabulário**: Validar os termos contra o `vocabulary.md` e, em caso de dúvida real ou conflito físico vs digital, consultar a skill `voice-glossary` antes de concluir que um termo está errado.
 - **Voz e Tom**: A mensagem ajuda o usuário a dar o próximo passo? O tom é acolhedor?
 - **Estética**: Títulos e botões estão em *sentence case*?
+- **Consistência estrutural**: Elementos que parecem e se comportam como o mesmo padrão usam a mesma implementação? Se houver duplicação com custo de evolução compartilhado, apontar a dívida e consultar `../../engineering/frontend.md`, seção **Reutilização e responsabilidade de componentes**, antes de sugerir a extração.
 
 ### 3. Execução de Melhorias
 - Aplique correções cirúrgicas usando `replace`.
@@ -43,6 +44,7 @@ Use **voice-glossary** antes ou junto desta skill quando a dúvida principal for
 
 ## 🛑 Limites e Fronteiras
 - **Não mude a lógica de negócio**: Foque estritamente em UX/UI e aplicação do texto na experiência.
+- **Não transforme auditoria em refatoração silenciosa**: identificar duplicação faz parte da revisão; extrair componente só faz parte da execução quando o usuário pediu correção ou implementação.
 - **Não arbitre sozinho conflitos canônicos de linguagem** quando houver dúvida real sobre identidade verbal do Sharebook. Nesses casos, consultar primeiro `voice-glossary`.
 - **Respeite o Bootstrap 4**: Não tente forçar Tailwind ou CSS moderno se o componente usa Bootstrap.
 - **Seja Conciso**: Relate apenas o que importa. Aponte o erro, explique se ele é de UX, de vocabulário ou de mecânica do fluxo, e proponha o fix.

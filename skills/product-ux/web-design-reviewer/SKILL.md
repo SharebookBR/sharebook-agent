@@ -65,6 +65,8 @@ When making fixes, gather the following information:
 | Source Location | Where are style files and components located? |
 | Review Scope | Specific pages only or entire site? |
 
+No Sharebook Angular, ler também [`../../engineering/frontend.md`](../../engineering/frontend.md). Antes de criar markup ou CSS local, verificar se o padrão já existe como componente compartilhado ou em outra tela.
+
 ### 1.3 Automatic Project Detection
 
 Attempt automatic detection from files in the workspace:
@@ -197,6 +199,7 @@ See [references/framework-fixes.md](references/framework-fixes.md) for details.
 2. **Respect Existing Patterns**: Follow existing code style in the project
 3. **Avoid Breaking Changes**: Be careful not to affect other areas
 4. **Add Comments**: Add comments to explain the reason for fixes where appropriate
+5. **Reuse Before Override**: When the same pattern has shared behavior, responsive rules, accessibility, or interaction, prefer evolving a first-party shared component over copying markup or piercing it with local CSS. For Sharebook, the canonical decision criteria live in `skills/engineering/frontend.md`.
 
 ---
 

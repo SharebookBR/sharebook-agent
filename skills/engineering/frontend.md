@@ -38,6 +38,46 @@ Skill operacional para desenvolvimento, manutenção e evolução do `sharebook-
 - **Toast de Ação**: Toda ação mutante bem-sucedida (salvar, publicar, atualizar) deve exibir um toast de confirmação via `ToastrService.success('...')`. Nunca fechar silenciosamente um modal ou formulário sem feedback. Para erros, usar `ToastrService.error()` ou exibir inline se o contexto for um formulário com campos. `ToastrService` já está configurado no `AppModule` — apenas injetar no construtor.
 - **Inspetor de Metadados**: Nunca exiba JSON bruto para o usuário. Use flattening recursivo e listas zebradas para inspeção humana.
 
+## Reutilização e responsabilidade de componentes
+
+Antes de criar markup, CSS ou comportamento de interface, procurar o que já existe com `rg` por seletor, classe visual e conceito de produto. Reutilizar o card interno enquanto se duplica a prateleira, o modal ou a navegação resolve apenas parte do problema.
+
+### Quando extrair um componente compartilhado
+
+Extrair quando duas ou mais telas compartilham uma estrutura que também carrega pelo menos uma responsabilidade relevante:
+
+- comportamento ou estado;
+- responsividade e overflow;
+- acessibilidade;
+- regras visuais que devem evoluir juntas;
+- eventos de interação que os consumidores precisam observar.
+
+Não extrair só porque dois trechos têm poucas tags parecidas. Se a semelhança for acidental, o comportamento estiver divergindo ou a API do componente exigir muitos flags sem relação entre si, manter local pode ser mais claro.
+
+### Fronteira de responsabilidade
+
+- o componente compartilhado possui DOM, CSS, responsividade, acessibilidade e comportamento visual;
+- a página consumidora possui carregamento de dados, regra de negócio, copy contextual e decisão analítica;
+- dados e variações entram por `@Input()`; interações relevantes saem por `@Output()`;
+- o componente compartilhado não deve conhecer a PDP, a Home ou nomes de eventos GA4 específicos;
+- diferenças legítimas devem virar variantes explícitas e pequenas, não forks de markup nem cascatas de booleanos.
+
+### Regra para estilos
+
+- uma página pode controlar espaçamento e posicionamento do host compartilhado;
+- não atravessar o encapsulamento de um componente próprio com `::ng-deep`;
+- se um componente próprio precisa de outra apresentação, criar uma API explícita de variante ou corrigir seu contrato;
+- `::ng-deep` fica restrito a DOM de bibliotecas externas que não oferece outra superfície de customização.
+
+### Validação de uma extração
+
+- validar todos os consumidores existentes, não apenas a tela que motivou a mudança;
+- testar os viewports em que o componente muda de comportamento;
+- proteger regras relevantes com testes no componente compartilhado;
+- confirmar que analytics não duplicou por existir no componente e na página ao mesmo tempo.
+
+Heurística de bolso: se uma correção futura precisaria ser aplicada nas mesmas duas telas, provavelmente existe uma responsabilidade compartilhada. Se as telas mudariam por razões diferentes, provavelmente não existe.
+
 ## SSR v2 (Angular Universal)
 
 O Sharebook utiliza Angular 13 Universal + Express (ngExpressEngine) para SSR de SEO e performance. Siga estes padrões para evitar quebras no ambiente Node:
@@ -222,9 +262,11 @@ Fix global obrigatório em `src/custom-theme.scss`:
 ```
 Sem isso, modais, selects e tooltips ficam atrás do header.
 
-### `::ng-deep` para componentes de terceiros
+### `::ng-deep` somente para componentes de terceiros
 
 Usar `::ng-deep` quando o componente gera DOM dinamicamente sem atributo `_ngcontent` (ex: CodeMirror/EasyMDE, Chart.js overlays).
+
+Nunca usar `::ng-deep` para estilizar um componente criado pelo próprio Sharebook. Nesse caso, evoluir o componente com variante explícita, classe no host ou layout controlado pelo consumidor.
 
 Caso real — CodeMirror no modal editorial:
 ```scss
@@ -282,6 +324,9 @@ Máximo um `mat-flat-button accent` por página — Amazon nunca compete com "Re
 ## Shelf arrows — visibilidade e estado inteligente
 
 Para controles de scroll horizontal (carrosséis, prateleiras):
+
+- antes de copiar a estrutura de uma prateleira existente para outra tela, aplicar a seção **Reutilização e responsabilidade de componentes**;
+- quando uma prateleira compartilhada existir, ela deve possuir track, overflow, setas, estados disabled e acessibilidade; a página fornece conteúdo e reage à seleção;
 
 - **Usar SVG em vez de Unicode**: caracteres `‹` `›` variam entre fontes e plataformas. Substituir por `<polyline>` SVG com `stroke-width="2.5"`.
 - **Estado disabled via HTML**: inicializar a seta esquerda com classe `.shelf-arrow--disabled` direto no HTML (sem `AfterViewInit`). Método `updateArrows(wrapper)` toggle a classe com base em `scrollLeft` vs `scrollWidth`.

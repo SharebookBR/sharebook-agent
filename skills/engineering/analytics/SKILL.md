@@ -158,6 +158,8 @@ Todos usam `GoogleAnalyticsService.sendEvent` em `src/app/core/services/analytic
 | `share_modal_open` | clique em "Compartilhar com amigos" na PDP | `details.component.ts` | `book_title`, `book_slug` | ✅ |
 | `social_share` | escolha do canal no modal de compartilhamento | `details.component.ts` | `book_title`, `book_slug`, `method` (canal) | ✅ |
 | `search` | busca concluída e página de resultados carregada | `search-results.component.ts` | `search_term`, `results_count` | ✅ |
+| `recommendation_impression` | prateleira de recomendações carregada na PDP | `details.component.ts` | `source_book_slug`, `first_recommended_book_slug`, `recommendation_count` | ✅ resumo |
+| `recommendation_click` | clique em livro recomendado na PDP | `details.component.ts` | `source_book_slug`, `recommended_book_slug`, `recommended_book_type`, `position` | ✅ resumo |
 | `book_request_modal_open` | abriu modal de pedido de livro | `request.component.ts` | `book_id`, `book_title` | ✅ |
 | `book_request_success` | pedido enviado com sucesso | `request.component.ts` | `book_id`, `book_title` | ✅ |
 | `book_request_error` | pedido falhou | `request.component.ts` | `book_id`, `book_title` | ✅ |
@@ -175,6 +177,7 @@ Todos usam `GoogleAnalyticsService.sendEvent` em `src/app/core/services/analytic
 **Funis úteis:**
 - Pedido: `book_request_modal_open` → `book_request_success` (conversão de pedido)
 - Compartilhamento: `share_modal_open` → `social_share` (conversão de share)
+- Recomendação: `recommendation_impression` → `recommendation_click` (CTR da prateleira; segmentar origem e destino quando as dimensões estiverem registradas)
 
 ### Custom Dimensions registradas na property
 
@@ -186,7 +189,7 @@ Parâmetros só ficam disponíveis na Data API após registro em **GA4 Admin →
 | `customEvent:book_title` | `book_title` | `amazon_click`, `ebook_download`, `share_modal_open`, `social_share`, `book_request_*` | 04/06/2026 |
 | `customEvent:book_slug` | `book_slug` | `amazon_click`, `ebook_download`, `share_modal_open`, `social_share` | 04/06/2026 |
 
-**Parâmetros enviados mas NÃO registrados:** `method` (canal do `social_share`) e `book_id` (eventos de pedido) como custom dimensions; `results_count` (evento `search`) como custom metric.
+**Parâmetros enviados mas NÃO registrados:** `method` (canal do `social_share`) e `book_id` (eventos de pedido) como custom dimensions; `results_count` (evento `search`) como custom metric; `source_book_slug`, `first_recommended_book_slug`, `recommended_book_slug`, `recommended_book_type` e `position` (eventos de recomendação) como custom dimensions; `recommendation_count` como custom metric.
 
 **Regra:** ao criar evento novo com parâmetros relevantes, registrar a custom dimension imediatamente — dados não retroagem.
 
@@ -278,7 +281,7 @@ Todos em `scripts/production/`. Preferir scripts existentes antes de inventar qu
 | `test_ga4_connection.py` | Testar conexão com a property. Rodar primeiro se a API não responder. |
 | `ga4_list_dimensions.py` | Listar custom dimensions registradas. Diagnosticar `(not set)` na API. |
 | `ga4_new_events.py` | Checar `search` e `amazon_click` por data (ontem + hoje). Útil após deploy. |
-| `ga4_events_30d.py` | Panorama completo dos 10 eventos rastreados nos últimos 30 dias. |
+| `ga4_events_30d.py` | Panorama dos eventos rastreados nos últimos 30 dias. |
 | `ga4_search_via_pagepath.py` | Uso da busca via `/buscar/*` nos últimos 30 dias. Alternativa histórica ao evento `search` (custom dim só a partir de 04/06/2026). |
 
 ---
