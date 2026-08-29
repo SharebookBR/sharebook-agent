@@ -2,11 +2,12 @@
 
 ## Estado
 
-- **Status:** em andamento
-- **Prioridade:** 1
+- **Status:** em andamento, estacionado entre fatias
+- **Prioridade:** fatiada no backlog; tarefa 3 em 4º e tarefa 4 em 8º
 - **Valor:** altíssimo
 - **Marco atual:** busca lexical publicada e validada
 - **Próxima tarefa:** [Tarefa 3 — Tolerância a erro com trigram e fallback fuzzy](tarefa03-tolerancia-a-erro.md)
+- **Critério de retomada:** buscas sem resultado e termos reais indicarem que typos estão custando descoberta
 
 ## Objetivo
 
