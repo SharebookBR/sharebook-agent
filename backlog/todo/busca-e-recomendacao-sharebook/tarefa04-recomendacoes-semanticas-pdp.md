@@ -36,6 +36,8 @@ O caso que abriu a oportunidade foi concreto:
 
 - endpoint público devolve no máximo seis recomendações;
 - PDP exibe prateleira responsiva com seis cards;
+- Home e PDP usam o mesmo componente de vitrine, responsável por trilho, overflow, setas, responsividade e acessibilidade;
+- a página consumidora continua responsável por dados, copy contextual e analytics, sem duplicar eventos no componente compartilhado;
 - falha da recomendação não bloqueia a página principal;
 - `recommendation_impression` e `recommendation_click` tornam uso, primeira posição e clique observáveis no GA4.
 
@@ -123,6 +125,7 @@ Embeddings parecem convincentes em demonstrações isoladas. A tarefa só estar�
 - [x] página antiga do Google prioriza a cópia disponível da mesma obra;
 - [x] PDP física de `O Mar de Monstros` prioriza `O Minotauro`;
 - [x] cliques e impressões são observáveis;
+- [x] vitrine compartilhada entre Home e PDP, sem `::ng-deep` entre componentes próprios;
 - [x] testes protegem equivalência, caso temático, disponibilidade e diversidade;
 - [x] builds backend, browser e SSR concluídos.
 
