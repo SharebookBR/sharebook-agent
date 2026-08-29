@@ -7,7 +7,7 @@
 
 Revisada em **2026-08-27**, após a revisão crítica dos itens já entregues, da dívida de testes e da capacidade atual do importer.
 
-1. **[Busca textual: FTS + fuzzy](backlog/todo/busca-e-recomendacao-sharebook/index.md)** — alto valor, esforço médio. A disponibilidade pública já foi corrigida; o próximo passo é definir a régua de relevância e implementar FTS antes do fallback fuzzy.
+1. **[Busca textual: FTS + fuzzy](backlog/todo/busca-e-recomendacao-sharebook/index.md)** — alto valor, esforço médio. Disponibilidade pública e FTS estão em produção; o próximo passo é tolerância a erro com trigram e fallback fuzzy.
 2. **[Tornar a busca encontrável no mobile](backlog/todo/busca-encontravel-mobile.md)** — alto valor, esforço baixo–médio. Discutir o desenho antes de implementar; a busca não pode continuar escondida, especialmente para visitantes deslogados.
 3. **[Recuperar e tornar útil a suíte de testes do frontend](backlog/todo/recuperar-suite-testes-frontend.md)** — alto valor, esforço médio. Corrigir as causas-raiz, remover sem apego testes que não protegem valor e fazer a suíte bloquear o pipeline quando houver regressão real.
 4. **[Dependências e Segurança](backlog/todo/seguranca-e-vulnerabilidades.md)** — alto valor, alto esforço. Modernizar incrementalmente, sem salto cego de major.

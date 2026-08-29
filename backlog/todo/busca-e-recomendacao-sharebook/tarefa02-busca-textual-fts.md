@@ -2,94 +2,136 @@
 
 ## Status
 
-**Em discussão.**
+**Concluída em 2026-08-29.**
 
-## Objetivo
+Produção está no backend `d69b2cd13fdea726d6ae30031070fcc83ce0282d`, com container saudável e migration aplicada.
 
-Substituir a busca literal por substring por uma busca lexical ranqueada, nativa do PostgreSQL e explicável.
+## Resultado entregue
 
-FTS deve responder não apenas “este texto aparece?”, mas “quão relevante é este livro para esta consulta?”.
+A busca pública deixou de usar substring e data de criação como critério principal. Ela agora usa Full-Text Search nativo do PostgreSQL, com:
 
-## Problema atual
+- título com peso A;
+- autor com peso B;
+- categoria-folha e categoria-pai com peso C;
+- sinopse com peso D;
+- boost explícito de título exato e prefixo;
+- `ts_rank_cd` para relevância lexical;
+- data de criação apenas como desempate;
+- normalização de caixa, acentos, pontuação e espaços;
+- prefixo por token, no formato `token:* & token:*`;
+- filtro público canônico por `Available` e escopo ampliado preservado no admin;
+- interpretação estruturada de formato: `fisico/impresso` e `ebook/digital/eletronico`;
+- canonização de termos técnicos como `C#`, `C++`, `F#` e `.NET`.
 
-A busca usa equivalentes de `Contains` em título, autor e categoria e ordena por data de criação. Isso prejudica:
+## O que foi reaproveitado do Achei
 
-- consultas com várias palavras;
-- ranking de título exato;
-- descoberta por categoria-pai;
-- aproveitamento controlado da sinopse;
-- evolução futura do catálogo.
+A implementação de FTS do `achei-api` foi auditada antes da publicação. O histórico mostrou que a primeira versão com `plainto_tsquery` não atendia busca parcial e foi substituída por tokens prefixados com `to_tsquery`.
 
-## Pré-requisito de implementação — régua de relevância
+O ShareBook incorporou os aprendizados duráveis:
 
-Antes de escolher configuração textual ou pesos, montar uma bateria de 30 a 50 consultas com resultado esperado no topo ou no top 5.
+1. normalizar o termo antes do banco;
+2. montar `token:*` para busca parcial;
+3. enviar o `tsquery` como parâmetro;
+4. isolar o caminho PostgreSQL dos providers usados em testes;
+5. testar a SQL traduzida, não apenas a lógica em memória.
 
-Cobrir pelo menos:
+Não foi copiada a coluna persistida `SearchText`. No Achei ela exigiu backfill; no ShareBook, manter título, autor, categorias e sinopse sincronizados criaria mais pontos de drift. Com o catálogo atual, o documento calculado em consulta entregou latência aceitável sem GIN nem backfill.
 
-- título exato;
-- autor;
-- termo composto;
-- categoria-folha e categoria-pai;
-- consulta em português e em inglês;
-- variação de caixa e acento;
-- termo amplo;
-- termo inexistente;
-- livro existente, mas indisponível;
-- consultas reais do GA4.
+## Decisões arquiteturais
 
-Termos observados em agosto de 2026 incluem `odisseia`, `Odisséia`, `Orgulho e preconceito`, `a divina comédia`, `fisico` e `caverna de ssangue`.
+- **Configuração textual:** `simple`, porque o catálogo é bilíngue e previsibilidade vale mais que stemming específico de português nesta etapa.
+- **Acentos:** extensão PostgreSQL `unaccent`, instalada por migration e confirmada no banco `sharebook`.
+- **Documento:** calculado durante a consulta.
+- **Índice GIN:** não adotado agora. Reavaliar somente com evidência de latência ou crescimento do catálogo.
+- **Busca parcial:** todos os tokens relevantes são combinados com `AND` e recebem `:*`.
+- **Palavras de uma letra:** ficam fora do `tsquery`, mas permanecem no boost de título exato. Isso evita buscas amplas por `a` ou `c` sem quebrar “A Divina Comédia”.
+- **Formato:** tratado como filtro estruturado. `ebook python`, por exemplo, aplica `Eletronic` e só então ranqueia `python`.
+- **Fuzzy e aliases:** continuam fora desta tarefa. `sherlok`, `caverna de ssangue` e `acotar` pertencem à Tarefa 3 ou à curadoria de aliases.
 
-## Campos candidatos e pesos iniciais
+## Régua de relevância executada
 
-- título: peso máximo;
-- autor: alto;
-- categoria-folha e categoria-pai: médio;
-- sinopse: baixo;
-- data de criação: somente desempate, não relevância principal.
+Foram executadas 40 consultas na API pública antes e depois da publicação. A expectativa editorial e o resultado final ficaram assim:
 
-Correspondência exata de título e prefixo devem receber boost explícito antes do ranking textual geral.
+| # | Consulta | Classe | Resultado final |
+|---:|---|---|---|
+| 1 | `fisico` | GA4 / formato | Único impresso `Available` no topo. |
+| 2 | `Físico` | caixa e acento | Mesmo resultado de `fisico`. |
+| 3 | `odisseia` | GA4 / sem acento | `Odisséia` no topo. |
+| 4 | `odisséia` | GA4 / com acento | Mesmo resultado de `odisseia`. |
+| 5 | `sherlock` | título indisponível | Zero público; todas as cópias estão fora de `Available`. |
+| 6 | `sherlok` | typo | Zero esperado; caso da Tarefa 3. |
+| 7 | `sherlork` | typo | Zero esperado; caso da Tarefa 3. |
+| 8 | `caverna de ssangue` | typo composto | Zero esperado; caso da Tarefa 3. |
+| 9 | `Corte de espinhos e rosas` | título indisponível | Zero público; cópia existente está fora de `Available`. |
+| 10 | `stranger things` | termo ausente | Zero. |
+| 11 | `o morro dos ventos` | título indisponível | Zero público; cópia existente está fora de `Available`. |
+| 12 | `acotar` | alias editorial | Zero esperado; alias ainda não cadastrado. |
+| 13 | `percy jackson` | títulos indisponíveis | Zero público; quatro cópias estão fora de `Available`. |
+| 14 | `meu pé de laranja lima` | termo ausente | Zero. |
+| 15 | `culpa das estrelas` | termo ausente | Zero. |
+| 16 | `python` | técnico amplo | `Python para Matemáticos` no topo; 28 resultados. |
+| 17 | `java` | técnico amplo | `Java Básico e Orientação a Objeto` no topo; 13 resultados. |
+| 18 | `quantum algorithms` | inglês composto | `Quantum Algorithms` no topo. |
+| 19 | `Orgulho e preconceito` | título exato | Título exato no topo. |
+| 20 | `a divina comédia` | título exato com artigo | `A Divina Comédia` acima do guia e de menções na sinopse. |
+| 21 | `1984` | título exato | `1984` no topo. |
+| 22 | `A arte da guerra` | título exato | `A Arte da Guerra` no topo. |
+| 23 | `Clean Code` | título indisponível | Zero público; cópia existente está fora de `Available`. |
+| 24 | `machine learning` | inglês composto | Resultados diretamente relacionados; 33 resultados. |
+| 25 | `neural networks` | inglês composto | `A Brief Introduction to Neural Networks` no topo. |
+| 26 | `computational logic` | inglês composto | `A Computational Logic (1979)` no topo. |
+| 27 | `Machado de Assis` | autor | Obras do autor no topo; 33 resultados. |
+| 28 | `Jane Austen` | autor | `Orgulho e preconceito` no topo. |
+| 29 | `George Orwell` | autor | `A Revolucao dos Bichos` e `1984` no topo. |
+| 30 | `Edgar Allan Poe` | autor | `A Carta Roubada` no topo. |
+| 31 | `tecnologia` | categoria-pai | Conteúdo tecnológico no topo; 314 resultados. |
+| 32 | `literatura brasileira` | categoria / composto | `História da Literatura Brasileira` no topo. |
+| 33 | `ficção` | categoria | Obras de ficção no topo; 49 resultados. |
+| 34 | `aventura` | categoria | Obras de aventura no topo; 185 resultados. |
+| 35 | `data warehouse` | sinopse / composto | Resultado relacionado a banco de dados; uma opção pública. |
+| 36 | `20 mil léguas submarinas` | título indisponível | Zero público; cópia existente está fora de `Available`. |
+| 37 | `carta roubada` | título exato | `A Carta Roubada` no topo. |
+| 38 | `cartomante` | título exato | `A Cartomante` no topo. |
+| 39 | `C#` | termo técnico | `C# para Iniciantes` no topo; três resultados relevantes. |
+| 40 | `termo inexistente xyz` | inexistente | Zero. |
 
-## Decisões pendentes
+## Comparação com o as-is
 
-- configuração `simple`, `portuguese` ou combinação para catálogo bilíngue;
-- estratégia de remoção de acentos;
-- documento calculado em consulta ou `tsvector` persistido;
-- necessidade real de índice GIN na escala atual;
-- peso relativo de título, autor, categorias e sinopse;
-- tratamento de termos de formato como `fisico`, `impresso`, `ebook` e `digital`;
-- paginação real da interface, que hoje solicita apenas página 1 com até 100 itens;
-- contrato de observabilidade para resultado e clique.
+Os ganhos mais claros foram:
 
-## Direção inicial
+- `odisseia`: de zero para `Odisséia` no topo;
+- `a divina comédia`: o título exato passou à frente do guia que apenas contém o termo;
+- categoria-pai e sinopse passaram a contribuir com pesos menores;
+- autor passou a ser ranqueado por relevância, não por data;
+- `C#` deixou de virar uma consulta ruidosa por uma única letra;
+- `fisico` deixou de retornar e-books que mencionavam “físico” na sinopse.
 
-Começar simples e mensurável. Com 1.078 livros disponíveis em 2026-08-28, relevância importa mais que pré-otimização. Evitar tabela auxiliar ou sincronização de índice enquanto uma consulta direta puder entregar qualidade e latência adequadas.
+A comparação bruta de contagens foi afetada positivamente pela Tarefa 1: a API antiga ainda vazava livros indisponíveis. Os zeros finais de títulos conhecidos foram auditados diretamente no banco e representam a regra pública correta.
 
-## Observabilidade mínima
+## Performance em produção
 
-- registrar `results_count` como métrica utilizável;
-- rastrear clique em resultado;
-- registrar posição clicada;
-- preservar o termo pesquisado;
-- permitir distinguir resultado lexical de fallback fuzzy quando a Tarefa 3 entrar.
+Na passagem final dos 40 casos, medidos pelo endpoint público completo:
 
-Com o volume atual de busca, avaliação offline forte e acompanhamento pré/pós-release são mais honestos que teste A/B sem poder estatístico.
+- p50: **340 ms**;
+- p95: **398 ms**;
+- mínimo: **91 ms**;
+- máximo: **432 ms**;
+- erros: **0**.
 
-## Fora de escopo
+Esses números incluem rede, API, duas consultas de paginação (`Count` e itens) e serialização. São aceitáveis na escala atual. Um `tsvector` persistido com GIN só deve entrar se a telemetria mostrar degradação real.
 
-- tolerância a typo com trigram;
-- embeddings;
-- busca semântica principal;
-- popularidade e personalização;
-- aliases editoriais como `acotar`.
+## Validação técnica
 
-## Critérios de pronto
+- `dotnet test ShareBook.Test.Unit`: **129/129**;
+- `dotnet test ShareBook.Test.Integration`: **23/23**;
+- `dotnet build ShareBook.Api -c Release`: sucesso, zero erros;
+- SQL gerada validada com `to_tsvector`, `to_tsquery`, `setweight`, `unaccent` e `ts_rank_cd`;
+- extensão `unaccent` confirmada no PostgreSQL de produção;
+- deploy final `hgtmkhykpu73i7h4vo79s5rd`: `finished`;
+- container `sharebook-api`: saudável no SHA final.
 
-- bateria de relevância documentada e executada antes/depois;
-- público continua recebendo somente `Available`;
-- título exato aparece acima de menção incidental na sinopse;
-- consultas compostas apresentam melhora perceptível;
-- ranking dos primeiros resultados é editorialmente coerente;
-- paginação e `TotalItems` permanecem corretos;
-- latência é aceitável e medida;
-- testes e builds passam;
-- produção é validada com consultas reais.
+## Observabilidade e continuidade
+
+O frontend já preserva `search_term` e envia `results_count` no evento de busca. A consolidação de clique e posição clicada continua como melhoria transversal de analytics; não altera o motor lexical entregue nesta tarefa.
+
+O próximo passo funcional do épico é a [Tarefa 3 — Tolerância a erro com trigram e fallback fuzzy](tarefa03-tolerancia-a-erro.md).

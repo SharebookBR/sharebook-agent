@@ -5,8 +5,8 @@
 - **Status:** em andamento
 - **Prioridade:** 1
 - **Valor:** altíssimo
-- **Marco atual:** busca textual confiável
-- **Próxima tarefa:** [Tarefa 2 — Busca textual com FTS](tarefa02-busca-textual-fts.md)
+- **Marco atual:** busca lexical publicada e validada
+- **Próxima tarefa:** [Tarefa 3 — Tolerância a erro com trigram e fallback fuzzy](tarefa03-tolerancia-a-erro.md)
 
 ## Objetivo
 
@@ -24,7 +24,7 @@ A ordem importa. Primeiro a busca pública precisa ser correta. Depois ganha rel
 | # | Tarefa | Status | Depende de | Resultado |
 |---|---|---|---|---|
 | 1 | [Disponibilidade pública canônica](tarefa01-disponibilidade-publica.md) | **Concluída** em 2026-08-28 | — | Público recebe somente `Available`; admin preserva escopo ampliado. |
-| 2 | [Busca textual com Full-Text Search](tarefa02-busca-textual-fts.md) | **Em discussão** | 1 | Busca lexical ranqueada por relevância, com régua de qualidade explícita. |
+| 2 | [Busca textual com Full-Text Search](tarefa02-busca-textual-fts.md) | **Concluída** em 2026-08-29 | 1 | Busca lexical ranqueada, normalizada e validada em 40 consultas reais. |
 | 3 | [Tolerância a erro com trigram e fallback fuzzy](tarefa03-tolerancia-a-erro.md) | **Pendente** | 2 | Typos e pequenas variações deixam de produzir falso zero. |
 | 4 | [Recomendações semânticas na PDP](tarefa04-recomendacoes-semanticas-pdp.md) | **Pendente** | 2 e 3 | Livros parecidos por significado usando embeddings e `pgvector`. |
 | 5 | [Re-ranking com popularidade](tarefa05-reranking-popularidade.md) | **Horizonte v2** | 4 + evidência de uso | Similaridade recebe sinal moderado de tração real. |
