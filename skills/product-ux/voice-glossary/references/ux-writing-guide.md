@@ -68,6 +68,13 @@ Templates são genéricos por definição — nunca devem conter dados reais de 
 - Emojis não são assinatura de voz. Evitar decoração; usar somente quando acrescentarem significado real.
 - Preservar a mecânica exata do fluxo. Cancelamento, não seleção, atraso e renovação são eventos diferentes e devem receber mensagens diferentes.
 
+### Responsabilidade do doador após a escolha
+
+- Em lembretes de escolha, não apresentar a automação do Sharebook como se ela encerrasse o papel do doador.
+- Orientar explicitamente o doador a entrar em contato com o(a) ganhador(a) e combinar a entrega.
+- Motivar pelo impacto concreto do próximo passo: a escolha inicia a etapa, mas o cuidado humano faz a doação acontecer.
+- Manter o convite amigável, sem culpa, cobrança moral ou promessa grandiosa de transformação.
+
 ### Avisos firmes e consequências
 
 O Sharebook pode e deve ser firme quando existe atraso grave, abandono ou risco para outras pessoas.
