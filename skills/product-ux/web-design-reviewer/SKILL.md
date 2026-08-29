@@ -191,7 +191,7 @@ Identify source files from problematic elements:
 
 #### Framework-specific Fix Guidelines
 
-See [references/framework-fixes.md](references/framework-fixes.md) for details.
+See [framework-fixes.md](../ux-reviewer/references/framework-fixes.md) for details.
 
 #### Fix Principles
 
