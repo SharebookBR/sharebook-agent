@@ -35,6 +35,28 @@ Stalwart permanece a opção preferida porque entrega SMTP e fila em uma única 
 
 Fontes oficiais: [requisitos e componentes do Mailcow](https://docs.mailcow.email/getstarted/prerequisite-system/), [instalação e topologia Docker Compose](https://docs.mailcow.email/getstarted/install/), [ciclo próprio de atualização](https://docs.mailcow.email/maintenance/update/), [imagem Docker e listeners do Stalwart](https://stalw.art/docs/install/platform/docker/), [requisitos do Stalwart](https://stalw.art/docs/install/requirements/) e [desativação de portas não usadas](https://stalw.art/docs/install/security/).
 
+## Alternativa viável — Postal
+
+**Decisão em 2026-08-30: incluir Postal como desafiante do Stalwart, não como opção preferida.**
+
+Postal é alinhado ao caso de uso: foi criado como alternativa self-hosted a SendGrid, Mailgun e Postmark para aplicações. Aceita envio por SMTP ou API e já oferece DKIM, inspeção de fila e histórico, webhooks de entrega e falha, detecção de bounces e lista de supressão. Essa camada integrada pode eliminar o acoplamento atual do Sharebook com uma caixa IMAP e reduzir código próprio de bounces.
+
+O custo está na infraestrutura. A documentação recomenda servidor dedicado e no mínimo 4 GiB de RAM, 2 CPUs e 25 GiB de disco. Postal exige MariaDB, executa vários containers e precisa de proxy web; upgrades reiniciam os componentes e não são zero-downtime. É mais plataforma do que daemon SMTP e, no volume atual, provavelmente entrega mais operação do que valor.
+
+Postal só deve superar Stalwart se um spike curto provar que bounces, supressão e webhooks integrados compensam objetivamente a topologia mais pesada. Se a prioridade continuar sendo **o menor número de peças**, Stalwart permanece na frente.
+
+Fontes oficiais: [visão e recursos do Postal](https://docs.postalserver.io/welcome/feature-list/), [webhooks e eventos de bounce](https://docs.postalserver.io/developer/webhooks/), [pré-requisitos](https://docs.postalserver.io/getting-started/prerequisites/), [instalação](https://docs.postalserver.io/getting-started/installation/) e [upgrades](https://docs.postalserver.io/getting-started/upgrading/).
+
+## Alternativa avaliada — Postfix puro
+
+**Decisão em 2026-08-30: não incluir Postfix puro como opção de execução.**
+
+Postfix é um MTA sólido, pequeno e extremamente testado, com SMTP, fila, retries, TLS e DSNs. Mas é um bloco de construção, não uma solução transacional completa. A autenticação SASL depende de Cyrus SASL ou Dovecot; DKIM depende de um Milter externo como OpenDKIM ou Rspamd; bounces estruturados, webhooks, supressão, painel e observabilidade teriam de ser montados ou implementados pelo Sharebook.
+
+Para este objetivo, Postfix oferece a menor instalação inicial e o maior projeto de integração. Seria racional se quiséssemos controle fino e aceitássemos operar nossa própria plataforma de entrega. Com simplicidade como critério principal, é falsa economia.
+
+Fontes oficiais: [arquitetura e filas do Postfix](https://www.postfix.org/OVERVIEW.html), [autenticação SASL e dependências](https://www.postfix.org/SASL_README.html), [DKIM por Milter externo](https://www.postfix.org/MILTER_README.html) e [controle de relay](https://www.postfix.org/SMTPD_ACCESS_README.html).
+
 ## Plano de execução
 
 ### 1. Pré-flight de infraestrutura
