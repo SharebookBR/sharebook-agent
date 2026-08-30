@@ -100,6 +100,33 @@ RESUME
 
 Se esse loop for bom, existe produto. Evitar transformar a primeira versão em uma plataforma enorme antes dessa prova.
 
+### Papel do agente no MVP
+
+O agente mínimo é parte do MVP de `Converse com seu livro`. Ele precisa:
+
+- compreender a pergunta;
+- conhecer o livro e a posição atual;
+- recuperar apenas o contexto relevante;
+- respeitar o limite de spoilers;
+- responder de forma adequada ao momento da leitura;
+- devolver o controle ao player para a retomada.
+
+O MVP **não depende** de um agente geral do Sharebook, WhatsApp, memória transversal sofisticada ou um MCP com todas as capacidades do produto. Construir essa plataforma antes de provar o loop principal criaria custo e abstração sem evidência de valor.
+
+A relação correta é:
+
+```text
+Converse com seu livro
+        ↓
+prova o valor do agente
+        ↓
+agente ganha memória durável
+        ↓
+ganha ferramentas do Sharebook via MCP
+        ↓
+expande para app, WhatsApp e outros canais
+```
+
 ## Arquitetura conceitual
 
 ```text
@@ -292,6 +319,67 @@ Considerar desde o início situações nas quais a pessoa não pode ou não quer
 ```
 
 Comandos futuros possíveis: explicar novamente, dar outro exemplo, comparar com outro conceito, marcar um trecho, testar entendimento, resumir a sessão, continuar e voltar.
+
+## Visão futura — Agente Sharebook
+
+Se o agente provar valor no fluxo de áudio, ele pode evoluir para uma interface conversacional autenticada do Sharebook e acompanhar o usuário em diferentes jornadas e canais.
+
+```text
+Memória         → quem é o usuário e como ele aprende
+RAG             → o que os livros dizem
+MCP Sharebook   → o que o agente pode consultar e fazer
+Canais          → onde a interação acontece
+```
+
+O núcleo do agente deve ser independente do canal:
+
+```text
+                    Agente de aprendizado
+          livro + progresso + memória + preferências
+                            │
+            ┌───────────────┼───────────────┐
+            ▼               ▼               ▼
+       Áudio interativo   Chat no app     WhatsApp
+```
+
+Possíveis jornadas futuras:
+
+- pesquisar o catálogo e consultar disponibilidade;
+- recomendar livros a partir de um objetivo de aprendizado;
+- montar e acompanhar uma sequência de leitura;
+- salvar progresso, bookmarks e anotações;
+- gerenciar lista de desejos;
+- preparar um Sharebook Audio;
+- consultar doações e solicitações;
+- continuar no WhatsApp uma conversa iniciada no player;
+- usar mensagens de voz, lembretes e resumos de sessão.
+
+### MCP autenticado
+
+Após a autenticação, um MCP do Sharebook pode expor ao agente capacidades oficiais do produto. O MCP dá capacidade de ação; a memória dá continuidade. Uma coisa não deve implicar a outra.
+
+Princípios de segurança:
+
+- o MCP chama APIs e serviços oficiais, nunca acessa o banco diretamente;
+- o token sempre representa o usuário autenticado;
+- permissões seguem o menor privilégio e escopos explícitos;
+- consultas seguras podem ser automáticas;
+- mutações relevantes exigem confirmação do usuário;
+- ações precisam ser auditáveis e idempotentes;
+- o agente não recebe privilégios administrativos por conveniência;
+- canais externos exigem vinculação segura com a conta Sharebook;
+- memórias podem ser consultadas, corrigidas e apagadas pelo usuário.
+
+### Fronteira de produto
+
+Evitar um chatbot genérico replicado em todos os lugares. Cada canal deve resolver um trabalho adequado à sua natureza:
+
+- **Áudio:** explicar durante a leitura e retomar no ponto correto.
+- **Chat no app:** aprofundar respostas, mostrar fontes, trechos e histórico.
+- **WhatsApp:** dúvidas rápidas, voz, lembretes e retomada fora do aplicativo.
+- **Outros canais:** apenas quando existir uma jornada concreta que justifique sua presença.
+
+Esta visão orienta as fronteiras arquiteturais do MVP, mas não amplia seu escopo. Identidade, memória e capacidades devem nascer desacopladas do player para permitir evolução futura sem exigir que a evolução seja construída agora.
 
 ## Research / benchmark obrigatório
 
