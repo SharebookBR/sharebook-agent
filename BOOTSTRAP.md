@@ -133,6 +133,7 @@ Validações esperadas:
 ## Imagem, versão e persistência do OpenClaw
 
 - No Sharebook, usar `coollabsio/openclaw:latest` por decisão explícita de Raffa em 2026-08-30. É o wrapper esperado pelo template do Coolify e prepara `/data`, variáveis, autenticação web e browser sidecar.
+- Para evitar prompts repetidos da Control UI sem expor o Gateway, manter o hook `scripts/infra/openclaw_static_auth_init.sh` no volume persistente e `OPENCLAW_DOCKER_INIT_SCRIPT=/data/openclaw-init/patch-nginx-static-auth.sh` no serviço. Ele isenta somente assets públicos comprovados; `/` e `/browser/` continuam atrás do Basic Auth. Preservar essa variável ao reconfigurar o serviço no Coolify.
 - `latest` é móvel: em cada deploy, registrar versão efetiva (`openclaw --version`) e digest. Na ativação de 2026-08-30 a tag mudou durante a própria janela de deploy; o estado efetivamente implantado ao fim da checagem era `OpenClaw 2026.7.1 (0790d9f)`, digest `sha256:61bcc5034ecb2f8e80132e61c76aae0f0474e5ad877af2588a76a1284d5369e0`. Não reutilizar essa observação como pin nem presumir que continuará igual.
 - Fora desse template, preferir as imagens upstream `ghcr.io/openclaw/openclaw` ou `openclaw/openclaw`.
 - Atualizar pelo Coolify com nova imagem; não executar `openclaw update` dentro do container.
