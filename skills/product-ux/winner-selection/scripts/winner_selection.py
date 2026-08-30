@@ -43,9 +43,10 @@ ADDRESS_LINE_RE = re.compile(
     r"(?im)^.*\b(?:rua|avenida|av\.|travessa|alameda|rodovia)\b.*$"
 )
 INTRO_NAME_RE = re.compile(
-    r"(?i)\b(?:meu nome é|me chamo|me chamou)\s+.{1,80}?"
+    r"(?i)\b(?:meu nome (?:é|e)|me chamo|me chamou)\s+.{1,80}?"
     r"(?=\s*(?:,|\.|!|\n|\be\s+\d+\s+anos\b|\be\s+sou\b|\bsou\b|"
-    r"\btenho\b|\bestou\b|\bgostaria\b|\bquero\b|\bgosto\b|\bentrei\b))"
+    r"\btenho\b|\bestou\b|\bgostaria\b|\bquero\b|\bgosto\b|\bentrei\b|"
+    r"\bsempre\b))"
 )
 SOU_NAME_RE = re.compile(
     r"(?i)\bSou\s+[A-ZÀ-Ý][\wÀ-ÿ'’-]*(?:\s+[A-ZÀ-Ý][\wÀ-ÿ'’-]*){0,4}"
@@ -63,6 +64,10 @@ NAMED_LOCATION_RE = re.compile(
     r"(?i)\b(?:moro|resido|residente)\s+(?:em|no|na)\s+"
     r"(?!interior\b|zona\s+rural\b)[^,.()\n]{1,80}"
     r"(?:,\s*(?:no|na)\s+[^.()\n]{1,40})?"
+)
+INTERIOR_NAMED_LOCATION_RE = re.compile(
+    r"(?i)\b(?:moro|resido|residente)\s+(?:em|no|na)\s+interior\s+de\s+"
+    r"(?!(?:uma?\s+)?zona\s+rural\b)[^,.()\n]{1,80}"
 )
 INSTITUTION_ACRONYM_RE = re.compile(
     r"(?i:\b(?:universidade|faculdade|colégio|escola|instituição)\s+(?:d[aeo]\s+)?)"
@@ -97,6 +102,9 @@ def sanitize_request_text(text: str) -> str:
     sanitized = SOU_NAME_RE.sub("Sou [identidade removida]", sanitized)
     sanitized = CALLED_NAME_RE.sub("chamado [familiar removido]", sanitized)
     sanitized = ODD_ME_NAME_RE.sub("me [identidade removida]", sanitized)
+    sanitized = INTERIOR_NAMED_LOCATION_RE.sub(
+        "moro no interior de [localidade removida]", sanitized
+    )
     sanitized = NAMED_LOCATION_RE.sub("moro em [localidade removida]", sanitized)
     sanitized = INSTITUTION_ACRONYM_RE.sub("[instituição removida]", sanitized)
     sanitized = FAMILY_NAME_RE.sub("[familiar removido] ", sanitized)
@@ -323,6 +331,18 @@ def self_test() -> int:
         (
             "Entrei pelo Enem na universidade de UFRN.",
             ["UFRN"],
+        ),
+        (
+            "Meu nome e Cauã, e gosto de ler.",
+            ["Cauã"],
+        ),
+        (
+            "Meu nome é Leandro sempre gostei de ler livros.",
+            ["Leandro"],
+        ),
+        (
+            "Meu nome é Ana, moro no interior de Recife e amo poesia.",
+            ["Ana", "Recife"],
         ),
     ]
     for sample, forbidden in samples:
