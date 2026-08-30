@@ -138,6 +138,7 @@ Validações esperadas:
 - Atualizar pelo Coolify com nova imagem; não executar `openclaw update` dentro do container.
 - Persistir config/state, chave dos perfis OAuth e workspace. A imagem oficial usa `/home/node/.openclaw`; o deployment histórico do Sharebook usava mounts em `/data/.openclaw` e `/data/workspace`. Inspecionar os mounts reais e registrar o contrato efetivo.
 - O wrapper Coolify serve HTTP pelo nginx interno na porta `8080`; `18789` é o Gateway em loopback dentro do mesmo container. No campo **Domains for openclaw**, configurar `https://claw.sharebook.com.br:8080`. O sufixo seleciona a porta interna e não expõe `8080` ao visitante. Depois do deploy, provar que a label `traefik.http.services.*.loadbalancer.server.port` vale `8080`; o default `80` produz `502` mesmo com container saudável.
+- Estado de modelos validado em 2026-08-30: primário `openai/gpt-5.5`, fallback global `deepseek/deepseek-v4-pro`, com `DEEPSEEK_API_KEY` fornecida pelo ambiente do container. A configuração foi gravada por `openclaw models fallbacks add deepseek/deepseek-v4-pro`; não editar o JSON manualmente quando a CLI estiver disponível.
 - Validar versão e config com:
 
 ```bash
