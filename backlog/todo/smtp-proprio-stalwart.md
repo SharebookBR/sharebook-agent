@@ -18,9 +18,22 @@ Avaliar e, se a entregabilidade for comprovada, migrar o envio transacional do S
 
 - Usar Stalwart em um único container no Coolify.
 - Começar somente com envio transacional; sem webmail, POP3, calendários ou colaboração.
+- Desabilitar os listeners e serviços que não participarem do fluxo SMTP; publicar somente o estritamente necessário.
 - Manter o limitador do Sharebook inicialmente no ritmo atual e aumentar apenas com evidência de entregabilidade.
 - Não publicar a porta de submissão para a internet se somente os containers do Sharebook precisarem usá-la; conectar pela rede interna do Coolify com autenticação obrigatória.
 - Manter a Hostinger como rollback durante o período de aquecimento e validação.
+
+## Alternativa avaliada — Mailcow
+
+**Decisão em 2026-08-30: não incluir Mailcow como opção de execução para este caso.**
+
+Mailcow é uma suíte completa de groupware, não um SMTP transacional enxuto. A própria documentação descreve uma composição com Postfix, Dovecot, Rspamd, webmail, ActiveSync, antivírus, antispam, indexação, MariaDB, Redis e outros serviços. A configuração padrão exige no mínimo 6 GiB de RAM mais 1 GiB de swap e 20 GiB de disco antes das mensagens. Mesmo desabilitando ClamAV e busca full-text, continuaria sendo uma topologia multi-container com superfície de operação muito maior que a necessidade do Sharebook.
+
+Ele passa a fazer sentido se o objetivo mudar para hospedar caixas postais, IMAP, webmail, calendário e administração de usuários. Para **somente receber submissões autenticadas do backend, enfileirar e entregar e-mail transacional**, Mailcow acrescenta componentes, atualizações e backups sem remover os problemas realmente difíceis: PTR, SPF/DKIM/DMARC, reputação do IP, aquecimento, bounces e supressão.
+
+Stalwart permanece a opção preferida porque entrega SMTP e fila em uma única imagem/container, permite remover listeners não usados e tem footprint ocioso documentado em torno de 100 MB. Isso simplifica o software, mas não transforma SMTP próprio em operação “zero cuidado”.
+
+Fontes oficiais: [requisitos e componentes do Mailcow](https://docs.mailcow.email/getstarted/prerequisite-system/), [instalação e topologia Docker Compose](https://docs.mailcow.email/getstarted/install/), [ciclo próprio de atualização](https://docs.mailcow.email/maintenance/update/), [imagem Docker e listeners do Stalwart](https://stalw.art/docs/install/platform/docker/), [requisitos do Stalwart](https://stalw.art/docs/install/requirements/) e [desativação de portas não usadas](https://stalw.art/docs/install/security/).
 
 ## Plano de execução
 
