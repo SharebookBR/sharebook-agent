@@ -3,9 +3,11 @@
 Regras específicas de habitat, ambiente de execução e fricções do runtime.
 
 ## Skills
-- `./windows-local.md` — **Habitat único e ativo.** Ambiente local Windows: paths, shell, encoding, Python, banco, armadilhas.
-- `./openclaw.md` — **Dormente desde 2026-08-16.** Container desprovisionado. Preservado para tornar barato um eventual retorno; não acionar como runtime do presente.
+- `./windows-local.md` — Ambiente local Windows: paths, shell, encoding, Python, banco e armadilhas.
+- `./openclaw.md` — Container OpenClaw na VPS: volume persistente, memória, sessões, automações, ferramentas e operação remota.
 
 ## Uso
-- Ler `windows-local.md` primeiro quando a tarefa depender do habitat real, permissões, ferramentas disponíveis, caminhos, shell ou comportamento do ambiente.
-- Abrir `openclaw.md` apenas para arqueologia de decisão antiga ou se o habitat voltar a ser provisionado.
+- Detectar o habitat antes de executar trabalho relevante.
+- No Windows, ler `windows-local.md`.
+- Dentro do container OpenClaw, ler `openclaw.md`.
+- Operar um habitat a partir do outro não muda o habitat da sessão: uma sessão Windows usando SSH continua sujeita a `windows-local.md` e consulta `openclaw.md` como playbook do alvo remoto.

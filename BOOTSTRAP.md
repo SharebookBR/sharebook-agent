@@ -14,9 +14,12 @@ Não é documentação completa do Sharebook.
 
 ## Escopo atual
 
-O habitat operacional hoje é o Windows local (`skills/runtime/windows-local.md`). O bloco **Ferramentas obrigatórias** vale para ele.
+O Sharebook-agent voltou a ter dois habitats em 2026-08-30:
 
-As seções marcadas como dormentes descrevem o provisionamento do container OpenClaw, desprovisionado em 2026-08-16. Ficam aqui de propósito: se o habitat voltar, o roteiro já existe.
+- Windows local (`skills/runtime/windows-local.md`)
+- OpenClaw na VPS (`skills/runtime/openclaw.md`)
+
+O bloco **Ferramentas obrigatórias** vale para qualquer habitat que execute aquele tipo de trabalho. As seções OpenClaw são checklist de provisionamento; nenhum item é presumido só porque o container iniciou.
 
 ---
 
@@ -127,67 +130,101 @@ Validações esperadas:
 
 ---
 
-## Memória semântica
+## Imagem, versão e persistência do OpenClaw
 
-> **Status: dormente desde 2026-08-16.**
-> Era configuração do container OpenClaw, que foi desprovisionado. Não presumir este runtime disponível no presente.
-> Preservado intencionalmente para tornar barato um eventual retorno — não apagar.
+- Usar imagem oficial `ghcr.io/openclaw/openclaw` ou `openclaw/openclaw`.
+- Fixar uma release estável em produção. Não usar beta ou tag flutuante sem alinhamento explícito.
+- Atualizar pelo Coolify com nova imagem; não executar `openclaw update` dentro do container.
+- Persistir config/state, chave dos perfis OAuth e workspace. A imagem oficial usa `/home/node/.openclaw`; o deployment histórico do Sharebook usava mounts em `/data/.openclaw` e `/data/workspace`. Inspecionar os mounts reais e registrar o contrato efetivo.
+- Validar versão e config com:
+
+```bash
+openclaw --version
+openclaw config validate
+openclaw doctor --lint
+openclaw status --deep
+```
+
+Referências: [Docker oficial](https://docs.openclaw.ai/install/docker) e [configuração](https://docs.openclaw.ai/gateway/configuration).
+
+---
+
+## Memória semântica
 
 A memória semântica precisa ser configurada conforme abaixo:
 
-```json
+```json5
 {
-  "enabled": true,
-  "sources": ["memory"],
-  "provider": "openai",
-  "model": "text-embedding-3-small",
-  "fallback": "none"
+  agents: {
+    defaults: {
+      memorySearch: {
+        enabled: true,
+        sources: ["memory"],
+        provider: "openai",
+        model: "text-embedding-3-small",
+        fallback: "none"
+      }
+    }
+  }
 }
 ```
+
+Esse é o schema da release estável `2026.7.1-2`. Documentação de versões posteriores já mostra `memory.search`; antes de migrar, consultar `openclaw config schema` na imagem realmente instalada.
 
 Validações esperadas:
 
 - `MEMORY.md` indexado
 - arquivos em `memory/*.md` indexados
 - `memory_search` funcional
+- `openclaw memory status --deep --agent main` sadio; `--index` usado só se o índice precisar ser reconstruído
+- busca controlada encontra um fato conhecido sem misturar transcript não autorizado
+
+Mudança de provider, modelo, sources ou tokenizer muda a identidade do índice. Não reindexar automaticamente sem entender o impacto.
 
 ---
 
 ## Active Memory
 
-> **Status: dormente desde 2026-08-16.**
-> Plugin do container OpenClaw, que foi desprovisionado. Não presumir este runtime disponível no presente.
-> Preservado intencionalmente para tornar barato um eventual retorno — não apagar.
+Active Memory enriquece conversas interativas persistentes. Não roda em headless one-shot, heartbeat, cron nem subagente interno.
 
-Plugin de recuperação automática de contexto recente.
+Config inicial recomendada:
 
-Config geral:
-
-```text
-plugin: active-memory
-agents: main
-allowedChatTypes: direct
-queryMode: recent
-promptStyle: balanced
-persistTranscripts: true
-logging: true
+```json5
+{
+  plugins: {
+    entries: {
+      "active-memory": {
+        enabled: true,
+        config: {
+          agents: ["main"],
+          allowedChatTypes: ["direct"],
+          queryMode: "recent",
+          promptStyle: "balanced",
+          timeoutMs: 15000,
+          maxSummaryChars: 220,
+          persistTranscripts: false,
+          logging: true
+        }
+      }
+    }
+  }
+}
 ```
+
+O schema estável `2026.7.1-2` rejeita `config.mode`; documentação posterior já mostra `mode: "escalate"`. A release instalada manda.
 
 Validações esperadas:
 
 - plugin carregado no boot
-- hook pré-resposta funcionando
-- contexto recuperado sendo injetado no prompt
+- agente `main` elegível em conversa direta persistente
+- `/active-memory status`, `/verbose on` e `/trace on` coerentes durante tuning
+- contexto conhecido recuperado sem bloquear a resposta em caso de miss
+
+Referência: [Active Memory oficial](https://docs.openclaw.ai/concepts/active-memory).
 
 ---
 
 ## Coolify / rede
-
-> **Status: dormente desde 2026-08-16.**
-> O container OpenClaw foi desprovisionado. Não presumir este runtime disponível no presente.
-> Preservado intencionalmente para tornar barato um eventual retorno — não apagar.
->
-> Hoje o acesso ao Postgres de produção sai do Windows local direto pelo IP público da VPS — ver `skills/runtime/windows-local.md`, seção "Acesso ao banco de dados".
 
 Garanta que o container do OpenClaw tenha acesso à network interna do Coolify.
 
@@ -199,7 +236,7 @@ Network esperada:
 coolify
 ```
 
-Host interno do PostgreSQL observado:
+Host interno histórico do PostgreSQL (não reutilizar sem inspeção):
 
 ```text
 fgsgwsckccgk8sccc4gg0gg0:5432
@@ -211,23 +248,35 @@ Atenção:
 
 ---
 
-## Cron Linux no container OpenClaw
+## Automação OpenClaw e cron Linux do importer
 
-> **Status: dormente desde 2026-08-16.**
-> O container OpenClaw foi desprovisionado, e com ele o cron que rodava o worker do importer. Não presumir este runtime disponível no presente.
-> Preservado intencionalmente para tornar barato um eventual retorno — não apagar.
->
-> Consequência no presente: **o worker do importer não tem agendamento**. Ver `skills/importers/ebook-importer/SKILL.md`, seção "Agendamento: onde olhar".
+São mecanismos diferentes e devem ser validados separadamente:
 
-Cron observado:
+- `openclaw cron` agenda wakes e rotinas agentic na release estável `2026.7.1-2`; documentação mais nova usa `openclaw automations`, então detectar pela ajuda da versão instalada. Jobs/histórico vivem no SQLite compartilhado desde 2026.6.1.
+- `crontab` Linux rodava o worker Python do importer a cada 30 minutos.
 
-- execução a cada 30 minutos
-- usado pelo worker importador de livros
-
-Em novo ambiente, validar:
+Reativar um não reativa o outro. Durante o reprovisionamento:
 
 ```bash
+openclaw cron status
+openclaw cron list --agent main --all
 crontab -l
+```
+
+Não editar `/data/.openclaw/cron/jobs.json`: ele é entrada de migração legada, não fonte canônica das releases atuais.
+
+Defaults atuais do script canônico `sharebook-ebook-importer/setup-importer-cron.sh`:
+
+- triagem: `*/15 0-8 * * *` em `America/Sao_Paulo`
+- publicação: `5,35 * * * *`, com limite padrão de 10 itens
+- locks separados por modo e log em `var/logs/importer-cron.log`
+
+Em novo ambiente, instalar e validar:
+
+```bash
+cd /data/workspace/sharebook-ebook-importer
+bash setup-importer-cron.sh install
+bash setup-importer-cron.sh status
 ```
 
 Também validar se o serviço de cron está ativo dentro do container ou host responsável.
@@ -245,12 +294,17 @@ Antes de considerar o novo ambiente pronto, validar:
 - acesso ao PostgreSQL de produção funcionando
 - endpoint da API Sharebook acessível
 
-Itens do runtime dormente (só voltam a valer se o container OpenClaw for reprovisionado):
+Itens do runtime OpenClaw:
 
+- imagem oficial em release estável fixada
+- mounts persistentes de config/state, auth-profile key e workspace
 - container OpenClaw conectado à network interna correta
 - acesso ao PostgreSQL interno funcionando
+- `openclaw config validate`, `openclaw doctor --lint` e `openclaw status --deep` sadios
 - memória semântica configurada
 - `memory_search` funcional
 - Active Memory habilitado
-- cron do importador configurado
-- cron executando no ambiente correto
+- jobs OpenClaw listados e validados por run
+- cron Linux do importer configurado
+- cron Linux executando e registrando run no banco/log
+- Control UI público e probe interno do Gateway funcionais

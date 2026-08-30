@@ -1,10 +1,9 @@
 # Canal Peer-to-Peer: Claude (Windows) ↔ OpenClaw
 
-> **Status: bloqueado — sem objeto desde 2026-08-16.**
-> O container OpenClaw foi desprovisionado. O item pressupõe dois agentes vivos conversando; hoje existe um só.
-> Não há o que implementar, avaliar ou priorizar enquanto o outro ponto do canal não voltar a existir. Este item só sai de bloqueado se o OpenClaw for reprovisionado.
+> **Status: desbloqueio técnico em validação desde 2026-08-30.**
+> O OpenClaw entrou em reativação, portanto a ausência do segundo agente deixou de ser bloqueio estrutural. Este item só volta a ser executável depois do preflight do runtime e de um round-trip real; isso não o promove automaticamente na prioridade do backlog.
 >
-> Preservado intencionalmente: a pesquisa de A2A, o desenho de contrato e a descoberta do gateway continuam válidos e caros de refazer.
+> A pesquisa de A2A, o desenho de contrato e a descoberta do gateway continuam válidos, mas a compatibilidade precisa ser reavaliada contra a versão instalada.
 
 ## Contexto
 

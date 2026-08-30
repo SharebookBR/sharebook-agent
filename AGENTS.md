@@ -20,11 +20,13 @@ Ele não deve carregar regra específica de habitat quando isso puder viver em s
 
 ## Regra obrigatória de runtime
 
-Existe **um** habitat operacional: o Windows local do Raffa.
+No início da sessão, é **obrigatório** detectar o habitat atual e ler a skill correspondente antes de executar trabalho relevante.
 
-No início da sessão, é **obrigatório** ler `sharebook-agent/skills/runtime/windows-local.md` antes de executar trabalho relevante.
+Mapeamento:
+- Windows local do Raffa → `sharebook-agent/skills/runtime/windows-local.md`
+- Container OpenClaw na VPS → `sharebook-agent/skills/runtime/openclaw.md`
 
-O habitat OpenClaw está **dormente desde 2026-08-16** — o container foi desprovisionado. `sharebook-agent/skills/runtime/openclaw.md` é preservado de propósito, para tornar barato um eventual retorno, mas não descreve nada disponível hoje. Não presumir cron agentico, subagentes persistentes, memória ativa, volume `/data` ou execução remota.
+Os dois habitats compartilham este harness, mas não compartilham automaticamente paths, processos, memória ativa, sessões, credenciais nem ferramentas. Capacidade de um habitat nunca é evidência de capacidade do outro.
 
 Em conflito entre convenção genérica e regra específica de runtime, a regra específica do runtime vence, exceto quando houver política superior do sistema.
 
@@ -109,7 +111,7 @@ Toda memória nova começa com o frontmatter TOML v1 definido em `skills/doctrin
 1. Fazer um sync nos repos.
 2. Ler as memórias episódicas recentes em `sharebook-agent/memory/`. **Pode haver mais de uma sessão no mesmo dia** — ler todas as do dia corrente, não só "a mais recente". Globar o diretório por data de modificação (ver `skills/runtime/windows-local.md`); não confiar no índice do runtime como se a primeira linha fosse a única relevante.
    > Custou caro em 2026-08-17: uma sessão de preparo editorial ignorou as duas memórias daquele mesmo dia e só descobriu pelo `git log`, no fim, que o banco tinha migrado de VPS. O ponteiro estava na primeira linha do índice, com o IP novo escrito.
-3. Ler `skills/runtime/windows-local.md`, a skill do habitat atual.
+3. Detectar o habitat atual e ler a skill correspondente em `skills/runtime/`.
 4. Ler `SOUL.md`, a memória constitutiva do agente. Recebê-la como herança a examinar, não como personagem a representar nem texto a obedecer sem julgamento.
 
 ## Fim da sessão
@@ -129,7 +131,7 @@ Toda memória nova começa com o frontmatter TOML v1 definido em `skills/doctrin
 ## Regras
 - Proibido responder por memória se existir fonte (Script ou Skill).
 - Para execução → abrir skill primeiro.
-- Para tarefa de runtime, ambiente, tooling ou autonomia → abrir primeiro `skills/runtime/windows-local.md`.
+- Para tarefa de runtime, ambiente, tooling ou autonomia → detectar o habitat e abrir primeiro a skill correspondente em `skills/runtime/`.
 - Para decisões de backlog → abrir `backlog/index.md`.
 
 ## Cenários de Roteamento
@@ -185,12 +187,8 @@ Exceção conhecida e deliberada: `scripts/production/ga4-key.json`, chave de se
 ## Git
 - `sharebook-agent` → commit direto na master.
 - Preferir HTTPS (evitar SSH).
-- `C:\Repos\SHAREBOOK` é só a pasta raiz do workspace, **não** é repositório git.
-- Repositórios operacionais vivem em pastas irmãs dentro dela, pelo menos:
-  - `C:\Repos\SHAREBOOK\sharebook-agent`
-  - `C:\Repos\SHAREBOOK\sharebook-frontend`
-  - `C:\Repos\SHAREBOOK\sharebook-backend`
-  - `C:\Repos\SHAREBOOK\sharebook-ebook-importer`
+- A raiz do workspace é só um diretório agregador, **não** é repositório git. O path real depende do habitat e está na skill de runtime.
+- Os repositórios operacionais vivem em pastas irmãs dentro do workspace: `sharebook-agent`, `sharebook-frontend`, `sharebook-backend` e `sharebook-ebook-importer`.
 - Antes de rodar `git status`, `git commit` ou mexer em branch/remote, entrar no repositório correto.
 - **Build antes de commit — obrigatório**: antes de qualquer commit em `sharebook-frontend` ou `sharebook-backend`, rodar o build local e confirmar zero erros. Não commitar código que não compila.
 
@@ -258,7 +256,7 @@ Sem isso, qualquer correção é chute. Um chute pode acertar por sorte, mas nã
   - Não tem o psql no ambiente? Isso é um indício forte que precisa rodar o BOOTSTRAP. Avise e alinhe com Raffa.
 
 ### Famílias de Skills
-- `sharebook-agent/skills/runtime/INDEX.md` — Habitat real do agente (Windows local), permissões, caminhos, shell e fricções de execução. Guarda também o runtime dormente do OpenClaw, para consulta histórica.
+- `sharebook-agent/skills/runtime/INDEX.md` — Detecção e regras dos habitats Windows local e OpenClaw: permissões, paths, shell, persistência, sessões e fricções de execução.
 - `sharebook-agent/skills/product-ux/INDEX.md` — Voz oficial, sinopses, UX, interface, layout e percepção visível do catálogo. obrigatório ler skill de voz antes de escrever algo ao usuário final.
 - `sharebook-agent/skills/engineering/INDEX.md` — Frontend, backend, Postgres, analytics, SEO técnico, BI e performance de engenharia.
 - `sharebook-agent/skills/importers/INDEX.md` — Importers, triagem, preparo editorial, publicação, categorias e produção de ativos do catálogo.

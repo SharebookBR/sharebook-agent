@@ -1,8 +1,8 @@
-# Materializa no Windows os assets de itens triados pelo runtime OpenClaw (desprovisionado em 2026-08-16).
+# Materializa no Windows assets de itens cujo volume OpenClaw original foi removido em 2026-08-16.
 #
 # Problema que resolve:
 #   Itens triados antes de 2026-08-16 têm metadata_json apontando para
-#   /data/workspace/sharebook-ebook-importer/var/tmp/triage-<ID>/, que não existe em lugar nenhum hoje.
+#   /data/workspace/sharebook-ebook-importer/var/tmp/triage-<ID>/, cujos arquivos antigos não voltam com o novo volume.
 #   O publisher resolve o PDF por caminho absoluto do manifest, então falha com
 #   "item sem PDF materializado pela triagem" mesmo com a triagem íntegra no banco.
 #
@@ -161,7 +161,7 @@ def rehome(item_id: int, cur, max_cover_bytes: int, opener) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Materializa assets no Windows para itens triados no runtime dormente"
+        description="Materializa no Windows assets perdidos com o volume OpenClaw removido"
     )
     parser.add_argument("--ids", nargs="+", type=int, required=True)
     parser.add_argument(

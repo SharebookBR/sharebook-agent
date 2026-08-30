@@ -76,7 +76,7 @@ waiting_triage → triaging → waiting_editorial → editing → waiting_publis
 
 ## Workflow canônico
 
-Os comandos abaixo são do CLI do importer e independem de habitat. Onde eles rodavam automaticamente por worker/cron no container OpenClaw, hoje não há runtime — ver "Agendamento: onde olhar". Execução manual é no Windows local; o ciclo completo, incluindo materialização de assets, está em `windows-manual.md`.
+Os comandos abaixo são do CLI do importer e independem de habitat. O OpenClaw entrou em reativação em 2026-08-30, mas gateway online não prova worker agendado — ver "Agendamento: onde olhar". Enquanto o cron Linux não passar pelo preflight, a execução canônica continua manual no Windows (`windows-manual.md`).
 
 ### 1. Triagem mecânica
 
@@ -118,7 +118,7 @@ Guardrails de publish:
 - Item com triagem/editorial íntegros e PDF real materializado pode falhar só no transporte do publish. Se `prepare_pdf_for_publish()` estimar payload acima de `upload_request_limit_bytes`, tentar otimização com Ghostscript; se ainda exceder, tratar como gargalo de upload/publish, não como falha de triagem.
 - Não tratar PDF fake como solução padrão. Para PDF grande demais, o conserto estrutural preferido é melhorar o fluxo de upload de arquivos grandes; o workaround com fake PDF + S3 direto continua sendo exceção operacional.
 - **Tamanho de PDF não é motivo suficiente para desviar do worker normal.** Medido em 2026-08-17: 34,1 MB e 35,7 MB publicaram por `publish-once --id` do Windows, uma tentativa cada, sem erro de transporte. O teto útil é ~37 MB pelo estimador do importer. Sempre tentar o worker normal primeiro e exigir a falha observada antes de escalar para fake PDF.
-- **Item triado antes de 2026-08-16 precisa dos assets rematerializados** antes de qualquer publish — o manifest aponta para o container desprovisionado. Ver `windows-manual.md`, "Assets órfãos do runtime dormente".
+- **Item triado antes de 2026-08-16 precisa dos assets rematerializados** antes de qualquer publish — o volume antigo foi apagado; recriar `/data/workspace` não recria aqueles arquivos. Ver `windows-manual.md`, "Assets órfãos do volume removido".
 
 ---
 
@@ -168,37 +168,47 @@ O Sharebook assume conscientemente o risco operacional de casos incertos para fo
 
 ## Agendamento: onde olhar
 
-> **Sem runtime desde 2026-08-16.** Os dois mecanismos de agendamento viviam dentro do container OpenClaw, que foi desprovisionado. Hoje **nada do importer roda sozinho**: nem a triagem mecânica, nem o publish, nem a preparação editorial. Todo avanço de item é manual, pelo Windows local (`windows-manual.md`).
->
-> Não existe substituto documentado no habitat atual. Definir onde e como reagendar é decisão em aberto — não improvisar um agendador novo sem alinhar com o Raffa.
+O OpenClaw entrou em reativação em 2026-08-30. Há dois mecanismos independentes; só declarar cada um ativo depois de validação própria:
 
-O que segue descreve os mecanismos como eram, e volta a valer se o habitat for reprovisionado.
+- cron Linux: triagem mecânica e publish Python;
+- OpenClaw Automations: preparação editorial agentic.
 
-### Cron Linux local (dormente)
+Até o cron Linux ser instalado e produzir log/run real, o ciclo Windows continua sendo o fallback canônico.
+
+### Cron Linux do importer
 
 ```bash
 bash setup-importer-cron.sh install | status | remove | start-daemon
 ```
 
-Logs em `var/logs/`. Lock/estado em `var/state/`.
+Fonte canônica: `sharebook-ebook-importer/setup-importer-cron.sh`. Defaults atuais: triagem a cada 15 minutos entre 00h e 08h; publish nos minutos 5 e 35, com limite 10; timezone `America/Sao_Paulo`. Logs em `var/logs/`; locks/estado em `var/state/`.
 
-### Cron agentic do OpenClaw (dormente)
+### OpenClaw Automations
 
-Job `editorial-preparer` em `/data/.openclaw/cron/jobs.json`. Não é triagem mecânica nem publish Python — é preparação editorial automática.
+Job histórico `editorial-preparer`. Não é triagem mecânica nem publish Python — é preparação editorial automática.
 
-### Ordem de diagnóstico de incidente (dormente)
+Na release estável `2026.7.1-2`:
 
-1. `crontab -l`
+```bash
+openclaw cron status
+openclaw cron list --agent main --all
+openclaw cron runs --id <job-id> --limit 10
+```
+
+A documentação mais nova chama o subsistema de `openclaw automations`; detectar pela ajuda da versão instalada. Desde 2026.6.1, jobs e histórico ficam no SQLite compartilhado. `/data/.openclaw/cron/jobs.json` é apenas entrada de migração legada.
+
+### Ordem de diagnóstico de incidente
+
+1. `bash setup-importer-cron.sh status`
 2. `var/logs/importer-cron.log`
-3. Postgres: `importer.runs`, `importer.queue_items` — **este passo continua válido hoje**, é o único que não depende do container
-4. `/data/.openclaw/cron/jobs.json`
+3. Postgres: `importer.runs`, `importer.queue_items`
+4. `openclaw cron status`, `openclaw cron list --agent main --all` e histórico do job relevante na release estável
 
 ---
 
 ## Bootstrap e recovery do container
 
-> **Dormente desde 2026-08-16.** Toda esta seção descreve o container OpenClaw, desprovisionado. Não presumir este runtime disponível no presente.
-> Preservado intencionalmente para tornar barato um eventual retorno — não apagar.
+Esta seção volta a ser acionável durante a reativação de 2026-08-30. Seguir também `BOOTSTRAP.md` e `skills/runtime/openclaw.md`; container online sem este checklist não é worker ativo.
 
 ### Checklist mínimo
 
@@ -296,9 +306,9 @@ Exemplos não aceitáveis:
 - simular `plan-set`;
 - mascarar falha técnica ou bloqueio de source como decisão humana.
 
-### Runtime OpenClaw/mini (dormente)
+### Runtime OpenClaw/mini
 
-> Regra do habitat desprovisionado em 2026-08-16. Não se aplica hoje; preservada para um eventual retorno.
+Usar somente depois de confirmar checkout, dependências e ferramenta efetiva no container:
 
 ```bash
 cd /data/workspace/sharebook-ebook-importer && sh -c 'python3 cli.py editor-next --source <SOURCE>'
@@ -383,7 +393,7 @@ Sync atualiza apenas `title` e `updated_at` em itens existentes. Nunca resetar `
 
 ### Hardening a partir de `source_blocked` recorrente
 
-Não existe mais heartbeat automático — ele rodava no OpenClaw. A varredura hoje é manual, na revisão de triagem. O critério abaixo não mudou.
+Não presumir heartbeat de expansão de sources só porque o OpenClaw voltou. Enquanto nenhum job específico for listado e validado por run, a varredura continua manual na revisão de triagem. O critério abaixo não mudou.
 
 Quando aparecer `source_blocked` recorrente por família de URL, o alvo preferencial é transformar o caso em uma destas saídas:
 - resolver asset PDF público reutilizável;
@@ -464,7 +474,7 @@ Scripts em `skills/importers/ebook-importer/scripts/`. Regra: se não está aqui
 | Script | Comando | O que faz |
 |---|---|---|
 | `manual_triage_windows.py` | `python ... --ids <ids>` | Triagem: valida PDF, extrai texto, monta metadata → `waiting_editorial` |
-| `materialize_assets_windows.py` | `python ... --ids <ids> [--max-cover-bytes N]` | Reanima item triado no runtime dormente: baixa o PDF de `manifest.source_url`, renderiza e comprime a capa, reaponta os caminhos `/data/workspace/...` para Windows por merge. Idempotente |
+| `materialize_assets_windows.py` | `python ... --ids <ids> [--max-cover-bytes N]` | Reanima item cujos assets sumiram com o volume removido em 2026-08-16: baixa o PDF de `manifest.source_url`, renderiza e comprime a capa, reaponta os paths para Windows por merge. Idempotente |
 | `render_covers.py` | `python ... --ids <ids>` | Renderiza página 1 como PNG, atualiza `triage.preview_pages`. Procura o PDF em `triage-<id>\source.pdf` e depois em `Downloads\<id>.pdf` |
 | `publish_fake_pdf.py` | `python ... --id <id> [--pdf-path <pdf>] [--cover-path <capa>]` | **Exceção**, não rota de PDF grande: cria com fake.pdf, envia o PDF real ao S3, aprova e marca `done`; usa `IMPORTER_DB_DSN` e renova token expirado |
 

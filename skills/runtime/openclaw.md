@@ -1,174 +1,187 @@
 # Sharebook Runtime — OpenClaw
 
-> **Status: habitat dormente desde 2026-08-16.**
-> O container OpenClaw foi desprovisionado. Não presumir este runtime disponível no presente.
-> Este arquivo é preservado intencionalmente para tornar barato um eventual retorno — não apagar.
+> **Status: em reativação desde 2026-08-30.**
+> O container só é considerado operacional depois do preflight desta skill. Existir no Coolify ou responder HTTP não prova workspace, memória, ferramentas nem automações.
 
-Regras específicas para quando o Sharebook-agent estiver rodando dentro do OpenClaw.
-
-Tudo abaixo descreve o habitat como ele era enquanto existiu. Nada aqui é acionável hoje: o habitat operacional atual é `./windows-local.md`.
+Regras específicas para sessões que rodam dentro do OpenClaw. Uma sessão Windows operando a VPS por SSH continua sendo Windows e usa este arquivo como playbook do alvo remoto.
 
 ## Quando usar
 
-- Somente se o OpenClaw for reprovisionado — aí este arquivo volta a valer como escrito.
-- Como referência histórica ao investigar decisão, path ou fricção da época em que o habitat existia.
-- Antes de executar trabalho relevante neste ambiente, caso ele volte.
-- Sempre que houver dúvida sobre autonomia, memória, cron, sessões, permissões, messaging, configuração, persistência ou comportamento de tooling.
+- No início de uma sessão hospedada pelo OpenClaw.
+- Ao provisionar, atualizar ou diagnosticar o container, sua persistência, memória, sessões, ferramentas, canais ou automações.
+- Como referência ao operar o OpenClaw a partir do Windows.
 
-## O que este habitat torna possível
+## Princípio do habitat
 
-- Workspace persistente em volume.
-- Ferramentas reais de arquivo, shell, rede, banco, canvas, memória e messaging.
-- Memória episódica, memória durável e active retrieve.
-- Sessões, subagentes, cron e trabalho assíncrono.
-- Alta autonomia operacional com validação concreta no ambiente.
+OpenClaw é infraestrutura cognitiva e operacional: workspace persistente, memória recuperável, sessões, subagentes, automações e messaging podem existir. **Podem** não significa **existem**. Depois de rebuild, upgrade ou troca de volume, provar cada capacidade antes de usá-la.
 
-OpenClaw não é só runtime. É infraestrutura cognitiva e operacional. Trabalhe como quem tem memória, ferramentas e continuidade reais.
+## Abertura de sessão
 
-## Abertura de sessão neste habitat
+1. Confirmar runtime e versão com `openclaw --version`.
+2. Confirmar workspace, config e ownership reais; não presumir que o layout histórico sobreviveu.
+3. Fazer sync dos quatro repositórios e ler todas as memórias episódicas do dia corrente.
+4. Ler `AGENTS.md`, esta skill e `SOUL.md` a partir do checkout efetivo.
+5. Consultar skill, script, log, payload, banco ou estado real antes de improvisar narrativa.
+6. Para passado, decisão, preferência, pessoa ou data, usar `memory_search` quando disponível e confrontar o resultado com a fonte canônica.
 
-No início da sessão:
+## Preflight obrigatório após provisionamento ou upgrade
 
-1. Confirmar que está em OpenClaw.
-2. Assumir que memória, workspace persistente, ferramentas reais e trabalho assíncrono estão disponíveis.
-3. Procurar skill, script, log, payload, banco ou estado real antes de improvisar narrativa.
-4. Se a tarefa tocar passado, decisão, preferência, pessoa, data ou contexto prévio, usar recuperação de memória.
-5. Se a tarefa tocar operação real da casa, preferir checagem concreta antes de opinião.
+Executar no container e guardar a saída sem segredos:
 
-## Escolha de mecanismo
+```bash
+openclaw --version
+openclaw config validate
+openclaw doctor --lint
+openclaw status --deep
+openclaw memory status --deep --agent main
+openclaw cron status
+openclaw cron list --agent main --all
+```
 
-Use o mecanismo mais nativo e menos improvisado que resolva o problema.
+Além disso:
 
-- **Ferramenta nativa do OpenClaw**: usar quando houver ação de primeira classe.
-- **`exec`**: usar para shell real, diagnóstico local, scripts do repositório e integrações não cobertas por ferramenta nativa.
-- **Subagente ou sessão destacada**: usar quando o trabalho for mais longo, exigir isolamento de contexto ou puder seguir em paralelo.
-- **`cron`**: usar para espera longa, follow-up, lembrete, wake ou rotina recorrente. Não simular isso com sleep ou polling manual.
-- **Recuperação de memória**: usar para fatos passados, decisões, preferências, nomes, datas e continuidade entre sessões.
-- **`session_status`**: usar para hora, modelo, configuração da sessão e leitura de estado operacional da sessão.
+1. Confirmar os mounts persistentes do ponto de vista do host e do container.
+2. Confirmar os quatro repositórios em `/data/workspace/` ou registrar o novo path real.
+3. Confirmar escrita como o usuário do processo e ownership consistente.
+4. Confirmar `memory_search` com uma busca controlada que tenha resultado conhecido.
+5. Confirmar ferramentas efetivas na própria sessão (`/tools` ou equivalente), sem deduzir pelo perfil configurado.
+6. Confirmar Control UI, canal usado pelo Raffa e um round-trip real do agente.
+7. Confirmar jobs um por um. Job listado não basta: exigir histórico recente ou execução controlada.
 
-## Regras de operação
+Falha em um item não invalida todo o runtime; invalida apenas a capacidade correspondente. Documentar o estado parcial em vez de declarar vitória binária.
 
-- Agir no mundo real antes de teorizar quando a próxima ação for clara e segura.
-- Validar no estado real do sistema antes de declarar vitória.
-- Usar ferramenta nativa do OpenClaw em vez de improvisar equivalente por shell quando existir ferramenta de primeira classe.
-- Em tarefa não trivial, manter plano curto e depois executar sem pedir confirmação desnecessária.
-- Se houver fonte canônica local, olhar a fonte antes da narrativa.
-- Tratar OpenClaw como habitat com continuidade real, não como chat descartável.
+## Versão e atualização
+
+- Usar imagem oficial `ghcr.io/openclaw/openclaw` ou `openclaw/openclaw`.
+- Produção usa release estável versionada; beta exige alinhamento explícito com Raffa.
+- Conferir dist-tags com `npm view openclaw version dist-tags --json`, mas não transformar `latest` flutuante em política de deploy.
+- Não executar `openclaw update` dentro do container. Atualização de produção é nova imagem + redeploy pelo Coolify.
+- Depois do upgrade, rodar o preflight inteiro. Migração automática de config não prova plugins, índice de memória nem jobs.
+
+Referências oficiais: [Docker](https://docs.openclaw.ai/install/docker), [releases](https://github.com/openclaw/openclaw/releases) e [configuração](https://docs.openclaw.ai/gateway/configuration).
+
+## Configuração e persistência
+
+- Preferir `openclaw config get|set|unset` para mudanças simples.
+- Antes de editar campo incerto, consultar `openclaw config schema` ou `config.schema.lookup`; a validação atual é estrita.
+- Rodar `openclaw config validate` depois de qualquer mudança. Usar `openclaw doctor --fix` somente após ler os achados e entender a migração proposta.
+- A configuração usa hot reload `hybrid` por padrão. `config set` prova persistência, não aplicação; validar o valor efetivo e o estado do subsistema.
+- O deployment histórico do Sharebook montava config em `/data/.openclaw` e workspace em `/data/workspace`. A imagem oficial atual usa `/home/node/.openclaw` internamente. O mount real do Coolify decide: inspecionar, não adivinhar.
+- Persistir juntos o config, o banco compartilhado `state/openclaw.sqlite`, os bancos por agente e o workspace. Preservar separadamente o diretório da chave que cifra perfis OAuth.
+- Credenciais Sharebook continuam apenas em `sharebook-agent/.env`. Segredos do gateway/provider entram por variáveis/SecretRefs do runtime e nunca no Git, em memória episódica ou output de diagnóstico.
+
+## Gateway, proxy e Control UI
+
+- Para acesso público, `gateway.controlUi.allowedOrigins` deve conter origins completos e exatos, por exemplo `https://claw.sharebook.com.br`, sem barra final.
+- Não usar `allowedOrigins: ["*"]` nem `dangerouslyAllowHostHeaderOriginFallback` em produção.
+- Em Docker, preferir o bind suportado pela versão (`lan` no setup oficial atual) em vez de transportar cegamente o antigo `0.0.0.0`.
+- `gateway.trustedProxies` deve conter apenas o proxy/rede real do Coolify. O antigo `0.0.0.0/0` era permissivo demais e não é receita canônica.
+- Validar o domínio público e também o probe interno do Gateway; uma camada verde não prova a outra.
+
+Referências oficiais: [Control UI](https://docs.openclaw.ai/control-ui) e [segurança do Gateway](https://docs.openclaw.ai/gateway/security).
 
 ## Memória e continuidade
 
-- Tratar memória como infraestrutura, não enfeite.
-- Para fatos passados, decisões, preferências, pessoas ou datas, usar recuperação de memória antes de responder.
-- Aprendizado recorrente deve subir para skill, script ou memória durável.
-- Não deixar fricção boa morrer na sessão.
-- Não despejar regra de habitat no `AGENTS.md` se ela pertence a esta skill.
+- A memória canônica do projeto continua em `MEMORY.md` e `memory/*.md`; índice é mecanismo de acesso, não fonte superior.
+- Na release estável `2026.7.1-2`, a configuração vive em `agents.defaults.memorySearch`. Documentação de versões posteriores já mostra `memory.search`; consultar `openclaw config schema` antes de migrar.
+- O provider padrão é OpenAI; `sources: ["memory"]` evita indexar transcripts por acidente. Não habilitar `sessions` ou `experimental.sessionMemory` sem decisão explícita sobre a fronteira de recall.
+- Mudança de provider, modelo, sources ou tokenizer pode invalidar a identidade do índice. Inspecionar com `openclaw memory status --deep --agent main`; usar `--index` deliberadamente apenas quando a reconstrução for necessária.
+- Active Memory é para conversas interativas persistentes. Não roda em headless one-shot, heartbeat, cron ou subagente interno.
 
-## Configuração, persistência e volumes
+Configuração inicial recomendada para o Sharebook:
 
-- Preferir comando oficial do OpenClaw para configuração. Não confiar em edição manual de JSON quando houver comando nativo.
-- Em configuração de CORS/origin, usar origin completo e exato, sem barra final.
-- Lembrar que os caminhos críticos de persistência do OpenClaw ficam em `/data/workspace` e `/data/.openclaw`.
-- Em ambiente com container e host separados, não assumir que path visto dentro do container é o mesmo path do host.
-- Validar arquivo operacional ou config do ponto de vista do runtime real, não só do host.
+```json5
+{
+  agents: {
+    defaults: {
+      memorySearch: {
+      enabled: true,
+      provider: "openai",
+      model: "text-embedding-3-small",
+      fallback: "none",
+      sources: ["memory"],
+      },
+    },
+  },
+  plugins: {
+    entries: {
+      "active-memory": {
+        enabled: true,
+        config: {
+          agents: ["main"],
+          allowedChatTypes: ["direct"],
+          queryMode: "recent",
+          promptStyle: "balanced",
+          timeoutMs: 15000,
+          maxSummaryChars: 220,
+          logging: true,
+        },
+      },
+    },
+  },
+}
+```
 
-## Permissões e ownership
+O schema estável `2026.7.1-2` rejeita `config.mode`; esse campo aparece em versões posteriores. Só adicioná-lo depois de upgrade e `openclaw config schema` confirmar suporte.
 
-- Arquivos editáveis do workspace devem pertencer a `node:node` quando esse for o padrão operacional do container.
-- Se falhar `git add`, rename, write ou replace após operação como root, suspeitar primeiro de ownership inconsistente.
-- Comando canônico de correção no repositório do agente:
-  ```bash
-  chown -R node:node /data/workspace/sharebook-agent
-  ```
-- As pastas em `/data/workspace/` são persistentes. Não guardar estado crítico fora desses volumes.
+Referências oficiais: [memória](https://docs.openclaw.ai/reference/memory-config) e [Active Memory](https://docs.openclaw.ai/concepts/active-memory).
 
-## Cron, sessões e trabalho assíncrono
+## Sessões e subagentes
 
-- Preferir cron do OpenClaw para lembretes, wakes e rotinas agenticas.
-- Se o ambiente também usar cron Linux interno, manter o setup reidempotente, documentado e versionado.
-- Não depender de configuração manual feita via `docker exec` que não esteja scriptada.
-- Quando o trabalho ficar mais longo, complexo ou destacável, considerar subagente ou tarefa assíncrona.
-- **Padrão para subagentes: usar `mode: "session"`.**
-- **Só usar `mode: "run"` quando houver motivo forte e com ok explícito do Raffa.**
-- Não usar polling frenético. Preferir `yieldMs`, `process poll` com timeout decente, ou cron quando o caso for espera longa.
-- Tratar sessões e subagentes como ferramenta normal de separação de contexto, não como extravagância.
+- Usar `sessions_spawn` para trabalho de fundo isolado. O default atual é `mode: "run"` e contexto isolado.
+- Usar `context: "fork"` apenas quando o filho realmente depender da conversa atual; não é substituto para um briefing claro.
+- `mode: "session"` exige `thread: true` e só funciona em canais com thread binding. Não usar como default universal.
+- Trabalho que o Raffa acompanhará ou retomará deve usar sessão visível quando a ferramenta oferecer `visible: true`.
+- Usar `sessions_yield` para esperar resultado quando disponível. Não recriar espera com polling frenético.
+- Subagentes têm custo e política de tools próprios; confirmar `/tools` e limites efetivos antes de delegar operação sensível.
 
-## Messaging e canais
+Referência oficial: [subagentes](https://docs.openclaw.ai/tools/subagents).
 
-- Responder pelo canal atual quando a conversa é local da sessão.
-- Para envio proativo ou cross-session, usar as ferramentas do OpenClaw. Não improvisar provedor por `curl`.
-- Em grupos, evitar resposta meia-boca. Validar mais antes de falar.
-- Ajustar formato ao canal real. Não presumir WhatsApp quando estiver na web, nem web quando estiver no WhatsApp.
+## Automações e trabalho assíncrono
 
-## Armadilhas recorrentes já pagas
+- Na release estável `2026.7.1-2`, a CLI é `openclaw cron`. A documentação mais nova já chama o mesmo subsistema de `openclaw automations`; detectar pela ajuda da versão instalada em vez de presumir alias.
+- Usar automações para wakes, follow-ups e rotinas agentic. Não usar `sleep` longo.
+- Automação OpenClaw e cron Linux do importer são mecanismos diferentes. Restaurar um não restaura o outro.
+- Desde 2026.6.1, jobs e histórico vivem no SQLite compartilhado. O `jobs.json` é entrada de migração legada; não editá-lo como fonte canônica.
+- Após restore ou upgrade, listar jobs e validar um run controlado. Ausência de erro no boot não prova scheduler.
 
-- Editar config manualmente quando existe `openclaw config set`.
-- Tratar caminho do container como se fosse caminho do host.
-- Esquecer que `/data` é volume persistente e que host e container podem divergir.
-- Cair em shell improvisado quando existe ferramenta nativa melhor.
-- Polling demais para espera que deveria usar cron ou timeout decente.
-- Declarar resolução sem prova no ambiente real.
-- Misturar regra de Windows local nesta camada.
-- Deixar arquivo como root e depois fingir surpresa quando Git ou escrita quebrar.
+Referência oficial: [automações](https://docs.openclaw.ai/cli/cron).
 
-## Quando promover aprendizado
+## Ferramentas, shell e ownership
 
-- Fricção recorrente de habitat OpenClaw → atualizar esta skill.
-- Procedimento de domínio do Sharebook → atualizar a skill de domínio correspondente.
-- Decisão transversal e durável → promover para `MEMORY.md`.
-- Contexto local da rodada → manter em memória episódica.
-- Não usar `AGENTS.md` como depósito de detalhe operacional que pertence a runtime ou skill específica.
+- Preferir ferramenta nativa quando houver ação de primeira classe; usar `exec` para scripts e diagnóstico local.
+- O perfil `coding` inclui filesystem, runtime, web, sessions, memory e automação, mas políticas allow/deny ainda podem remover tools.
+- Repositórios ficam em pastas irmãs do workspace persistente. Confirmar o path real antes de Git.
+- Arquivos editáveis devem pertencer ao usuário do processo. O histórico usava `node:node`, mas não rodar `chown -R` até confirmar UID/GID e mount corretos.
+- Se `git add`, rename ou escrita falhar depois de uma operação root, checar ownership antes de culpar Git.
 
 ## Diagnóstico de sessões silenciosas / falhas de modelo
 
-Quando sessões de agente (especialmente subagentes/mini) completam sem output real, sem tools chamadas e com `usage: {}` (objeto vazio, não `{total: 0}`), suspeitar de token OAuth expirado/corrompido antes de culpar rate limit.
+Quando sessões completarem sem output real, sem tool calls e com `usage: {}`, suspeitar de auth/provider antes de chamar de rate limit.
 
-### Assinatura de falha OAuth
-
-- Trajectory mostra `usage: {}` — objeto vazio, não zero
-- Zero tool calls (`tool.call: 0×`)
-- Duração ~2-4s (vs ~60s saudável)
-- Todo conteúdo pré-modelo (system prompt, tools, workspace) é byte-idêntico entre saudável e falho
-- Divergência está na resposta do modelo, não no input
-
-### Padrão de falha
-
-- **Intermitente**: mesma sessão pode funcionar em uma hora e falhar na seguinte
-- **Seletivo por agente**: agente principal funciona enquanto mini falha no mesmo dia (tokens OAuth são independentes por codex-home)
-- **Determinístico por sessão**: todas as runs de uma sessão falha mostram o mesmo padrão
-
-### Procedimento de diagnóstico
-
-1. Comparar codex-homes:
-   ```bash
-   diff /data/.openclaw/agents/main/agent/codex-home/.auth/ \
-        /data/.openclaw/agents/mini/agent/codex-home/.auth/
-   ```
-2. Reautenticar OAuth do agente afetado:
-   ```bash
-   openclaw models auth login --provider openai-codex --agent <agent-name>
-   ```
-3. Teste controlado: rodar 1 run do agente afetado com modelo DeepSeek (não OpenAI). Se produzir output real, o problema é específico do túnel OpenAI+OAuth.
-4. Mitigação imediata: trocar jobs cron para `deepseek/deepseek-v4-pro` até revalidar OAuth.
-
-### Referências
-
-- GitHub OpenClaw #50452: OAuth expiry → falso "rate limit"
-- GitHub OpenClaw #32828: Detecção agressiva de rate-limit
-- OpenAI Community: relatos de "credits draining while idle" com GPT-5.5 (assinatura OAuth, não API key)
+1. Ler trajectory, logs e duração reais.
+2. Comparar perfis de auth dos agentes sem imprimir tokens.
+3. Rodar `openclaw models auth login --provider openai-codex --agent <agent-name>` se a evidência apontar OAuth.
+4. Fazer teste controlado com outro provider/model. Se funcionar, o defeito é específico do caminho OpenAI+OAuth.
+5. Não copiar auth de um agente para outro; os perfis são independentes.
 
 ## Diagnóstico rápido
 
-1. Ver estado real antes de opinar: logs, arquivos, banco, payloads, filas.
-2. Se edição ou Git falhar, checar ownership.
-3. Se persistência parecer quebrada, checar volume, path real e espaço.
-4. Se automação parecer fantasma, checar cron, logs e estado persistido.
-5. Se houver dúvida sobre passado ou decisão já tomada, recuperar memória antes de responder.
-6. Se sessão de subagente completar sem tools e com `usage: {}`, suspeitar de OAuth expirado (ver seção de diagnóstico acima).
+1. `openclaw --version`, `openclaw config validate`, `openclaw doctor --lint`.
+2. `openclaw status --deep` e logs do Gateway.
+3. Mounts, disco e ownership.
+4. `openclaw memory status --deep --agent main` e busca controlada.
+5. `openclaw cron status`, `openclaw cron list --agent main --all` e histórico do job relevante na release estável.
+6. Ferramentas efetivas da sessão.
+7. Domínio público, origin exata e proxy real.
 
 ## Anti-padrões
 
-- Agir como se este habitat fosse igual ao Windows local.
-- Ignorar ferramentas nativas e cair em shell improvisado por hábito.
-- Declarar resolução sem validação no ambiente real.
-- Esquecer que OpenClaw permite continuidade real e trabalho assíncrono.
-- Tratar memória, cron, sessões e subagentes como opcional decorativo quando eles são parte estrutural do habitat.
+- Tratar container `running` como habitat operacional completo.
+- Transportar paths, tools ou processos do Windows para o Linux — ou o inverso.
+- Usar config antiga sem consultar schema da versão instalada.
+- Editar config/SQLite manualmente quando existe CLI ou RPC suportado.
+- Atualizar pacote dentro do container e perder a mudança no próximo redeploy.
+- Abrir origin ou trusted proxy para o mundo por conveniência.
+- Declarar memória ou automação restaurada sem teste funcional.
+- Deixar arquivo como root e descobrir a quebra só no commit seguinte.

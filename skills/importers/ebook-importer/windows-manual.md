@@ -1,18 +1,18 @@
 # Ciclo Manual Windows
 
-Ciclo completo de processamento de um item a partir do Windows local, incluindo os casos em que o worker não dá conta sozinho (`source_blocked`, PDF grande demais).
+Ciclo completo de processamento de um item a partir do Windows local, incluindo os casos em que o worker remoto não dá conta sozinho (`source_blocked`, PDF grande demais) ou ainda não passou pelo preflight.
 
-Desde 2026-08-16, com o OpenClaw dormente, **este é o único ciclo com runtime**. Não há worker agendado em lugar nenhum — todo item avança por execução manual daqui.
+O OpenClaw entrou em reativação em 2026-08-30. Este fluxo continua sendo o fallback canônico até cron, checkout e assets remotos serem validados no novo container.
 
 ---
 
-## ⚠️ Regra crítica sobre triage no Windows — pressuposto vencido
+## ⚠️ Regra crítica: triage e publish no mesmo habitat
 
-A regra antiga era: **nunca rodar `triage-once` no Windows para avançar um item de verdade**, porque o triage materializa arquivos localmente (`var/tmp/triage-<ID>/`) e o worker de publish rodava no OpenClaw, esperando encontrá-los lá.
+`triage-once` materializa arquivos em `var/tmp/triage-<ID>/`; o publish precisa enxergar exatamente esses assets.
 
-Esse pressuposto morreu com o container. Não existe mais publish remoto, então não existe mais a divisão que a regra protegia.
-
-O que continua verdadeiro: **triage e publish precisam ver os mesmos arquivos**. No Windows isso significa materializar os assets nos caminhos que o worker espera (Passo 3b) antes de chamar `publish-once`. Se os caminhos não baterem, o publish falha exatamente como antes — só que agora sem nenhum outro lugar para onde apontar.
+- Se o item seguirá pelo worker remoto, triage e publish rodam no OpenClaw.
+- Se o item seguirá por este ciclo, os assets ficam no Windows e são espelhados nos paths do Passo 3b.
+- Não triar no Windows esperando que um publish remoto encontre os arquivos — os habitats não compartilham filesystem.
 
 **Pendência aberta**: a metade `publish-once` está validada em produção — 4 itens (1553, 1502, 1582, 1471) publicados em 2026-08-17 direto do Windows, uma tentativa cada, com os assets espelhados pelo Passo 3b. O que **continua não validado** é a metade `triage-once`: nessas quatro publicações a triagem já existia no banco (feita pelo runtime antigo) e só os arquivos foram materializados na mão. Rodar `triage-once` no Windows e emendar no publish sem intervenção segue sem prova.
 
@@ -23,15 +23,15 @@ O que continua verdadeiro: **triage e publish precisam ver os mesmos arquivos**.
 - Item em `source_blocked` com PDF baixável manualmente (WAF, signed URL, domínio migrado)
 - Item em `error` com "pdf grande demais" — mas confirmar o limite real antes, ver Passo 4
 - PDF já disponível em `C:\Users\raffa\Downloads\<id>.pdf`
-- **Item triado antes de 2026-08-16 com assets apontando para `/data/workspace/...`** — o caso mais comum hoje, ver "Assets órfãos do runtime dormente"
+- **Item triado antes de 2026-08-16 com assets apontando para `/data/workspace/...`** — o volume antigo foi apagado; ver "Assets órfãos do volume removido"
 
 ---
 
-## Assets órfãos do runtime dormente
+## Assets órfãos do volume removido
 
 Itens triados pelo container OpenClaw têm `metadata_json.manifest.downloaded_pdf_path` e
 `triage.preview_pages` apontando para `/data/workspace/sharebook-ebook-importer/var/tmp/triage-<ID>/`.
-Esse caminho não existe em lugar nenhum desde o desprovisionamento. A triagem no banco está íntegra
+O path pode voltar a existir no novo container, mas os arquivos antigos não: o volume de 16/08 foi apagado. A triagem no banco está íntegra
 (`context_text`, `mode`, `reason`), mas o publisher resolve o PDF por caminho absoluto do manifest e
 falha com **"item sem PDF materializado pela triagem"**.
 
@@ -52,29 +52,23 @@ O script é idempotente (reaproveita PDF já baixado) e faz merge no `metadata_j
 - URLs `.php?chapter=...` (opentextbookstore) penduram sem responder. Não insistir; tratar como fonte
   a resolver manualmente.
 
-## Publish remoto via SSH/docker exec — dormente
+## Publish remoto via SSH/docker exec
 
-> **Status: dormente desde 2026-08-16.**
-> O container OpenClaw foi desprovisionado. Não presumir este runtime disponível no presente.
-> Este trecho é preservado intencionalmente para tornar barato um eventual retorno — não apagar.
->
-> **No presente**: não existe atalho remoto. Todo item cai no ciclo manual descrito abaixo. O `vps_ssh.py` continua útil para a VPS em si (containers de backend, frontend, banco), só não há mais container do agente para entrar.
+Só usar depois do preflight do novo container. Itens triados pelo worker do OpenClaw devem ter `source.pdf` e `preview-pages/` materializados no mesmo checkout; nesse caso não usar o workaround de fake PDF + S3.
 
-Enquanto o habitat existiu, itens triados pelo worker do OpenClaw já tinham os assets (`source.pdf`, `preview-pages/`) materializados no container. Nesse caso **não** se defaultava para o workaround de fake PDF + S3 — ele existe para contornar limite do nginx, não é o caminho preferencial.
-
-Antes de qualquer workaround Windows, checava-se se dava para publicar no lugar certo:
+Antes de qualquer workaround Windows, checar os assets no lugar certo:
 
 ```powershell
-python scripts/infra/vps_ssh.py --cmd "docker exec <container_openclaw> ls /data/workspace/sharebook-ebook-importer/var/tmp/triage-<ID>/"
+python scripts/infra/vps_ssh.py --prefix VPS_HOSTGATOR_SSH --cmd "docker exec <container_openclaw> ls /data/workspace/sharebook-ebook-importer/var/tmp/triage-<ID>/"
 ```
 
-Existindo os assets, disparava-se o worker canônico direto dentro do container (sem materializar nada no Windows):
+Existindo os assets, disparar o worker canônico por ID dentro do container:
 
 ```powershell
-python scripts/infra/vps_ssh.py --cmd "docker exec <container_openclaw> sh -lc 'cd /data/workspace/sharebook-ebook-importer && python3 cli.py publish-once --source <SOURCE> --limit 1'"
+python scripts/infra/vps_ssh.py --prefix VPS_HOSTGATOR_SSH --cmd "docker exec <container_openclaw> sh -lc 'cd /data/workspace/sharebook-ebook-importer && python3 cli.py publish-once --id <ID>'"
 ```
 
-O item ia para `done` em uma única passada, sem fake PDF, sem upload manual de S3. Validado em produção em 2026-07-11 (item 1367).
+O padrão remoto foi validado no runtime antigo em 2026-07-11 (item 1367). O novo container exige nova prova antes de virar caminho verde.
 
 Após publicar, validar no catálogo real: rota do frontend é `/livros/:slug` (não `/livro/:slug`).
 

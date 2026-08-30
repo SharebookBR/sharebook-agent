@@ -2,7 +2,7 @@
 
 Regras específicas para o Sharebook-agent rodando no ambiente local Windows do Raffa.
 
-Este é **o** habitat operacional do agente. Desde 2026-08-16 não existe outro: o container OpenClaw foi desprovisionado e `./openclaw.md` está dormente.
+Este é o habitat das sessões locais no Windows. O OpenClaw voltou a ser um segundo habitat em 2026-08-30; sua existência não muda as limitações desta sessão nem autoriza transportar capacidades entre ambientes.
 
 ## Quando usar
 
@@ -50,7 +50,7 @@ Use o mecanismo mais simples e mais fiel ao habitat real.
 ## Paths, shell e encoding
 
 - Caminhos Windows são a fonte canônica. Os repositórios operacionais vivem em `C:\Repos\SHAREBOOK\`.
-- Alguns artefatos e CLIs ainda emitem caminhos POSIX `/data/workspace/...` herdados do runtime antigo (ex: saída do `editor-next`). Esses caminhos não existem em lugar nenhum hoje — traduzir para o repositório local correspondente em `C:\Repos\SHAREBOOK\`.
+- Alguns artefatos e CLIs emitem caminhos POSIX `/data/workspace/...` (ex: saída do `editor-next`). Eles pertencem ao habitat OpenClaw e não existem nesta máquina; ao executar no Windows, traduzir para o repositório local correspondente em `C:\Repos\SHAREBOOK\`.
 - Em PowerShell, não usar `&&`; usar `;` ou chamadas separadas.
 - Tratar quoting e encoding como suspeitos usuais quando o comando parecer certo e o resultado vier torto.
 - **Encoding Fix**: Para evitar `UnicodeDecodeError` em subprocessos Python no Windows que retornam acentuação, force `PYTHONIOENCODING=utf-8` no ambiente ou no comando.
@@ -257,7 +257,7 @@ Token da API pode expirar. O script `scripts/production/sharebook_refresh_token.
 
 - Presumir cron agentico, sessões destacadas, subagentes persistentes ou memória ativa como se existissem aqui.
 - Usar comandos PowerShell como se fossem shell POSIX.
-- Rodar comando ou apontar caminho que só existia no runtime dormente (`/data/workspace/...`, `docker exec` no container do agente) sem checar que o alvo ainda existe.
+- Rodar comando ou apontar path do outro habitat (`/data/workspace/...`, `docker exec` no container do agente) como se fosse local, sem checar o alvo remoto.
 - Deixar regra específica de Windows poluir a camada genérica do AGENTS.
 
 

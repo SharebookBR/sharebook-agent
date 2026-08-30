@@ -140,7 +140,7 @@ Escalar se houver:
 - Evitar pipes, redirecionamentos e shell enfeitado no mesmo comando.
 - Se precisar de script auxiliar, escrever um arquivo temporário curto e rodar pelo path — regra reforçada no Windows, onde `python -c` inline quebra com regex, aspas aninhadas ou acentos (ver `skills/runtime/windows-local.md`).
 
-> Nota histórica: esta seção nasceu de uma restrição do runtime OpenClaw (preflight de `exec` bloqueava interpretador + shell complexo). O habitat está dormente desde 2026-08-16, mas a prática se sustenta sozinha no Windows.
+> Nota histórica: esta seção nasceu de uma restrição do runtime OpenClaw (preflight de `exec` bloqueava interpretador + shell complexo). O habitat ficou dormente entre 2026-08-16 e a reativação iniciada em 2026-08-30, mas a prática se sustenta sozinha em ambos os habitats.
 
 ### Fonte de verdade para diagnóstico
 - Para medir volume, detectar duplicidade, checar categoria pai/filha e mapear livros, preferir **Postgres produção read-only** quando isso for mais rápido e confiável.

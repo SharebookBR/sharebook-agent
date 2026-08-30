@@ -20,4 +20,4 @@ Item `1328` da fila (`source_blocked`) apontava para a homepage — lixo como it
 4. Priorizar subject `computer-science` para o corpus técnico do Sharebook
 
 ## Quem faz
-Sem executor definido. O heartbeat do OpenClaw, que era o dono desse tipo de expansão, ficou sem runtime com o desprovisionamento do container em 2026-08-16. Enquanto não houver substituto, isso só avança por execução manual no Windows local — decisão em aberto.
+Sem executor automático definido. O OpenClaw entrou em reativação em 2026-08-30, mas nenhum heartbeat de expansão de sources foi restaurado e validado; até isso acontecer, o item avança manualmente em qualquer habitat.
