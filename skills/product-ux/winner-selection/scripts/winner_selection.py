@@ -48,7 +48,12 @@ INTRO_NAME_RE = re.compile(
 )
 SOU_NAME_RE = re.compile(
     r"(?i)\bSou\s+[A-ZÀ-Ý][\wÀ-ÿ'’-]*(?:\s+[A-ZÀ-Ý][\wÀ-ÿ'’-]*){0,4}"
-    r"(?=\s*,\s*(?:tenho|fui|estou|moro|gosto|amo)\b)"
+    r"(?=\s*(?:,\s*(?:tenho|fui|estou|moro|gosto|amo)\b|tenho\b))"
+)
+CALLED_NAME_RE = re.compile(
+    r"(?i:\b(?:chamad[oa]s?|se chama)\s+)"
+    r"[A-ZÀ-Ý][\wÀ-ÿ'’-]*(?:\s+[A-ZÀ-Ý][\wÀ-ÿ'’-]*){0,4}"
+    r"(?=\s*(?:[,.;!?\n]|$))"
 )
 ODD_ME_NAME_RE = re.compile(
     r"\bme\s+[A-ZÀ-Ý][\wÀ-ÿ'’-]*(?:\s+[A-ZÀ-Ý][\wÀ-ÿ'’-]*){0,4}(?=\s*[,\.])"
@@ -57,6 +62,10 @@ NAMED_LOCATION_RE = re.compile(
     r"(?i)\b(?:moro|resido|residente)\s+(?:em|no|na)\s+"
     r"(?!interior\b|zona\s+rural\b)[^,.()\n]{1,80}"
     r"(?:,\s*(?:no|na)\s+[^.()\n]{1,40})?"
+)
+INSTITUTION_ACRONYM_RE = re.compile(
+    r"(?i:\b(?:universidade|faculdade|colégio|escola|instituição)\s+(?:d[aeo]\s+)?)"
+    r"[A-Z]{2,}\b"
 )
 FAMILY_NAME_RE = re.compile(r"\b[A-ZÀ-Ý][\wÀ-ÿ'’-]+\s+(?=de\s+\d{1,3}\b)")
 SIGNATURE_RE = re.compile(
@@ -78,8 +87,10 @@ def sanitize_request_text(text: str) -> str:
     sanitized = ADDRESS_LINE_RE.sub("[endereço removido]", sanitized)
     sanitized = INTRO_NAME_RE.sub("meu nome é [identidade removida]", sanitized)
     sanitized = SOU_NAME_RE.sub("Sou [identidade removida]", sanitized)
+    sanitized = CALLED_NAME_RE.sub("chamado [familiar removido]", sanitized)
     sanitized = ODD_ME_NAME_RE.sub("me [identidade removida]", sanitized)
     sanitized = NAMED_LOCATION_RE.sub("moro em [localidade removida]", sanitized)
+    sanitized = INSTITUTION_ACRONYM_RE.sub("[instituição removida]", sanitized)
     sanitized = FAMILY_NAME_RE.sub("[familiar removido] ", sanitized)
     sanitized = SIGNATURE_RE.sub(r"\1[assinatura removida]", sanitized)
     sanitized = re.sub(r"[ \t]+\n", "\n", sanitized)
@@ -288,6 +299,18 @@ def self_test() -> int:
         (
             "Residente no Rio Grande do Sul e moro em Porto Alegre.",
             ["Rio Grande do Sul", "Porto Alegre"],
+        ),
+        (
+            "Tenho um filhinho ainda criança chamado George, e quero ensiná-lo a ler.",
+            ["George"],
+        ),
+        (
+            "Sou Igor tenho um filho e gosto de ler para ele.",
+            ["Igor"],
+        ),
+        (
+            "Entrei pelo Enem na universidade de UFRN.",
+            ["UFRN"],
         ),
     ]
     for sample, forbidden in samples:
