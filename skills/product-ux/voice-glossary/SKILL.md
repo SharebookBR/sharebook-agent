@@ -43,6 +43,9 @@ Ao escrever sinopses para o catálogo:
 - Usar **entrar** em vez de `login` em labels visíveis.
 - Usar **código de rastreio** para envio.
 - Usar **data de escolha** para o momento da decisão.
+- Depois da escolha de um livro físico, o Sharebook já fornece ao doador todos os
+  dados necessários para o envio. Não pedir ao ganhador que responda, confirme
+  endereço ou combine a entrega, salvo se houver uma exceção real e explícita.
 
 ## Regra crítica sobre físico vs digital
 

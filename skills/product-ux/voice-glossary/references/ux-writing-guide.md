@@ -71,8 +71,10 @@ Templates são genéricos por definição — nunca devem conter dados reais de 
 ### Responsabilidade do doador após a escolha
 
 - Em lembretes de escolha, não apresentar a automação do Sharebook como se ela encerrasse o papel do doador.
-- Orientar explicitamente o doador a entrar em contato com o(a) ganhador(a) e combinar a entrega.
-- Motivar pelo impacto concreto do próximo passo: a escolha inicia a etapa, mas o cuidado humano faz a doação acontecer.
+- Após a escolha, o Sharebook já fornece ao doador todos os dados necessários para realizar o envio.
+- Não orientar o doador a entrar em contato para combinar a entrega e não pedir à pessoa ganhadora que responda, informe ou confirme endereço. Isso inventa uma etapa que não existe.
+- Em mensagens de boa notícia enviadas pelo doador, celebrar a escolha e informar que o envio será preparado. Só solicitar resposta quando houver uma exceção operacional real e explícita.
+- Motivar pelo impacto concreto do próximo passo: a escolha inicia a etapa, e o doador agora deve realizar o envio usando os dados já disponíveis no Sharebook.
 - Manter o convite amigável, sem culpa, cobrança moral ou promessa grandiosa de transformação.
 
 ### Avisos firmes e consequências
