@@ -33,6 +33,7 @@ BOOK_READY_FOR_SELECTION = "AwaitingDonorDecision"
 REQUEST_ACTIVE = "WaitingAction"
 BOOK_AFTER_SELECTION = "WaitingSend"
 REQUEST_WINNER = "Donated"
+SAFE_NICKNAME_RE = re.compile(r"(?i)^Interessado\s+\d+$")
 
 EMAIL_RE = re.compile(r"(?i)\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b")
 URL_RE = re.compile(r"(?i)\b(?:https?://|www\.)\S+")
@@ -76,6 +77,13 @@ SIGNATURE_RE = re.compile(
 def opaque_code(book_id: str, user_id: str) -> str:
     digest = hashlib.sha256(f"{book_id}:{user_id}".encode("utf-8")).hexdigest()
     return f"P-{digest[:8].upper()}"
+
+
+def safe_requester_nickname(value: Any, selection_code: str) -> str:
+    nickname = str(value or "").strip()
+    if SAFE_NICKNAME_RE.fullmatch(nickname):
+        return nickname
+    return f"Solicitação {selection_code}"
 
 
 def sanitize_request_text(text: str) -> str:
@@ -144,9 +152,13 @@ def prepare(slug: str, include_closed: bool) -> int:
         if not include_closed and status != REQUEST_ACTIVE:
             continue
 
+        selection_code = opaque_code(book["id"], str(request["userId"]))
         candidates.append(
             {
-                "code": opaque_code(book["id"], str(request["userId"])),
+                "nickname": safe_requester_nickname(
+                    request.get("requesterNickName"), selection_code
+                ),
+                "selectionCode": selection_code,
                 "requestText": sanitize_request_text(text),
                 "hasDonated": int(request.get("totalBooksDonated") or 0) > 0,
                 "booksReceived": int(request.get("totalBooksWon") or 0),
@@ -321,6 +333,10 @@ def self_test() -> int:
         raise SystemExit("Código opaco não é determinístico.")
     if opaque_code("book", "user") == opaque_code("book", "other"):
         raise SystemExit("Código opaco colidiu no autoteste.")
+    if safe_requester_nickname("Interessado 12", "P-TESTE") != "Interessado 12":
+        raise SystemExit("Apelido anônimo válido foi alterado.")
+    if safe_requester_nickname("Nome Real", "P-TESTE") != "Solicitação P-TESTE":
+        raise SystemExit("Fallback de apelido inseguro falhou.")
     print("Autoteste concluído com sucesso.")
     return 0
 

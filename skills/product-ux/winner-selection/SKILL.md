@@ -11,7 +11,12 @@ Escolha humana assistida por critérios, com anonimato até a decisão final.
 
 - **Anonimato é essência do fluxo.** Antes da escolha, nunca mostrar nome, apelido, `userId`, endereço, contato, localidade específica ou outro identificador do solicitante.
 - A regra também vale para identificadores escritos dentro do texto livre. Usar o script desta skill para preparar os dados; nunca imprimir a resposta bruta de `RequestersList`.
-- Identificar candidatos somente pelo código opaco gerado pelo script.
+- Na conversa com o doador, identificar cada candidato somente pelo apelido anônimo
+  `RequesterNickName` já gerado pelo Sharebook (ex.: `Interessado 12`). Esse é o nome
+  humano do fluxo; não substituir por código opaco na apresentação, shortlist ou decisão.
+- O código opaco gerado pelo script é apenas um identificador técnico interno para
+  registrar a escolha com segurança. Nunca exibi-lo ao doador quando houver apelido
+  anônimo válido.
 - Verificar fatos sobre o livro e o autor quando isso afetar a nota de conexão. Nunca pesquisar a pessoa candidata.
 - Escrita bonita não ganha ponto extra. Texto dramático não prova veracidade. Não usar detector de IA como evidência.
 - A pontuação faz triagem; a decisão final é manual e pertence ao doador.
@@ -74,11 +79,13 @@ python C:\Repos\SHAREBOOK\sharebook-agent\skills\product-ux\winner-selection\scr
 5. Excluir solicitações canceladas. Pontuar cada solicitação somente pelo texto anonimizado e pelas métricas permitidas.
 6. Registrar uma evidência textual curta para cada nota. Não completar lacunas com suposições.
 7. Ordenar pelo total. Se houver empate no corte, ampliar a shortlist; não eliminar arbitrariamente para fabricar um número exato.
-8. Entregar ao doador somente código, texto anonimizado, notas, total, evidências e incertezas relevantes.
+8. Entregar ao doador somente apelido anônimo do Sharebook, texto anonimizado, notas,
+   total, evidências e incertezas relevantes. Manter o `selectionCode` fora da conversa.
 9. Ajudar a comparar finalistas sem revelar identidade. Recalcular apenas se um critério mudar por princípio, nunca para justificar preferência posterior.
-10. Após o doador declarar o código vencedor, pedir autorização explícita separada para registrar a escolha.
+10. Após o doador declarar o apelido anônimo vencedor, pedir autorização explícita separada para registrar a escolha.
 11. Avisar que a escolha oficial atualiza todos os pedidos e dispara as notificações normais.
-12. Com autorização, registrar:
+12. Com autorização, localizar internamente o `selectionCode` correspondente ao
+    apelido na saída preparada e registrar sem expor o código na conversa:
 
 ```powershell
 python C:\Repos\SHAREBOOK\sharebook-agent\skills\product-ux\winner-selection\scripts\winner_selection.py choose --slug "<SLUG>" --code "<CODIGO>" --confirm
