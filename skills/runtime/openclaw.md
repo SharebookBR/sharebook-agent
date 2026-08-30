@@ -54,7 +54,7 @@ Falha em um item não invalida todo o runtime; invalida apenas a capacidade corr
 
 - O deployment Sharebook via template do Coolify usa deliberadamente `coollabsio/openclaw:latest` (decisão de Raffa em 2026-08-30). Esse wrapper prepara `/data`, variáveis, autenticação web e browser sidecar; trocar pela imagem upstream sem adaptar o compose quebra esse contrato.
 - `latest` é política explícita deste deployment. Como a tag é móvel, registrar em todo deploy a versão efetiva (`openclaw --version`) e o digest da imagem.
-- Em 2026-08-30, `coollabsio/openclaw:latest` resolvia para OpenClaw `2026.7.1-2`. Nunca usar essa observação antiga como substituto da checagem atual.
+- Na ativação de 2026-08-30, a tag mudou durante a própria janela de deploy. O estado efetivamente implantado ao fim da checagem era `OpenClaw 2026.7.1 (0790d9f)`, digest `sha256:61bcc5034ecb2f8e80132e61c76aae0f0474e5ad877af2588a76a1284d5369e0`. Nunca usar essa observação como pin nem como substituto da checagem atual.
 - Para instalação Docker fora do template, preferir as imagens upstream `ghcr.io/openclaw/openclaw` ou `openclaw/openclaw`.
 - Não executar `openclaw update` dentro do container. Atualização de produção é nova imagem + redeploy pelo Coolify.
 - Depois do upgrade, rodar o preflight inteiro. Migração automática de config não prova plugins, índice de memória nem jobs.
@@ -74,7 +74,9 @@ Referências: [wrapper Coolify](https://github.com/coollabsio/openclaw), [Docker
 ## Gateway, proxy e Control UI
 
 - Para acesso público, `gateway.controlUi.allowedOrigins` deve conter origins completos e exatos, por exemplo `https://claw.sharebook.com.br`, sem barra final.
+- No wrapper `coollabsio/openclaw`, o nginx público do container escuta em `8080` e encaminha ao Gateway em `127.0.0.1:18789`. No campo **Domains for openclaw** do Coolify, usar `https://claw.sharebook.com.br:8080`; esse sufixo escolhe a porta interna, enquanto o acesso público continua no HTTPS normal. Confirmar depois do deploy que a label `traefik.http.services.*.loadbalancer.server.port` vale `8080`. Se ela valer `80`, o domínio retorna `502` embora o healthcheck esteja verde.
 - Não usar `allowedOrigins: ["*"]` nem `dangerouslyAllowHostHeaderOriginFallback` em produção.
+- `gateway.controlUi.dangerouslyDisableDeviceAuth=true` reduz uma camada de autenticação e não deve virar default silencioso. Quando for uma exceção deliberada, manter o basic auth do nginx ativo, restringir a origin e registrar o aviso do `openclaw security audit`.
 - Em Docker, preferir o bind suportado pela versão (`lan` no setup oficial atual) em vez de transportar cegamente o antigo `0.0.0.0`.
 - `gateway.trustedProxies` deve conter apenas o proxy/rede real do Coolify. O antigo `0.0.0.0/0` era permissivo demais e não é receita canônica.
 - Validar o domínio público e também o probe interno do Gateway; uma camada verde não prova a outra.

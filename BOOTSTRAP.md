@@ -133,10 +133,11 @@ Validações esperadas:
 ## Imagem, versão e persistência do OpenClaw
 
 - No Sharebook, usar `coollabsio/openclaw:latest` por decisão explícita de Raffa em 2026-08-30. É o wrapper esperado pelo template do Coolify e prepara `/data`, variáveis, autenticação web e browser sidecar.
-- `latest` é móvel: em cada deploy, registrar versão efetiva (`openclaw --version`) e digest. Em 2026-08-30, ela resolvia para `2026.7.1-2`; não presumir que continuará assim.
+- `latest` é móvel: em cada deploy, registrar versão efetiva (`openclaw --version`) e digest. Na ativação de 2026-08-30 a tag mudou durante a própria janela de deploy; o estado efetivamente implantado ao fim da checagem era `OpenClaw 2026.7.1 (0790d9f)`, digest `sha256:61bcc5034ecb2f8e80132e61c76aae0f0474e5ad877af2588a76a1284d5369e0`. Não reutilizar essa observação como pin nem presumir que continuará igual.
 - Fora desse template, preferir as imagens upstream `ghcr.io/openclaw/openclaw` ou `openclaw/openclaw`.
 - Atualizar pelo Coolify com nova imagem; não executar `openclaw update` dentro do container.
 - Persistir config/state, chave dos perfis OAuth e workspace. A imagem oficial usa `/home/node/.openclaw`; o deployment histórico do Sharebook usava mounts em `/data/.openclaw` e `/data/workspace`. Inspecionar os mounts reais e registrar o contrato efetivo.
+- O wrapper Coolify serve HTTP pelo nginx interno na porta `8080`; `18789` é o Gateway em loopback dentro do mesmo container. No campo **Domains for openclaw**, configurar `https://claw.sharebook.com.br:8080`. O sufixo seleciona a porta interna e não expõe `8080` ao visitante. Depois do deploy, provar que a label `traefik.http.services.*.loadbalancer.server.port` vale `8080`; o default `80` produz `502` mesmo com container saudável.
 - Validar versão e config com:
 
 ```bash
