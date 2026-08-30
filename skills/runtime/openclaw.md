@@ -69,6 +69,7 @@ Referências: [wrapper Coolify](https://github.com/coollabsio/openclaw), [Docker
 - Rodar `openclaw config validate` depois de qualquer mudança. Usar `openclaw doctor --fix` somente após ler os achados e entender a migração proposta.
 - A configuração usa hot reload `hybrid` por padrão. `config set` prova persistência, não aplicação; validar o valor efetivo e o estado do subsistema.
 - O deployment histórico do Sharebook montava config em `/data/.openclaw` e workspace em `/data/workspace`. A imagem oficial atual usa `/home/node/.openclaw` internamente. O mount real do Coolify decide: inspecionar, não adivinhar.
+- O checkout do agente neste deployment é `/data/workspace/sharebook-agent`, incluindo seu `.env` operacional (modo `600`). Sincronizar esse arquivo somente por transferência segura a partir do `.env` canônico local; nunca colocá-lo no Git, em logs ou em temporários. Após rotação, validar por tamanho/hash, sem imprimir valores.
 - Persistir juntos o config, o banco compartilhado `state/openclaw.sqlite`, os bancos por agente e o workspace. Preservar separadamente o diretório da chave que cifra perfis OAuth.
 - Credenciais Sharebook continuam apenas em `sharebook-agent/.env`. Segredos do gateway/provider entram por variáveis/SecretRefs do runtime e nunca no Git, em memória episódica ou output de diagnóstico.
 
