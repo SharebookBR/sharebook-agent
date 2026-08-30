@@ -133,32 +133,32 @@ Validações esperadas:
 ## Imagem, versão e persistência do OpenClaw
 
 - No Sharebook, usar `coollabsio/openclaw:latest` por decisão explícita de Raffa em 2026-08-30. É o wrapper esperado pelo template do Coolify e prepara `/data`, variáveis, autenticação web e browser sidecar.
-- Para evitar prompts repetidos da Control UI sem expor o Gateway, manter o hook `scripts/infra/openclaw_static_auth_init.sh` no volume persistente e `OPENCLAW_DOCKER_INIT_SCRIPT=/data/openclaw-init/patch-nginx-static-auth.sh` no serviço. Ele isenta somente assets públicos comprovados; `/` e `/browser/` continuam atrás do Basic Auth. Preservar essa variável ao reconfigurar o serviço no Coolify.
+- Para evitar os prompts repetidos da Control UI, o deployment Sharebook remove deliberadamente o Basic Auth do wrapper com `scripts/infra/openclaw_disable_basic_auth_init.sh`. Manter `OPENCLAW_DOCKER_INIT_SCRIPT=/data/openclaw-init/disable-nginx-basic-auth.sh` no serviço e o pareamento nativo de dispositivos ativo.
 
-### Hook de assets públicos da Control UI
+### Hook que desativa o Basic Auth do nginx
 
-O wrapper aplica `AUTH_PASSWORD` com `auth_basic` na localização genérica. A Control UI, porém, carrega alguns recursos estáticos sem reutilizar esse desafio; protegê-los provoca novos `401` e reabre o prompt de senha no navegador. O ajuste aprovado para o Sharebook é uma exceção mínima no nginx, não a remoção do Basic Auth.
+O wrapper aplica `AUTH_PASSWORD` com `auth_basic`, mas a Control UI faz requisições que nem sempre repetem essas credenciais, incluindo `/__openclaw__/assistant-media`. Isso reabria indefinidamente a janela nativa de senha. Em 2026-08-30, Raffa decidiu remover o Basic Auth e assumir conscientemente o risco adicional. O wrapper continua injetando o gateway token: device pairing protege a Control UI, mas não substitui autenticação de borda para toda rota HTTP. Para endurecer novamente sem ressuscitar o prompt, usar Cloudflare Access ou Tailscale.
 
 Instalação e contrato:
 
-- fonte versionada: `scripts/infra/openclaw_static_auth_init.sh`;
-- destino persistente no volume do OpenClaw: `/data/openclaw-init/patch-nginx-static-auth.sh`;
-- variável do serviço Coolify: `OPENCLAW_DOCKER_INIT_SCRIPT=/data/openclaw-init/patch-nginx-static-auth.sh`;
-- o hook espera o `openclaw.conf` gerado pelo wrapper, insere a regra uma vez (é idempotente), valida com `nginx -t` e recarrega o nginx;
-- a regex sem Basic Auth cobre apenas `sw.js`, `manifest.webmanifest`, `control-ui-config.json`, ícones, `assets/`, `avatar/` e `provider-icons/`;
-- as localizações `/` e `/browser/` permanecem protegidas e o `AUTH_PASSWORD` não deve ser removido.
+- fonte versionada: `scripts/infra/openclaw_disable_basic_auth_init.sh`;
+- destino persistente no volume do OpenClaw: `/data/openclaw-init/disable-nginx-basic-auth.sh`;
+- variável do serviço Coolify: `OPENCLAW_DOCKER_INIT_SCRIPT=/data/openclaw-init/disable-nginx-basic-auth.sh`;
+- o hook espera o `openclaw.conf` gerado pelo wrapper, remove `auth_basic` e `auth_basic_user_file`, valida com `nginx -t` e recarrega o nginx;
+- remover `gateway.controlUi.dangerouslyDisableDeviceAuth`; cada navegador ou app deve possuir identidade pareada;
+- manter `gateway.trustedProxies` restrito ao nginx local (`127.0.0.1` e `::1`).
 
 Validar depois da instalação, restart ou redeploy:
 
 ```bash
 docker exec <container-openclaw> nginx -t
-curl -sS -o /dev/null -w '%{http_code} %{url_effective}\n' https://claw.sharebook.com.br/sw.js
-curl -sS -o /dev/null -w '%{http_code} %{url_effective}\n' https://claw.sharebook.com.br/control-ui-config.json
-curl -sS -o /dev/null -w '%{http_code} %{url_effective}\n' https://claw.sharebook.com.br/
-curl -sS -o /dev/null -w '%{http_code} %{url_effective}\n' https://claw.sharebook.com.br/browser/
+docker exec <container-openclaw> sh -lc 'nginx -T 2>&1 | grep -n auth_basic || echo NGINX_BASIC_AUTH_ABSENT'
+curl -sSkD - -o /dev/null https://claw.sharebook.com.br/ | grep -Ei '^(HTTP/|WWW-Authenticate:)'
+openclaw config get gateway.controlUi.dangerouslyDisableDeviceAuth
+openclaw devices list
 ```
 
-Resultado esperado: assets públicos `200`, enquanto `/` e `/browser/` retornam `401` sem credenciais. Se uma versão futura da Control UI gerar um novo `401`, adicionar a rota somente após confirmar no log que ela é um asset público; nunca trocar a exceção por `location /` sem autenticação.
+Resultado esperado: `/` responde `200` sem `WWW-Authenticate`; o grep não encontra `auth_basic`; `dangerouslyDisableDeviceAuth` não existe; notebook e celular aparecem pareados. Se o hook não estiver no env efetivo do container, o Basic Auth voltará no próximo restart.
 - `latest` é móvel: em cada deploy, registrar versão efetiva (`openclaw --version`) e digest. Na ativação de 2026-08-30 a tag mudou durante a própria janela de deploy; o estado efetivamente implantado ao fim da checagem era `OpenClaw 2026.7.1 (0790d9f)`, digest `sha256:61bcc5034ecb2f8e80132e61c76aae0f0474e5ad877af2588a76a1284d5369e0`. Não reutilizar essa observação como pin nem presumir que continuará igual.
 - Fora desse template, preferir as imagens upstream `ghcr.io/openclaw/openclaw` ou `openclaw/openclaw`.
 - Atualizar pelo Coolify com nova imagem; não executar `openclaw update` dentro do container.
