@@ -52,13 +52,14 @@ Falha em um item não invalida todo o runtime; invalida apenas a capacidade corr
 
 ## Versão e atualização
 
-- Usar imagem oficial `ghcr.io/openclaw/openclaw` ou `openclaw/openclaw`.
-- Produção usa release estável versionada; beta exige alinhamento explícito com Raffa.
-- Conferir dist-tags com `npm view openclaw version dist-tags --json`, mas não transformar `latest` flutuante em política de deploy.
+- O deployment Sharebook via template do Coolify usa deliberadamente `coollabsio/openclaw:latest` (decisão de Raffa em 2026-08-30). Esse wrapper prepara `/data`, variáveis, autenticação web e browser sidecar; trocar pela imagem upstream sem adaptar o compose quebra esse contrato.
+- `latest` é política explícita deste deployment. Como a tag é móvel, registrar em todo deploy a versão efetiva (`openclaw --version`) e o digest da imagem.
+- Em 2026-08-30, `coollabsio/openclaw:latest` resolvia para OpenClaw `2026.7.1-2`. Nunca usar essa observação antiga como substituto da checagem atual.
+- Para instalação Docker fora do template, preferir as imagens upstream `ghcr.io/openclaw/openclaw` ou `openclaw/openclaw`.
 - Não executar `openclaw update` dentro do container. Atualização de produção é nova imagem + redeploy pelo Coolify.
 - Depois do upgrade, rodar o preflight inteiro. Migração automática de config não prova plugins, índice de memória nem jobs.
 
-Referências oficiais: [Docker](https://docs.openclaw.ai/install/docker), [releases](https://github.com/openclaw/openclaw/releases) e [configuração](https://docs.openclaw.ai/gateway/configuration).
+Referências: [wrapper Coolify](https://github.com/coollabsio/openclaw), [Docker upstream](https://docs.openclaw.ai/install/docker), [releases](https://github.com/openclaw/openclaw/releases) e [configuração](https://docs.openclaw.ai/gateway/configuration).
 
 ## Configuração e persistência
 

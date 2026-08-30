@@ -132,8 +132,9 @@ Validações esperadas:
 
 ## Imagem, versão e persistência do OpenClaw
 
-- Usar imagem oficial `ghcr.io/openclaw/openclaw` ou `openclaw/openclaw`.
-- Fixar uma release estável em produção. Não usar beta ou tag flutuante sem alinhamento explícito.
+- No Sharebook, usar `coollabsio/openclaw:latest` por decisão explícita de Raffa em 2026-08-30. É o wrapper esperado pelo template do Coolify e prepara `/data`, variáveis, autenticação web e browser sidecar.
+- `latest` é móvel: em cada deploy, registrar versão efetiva (`openclaw --version`) e digest. Em 2026-08-30, ela resolvia para `2026.7.1-2`; não presumir que continuará assim.
+- Fora desse template, preferir as imagens upstream `ghcr.io/openclaw/openclaw` ou `openclaw/openclaw`.
 - Atualizar pelo Coolify com nova imagem; não executar `openclaw update` dentro do container.
 - Persistir config/state, chave dos perfis OAuth e workspace. A imagem oficial usa `/home/node/.openclaw`; o deployment histórico do Sharebook usava mounts em `/data/.openclaw` e `/data/workspace`. Inspecionar os mounts reais e registrar o contrato efetivo.
 - Validar versão e config com:
@@ -145,7 +146,7 @@ openclaw doctor --lint
 openclaw status --deep
 ```
 
-Referências: [Docker oficial](https://docs.openclaw.ai/install/docker) e [configuração](https://docs.openclaw.ai/gateway/configuration).
+Referências: [wrapper Coolify](https://github.com/coollabsio/openclaw), [Docker upstream](https://docs.openclaw.ai/install/docker) e [configuração](https://docs.openclaw.ai/gateway/configuration).
 
 ---
 
@@ -296,7 +297,7 @@ Antes de considerar o novo ambiente pronto, validar:
 
 Itens do runtime OpenClaw:
 
-- imagem oficial em release estável fixada
+- `coollabsio/openclaw:latest` com versão efetiva e digest registrados
 - mounts persistentes de config/state, auth-profile key e workspace
 - container OpenClaw conectado à network interna correta
 - acesso ao PostgreSQL interno funcionando
