@@ -92,8 +92,11 @@ Referências oficiais: [Control UI](https://docs.openclaw.ai/control-ui) e [segu
 
 - A memória canônica do projeto continua em `MEMORY.md` e `memory/*.md`; índice é mecanismo de acesso, não fonte superior.
 - Na release estável `2026.7.1-2`, a configuração vive em `agents.defaults.memorySearch`. Documentação de versões posteriores já mostra `memory.search`; consultar `openclaw config schema` antes de migrar.
-- O provider padrão é OpenAI; `sources: ["memory"]` evita indexar transcripts por acidente. Não habilitar `sessions` ou `experimental.sessionMemory` sem decisão explícita sobre a fronteira de recall.
+- O provider padrão é OpenAI; em 2026-08-31 Raffa confirmou crédito na OpenAI e decidiu priorizar `memory_search` com embeddings pagos, por serem baratos e melhores para continuidade que leitura manual recorrente.
+- `sources: ["memory"]` evita indexar transcripts por acidente. Não habilitar `sessions`, `experimental.sessionMemory` ou QMD sem decisão explícita sobre a fronteira de recall. QMD é para coleções extras de transcritos entre agentes, não para ser engine canônica das memórias episódicas Markdown.
+- Como o workspace OpenClaw do Sharebook é a raiz agregadora `/data/workspace`, configurar `extraPaths: ["/data/workspace/sharebook-agent/memory"]`; sem isso o índice olha apenas `MEMORY.md` e `memory/*.md` da raiz agregadora e perde as memórias reais do harness.
 - Mudança de provider, modelo, sources ou tokenizer pode invalidar a identidade do índice. Inspecionar com `openclaw memory status --deep --agent main`; usar `--index` deliberadamente apenas quando a reconstrução for necessária.
+- Depois de mudar o escopo do índice durante uma sessão já carregada, a CLI pode mostrar `Dirty: no` enquanto a ferramenta dinâmica `memory_search` ainda acusa `index scope changed` por snapshot antigo de configuração. Validar com a CLI e considerar o próximo turno/sessão como teste da ferramenta dinâmica; enquanto isso, usar `openclaw memory search`.
 - Active Memory é para conversas interativas persistentes. Não roda em headless one-shot, heartbeat, cron ou subagente interno.
 
 Configuração inicial recomendada para o Sharebook:
@@ -103,11 +106,33 @@ Configuração inicial recomendada para o Sharebook:
   agents: {
     defaults: {
       memorySearch: {
-      enabled: true,
-      provider: "openai",
-      model: "text-embedding-3-small",
-      fallback: "none",
-      sources: ["memory"],
+        enabled: true,
+        provider: "openai",
+        model: "text-embedding-3-small",
+        fallback: "none",
+        sources: ["memory"],
+        extraPaths: ["/data/workspace/sharebook-agent/memory"],
+        store: {
+          driver: "sqlite",
+          vector: { enabled: true },
+          fts: { tokenizer: "unicode61" },
+        },
+        query: {
+          maxResults: 8,
+          minScore: 0.2,
+          hybrid: {
+            enabled: true,
+            vectorWeight: 0.7,
+            textWeight: 0.3,
+            candidateMultiplier: 4,
+          },
+        },
+        cache: { enabled: true },
+        sync: {
+          onSessionStart: false,
+          onSearch: true,
+          watch: false,
+        },
       },
     },
   },
