@@ -59,4 +59,4 @@ Validação da fatia:
 - `dotnet restore ShareBook/ShareBook.sln`: passou;
 - `dotnet list ShareBook/ShareBook.sln package --vulnerable --include-transitive`: zerado;
 - `dotnet build ShareBook/ShareBook.sln --no-restore`: passou com 6 warnings legados;
-- `dotnet test ShareBook/ShareBook.sln --no-build`: 104 testes passaram (`92` unitários, `12` integração).
+- `dotnet test ShareBook/ShareBook.sln --no-build`: 160 testes passaram (`137` unitários, `23` integração) na `master`, branch usada pela API em produção.
