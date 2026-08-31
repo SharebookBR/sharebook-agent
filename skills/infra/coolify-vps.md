@@ -9,6 +9,8 @@
 - Credenciais devem ser lidas apenas do `.env`.
 - Ao documentar comandos, referenciar apenas "ler do `.env`" sem repetir valores.
 - No caso do VPS, o `.env` deve usar variáveis reais como `VPS_SSH_HOST`, `VPS_SSH_PORT`, `VPS_SSH_USER` e `VPS_SSH_PASSWORD`.
+- Não usar `rg`, `grep` ou `cat` bruto no `.env` para descobrir variáveis: isso imprime valores no output da sessão. Para inventário seguro, listar somente as chaves, por exemplo `python -c "from pathlib import Path; print('\\n'.join(line.split('=', 1)[0] for line in Path('.env').read_text().splitlines() if '=' in line and not line.lstrip().startswith('#')))"`.
+- Se um segredo aparecer em output de ferramenta, tratar como vazamento operacional: não repetir o valor, registrar a fricção sem o segredo e abrir pendência de rotação.
 
 ## Primeira Leitura
 - Ler o `.env` para obter `VPS_SSH_HOST`, `VPS_SSH_PORT`, `VPS_SSH_USER` e `VPS_SSH_PASSWORD`.

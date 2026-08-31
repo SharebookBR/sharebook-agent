@@ -5,9 +5,9 @@
 
 ### 🎯 Ordem de prioridade
 
-Revisada em **2026-08-29**, após a publicação do núcleo da busca e a reavaliação do valor marginal das próximas fatias.
+Revisada em **2026-08-31**, após recuperar a suíte de testes do frontend e descobrir que o Coolify não enfileirou deploy automaticamente depois do push na `master`.
 
-1. **[Recuperar e tornar útil a suíte de testes do frontend](todo/recuperar-suite-testes-frontend.md)** — alto valor, esforço médio. Corrigir as causas-raiz, remover sem apego testes que não protegem valor e fazer a suíte bloquear o pipeline quando houver regressão real.
+1. **[Investigar deploy automático GitHub + Coolify](todo/investigar-deploy-automatico-github-coolify.md)** — alto valor operacional, esforço baixo–médio. O gate de teste passou no Docker/Coolify, mas o deploy não foi enfileirado automaticamente; investigar webhook, secret, branch protection e possível efeito da migração Hostinger → HostGator.
 2. **[Dependências e Segurança](todo/seguranca-e-vulnerabilidades.md)** — alto valor, alto esforço. Triar o que é realmente explorável e modernizar incrementalmente, sem salto cego de major.
 3. **[Dedupe preventivo no importer](todo/dedupe-preventivo-importer.md)** — valor médio–alto, esforço médio. Impedir nova duplicata digital sem bloquear exemplares físicos ou edições legítimas.
 4. **[Tolerância a erro na busca](todo/busca-e-recomendacao-sharebook/tarefa03-tolerancia-a-erro.md)** — valor incremental, esforço médio. O núcleo lexical já está em produção; retomar trigram e fallback fuzzy quando buscas sem resultado mostrarem custo real de typos.

@@ -1,5 +1,16 @@
 # Recuperar a suíte de testes do frontend
 
+## Status final
+
+Concluído em 31/08/2026 no `sharebook-frontend` `master`.
+
+- Commits: `6c475b1` e `85b9a27`.
+- Suíte recuperada de `TOTAL: 47 FAILED, 31 SUCCESS` para `TOTAL: 44 SUCCESS`.
+- Testes tautológicos foram removidos sem substituição quando não protegiam regra, contrato ou regressão real.
+- Causas-raiz corrigidas: providers de SSR (`TransferState`), provider do `GoogleAnalyticsService`, `MatAutocompleteModule`, `NoopAnimationsModule` e expectativa obsoleta do modal responsivo em `RequestedsComponent`.
+- O `Dockerfile` passou a rodar `npm test` antes de `npm run build:ssr`.
+- Validação local e no Coolify: `npm test` com `44 SUCCESS`; `build:ssr` concluído; container `sharebook-frontend` saudável na imagem do SHA `85b9a27e4958f51b2212cfa4a712f23ff194a25f`.
+
 ## Problema
 
 Em 26/08/2026, a execução completa de `npm test` no `sharebook-frontend` terminou com 69 testes executados, 22 sucessos e 47 falhas.
