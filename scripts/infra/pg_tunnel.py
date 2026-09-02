@@ -38,14 +38,18 @@ import paramiko
 from dotenv import load_dotenv
 import os
 
-ENV_PATH = Path(r"C:\Repos\SHAREBOOK\sharebook-agent\.env")
+DEFAULT_ENV_PATH = (
+    Path("/data/workspace/sharebook-agent/.env")
+    if Path("/data/workspace/sharebook-agent/.env").exists()
+    else Path(r"C:\Repos\SHAREBOOK\sharebook-agent\.env")
+)
 # Container do Postgres das aplicacoes (nome-hash gerado pelo Coolify).
 DEFAULT_CONTAINER = "fgsgwsckccgk8sccc4gg0gg0"
 DEFAULT_PREFIX = "VPS_HOSTGATOR_SSH"
 
 
-def ssh_credentials(prefix: str) -> tuple[str, int, str, str]:
-    load_dotenv(ENV_PATH)
+def ssh_credentials(env_path: Path, prefix: str) -> tuple[str, int, str, str]:
+    load_dotenv(env_path)
     host = os.getenv(f"{prefix}_HOST")
     user = os.getenv(f"{prefix}_USER")
     password = os.getenv(f"{prefix}_PASSWORD")
@@ -112,9 +116,11 @@ def main() -> None:
                         help=f"Container do Postgres (default: {DEFAULT_CONTAINER})")
     parser.add_argument("--prefix", default=DEFAULT_PREFIX,
                         help=f"Prefixo das credenciais SSH no .env (default: {DEFAULT_PREFIX})")
+    parser.add_argument("--env-file", type=Path, default=DEFAULT_ENV_PATH,
+                        help=f"Caminho do .env (default: {DEFAULT_ENV_PATH})")
     args = parser.parse_args()
 
-    host, port, user, password = ssh_credentials(args.prefix)
+    host, port, user, password = ssh_credentials(args.env_file, args.prefix)
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     client.connect(host, port=port, username=user, password=password, timeout=30)
