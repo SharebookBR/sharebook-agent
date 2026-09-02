@@ -187,6 +187,7 @@ Exceção conhecida e deliberada: `scripts/production/ga4-key.json`, chave de se
 ## Git
 - `sharebook-agent` → commit direto na master.
 - Preferir HTTPS (evitar SSH).
+- No OpenClaw, se `git push/pull` por HTTPS pedir usuário, conferir primeiro o `.env` do `sharebook-agent`: há token GitHub operacional lá. Usar de forma não interativa e sem imprimir o valor em comando, log, memória ou arquivo temporário.
 - A raiz do workspace é só um diretório agregador, **não** é repositório git. O path real depende do habitat e está na skill de runtime.
 - Os repositórios operacionais vivem em pastas irmãs dentro do workspace: `sharebook-agent`, `sharebook-frontend`, `sharebook-backend` e `sharebook-ebook-importer`.
 - Antes de rodar `git status`, `git commit` ou mexer em branch/remote, entrar no repositório correto.
