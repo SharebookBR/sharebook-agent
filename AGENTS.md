@@ -175,6 +175,8 @@ Regra do Raffa (17/08/2026), sem exceção não-negociada: **`C:\Repos\SHAREBOOK
 
 Regra do Raffa (03/09/2026): existe **um único `.env` canônico do Sharebook-agent**. Não criar `.env.windows`, `.env.openclaw`, cópias por runtime ou arquivos alternativos de credencial. Windows e OpenClaw podem enxergar esse mesmo `.env` por paths diferentes; a solução correta é resolver o path por habitat ou aceitar `--env-file`, não duplicar segredo.
 
+Recado para o agente no Windows: quando uma instrução ou script citar `/data/workspace/sharebook-agent/.env`, leia isso como "o `.env` canônico do Sharebook-agent no seu habitat", normalmente `C:\Repos\SHAREBOOK\sharebook-agent\.env`. Não crie outro arquivo para espelhar o OpenClaw. A motivação é simples: duas cópias viram duas verdades, e credencial divergente vira retrabalho, falso diagnóstico ou vazamento. O problema a resolver é path, não configuração.
+
 Isso vale para lugares que não parecem código:
 - backup de `.env` (`.env.bak-*`) — não criar; se criar para uma operação de risco, apagar assim que a operação for provada.
 - `.claude/settings.local.json` — a allowlist de permissão grava o **comando inteiro**, e um `$pass = "..."` aprovado uma vez fica gravado ali para sempre. Foi assim que a senha root da VPS ficou num arquivo de config.
