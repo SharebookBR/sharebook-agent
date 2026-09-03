@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import base64
 import os
+import re
 from pathlib import Path
 from typing import Iterable
 from urllib.parse import urlparse, urlunparse
@@ -61,6 +62,27 @@ def require_env(values: dict[str, str], keys: Iterable[str]) -> None:
 
 def sibling_repo(agent_dir: Path, repo_name: str) -> Path:
     return agent_dir.parent / repo_name
+
+
+def is_windows_path(value: str) -> bool:
+    return bool(re.match(r"^[A-Za-z]:[\\/]", value)) or "\\" in value
+
+
+def resolve_runtime_path(value: str | None, default: Path) -> Path:
+    """Resolve um path do .env respeitando o habitat (Windows x POSIX).
+
+    Ignora paths de outro SO (ex.: C:\\... dentro de container Linux) e cai no
+    default derivado, evitando diretórios-lixo e quebra de publish/materialize.
+    """
+    if not value:
+        return default
+    if os.name == "nt":
+        if value.startswith("/") and not is_windows_path(value):
+            return default
+    else:
+        if is_windows_path(value):
+            return default
+    return Path(value)
 
 
 def github_extra_header(values: dict[str, str]) -> str:

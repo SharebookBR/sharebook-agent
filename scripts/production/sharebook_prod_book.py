@@ -152,6 +152,33 @@ def find_exact_book(
     return enriched
 
 
+def find_exact_book_admin(
+    token: str, title: str, author: str, book_type: str | None = None
+) -> dict[str, Any] | None:
+    """Localiza livro na listagem administrativa (todos os status).
+
+    FullSearch (/Book/FullSearch) só retorna livros Available; um livro
+    recém-criado está WaitingApproval e não aparece. A listagem /Book/{page}/{items}
+    retorna todos os status, então é a fonte correta para localizar o livro logo
+    após o cadastro.
+    """
+    normalized_title = normalize_match_text(title)
+    normalized_author = normalize_match_text(author)
+
+    candidates = [
+        item
+        for item in get_books(token)
+        if normalize_match_text(item.get("title")) == normalized_title
+        and normalize_match_text(item.get("author")) == normalized_author
+        and (book_type is None or item.get("type") == book_type)
+    ]
+    if not candidates:
+        return None
+
+    candidates.sort(key=lambda item: item.get("creationDate") or "", reverse=True)
+    return candidates[0]
+
+
 def delete_book(token: str, book_id: str) -> Any:
     return request_json(f"{API_BASE}/Book/{book_id}", method="DELETE", headers=auth_headers(token))
 
@@ -310,14 +337,17 @@ def create_book(args: argparse.Namespace, token: str) -> dict[str, Any]:
         headers=auth_headers(token),
     )
 
-    created = find_exact_book(token, title, author, book_type=book_type)
+    # O POST /Book não retorna o ID e cria o livro em WaitingApproval. FullSearch
+    # (find_exact_book) só enxerga livros Available, então buscar na listagem
+    # administrativa (todos os status) para localizar o recém-criado.
+    created = find_exact_book_admin(token, title, author, book_type)
     if not created:
         raise SystemExit("Livro nao encontrado apos o cadastro.")
 
     result: dict[str, Any] = {"create_response": create_response, "book": infer_image_url(created)}
     if args.approve:
         result["approve_response"] = approve_book(token, created["id"])
-        result["book"] = find_exact_book(token, title, author, book_type=book_type)
+        result["book"] = get_book_by_id(token, created["id"])
     if getattr(args, "facilitator_id", None):
         result["book"] = set_facilitator(token, created["id"], args.facilitator_id)
     return result

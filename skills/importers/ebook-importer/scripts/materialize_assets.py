@@ -20,7 +20,14 @@ AGENT_DIR_FALLBACK = SCRIPT_PATH.parents[4]
 LIB_DIR = AGENT_DIR_FALLBACK / "scripts" / "lib"
 sys.path.insert(0, str(LIB_DIR))
 
-from sharebook_env import dsn_with_host_port, load_env, resolve_agent_dir, resolve_env_file, sibling_repo
+from sharebook_env import (
+    dsn_with_host_port,
+    load_env,
+    resolve_agent_dir,
+    resolve_env_file,
+    resolve_runtime_path,
+    sibling_repo,
+)
 
 USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -161,8 +168,13 @@ def main() -> int:
     env_file = resolve_env_file(args.env_file)
     values = load_env(env_file)
     agent_dir = resolve_agent_dir(env_file)
-    importer_dir = args.importer_dir or Path(values.get("SHAREBOOK_EBOOK_IMPORTER_DIR") or sibling_repo(agent_dir, "sharebook-ebook-importer"))
-    tmp_dir = args.tmp_dir or Path(values.get("SHAREBOOK_IMPORTER_TMP_DIR") or importer_dir / "var" / "tmp")
+    importer_dir = args.importer_dir or resolve_runtime_path(
+        values.get("SHAREBOOK_EBOOK_IMPORTER_DIR"),
+        sibling_repo(agent_dir, "sharebook-ebook-importer"),
+    )
+    tmp_dir = args.tmp_dir or resolve_runtime_path(
+        values.get("SHAREBOOK_IMPORTER_TMP_DIR"), importer_dir / "var" / "tmp"
+    )
     prepare_cover = agent_dir / "scripts" / "covers" / "prepare_cover.py"
     if not prepare_cover.exists():
         raise SystemExit(f"prepare_cover.py não encontrado: {prepare_cover}")
