@@ -173,6 +173,8 @@ Toda memória nova começa com o frontmatter TOML v1 definido em `skills/doctrin
 
 Regra do Raffa (17/08/2026), sem exceção não-negociada: **`C:\Repos\SHAREBOOK\sharebook-agent\.env` é o único arquivo do workspace autorizado a conter credencial.** Qualquer outro lugar é vazamento, mesmo que esteja no `.gitignore` e nunca chegue ao GitHub.
 
+Regra do Raffa (03/09/2026): existe **um único `.env` canônico do Sharebook-agent**. Não criar `.env.windows`, `.env.openclaw`, cópias por runtime ou arquivos alternativos de credencial. Windows e OpenClaw podem enxergar esse mesmo `.env` por paths diferentes; a solução correta é resolver o path por habitat ou aceitar `--env-file`, não duplicar segredo.
+
 Isso vale para lugares que não parecem código:
 - backup de `.env` (`.env.bak-*`) — não criar; se criar para uma operação de risco, apagar assim que a operação for provada.
 - `.claude/settings.local.json` — a allowlist de permissão grava o **comando inteiro**, e um `$pass = "..."` aprovado uma vez fica gravado ali para sempre. Foi assim que a senha root da VPS ficou num arquivo de config.
