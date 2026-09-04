@@ -5,14 +5,14 @@
 
 ### 🎯 Ordem de prioridade
 
-Revisada em **2026-08-31**, após recuperar a suíte de testes do frontend e descobrir que o Coolify não enfileirou deploy automaticamente depois do push na `master`.
+Revisada em **2026-09-04**, após refinamento de produto da Lista de Desejos. A v1 ficou deliberadamente simples: apenas livros físicos, pedido revisado antes de aparecer, `Book` como fonte da verdade, sem pagamento, doador conectado ao solicitante como no fluxo atual.
 
-1. **[Investigar deploy automático GitHub + Coolify](todo/investigar-deploy-automatico-github-coolify.md)** — alto valor operacional, esforço baixo–médio. O gate de teste passou no Docker/Coolify, mas o deploy não foi enfileirado automaticamente; investigar webhook, secret, branch protection e possível efeito da migração Hostinger → HostGator.
-2. **[Dependências e Segurança](todo/seguranca-e-vulnerabilidades.md)** — alto valor, alto esforço. Triar o que é realmente explorável e modernizar incrementalmente, sem salto cego de major.
-3. **[Dedupe preventivo no importer](todo/dedupe-preventivo-importer.md)** — valor médio–alto, esforço médio. Impedir nova duplicata digital sem bloquear exemplares físicos ou edições legítimas.
-4. **[Tolerância a erro na busca](todo/busca-e-recomendacao-sharebook/tarefa03-tolerancia-a-erro.md)** — valor incremental, esforço médio. O núcleo lexical já está em produção; retomar trigram e fallback fuzzy quando buscas sem resultado mostrarem custo real de typos.
-5. **[Painel de Jobs v2](todo/painel-de-jobs.md)** — valor médio, esforço médio. A v1 já está publicada; falta calcular saúde, expor histórico paginado e distinguir melhor quem enfileira de quem consome.
-6. **[Lista de Desejos — Doação Reversa](todo/lista-de-desejos.md)** — valor potencialmente alto, esforço alto. Validar demanda antes de construir o MVP.
+1. **[Lista de Desejos](todo/lista-de-desejos.md)** — maior aposta de valor direto ao usuário. Transforma busca frustrada em demanda explícita e reaproveita a confiança do fluxo atual de doação; v1 conectiva, sem pagamento, com caminho natural para patrocínio/Amazon na v2.
+2. **[Investigar deploy automático GitHub + Coolify](todo/investigar-deploy-automatico-github-coolify.md)** — alto valor operacional, esforço baixo–médio. O gate de teste passou no Docker/Coolify, mas o deploy não foi enfileirado automaticamente; investigar webhook, secret, branch protection e possível efeito da migração Hostinger → HostGator.
+3. **[Dependências e Segurança](todo/seguranca-e-vulnerabilidades.md)** — alto valor, alto esforço. Triar o que é realmente explorável e modernizar incrementalmente, sem salto cego de major.
+4. **[Dedupe preventivo no importer](todo/dedupe-preventivo-importer.md)** — valor médio–alto, esforço médio. Impedir nova duplicata digital sem bloquear exemplares físicos ou edições legítimas.
+5. **[Tolerância a erro na busca](todo/busca-e-recomendacao-sharebook/tarefa03-tolerancia-a-erro.md)** — valor incremental, esforço médio. O núcleo lexical já está em produção; retomar trigram e fallback fuzzy quando buscas sem resultado mostrarem custo real de typos.
+6. **[Painel de Jobs v2](todo/painel-de-jobs.md)** — valor médio, esforço médio. A v1 já está publicada; falta calcular saúde, expor histórico paginado e distinguir melhor quem enfileira de quem consome.
 7. **[Tags e conhecimento estruturado](todo/tags-e-conhecimento-estruturado.md)** — valor médio–alto, esforço alto. Começar com vocabulário controlado e tags navegáveis; estruturar tópicos, nível e pré-requisitos em fatia posterior.
 8. **[Recomendações semânticas com embeddings](todo/busca-e-recomendacao-sharebook/tarefa05-recomendacoes-semanticas-embeddings.md)** — valor médio, esforço alto. A recomendação pragmática da PDP já está publicada; só adicionar embeddings quando seus limites lexicais aparecerem em amostra editorial ou dados de navegação.
 9. **[Home v2 — curadoria e ranking](todo/home-v2-curadoria-ranking.md)** — valor médio, esforço médio. A reformulação estrutural está concluída; evoluir apenas com dados e hipóteses claras de descoberta.
