@@ -98,6 +98,12 @@ class HarnessDoctorTests(unittest.TestCase):
         self.assertEqual(1, len(broken))
         self.assertEqual("missing/file.md", broken[0].target)
 
+    def test_broken_links_inside_episodic_memory_are_not_structural_findings(self) -> None:
+        self.fixture.make_clean()
+        self.fixture.write("memory/2026-08-20-with-dead-link.md", "[histórico](old/path.md)\n")
+
+        self.assertNotIn("broken_markdown_link", self.codes())
+
     def test_reference_style_link_and_encoded_space_are_resolved(self) -> None:
         self.fixture.make_clean()
         self.fixture.write("docs/file name.md", "ok")

@@ -78,6 +78,8 @@ class HarnessDoctor:
     def audit_markdown_links(self) -> list[Finding]:
         findings: list[Finding] = []
         for markdown_file in self._files_named("*.md"):
+            if self._is_memory_file(markdown_file):
+                continue
             text = self._read_text(markdown_file)
             for line_number, raw_target in extract_relative_markdown_links(text):
                 target = normalize_link_target(raw_target)
@@ -376,6 +378,13 @@ class HarnessDoctor:
         except ValueError:
             return True
         return any(part in IGNORED_DIRECTORIES for part in relative.parts)
+
+    def _is_memory_file(self, path: Path) -> bool:
+        try:
+            path.resolve().relative_to((self.root / "memory").resolve())
+            return True
+        except ValueError:
+            return False
 
     def _display_path(self, path: Path) -> str:
         try:
