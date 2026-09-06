@@ -9,6 +9,10 @@ Use this skill for the daily review of the ebook importer triage worker output. 
 
 Also use `../ebook-importer/SKILL.md` for importer status names, commands, database guardrails, manual Windows flow, and hardening patterns.
 
+## Interface metadata
+
+- `agents/openai.yaml` — card/prompt de entrada para acionar esta skill via interface de agentes; nasceu junto com a skill e é parte deliberada do envelope operacional.
+
 ## Core Rule
 
 Look at what the triage worker processed today, not every old item in the queue.

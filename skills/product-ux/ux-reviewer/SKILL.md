@@ -23,6 +23,7 @@ Use **voice-glossary** antes ou junto desta skill quando a dúvida principal for
 ## 🛠️ Recursos de Apoio
 - **`references/vocabulary.md`**: Glossário local de apoio. Se houver divergência ou dúvida de precedência, consultar também a skill `voice-glossary`, cuja fonte canônica atual está em `voice-glossary/references/ux-writing-guide.md`.
 - **`references/ui-checklist.md`**: Guia de auditoria técnica (Bootstrap 4, Angular Material, Sentence Case).
+- **`references/framework-fixes.md`**: Guia técnico de correções recorrentes de layout, overflow, tipografia e acessibilidade; também serve de apoio para `web-design-reviewer`.
 
 ## 🚀 Workflow Procedural
 

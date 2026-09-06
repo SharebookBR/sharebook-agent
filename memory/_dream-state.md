@@ -3,12 +3,44 @@
 Checkpoint oficial da consolidação de memória do projeto.
 
 ## Último dream
+- Data: `2026-09-06`
+- Tipo: `dream semanal automatizado customizado via OpenClaw cron`
+- Última memória absorvida: `memory/2026-09-03-editorial-subagentes-e-harness.md`
+- Total de memórias lidas: `37 memórias episódicas absorvidas (2026-08-17 a 2026-09-03)`.
+
+## Consolidação produzida em 2026-09-06
+
+### Doctor zerado
+- O Harness Doctor abriu com 28 achados e fechou limpo.
+- 2 links quebrados em `memory/2026-06/2026-06-26-analytics-insights-cta-amazon.md` foram corrigidos para os destinos atuais: `backlog/todo/busca-e-recomendacao-sharebook/index.md` e `backlog/done/limpeza-duplicatas-catalogo.md`.
+- `skills/importers/daily-triage-recovery/agents/openai.yaml` foi classificado como artefato deliberado de interface e indexado no `SKILL.md`.
+- Artefatos legados de `skills/importers/escrever-livros/` foram preservados e tornados observáveis no `SKILL.md`, sem poda autônoma de PDFs/capas de missão antiga.
+- Referências úteis de `skills/product-ux/art-director/` e `skills/product-ux/ux-reviewer/references/framework-fixes.md` foram indexadas.
+- Placeholders explícitos de `ux-reviewer` e `web-design-reviewer` (`example_asset`, `example_reference`, `example_script`) foram removidos; os diretórios vazios foram apagados.
+
+### Decisões conscientes de não agir
+- As 7 memórias sem metadados v1 na safra (`2026-08-17-*`, `2026-08-20-incidente-*`, `2026-08-20-revisao-*`, `2026-08/2026-08-26-thumbnails-*`) foram preservadas como legado válido; não houve retroajuste cosmético.
+- Loops de produto/infra da safra não foram resolvidos como se fossem Dream: webhook GitHub/Coolify, token frontend, OAuth Google via `gog`, SMTP próprio, advisories Angular/Universal, Search Console permissões, healthcheck dedicado, source extractor ausente e decisões constitutivas/autonomia.
+- Nenhuma alteração em `SOUL.md`: as memórias constitutivas da safra foram lidas como continuidade e tensão, mas não pediram decisão deliberada do agente presente suficiente para reescrita constitutiva.
+
+### Validação
+- `python3 skills/doctrine/harness-governance/scripts/harness_doctor.py --root .` terminou limpo.
+- `python3 -m unittest discover -s skills/doctrine/harness-governance/scripts -p 'test_*.py' -v` terminou com 28 testes aprovados.
+- A memória do ciclo é `memory/2026-09-06-dream.md`.
+
+## Próximo dream
+- O checkpoint agora parte de `memory/2026-09-03-editorial-subagentes-e-harness.md`.
+- Observar se `memory_search` do OpenClaw já foi reconstruído e se o runtime continua exigindo caminhos alternativos.
+- Reavaliar artefatos legados de `escrever-livros` somente em sonho manual se houver intenção de reorganizar ou podar PDFs/capas antigas.
+- Continuar tratando achados do Doctor como objetos de triagem individual; baseline atual é limpo.
+
+## Histórico — 2026-08-17
 - Data: `2026-08-17`
 - Tipo: `dream semanal automatizado`
 - Última memória absorvida: `memory/2026-08-16-migracao-vps-e-openclaw-dormente.md`
 - Total de memórias lidas: `3 memórias episódicas absorvidas (2026-08-03-quatro-preparos-editoriais-publicacao, 2026-08-13-quatro-preparos-editoriais-publicacao, 2026-08-16-migracao-vps-e-openclaw-dormente)`.
 
-## Consolidação produzida
+## Consolidação produzida em 2026-08-17
 
 ### Guardrail promovido
 - `skills/importers/ebook-importer/SKILL.md`, seção "Regras editoriais" — adicionado passo 4 ao preflight editorial: buscar a obra no catálogo (busca semântica, não só título) antes de `plan-set`. Recorrência real: item `1358` (07-09) e `Think Bayes`/`1594` (08-13), ambos duplicatas pegas antes da mutação pela mesma prática ainda não escrita como regra.
@@ -25,7 +57,7 @@ Checkpoint oficial da consolidação de memória do projeto.
 - **BOOTSTRAP.md, seções "Memória semântica"/"Active Memory" marcadas dormentes por inferência**: pendente de confirmação explícita do Raffa, não é decisão do Dream autônomo.
 - **Cron do importer (onde/se renasce), `client_max_body_size` do nginx, convenção de commit vs. proteção de branch do GitHub**: decisões de produto/infra fora do mandato de arquitetura de skills do Dream.
 
-## Próximo dream
+## Próximo dream registrado em 2026-08-17
 - Cruzar se o feedback de "silêncio operacional durante tarefa longa" (08-13) se repete. Se sim, promover a "Postura do Agente" em `AGENTS.md` — atualização por marco em tarefas longas, sem virar narração excessiva.
 - A safra de 08-16 listou lacunas adicionais fora do escopo do brief daquela sessão que não são de arquitetura de skill (link `openai-codex-oauth-drain.md` já corrigido aqui; roteamento de capas já corrigido aqui). As restantes (BOOTSTRAP.md dormência por inferência, cron do importer, nginx, convenção de commit) seguem como pendência de produto/confirmação humana, não de Dream.
 - Observar se o guardrail de duplicidade recém-formalizado em `ebook-importer/SKILL.md` reduz de fato a taxa de duplicata pega tarde, ou se ainda escapa alguma — sinal de que o preflight precisa de mais força (ex: script de checagem automática em vez de instrução em prosa).

@@ -29,6 +29,8 @@ Para capa de livro do catálogo, usar também `../cover-direction/SKILL.md`; est
 
 Antes de dirigir a peça, carregar conforme o caso:
 
+- `references/brand-context.md` para paleta, logo e voz visual resumidas;
+- `references/prompt-patterns.md` para formatos de prompt reutilizáveis;
 - `sharebook-agent/AGENTS.md` e `sharebook-agent/SOUL.md` quando a tarefa pedir continuidade, critério do projeto ou trabalho durável;
 - `../voice-glossary/SKILL.md` para linguagem visível, CTAs, microcopy e tom;
 - `../voice-glossary/references/ux-writing-guide.md` quando houver texto de produto ou dúvida de termo;

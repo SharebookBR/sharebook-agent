@@ -30,9 +30,9 @@ Sessão de análise GA4 + implementação dupla: (1) instrumentação de `result
 
 ### Backlog
 
-1. **Item 1 — Confirmar**: [Busca e Recomendação](backlog/todo/busca-e-recomendacao-sharebook.md) já cobre sinônimo/typo (Fase 2 FTS + Fase 2.5 fuzzy). Refinamento: sinônimo de série (ex: "acotar" = "Corte de espinhos e rosas") requer registro manual.
+1. **Item 1 — Confirmar**: [Busca e Recomendação](../../backlog/todo/busca-e-recomendacao-sharebook/index.md) já cobre sinônimo/typo (Fase 2 FTS + Fase 2.5 fuzzy). Refinamento: sinônimo de série (ex: "acotar" = "Corte de espinhos e rosas") requer registro manual.
 
-2. **Item 2 — Adicionar**: [Limpeza de Duplicatas no Catálogo](backlog/todo/limpeza-duplicatas-catalogo.md) — novo arquivo criado com evidência (2677 livros, 163 grupos duplicados, 235 excedentes). Pré-condição de qualidade pra embeddings (Phase 3). ROI alto: busca, SEO, atribuição.
+2. **Item 2 — Adicionar**: [Limpeza de Duplicatas no Catálogo](../../backlog/done/limpeza-duplicatas-catalogo.md) — novo arquivo criado com evidência (2677 livros, 163 grupos duplicados, 235 excedentes). Pré-condição de qualidade pra embeddings (Phase 3). ROI alto: busca, SEO, atribuição.
 
 ### Implementação — Frontend (sharebook-frontend)
 

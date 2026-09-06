@@ -48,6 +48,21 @@ Tudo visual relevante deve cair ali:
 - prompts de capa
 - imagens auxiliares aprovadas
 
+Artefatos legados migrados de missões antigas ainda vivem diretamente nesta skill e devem permanecer observáveis até um sonho manual decidir reorganização ou poda:
+
+- `assets/cloud-para-devs-capa-v1.jpg`
+- `assets/cloud-para-devs-cover-prompt.txt`
+- `assets/redes-neurais-capa.png`
+- `cloud-para-devs-book-v1.pdf`
+- `cloud-para-devs-book-v2.pdf`
+- `cloud-para-devs-book-v3.pdf`
+- `cloud-para-devs-book-v4.pdf`
+- `cloud-para-devs-book-v5.pdf`
+- `cloud-para-devs-book-v6.pdf`
+- `cloud-para-devs-book-v7.pdf`
+- `cloud-para-devs-book-v8.pdf`
+- `redes-neurais-book-v3.pdf`
+
 Evitar espalhar artefatos por raiz, `tmp` eterno ou pastas inventadas no impulso.
 
 ### 3. Capa: usar ChatGPT web como fluxo premium
