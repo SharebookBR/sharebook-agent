@@ -257,11 +257,14 @@ def _resolve_checkpoint(raw_path: str | None, repo_root: Path, memory_root: Path
     if not raw_path:
         return None
     normalized = raw_path.replace("\\", "/")
-    candidate = Path(raw_path)
-    if candidate.is_absolute():
-        return candidate.resolve()
     if normalized.startswith("memory/"):
         return (repo_root / normalized).resolve()
+    marker = "/memory/"
+    if marker in normalized:
+        return (memory_root / normalized.split(marker, 1)[1]).resolve()
+    candidate = Path(normalized)
+    if candidate.is_absolute():
+        return candidate.resolve()
     return (memory_root / normalized).resolve()
 
 

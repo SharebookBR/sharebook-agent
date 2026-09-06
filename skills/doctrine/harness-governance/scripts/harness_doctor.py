@@ -281,8 +281,17 @@ class HarnessDoctor:
             return findings
 
         memory_reference = memory_match.group(1).strip()
-        memory_name = Path(memory_reference.replace("\\", "/")).name
-        referenced_memory = self.root / "memory" / memory_name
+        normalized_reference = memory_reference.replace("\\", "/")
+        marker = "/memory/"
+        if normalized_reference.startswith("memory/"):
+            memory_relative = normalized_reference[len("memory/") :]
+        elif marker in normalized_reference:
+            memory_relative = normalized_reference.split(marker, 1)[1]
+        else:
+            memory_relative = Path(normalized_reference).name
+
+        memory_name = Path(memory_relative).name
+        referenced_memory = self.root / "memory" / memory_relative
         if not referenced_memory.is_file():
             findings.append(
                 Finding(

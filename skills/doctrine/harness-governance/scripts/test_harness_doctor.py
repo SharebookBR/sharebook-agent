@@ -138,6 +138,20 @@ class HarnessDoctorTests(unittest.TestCase):
         self.assertEqual(1, len(dream_findings))
         self.assertIn("posterior", dream_findings[0].message)
 
+    def test_windows_absolute_dream_checkpoint_is_resolved_under_memory_root(self) -> None:
+        self.fixture.make_clean()
+        self.fixture.write(
+            "memory/_dream-state.md",
+            """# Dream State
+
+## Último dream
+- Data: `2026-08-20`
+- Última memória absorvida: `C:\\Repos\\SHAREBOOK\\sharebook-agent\\memory\\2026-08-19-before-dream.md`
+""",
+        )
+
+        self.assertNotIn("incoherent_dream_state", self.codes())
+
     def test_legacy_memory_is_allowed_and_invalid_toml_metadata_is_reported(self) -> None:
         self.fixture.make_clean()
         self.fixture.write(

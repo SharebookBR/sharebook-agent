@@ -116,6 +116,21 @@ Consultadas:
         self.assertEqual(["2026-08-17-nova.md"], [item["path"] for item in report["harvest"]["memories"]])
         self.assertTrue(any("arquivo ausente" in warning for warning in report["warnings"]))
 
+    def test_windows_absolute_checkpoint_is_resolved_relative_to_memory_root(self) -> None:
+        self.write("memory/2026-08-16-absorvida.md", "# Já absorvida\n")
+        self.write(
+            "memory/_dream-state.md",
+            "# Dream State\n\n## Último dream\n"
+            "- Data: `2026-08-17`\n"
+            "- Última memória absorvida: `C:\\Repos\\SHAREBOOK\\sharebook-agent\\memory\\2026-08-16-absorvida.md`\n",
+        )
+        self.write("memory/2026-08-17-nova.md", "# Nova\n")
+
+        report = dream_report.build_report(self.repo)
+
+        self.assertEqual(["2026-08-17-nova.md"], [item["path"] for item in report["harvest"]["memories"]])
+        self.assertEqual([], report["warnings"])
+
     def test_invalid_metadata_is_reported_without_inventing_entries(self) -> None:
         absorbed = self.write("memory/2026-08-16-absorvida.md", "# Já absorvida\n")
         self.state(absorbed)

@@ -5,7 +5,7 @@ Checkpoint oficial da consolidação de memória do projeto.
 ## Último dream
 - Data: `2026-08-17`
 - Tipo: `dream semanal automatizado`
-- Última memória absorvida: `C:\Repos\SHAREBOOK\sharebook-agent\memory\2026-08-16-migracao-vps-e-openclaw-dormente.md`
+- Última memória absorvida: `memory/2026-08-16-migracao-vps-e-openclaw-dormente.md`
 - Total de memórias lidas: `3 memórias episódicas absorvidas (2026-08-03-quatro-preparos-editoriais-publicacao, 2026-08-13-quatro-preparos-editoriais-publicacao, 2026-08-16-migracao-vps-e-openclaw-dormente)`.
 
 ## Consolidação produzida
