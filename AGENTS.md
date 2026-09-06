@@ -142,6 +142,7 @@ Toda memória nova começa com o frontmatter TOML v1 definido em `skills/doctrin
 - Soul, identidade do agente, continuidade entre modelos, autorreferência ou autonomia → abrir `sharebook-agent/skills/doctrine/INDEX.md` e `sharebook-agent/SOUL.md`.
 - Preparo editorial, sinopses, categoria, handoff por source ou rejeição curatorial pós-triagem (`editorial_rejected`) → consultar `editorial_prompt` da source em `importer.sources` no banco (`sharebook_importer`). Não abrir skill file por source, a config editorial vive no banco.
 - SEO, GA4, GSC, funil, tráfego, landing pages ou auditoria de indexação → abrir `sharebook-agent/skills/engineering/INDEX.md`.
+- Posts, campanhas, imagens geradas, banners, hero visuals, assets de frontend ou qualquer direção visual de marca do Sharebook → abrir `sharebook-agent/skills/product-ux/INDEX.md`, skill `art-director`.
 - Performance do banco, slow query log, `pg_stat_statements` ou ofensores de Postgres → abrir `sharebook-agent/skills/engineering/INDEX.md`.
 - Gestão de categorias, taxonomia, migração de leaf category ou revisão de hierarquia → abrir `sharebook-agent/skills/importers/INDEX.md`.
 - Produção de PDFs, manuscritos, capas autorais ou artefatos editoriais (escrever obra nova) → abrir `sharebook-agent/skills/importers/INDEX.md`.

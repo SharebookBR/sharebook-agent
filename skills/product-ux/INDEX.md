@@ -4,6 +4,7 @@ Conhecimento de produto, voz, interface, layout, catálogo visível e experiênc
 
 ## Skills
 - `./catalog-strategy/SKILL.md` — Memória durável para decisões de crescimento, curadoria e percepção do catálogo.
+- `./art-director/SKILL.md` — Direção de arte Sharebook para posts, campanhas, imagens geradas, assets de frontend, marca e composição visual.
 - `./voice-glossary/SKILL.md` — Voz oficial, sinopses e glossário.
 - `./ux-reviewer/SKILL.md` — Auditoria de UX, fluxos e interface.
 - `./web-design-reviewer/SKILL.md` — Layout, CSS e correções visuais.
@@ -12,5 +13,5 @@ Conhecimento de produto, voz, interface, layout, catálogo visível e experiênc
 - `./winner-selection/SKILL.md` — Triagem anônima, shortlist e escolha de ganhador(a) pela API oficial.
 
 ## Uso
-- Ler quando a tarefa envolver copy, percepção do catálogo, interface, experiência do usuário, leitura editorial de superfície ou direção visual de capas.
+- Ler quando a tarefa envolver copy, percepção do catálogo, interface, experiência do usuário, leitura editorial de superfície, direção visual de capas, posts, campanhas ou assets de marca.
 - Antes de priorizar títulos, sources, categorias ou vitrines, abrir `./catalog-strategy/SKILL.md`.
