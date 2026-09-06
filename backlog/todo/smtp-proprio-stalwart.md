@@ -11,7 +11,8 @@ Avaliar e, se a entregabilidade for comprovada, migrar o envio transacional do S
 - `EmailSettings__MaxEmailsPerHour=50`, mas o `MailSender` roda a cada 5 minutos e usa divisão inteira (`50 / 12`), resultando nominalmente em 4 envios por ciclo, 48 por hora ou 1.152 por dia.
 - O backoff self-healing atual deve ser preservado: ao receber `Ratelimit`, o worker espera progressivamente 5, 10, 15, 20 e 25 minutos.
 - A VPS atual tem recursos suficientes, as portas de e-mail estão livres e a saída TCP 25 foi validada.
-- O PTR atual da VPS é genérico e precisa ser substituído por um hostname de e-mail com resolução direta e reversa coerentes antes de qualquer envio direto.
+- Em 2026-09-06, `mail.sharebook.com.br` passou a resolver para `129.121.36.220` e o PTR de `129.121.36.220` passou a apontar para `mail.sharebook.com.br`.
+- Em 2026-09-06, o recurso `stalwart-mail` foi criado no Coolify, ainda parado, com imagem `stalwartlabs/stalwart:v0.16.13`, volumes persistentes gerenciados pelo Coolify e somente a porta pública `25:25` no compose parseado. Submissão SMTP, IMAP e admin ficaram sem publicação direta no host.
 - O backend reutiliza `EmailSettings.HostName`, credenciais e SSL tanto para SMTP quanto para ler bounces por IMAP. Trocar apenas o host SMTP quebraria o processamento atual de bounces.
 
 ## Direção recomendada
@@ -61,14 +62,14 @@ Fontes oficiais: [arquitetura e filas do Postfix](https://www.postfix.org/OVERVI
 
 ### 1. Pré-flight de infraestrutura
 
-- [ ] Confirmar com a HostGator que o PTR do IP da VPS pode ser alterado para `mail.sharebook.com.br`.
+- [x] Confirmar com a HostGator que o PTR do IP da VPS pode ser alterado para `mail.sharebook.com.br`.
 - [ ] Validar reputação atual do IP em listas de bloqueio relevantes.
-- [ ] Confirmar que a porta TCP 25 de saída continua liberada.
+- [x] Confirmar que a porta TCP 25 de saída continua liberada.
 - [ ] Definir limites de CPU, memória, disco e rotação de logs do container.
 
 ### 2. Deploy seguro do Stalwart
 
-- [ ] Criar o serviço pelo template do Coolify com tag de imagem fixada, não `latest`.
+- [x] Criar o serviço pelo template do Coolify com tag de imagem fixada, não `latest`.
 - [ ] Persistir configuração, fila e dados em volumes com backup remoto validado.
 - [ ] Expor o painel administrativo somente por HTTPS via Traefik.
 - [ ] Restringir SMTP de submissão à rede interna ou a origens explicitamente autorizadas.
@@ -76,8 +77,8 @@ Fontes oficiais: [arquitetura e filas do Postfix](https://www.postfix.org/OVERVI
 
 ### 3. DNS e autenticação
 
-- [ ] Criar `A` para `mail.sharebook.com.br` apontando para a VPS.
-- [ ] Configurar PTR com correspondência direta e reversa.
+- [x] Criar `A` para `mail.sharebook.com.br` apontando para a VPS.
+- [x] Configurar PTR com correspondência direta e reversa.
 - [ ] Atualizar o SPF existente sem criar um segundo registro SPF.
 - [ ] Gerar e publicar DKIM de 2.048 bits.
 - [ ] Validar alinhamento DMARC e preservar os demais emissores autorizados do domínio.
