@@ -12,8 +12,30 @@ Avaliar e, se a entregabilidade for comprovada, migrar o envio transacional do S
 - O backoff self-healing atual deve ser preservado: ao receber `Ratelimit`, o worker espera progressivamente 5, 10, 15, 20 e 25 minutos.
 - A VPS atual tem recursos suficientes, as portas de e-mail estão livres e a saída TCP 25 foi validada.
 - Em 2026-09-06, `mail.sharebook.com.br` passou a resolver para `129.121.36.220` e o PTR de `129.121.36.220` passou a apontar para `mail.sharebook.com.br`.
-- Em 2026-09-06, o recurso `stalwart-mail` foi criado no Coolify, ainda parado, com imagem `stalwartlabs/stalwart:v0.16.13`, volumes persistentes gerenciados pelo Coolify e somente a porta pública `25:25` no compose parseado. Submissão SMTP, IMAP e admin ficaram sem publicação direta no host.
+- Em 2026-09-06, o recurso `stalwart-mail` foi criado no Coolify com imagem `stalwartlabs/stalwart:v0.16.13`, volumes persistentes gerenciados pelo Coolify e somente a porta pública `25:25` no compose parseado. Submissão SMTP, IMAP e admin sem publicação direta no host.
+- Em 2026-09-07 o serviço subiu, saiu do bootstrap (config RocksDB em `/etc/stalwart/config.json`), ficou `healthy` e foi configurado via API: hostname `mail.sharebook.com.br`, domínio principal `sharebook.com.br`, domínio/conta de bounce (`bounce@bounces.sharebook.com.br`), DKIM RSA+Ed25519 gerados, listeners enxugados (POP3 e Sieve fechados) e anti-open-relay validado. DNS de autenticação (SPF/DKIM/DMARC/MX do bounce) ainda NÃO publicado.
 - O backend reutiliza `EmailSettings.HostName`, credenciais e SSL tanto para SMTP quanto para ler bounces por IMAP. Trocar apenas o host SMTP quebraria o processamento atual de bounces.
+- Em 2026-09-07 foi criado `ShareBook/ShareBook.Api/Controllers/BounceController.cs` — `POST /api/bounce` → `200 OK` (placeholder). Commit `94c152d`, deploy `finished`, container healthy. Serve para o webhook de bounce síncrono do Stalwart.
+- Distinção chave (2026-09-07): bounce **síncrono** (rejeição `5xx` no momento da entrega) é capturado por webhook; bounce **assíncrono** (DSN devolvido depois que o MX aceitou `250`) chega como e-mail de entrada no `Return-Path` (`bounce@bounces.sharebook.com.br`) e precisa ser lido por IMAP/JMAP. O webhook sozinho **não** pega tudo.
+- Decisão de bounce (2026-09-07): seguir com **Opção A** para bounces assíncronos — migrar a leitura IMAP da Hostinger para a caixa `bounce@bounces.sharebook.com.br` no Stalwart e reutilizar o parser atual. Usar webhook `delivery.*` do Stalwart apenas para bounces síncronos. Não implementar webhook+JMAP para DSNs assíncronos agora; fica como otimização futura se o polling virar dor real.
+
+## Status atual (2026-09-07)
+
+**Feito:**
+- Stalwart up e `healthy` no Coolify, fora do bootstrap (RocksDB).
+- Hostname `mail.sharebook.com.br`, domínio `sharebook.com.br`, conta `bounce@bounces.sharebook.com.br`.
+- DKIM RSA 2048 + Ed25519 gerados (seletores `v1-rsa-20260906` / `v1-ed25519-20260906`) — ainda não publicados no DNS.
+- Listeners enxugados: 25 (público), 465 (submissão), 993 (IMAP), 443/8080 (admin). POP3 e Sieve fechados.
+- Anti-open-relay comprovado (`550 Relay not allowed`).
+- Endpoint de bounce `POST /api/bounce` criado, commitado e no ar (200 OK).
+
+**Pendente (próximos passos, em ordem):**
+1. Publicar DNS no registro.br: SPF (`ip4:129.121.36.220`), 4 registros DKIM, DMARC `p=none`, MX de `bounces.sharebook.com.br` → `mail.sharebook.com.br`.
+2. Migrar a leitura IMAP de bounces da Hostinger para o Stalwart (`bounce@bounces.sharebook.com.br`), mantendo o parser atual para DSNs assíncronos.
+3. Apontar o `Return-Path` dos envios para `bounce@bounces.sharebook.com.br`.
+4. Configurar webhook `delivery.*` do Stalwart para `POST /api/bounce` e implementar o tratamento real dos eventos síncronos.
+5. Desacoplar `EmailSettings` em `Smtp*` / `Imap*` no backend.
+6. Aquecimento + corte (Hostinger como rollback).
 
 ## Direção recomendada
 
@@ -73,7 +95,7 @@ Fontes oficiais: [arquitetura e filas do Postfix](https://www.postfix.org/OVERVI
 - [ ] Persistir configuração, fila e dados em volumes com backup remoto validado.
 - [ ] Expor o painel administrativo somente por HTTPS via Traefik.
 - [ ] Restringir SMTP de submissão à rede interna ou a origens explicitamente autorizadas.
-- [ ] Provar que o servidor não funciona como open relay.
+- [x] Provar que o servidor não funciona como open relay. (2026-09-07: RCPT externo sem auth → `550 Relay not allowed`)
 
 ### 3. DNS e autenticação
 
@@ -86,8 +108,12 @@ Fontes oficiais: [arquitetura e filas do Postfix](https://www.postfix.org/OVERVI
 
 ### 4. Bounces e supressão
 
-- [ ] Decidir entre manter a Hostinger para IMAP/bounces ou migrar uma caixa mínima de bounces para o Stalwart.
-- [ ] Se os serviços permanecerem separados, dividir `EmailSettings` em configurações independentes de SMTP e IMAP.
+- [x] Criar endpoint de webhook de bounce no backend (`POST /api/bounce` → 200 OK).
+- [x] Decidir arquitetura de bounces: Opção A para assíncronos (IMAP no Stalwart) + webhook `delivery.*` para síncronos.
+- [ ] Migrar leitura IMAP de bounces da Hostinger para o Stalwart (`bounce@bounces.sharebook.com.br`).
+- [ ] Configurar webhook `delivery.*` do Stalwart para `POST /api/bounce`.
+- [ ] Implementar tratamento real dos eventos síncronos no `BounceController` (hoje 200 OK).
+- [ ] Dividir `EmailSettings` em configurações independentes de SMTP e IMAP.
 - [ ] Garantir que bounces assíncronos continuem alimentando `MailBounces` e a lista de supressão.
 - [ ] Validar que destinatários em estado de bounce não voltam a receber tentativas.
 
