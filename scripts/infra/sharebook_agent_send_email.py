@@ -180,6 +180,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--cc", action="append", help="CC. Pode repetir ou separar por virgula.")
     parser.add_argument("--bcc", action="append", help="BCC. Pode repetir ou separar por virgula.")
     parser.add_argument("--reply-to", help="Endereco Reply-To.")
+    parser.add_argument("--envelope-from", help="Endereco SMTP MAIL FROM/Return-Path.")
     parser.add_argument("--from-name", help="Nome exibido no remetente.")
     parser.add_argument("--env-file", type=Path, help="Caminho alternativo para o .env canonico.")
     parser.add_argument("--timeout", type=int, default=30, help="Timeout SMTP em segundos.")
@@ -198,8 +199,10 @@ def main() -> int:
     port = int(env["SHAREBOOK_AGENT_SMTP_PORT"])
     tls_verify = bool_env(env.get("SHAREBOOK_AGENT_SMTP_TLS_VERIFY"), default=True)
     via_vps = args.via_vps or bool_env(env.get("SHAREBOOK_AGENT_SMTP_VIA_VPS"), default=False)
+    envelope_from = args.envelope_from or env.get("SHAREBOOK_AGENT_SMTP_ENVELOPE_FROM") or env["SHAREBOOK_AGENT_SMTP_FROM"]
 
     print(f"SMTP_FROM={env['SHAREBOOK_AGENT_SMTP_FROM']}")
+    print(f"SMTP_ENVELOPE_FROM={envelope_from}")
     print(f"SMTP_TO={', '.join(recipients)}")
     print(f"SMTP_SUBJECT={args.subject}")
     print(f"SMTP_MESSAGE_ID={message['Message-ID']}")
@@ -216,7 +219,7 @@ def main() -> int:
 
     with smtp_connection(host, port, args.timeout, context, env, via_vps) as smtp:
         smtp.login(env["SHAREBOOK_AGENT_SMTP_USERNAME"], env["SHAREBOOK_AGENT_SMTP_PASSWORD"])
-        smtp.send_message(message, from_addr=env["SHAREBOOK_AGENT_SMTP_FROM"], to_addrs=recipients)
+        smtp.send_message(message, from_addr=envelope_from, to_addrs=recipients)
 
     print("SMTP_SEND_OK=1")
     return 0

@@ -15,8 +15,11 @@ Avaliar e, se a entregabilidade for comprovada, migrar o envio transacional do S
 - Em 2026-09-06, o recurso `stalwart-mail` foi criado no Coolify com imagem `stalwartlabs/stalwart:v0.16.13`, volumes persistentes gerenciados pelo Coolify e somente a porta pública `25:25` no compose parseado. Submissão SMTP, IMAP e admin sem publicação direta no host.
 - Em 2026-09-07 o serviço subiu, saiu do bootstrap (config RocksDB em `/etc/stalwart/config.json`), ficou `healthy` e foi configurado via API: hostname `mail.sharebook.com.br`, domínio principal `sharebook.com.br`, domínio/conta de bounce (`bounce@bounces.sharebook.com.br`), DKIM RSA+Ed25519 gerados, listeners enxugados (POP3 e Sieve fechados) e anti-open-relay validado.
 - Em 2026-09-08, DNS de autenticação foi publicado e validado publicamente: SPF raiz, DMARC `p=none`, MX/SPF de `bounces.sharebook.com.br` e quatro DKIM (`v1-rsa-20260906` / `v1-ed25519-20260906` para domínio raiz e bounce). A resolução direta/reversa também bate (`mail.sharebook.com.br` ↔ `129.121.36.220`).
-- Em 2026-09-08, validação interna confirmou API e Stalwart na rede Docker `coolify`, SMTP 25/465 e IMAP 993 abertos da API para o Stalwart, autenticação SMTP em 465 funcionando e anti-open-relay ainda ativo. Bloqueio restante: TLS do Stalwart ainda apresenta certificado autoassinado (`CN = rcgen self signed cert`), então não cortar produção antes de emitir/configurar certificado válido para `mail.sharebook.com.br`.
+- Em 2026-09-08, validação interna confirmou API e Stalwart na rede Docker `coolify`, SMTP 25/465 e IMAP 993 abertos da API para o Stalwart, autenticação SMTP em 465 funcionando e anti-open-relay ainda ativo. TLS do Stalwart ainda apresenta certificado autoassinado (`CN = rcgen self signed cert`), mas deixou de ser bloqueio para o uso interno API → Stalwart; permanece melhoria de higiene operacional.
 - Em 2026-09-08, envio real controlado para `raffacabofrio@gmail.com` via submissão SMTP interna (`465`, TLS autoassinado aceito no cliente de teste) chegou na Inbox do Gmail. Gmail validou SPF `pass`, DKIM RSA `pass` e DMARC `pass`; a assinatura Ed25519 apareceu como `neutral (no key)`, então o RSA é a prova de DKIM efetiva no Gmail neste teste. O app password temporário criado para o teste foi removido em seguida.
+- Em 2026-09-08, o `sharebook-agent` ganhou script operacional de envio (`scripts/infra/sharebook_agent_send_email.py`) usando Stalwart, credencial no `.env` e túnel SSH pela VPS quando necessário. Commit `56ac3fa`.
+- Em 2026-09-08, a caixa `bounce@bounces.sharebook.com.br` foi validada por IMAP no Stalwart (`INBOX`) e recebeu um DSN real gerado por envio proposital para destinatário inexistente do Gmail.
+- Em 2026-09-08, envio real com `Return-Path: bounce@bounces.sharebook.com.br` e `From: admin@sharebook.com.br` caiu na Inbox do Gmail com SPF `pass`, DKIM RSA `pass` para `bounces.sharebook.com.br` e DMARC `pass` por alinhamento relaxado. O script do agente passou a usar esse Return-Path por padrão.
 - O backend reutiliza `EmailSettings.HostName`, credenciais e SSL tanto para SMTP quanto para ler bounces por IMAP. Trocar apenas o host SMTP quebraria o processamento atual de bounces.
 - Em 2026-09-07 foi criado `ShareBook/ShareBook.Api/Controllers/BounceController.cs` — `POST /api/bounce` → `200 OK` (placeholder). Commit `94c152d`, deploy `finished`, container healthy. Serve para o webhook de bounce síncrono do Stalwart.
 - Distinção chave (2026-09-07): bounce **síncrono** (rejeição `5xx` no momento da entrega) é capturado por webhook; bounce **assíncrono** (DSN devolvido depois que o MX aceitou `250`) chega como e-mail de entrada no `Return-Path` (`bounce@bounces.sharebook.com.br`) e precisa ser lido por IMAP/JMAP. O webhook sozinho **não** pega tudo.
@@ -32,16 +35,15 @@ Avaliar e, se a entregabilidade for comprovada, migrar o envio transacional do S
 - Anti-open-relay comprovado (`550 Relay not allowed`).
 - Autenticação SMTP interna em 465 comprovada pela rede Docker `coolify`.
 - Envio real para Gmail comprovado: mensagem aceita e entregue na Inbox, SPF/DKIM RSA/DMARC passando.
+- Return-Path de bounce comprovado: Gmail aceitou mensagem real com `smtp.mailfrom=bounce@bounces.sharebook.com.br` e DMARC alinhado.
+- IMAP da caixa de bounce no Stalwart comprovado: login OK, `INBOX` acessível e DSN real recebido.
 - Endpoint de bounce `POST /api/bounce` criado, commitado e no ar (200 OK).
 
 **Pendente (próximos passos, em ordem):**
-1. Emitir/configurar certificado TLS válido para `mail.sharebook.com.br` no Stalwart. O SMTP 465/STARTTLS funciona, mas ainda usa certificado autoassinado.
-2. Migrar a leitura IMAP de bounces da Hostinger para o Stalwart (`bounce@bounces.sharebook.com.br`), mantendo o parser atual para DSNs assíncronos.
-3. Apontar o `Return-Path` dos envios para `bounce@bounces.sharebook.com.br`.
-4. Configurar webhook `delivery.*` do Stalwart para `POST /api/bounce` e implementar o tratamento real dos eventos síncronos.
-5. Desacoplar `EmailSettings` em `Smtp*` / `Imap*` no backend.
-6. Envio real controlado para ferramenta de diagnóstico e Outlook. Gmail já foi validado.
-7. Aquecimento + corte (Hostinger como rollback).
+1. Configurar webhook `delivery.*` do Stalwart para `POST /api/bounce` e implementar o tratamento real dos eventos síncronos.
+2. Envio real controlado para ferramenta de diagnóstico e Outlook. Gmail já foi validado.
+3. Aquecimento + observação com Hostinger como rollback.
+4. Emitir/configurar certificado TLS válido para `mail.sharebook.com.br` no Stalwart como melhoria posterior.
 
 ## Direção recomendada
 
@@ -111,17 +113,17 @@ Fontes oficiais: [arquitetura e filas do Postfix](https://www.postfix.org/OVERVI
 - [x] Gerar e publicar DKIM de 2.048 bits.
 - [x] Validar DNS público de SPF, DKIM, DMARC, MX de bounce e PTR.
 - [x] Validar alinhamento SPF/DKIM/DMARC em mensagem real. (2026-09-08: Gmail Inbox, SPF pass, DKIM RSA pass, DMARC pass; Ed25519 neutral/no key)
-- [ ] Configurar TLS válido para SMTP.
+- [ ] Configurar TLS válido para SMTP. (higiene posterior; não bloqueia API → Stalwart interno)
 
 ### 4. Bounces e supressão
 
 - [x] Criar endpoint de webhook de bounce no backend (`POST /api/bounce` → 200 OK).
 - [x] Decidir arquitetura de bounces: Opção A para assíncronos (IMAP no Stalwart) + webhook `delivery.*` para síncronos.
-- [ ] Migrar leitura IMAP de bounces da Hostinger para o Stalwart (`bounce@bounces.sharebook.com.br`).
+- [x] Migrar leitura IMAP de bounces da Hostinger para o Stalwart (`bounce@bounces.sharebook.com.br`). (2026-09-08: app password separada criada, IMAP `INBOX` validado, variáveis Coolify preparadas)
 - [ ] Configurar webhook `delivery.*` do Stalwart para `POST /api/bounce`.
 - [ ] Implementar tratamento real dos eventos síncronos no `BounceController` (hoje 200 OK).
-- [ ] Dividir `EmailSettings` em configurações independentes de SMTP e IMAP.
-- [ ] Garantir que bounces assíncronos continuem alimentando `MailBounces` e a lista de supressão.
+- [x] Dividir `EmailSettings` em configurações independentes de SMTP e IMAP. (commit backend `da77b34`)
+- [x] Garantir que bounces assíncronos continuem alimentando `MailBounces` e a lista de supressão. (2026-09-08: DSN real processado por `Operations/JobTest`; `MailBounces` recebeu `sharebook-bounce-test-1788869999@gmail.com`, erro `550`, hard bounce)
 - [ ] Validar que destinatários em estado de bounce não voltam a receber tentativas.
 
 ### 5. Aquecimento e corte
