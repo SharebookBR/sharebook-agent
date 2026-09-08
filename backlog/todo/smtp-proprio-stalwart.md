@@ -20,6 +20,7 @@ Avaliar e, se a entregabilidade for comprovada, migrar o envio transacional do S
 - Em 2026-09-08, o `sharebook-agent` ganhou script operacional de envio (`scripts/infra/sharebook_agent_send_email.py`) usando Stalwart, credencial no `.env` e túnel SSH pela VPS quando necessário. Commit `56ac3fa`.
 - Em 2026-09-08, a caixa `bounce@bounces.sharebook.com.br` foi validada por IMAP no Stalwart (`INBOX`) e recebeu um DSN real gerado por envio proposital para destinatário inexistente do Gmail.
 - Em 2026-09-08, envio real com `Return-Path: bounce@bounces.sharebook.com.br` e `From: admin@sharebook.com.br` caiu na Inbox do Gmail com SPF `pass`, DKIM RSA `pass` para `bounces.sharebook.com.br` e DMARC `pass` por alinhamento relaxado. O script do agente passou a usar esse Return-Path por padrão.
+- Em 2026-09-08, o backend foi deployado no commit `da77b34` com `EmailSettings` desacoplado (`Smtp*` / `Imap*`), variáveis Coolify apontando para Stalwart e teste real via `POST /api/Operations/EmailTest`. O Gmail recebeu na Inbox com `Return-Path: bounce@bounces.sharebook.com.br`, SPF `pass`, DKIM RSA `pass` e DMARC `pass`.
 - O backend reutiliza `EmailSettings.HostName`, credenciais e SSL tanto para SMTP quanto para ler bounces por IMAP. Trocar apenas o host SMTP quebraria o processamento atual de bounces.
 - Em 2026-09-07 foi criado `ShareBook/ShareBook.Api/Controllers/BounceController.cs` — `POST /api/bounce` → `200 OK` (placeholder). Commit `94c152d`, deploy `finished`, container healthy. Serve para o webhook de bounce síncrono do Stalwart.
 - Distinção chave (2026-09-07): bounce **síncrono** (rejeição `5xx` no momento da entrega) é capturado por webhook; bounce **assíncrono** (DSN devolvido depois que o MX aceitou `250`) chega como e-mail de entrada no `Return-Path` (`bounce@bounces.sharebook.com.br`) e precisa ser lido por IMAP/JMAP. O webhook sozinho **não** pega tudo.
@@ -38,6 +39,7 @@ Avaliar e, se a entregabilidade for comprovada, migrar o envio transacional do S
 - Return-Path de bounce comprovado: Gmail aceitou mensagem real com `smtp.mailfrom=bounce@bounces.sharebook.com.br` e DMARC alinhado.
 - IMAP da caixa de bounce no Stalwart comprovado: login OK, `INBOX` acessível e DSN real recebido.
 - Endpoint de bounce `POST /api/bounce` criado, commitado e no ar (200 OK).
+- Backend de produção já envia pelo Stalwart com Return-Path de bounce (`da77b34`, deploy `mlmevr5swovwyuhbdvy2l6zg`).
 
 **Pendente (próximos passos, em ordem):**
 1. Configurar webhook `delivery.*` do Stalwart para `POST /api/bounce` e implementar o tratamento real dos eventos síncronos.
