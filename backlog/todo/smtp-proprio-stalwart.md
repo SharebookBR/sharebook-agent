@@ -16,6 +16,7 @@ Avaliar e, se a entregabilidade for comprovada, migrar o envio transacional do S
 - Em 2026-09-07 o serviço subiu, saiu do bootstrap (config RocksDB em `/etc/stalwart/config.json`), ficou `healthy` e foi configurado via API: hostname `mail.sharebook.com.br`, domínio principal `sharebook.com.br`, domínio/conta de bounce (`bounce@bounces.sharebook.com.br`), DKIM RSA+Ed25519 gerados, listeners enxugados (POP3 e Sieve fechados) e anti-open-relay validado.
 - Em 2026-09-08, DNS de autenticação foi publicado e validado publicamente: SPF raiz, DMARC `p=none`, MX/SPF de `bounces.sharebook.com.br` e quatro DKIM (`v1-rsa-20260906` / `v1-ed25519-20260906` para domínio raiz e bounce). A resolução direta/reversa também bate (`mail.sharebook.com.br` ↔ `129.121.36.220`).
 - Em 2026-09-08, validação interna confirmou API e Stalwart na rede Docker `coolify`, SMTP 25/465 e IMAP 993 abertos da API para o Stalwart, autenticação SMTP em 465 funcionando e anti-open-relay ainda ativo. Bloqueio restante: TLS do Stalwart ainda apresenta certificado autoassinado (`CN = rcgen self signed cert`), então não cortar produção antes de emitir/configurar certificado válido para `mail.sharebook.com.br`.
+- Em 2026-09-08, envio real controlado para `raffacabofrio@gmail.com` via submissão SMTP interna (`465`, TLS autoassinado aceito no cliente de teste) chegou na Inbox do Gmail. Gmail validou SPF `pass`, DKIM RSA `pass` e DMARC `pass`; a assinatura Ed25519 apareceu como `neutral (no key)`, então o RSA é a prova de DKIM efetiva no Gmail neste teste. O app password temporário criado para o teste foi removido em seguida.
 - O backend reutiliza `EmailSettings.HostName`, credenciais e SSL tanto para SMTP quanto para ler bounces por IMAP. Trocar apenas o host SMTP quebraria o processamento atual de bounces.
 - Em 2026-09-07 foi criado `ShareBook/ShareBook.Api/Controllers/BounceController.cs` — `POST /api/bounce` → `200 OK` (placeholder). Commit `94c152d`, deploy `finished`, container healthy. Serve para o webhook de bounce síncrono do Stalwart.
 - Distinção chave (2026-09-07): bounce **síncrono** (rejeição `5xx` no momento da entrega) é capturado por webhook; bounce **assíncrono** (DSN devolvido depois que o MX aceitou `250`) chega como e-mail de entrada no `Return-Path` (`bounce@bounces.sharebook.com.br`) e precisa ser lido por IMAP/JMAP. O webhook sozinho **não** pega tudo.
@@ -30,6 +31,7 @@ Avaliar e, se a entregabilidade for comprovada, migrar o envio transacional do S
 - Listeners enxugados: 25 (público), 465 (submissão), 993 (IMAP), 443/8080 (admin). POP3 e Sieve fechados.
 - Anti-open-relay comprovado (`550 Relay not allowed`).
 - Autenticação SMTP interna em 465 comprovada pela rede Docker `coolify`.
+- Envio real para Gmail comprovado: mensagem aceita e entregue na Inbox, SPF/DKIM RSA/DMARC passando.
 - Endpoint de bounce `POST /api/bounce` criado, commitado e no ar (200 OK).
 
 **Pendente (próximos passos, em ordem):**
@@ -38,7 +40,7 @@ Avaliar e, se a entregabilidade for comprovada, migrar o envio transacional do S
 3. Apontar o `Return-Path` dos envios para `bounce@bounces.sharebook.com.br`.
 4. Configurar webhook `delivery.*` do Stalwart para `POST /api/bounce` e implementar o tratamento real dos eventos síncronos.
 5. Desacoplar `EmailSettings` em `Smtp*` / `Imap*` no backend.
-6. Envio real controlado para ferramenta de diagnóstico e caixas Gmail/Outlook.
+6. Envio real controlado para ferramenta de diagnóstico e Outlook. Gmail já foi validado.
 7. Aquecimento + corte (Hostinger como rollback).
 
 ## Direção recomendada
@@ -108,7 +110,7 @@ Fontes oficiais: [arquitetura e filas do Postfix](https://www.postfix.org/OVERVI
 - [x] Atualizar o SPF existente sem criar um segundo registro SPF.
 - [x] Gerar e publicar DKIM de 2.048 bits.
 - [x] Validar DNS público de SPF, DKIM, DMARC, MX de bounce e PTR.
-- [ ] Validar alinhamento SPF/DKIM/DMARC em mensagem real.
+- [x] Validar alinhamento SPF/DKIM/DMARC em mensagem real. (2026-09-08: Gmail Inbox, SPF pass, DKIM RSA pass, DMARC pass; Ed25519 neutral/no key)
 - [ ] Configurar TLS válido para SMTP.
 
 ### 4. Bounces e supressão
@@ -125,7 +127,7 @@ Fontes oficiais: [arquitetura e filas do Postfix](https://www.postfix.org/OVERVI
 ### 5. Aquecimento e corte
 
 - [ ] Testar SPF, DKIM, DMARC, TLS, PTR e conteúdo em ferramentas de diagnóstico.
-- [ ] Fazer envios graduais para Gmail, Outlook e outros provedores relevantes.
+- [ ] Fazer envios graduais para Gmail, Outlook e outros provedores relevantes. (Gmail inicial validado em 2026-09-08)
 - [ ] Medir entrega em caixa de entrada, spam, rejeições temporárias e definitivas.
 - [ ] Manter troca rápida de configuração para retornar à Hostinger durante o período de observação.
 - [ ] Só cancelar o serviço anterior depois de bounces, filas, backups e entregabilidade permanecerem saudáveis.
