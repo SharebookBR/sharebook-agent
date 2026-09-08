@@ -50,11 +50,28 @@ INTRO_NAME_RE = re.compile(
 )
 SOU_NAME_RE = re.compile(
     r"(?i)\bSou\s+[A-ZÀ-Ý][\wÀ-ÿ'’-]*(?:\s+[A-ZÀ-Ý][\wÀ-ÿ'’-]*){0,4}"
-    r"(?=\s*(?:,\s*(?:tenho|fui|estou|moro|gosto|amo)\b|tenho\b))"
+    r"(?=\s*(?:,\s*(?:tenho|fui|estou|moro|gosto|amo|estudante)\b|"
+    r"e\s+(?:tenho|fui|estou|moro|gosto|amo|sou)\b|tenho\b))"
+)
+SOU_ARTICLE_NAME_RE = re.compile(
+    r"(?i:\bsou\s+a\s+)[A-ZÀ-Ý][\wÀ-ÿ'’-]*(?:\s+[A-ZÀ-Ý][\wÀ-ÿ'’-]*){0,4}"
+    r"(?=\s*(?:[,.;!?\n]|\.{2,}|tenho\b|e\s+(?:tenho|sou|estou|gosto|amo)\b))"
+)
+ME_CHAMA_NAME_RE = re.compile(
+    r"(?i:\bme\s+chama[oo]\s+)[A-ZÀ-Ý][\wÀ-ÿ'’-]*(?:\s+[A-ZÀ-Ý][\wÀ-ÿ'’-]*){0,4}"
+    r"(?=\s*(?:[,.;!?\n]|e\s+(?:tenho|sou|estou|gosto|amo)\b))"
 )
 CALLED_NAME_RE = re.compile(
     r"(?i:\b(?:chamad[oa]s?|se chama)\s+)"
     r"[A-ZÀ-Ý][\wÀ-ÿ'’-]*(?:\s+[A-ZÀ-Ý][\wÀ-ÿ'’-]*){0,4}"
+    r"(?=\s*(?:[,.;!?\n]|$))"
+)
+FAMILY_DOTTED_NAME_RE = re.compile(
+    r"(?i:\b(filh[ao])\.?\s*)[A-ZÀ-Ý][\wÀ-ÿ'’-]*(?:\s+[A-ZÀ-Ý][\wÀ-ÿ'’-]*){0,4}"
+    r"(?=\s*(?:[,.;!?\n]|$))"
+)
+PARA_NAME_RE = re.compile(
+    r"(?i:\bpra\s+)[A-ZÀ-Ý][\wÀ-ÿ'’-]*(?:\s+[A-ZÀ-Ý][\wÀ-ÿ'’-]*){0,4}"
     r"(?=\s*(?:[,.;!?\n]|$))"
 )
 ODD_ME_NAME_RE = re.compile(
@@ -74,6 +91,13 @@ INSTITUTION_ACRONYM_RE = re.compile(
     r"[A-Z]{2,}\b"
 )
 FAMILY_NAME_RE = re.compile(r"\b[A-ZÀ-Ý][\wÀ-ÿ'’-]+\s+(?=de\s+\d{1,3}\b)")
+REGIONAL_IDENTITY_RE = re.compile(
+    r"(?i)\bjovem\s+escritora\s+[a-zà-ÿ'’-]+"
+)
+PUBLISHED_WORKS_RE = re.compile(
+    r"(?is)\b(?:Obras publicadas|Títulos conhecidos)\s*:\s*.*?"
+    r"(?=(?:A saga|Isso me ajuda|Eu planejo|$))"
+)
 SIGNATURE_RE = re.compile(
     r"(?im)(^\s*(?:Com carinho(?: e gratidão)?|Atenciosamente)[,]?\s*\n)\s*[^\n]+$"
 )
@@ -100,7 +124,11 @@ def sanitize_request_text(text: str) -> str:
     sanitized = ADDRESS_LINE_RE.sub("[endereço removido]", sanitized)
     sanitized = INTRO_NAME_RE.sub("meu nome é [identidade removida]", sanitized)
     sanitized = SOU_NAME_RE.sub("Sou [identidade removida]", sanitized)
+    sanitized = SOU_ARTICLE_NAME_RE.sub("sou [identidade removida]", sanitized)
+    sanitized = ME_CHAMA_NAME_RE.sub("me chamo [identidade removida]", sanitized)
     sanitized = CALLED_NAME_RE.sub("chamado [familiar removido]", sanitized)
+    sanitized = FAMILY_DOTTED_NAME_RE.sub(r"\1 [familiar removido]", sanitized)
+    sanitized = PARA_NAME_RE.sub("pra [identidade removida]", sanitized)
     sanitized = ODD_ME_NAME_RE.sub("me [identidade removida]", sanitized)
     sanitized = INTERIOR_NAMED_LOCATION_RE.sub(
         "moro no interior de [localidade removida]", sanitized
@@ -108,6 +136,8 @@ def sanitize_request_text(text: str) -> str:
     sanitized = NAMED_LOCATION_RE.sub("moro em [localidade removida]", sanitized)
     sanitized = INSTITUTION_ACRONYM_RE.sub("[instituição removida]", sanitized)
     sanitized = FAMILY_NAME_RE.sub("[familiar removido] ", sanitized)
+    sanitized = REGIONAL_IDENTITY_RE.sub("jovem escritora [localidade removida]", sanitized)
+    sanitized = PUBLISHED_WORKS_RE.sub("[obras publicadas removidas].", sanitized)
     sanitized = SIGNATURE_RE.sub(r"\1[assinatura removida]", sanitized)
     sanitized = re.sub(r"[ \t]+\n", "\n", sanitized)
     sanitized = re.sub(r"\n{3,}", "\n\n", sanitized)
@@ -343,6 +373,36 @@ def self_test() -> int:
         (
             "Meu nome é Ana, moro no interior de Recife e amo poesia.",
             ["Ana", "Recife"],
+        ),
+        (
+            "Sou Marya Luiza e estou começando na leitura.",
+            ["Marya", "Luiza"],
+        ),
+        (
+            "Sou Pedro Henrique Peixoto Souza, estudante de filosofia.",
+            ["Pedro", "Henrique", "Peixoto", "Souza"],
+        ),
+        (
+            "sou a Cler....tenho 35 anos e tenho 2 filhas.",
+            ["Cler"],
+        ),
+        (
+            "Oiii me chamao Gabriela e sou uma nova escritora na área.",
+            ["Gabriela"],
+        ),
+        (
+            "É pra minha filha.Luna.Ela tem 14 anos.",
+            ["Luna"],
+        ),
+        (
+            "Por isso acho que esse livro será bem-vindo e merecido pra Luna.",
+            ["Luna"],
+        ),
+        (
+            "Sou uma jovem escritora pernambucana de 15 anos. "
+            "Obras publicadas: Título A. Títulos conhecidos: Título B. "
+            "A saga escrita por Rick é referência.",
+            ["pernambucana", "Título A", "Título B"],
         ),
     ]
     for sample, forbidden in samples:
