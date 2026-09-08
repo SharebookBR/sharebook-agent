@@ -6,7 +6,7 @@ Avaliar e, se a entregabilidade for comprovada, migrar o envio transacional do S
 
 ## Contexto atual
 
-- Produção usa `smtp.hostinger.com:465` com SSL no plano Business Starter.
+- Até o corte de 2026-09-08, produção usava `smtp.hostinger.com:465` com SSL no plano Business Starter. Após o deploy `da77b34`, produção envia pelo Stalwart; Hostinger fica apenas como rollback temporário.
 - A Hostinger permite 1.000 mensagens por caixa em uma janela móvel de 24 horas.
 - `EmailSettings__MaxEmailsPerHour=50`, mas o `MailSender` roda a cada 5 minutos e usa divisão inteira (`50 / 12`), resultando nominalmente em 4 envios por ciclo, 48 por hora ou 1.152 por dia.
 - O backoff self-healing atual deve ser preservado: ao receber `Ratelimit`, o worker espera progressivamente 5, 10, 15, 20 e 25 minutos.
@@ -22,6 +22,7 @@ Avaliar e, se a entregabilidade for comprovada, migrar o envio transacional do S
 - Em 2026-09-08, envio real com `Return-Path: bounce@bounces.sharebook.com.br` e `From: admin@sharebook.com.br` caiu na Inbox do Gmail com SPF `pass`, DKIM RSA `pass` para `bounces.sharebook.com.br` e DMARC `pass` por alinhamento relaxado. O script do agente passou a usar esse Return-Path por padrão.
 - Em 2026-09-08, o backend foi deployado no commit `da77b34` com `EmailSettings` desacoplado (`Smtp*` / `Imap*`), variáveis Coolify apontando para Stalwart e teste real via `POST /api/Operations/EmailTest`. O Gmail recebeu na Inbox com `Return-Path: bounce@bounces.sharebook.com.br`, SPF `pass`, DKIM RSA `pass` e DMARC `pass`.
 - Decisão operacional em 2026-09-08: **não cancelar a Hostinger ainda**. O corte técnico para Stalwart está feito, mas a Hostinger deve permanecer como rollback durante aquecimento/observação, teste em Outlook/Hotmail e validação de rotina dos bounces.
+- Plano de observação aceito em 2026-09-08: aguardar **uma semana** antes de reavaliar cancelamento da Hostinger. Raffaello vai doar livros físicos nessa semana, gerando volumetria real para analisar logs, fila, entregabilidade e bounces do novo SMTP.
 - O backend reutiliza `EmailSettings.HostName`, credenciais e SSL tanto para SMTP quanto para ler bounces por IMAP. Trocar apenas o host SMTP quebraria o processamento atual de bounces.
 - Em 2026-09-07 foi criado `ShareBook/ShareBook.Api/Controllers/BounceController.cs` — `POST /api/bounce` → `200 OK` (placeholder). Commit `94c152d`, deploy `finished`, container healthy. Serve para o webhook de bounce síncrono do Stalwart.
 - Distinção chave (2026-09-07): bounce **síncrono** (rejeição `5xx` no momento da entrega) é capturado por webhook; bounce **assíncrono** (DSN devolvido depois que o MX aceitou `250`) chega como e-mail de entrada no `Return-Path` (`bounce@bounces.sharebook.com.br`) e precisa ser lido por IMAP/JMAP. O webhook sozinho **não** pega tudo.
@@ -50,7 +51,7 @@ Avaliar e, se a entregabilidade for comprovada, migrar o envio transacional do S
 
 **Hostinger:**
 - [ ] Manter ativa como rollback imediato durante a observação inicial do Stalwart.
-- [ ] Reavaliar cancelamento depois de Gmail + Outlook/Hotmail saudáveis, bounces processados em rotina e fila sem anomalia por alguns dias.
+- [ ] Reavaliar cancelamento depois de uma semana de observação com doações físicas, Gmail + Outlook/Hotmail saudáveis, bounces processados em rotina e fila sem anomalia.
 - [ ] Antes de cancelar, confirmar se a Hostinger não guarda outro serviço ainda usado pelo Sharebook (caixa humana, DNS, domínio, hospedagem ou credencial operacional esquecida).
 
 ## Direção recomendada
@@ -138,6 +139,7 @@ Fontes oficiais: [arquitetura e filas do Postfix](https://www.postfix.org/OVERVI
 
 - [ ] Testar SPF, DKIM, DMARC, TLS, PTR e conteúdo em ferramentas de diagnóstico.
 - [ ] Fazer envios graduais para Gmail, Outlook e outros provedores relevantes. (Gmail inicial validado em 2026-09-08)
+- [ ] Usar a semana de doações físicas como janela de tráfego real para analisar logs do `MailSender`, `JobHistories`, `MailBounces`, Inbox/spam e eventuais rejeições.
 - [ ] Medir entrega em caixa de entrada, spam, rejeições temporárias e definitivas.
 - [ ] Manter troca rápida de configuração para retornar à Hostinger durante o período de observação.
 - [ ] Só cancelar o serviço anterior depois de bounces, filas, backups e entregabilidade permanecerem saudáveis.
