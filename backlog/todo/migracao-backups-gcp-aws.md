@@ -6,6 +6,12 @@ Hoje o Sharebook paga storage em dois provedores: AWS e GCP. A AWS ja e a direca
 
 Concentrar os backups na AWS reduz dispersao operacional, simplifica auditoria de custo e evita manter duas superficies de storage para o mesmo projeto.
 
+## Prioridade
+
+Baixa no curto prazo.
+
+Em 2026-09-08, ainda ha R$ 16,81 de credito na GCP e o gasto atual esta perto de R$ 4 por mes. Isso da aproximadamente quatro meses de folga antes de a conta virar custo real recorrente. A migracao deve ficar no backlog, mas nao competir com itens de produto ou riscos operacionais mais urgentes enquanto esse credito existir.
+
 ## Estado Atual
 
 O GCP e usado hoje para backup da VPS:
