@@ -64,7 +64,7 @@
 - Scripts temporários criados: `tmp_count_books.py`, `tmp_slug_fisico.py`, `tmp_slug_fisico2.py` (podem ser removidos)
 
 ## Fricções e soluções
-- GSC em conta diferente (`raffacabofrio@gmail.com`) — Raffa compartilhou prints diretamente
+- GSC em conta diferente (`<email pessoal removido>`) — Raffa compartilhou prints diretamente
 - PowerShell não suporta heredoc no git commit — resolvido com arquivo temporário `commit_msg.txt`
 - Amazon bloqueia WebFetch — link gerado manualmente a partir do padrão conhecido
 

@@ -19,11 +19,7 @@
 - Renovado o token operacional com `scripts/production/sharebook_refresh_token.py`.
 - Consultadas pela API as doações físicas e os dados dos ganhadores.
 - Cruzados títulos, nomes, CEPs e cidades com o comprovante dos Correios.
-- Cadastrados e validados os rastreios:
-  - `Bola de Sebo e Outros Contos` → `JN967511204BR`.
-  - `Demônios` → `JN967511204BR`.
-  - `Cidade Ampliada` → `JN967511218BR`.
-  - `Cuidado com a Palavra` → `JN967511195BR`.
+- Cadastrados e validados os rastreios de quatro livros, distribuídos em três encomendas. Códigos omitidos do registro público.
 - Confirmado por GET que os quatro livros ficaram em `Sent`, com os códigos corretos.
 - Confirmado que a conta ficou com zero doações em `WaitingSend`.
 - `Contos da Selva` não foi alterado.
@@ -32,16 +28,13 @@
 
 - A mutação foi feita exclusivamente pela API para preservar mudança de status, integração de rastreio e notificação dos ganhadores.
 - Nenhum código foi gravado antes de reconciliar a divergência entre o nome lembrado, o título do livro e o destino do comprovante.
-- O CEP `55665-000` identificou Matheus Dias e o livro correto, `Cuidado com a Palavra`; `Contos da Selva` pertence a Gustavo, em Eunápolis/BA.
-- Os dois livros da Emilly receberam o mesmo código porque foram enviados no mesmo pacote.
+- O destino do comprovante permitiu identificar a doação correta; dados pessoais omitidos.
+- Dois livros da mesma pessoa receberam o mesmo código porque foram enviados no mesmo pacote.
 - O rastreio antigo de `Cuidado com a Palavra` foi substituído somente após confirmação explícita do Raffa.
 
 ## 5. Contexto relevante
 
-- Destinos do comprovante:
-  - Itapema/SC → Emilly → `JN967511204BR`.
-  - Curitibanos/SC → Danielle → `JN967511218BR`.
-  - CEP `55665-000`, PE → Matheus Dias → `JN967511195BR`.
+- Três destinos reconciliados com os comprovantes; nomes, localidades, CEPs e rastreios omitidos.
 - A API dispara o fluxo de notificação do ganhador ao informar o rastreio.
 - Antes da operação havia três livros em `WaitingSend`; o quarto, `Cuidado com a Palavra`, já estava em `Sent` com um código antigo.
 

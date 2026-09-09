@@ -4,7 +4,7 @@
 
 - Modelo: Claude Sonnet 4.6
 - Ambiente: Windows local (Claude Code, runtime windows-local)
-- Banco: PostgreSQL prod via IP público (212.85.23.202)
+- Banco: PostgreSQL prod via IP público (<IP da VPS antiga removido>)
 - SQS: AWS sa-east-1, fila `send-email-low-priority-prod`
 
 ## 2. Skills acionadas

@@ -14,7 +14,7 @@
 
 ## 3. O que foi feito
 
-- Confirmado acesso de leitura ao Gmail `raffacabofrio@gmail.com`.
+- Confirmado acesso de leitura ao Gmail `<email pessoal removido>`.
 - Buscados os avisos do Rollbar recebidos entre 22 e 23 de julho de 2026.
 - Encontrados dois e-mails referentes ao mesmo item Rollbar `#2926`: primeira ocorrência às 01:00 e décima ocorrência às 01:45 de 23/07.
 - Lida a evidência bruta dos e-mails. A exceção foi `ShareBookException: The authenticated user cannot act on behalf of the specified Google account`, originada em `MeetupService.GetYoutubeVideosAsync()`, linha 109, durante o job `MeetupSearch`.

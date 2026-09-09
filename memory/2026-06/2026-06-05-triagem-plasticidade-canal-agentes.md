@@ -2,7 +2,7 @@
 
 ## Modelo e ambiente
 - Claude Sonnet 4.5, Windows local
-- Banco: `sharebook_importer` e `sharebook` em produção (212.85.23.202)
+- Banco: `sharebook_importer` e `sharebook` em produção (<IP da VPS antiga removido>)
 
 ## Skills acionadas
 - `skills/runtime/windows-local.md`

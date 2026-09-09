@@ -28,7 +28,7 @@ Foram usadas `runtime/windows-local`, `product-ux/winner-selection`, `product-ux
 
 Foram identificados os dois livros físicos em `AwaitingDonorDecision`: o kit `Alimento Diário Kids: Jardim do Éden + A Criação` e `Álcoois: poemas (1898–1913) — edição bilíngue`. Raffa congelou os critérios padrão e participou de cada decisão, um livro por vez.
 
-No kit infantil, 31 solicitações válidas foram anonimizadas e pontuadas. A decisão final foi pelo `Interessado 2`, valorizando o potencial de ampliar os horizontes de leitura de uma criança autista que já tinha rotina afetiva de leitura. O diagnóstico não foi tratado como vantagem moral; o fundamento foi o uso concreto descrito. A API confirmou livro em `WaitingSend`, solicitação vencedora em `Donated` e zero solicitações em `WaitingAction`.
+No kit infantil, 31 solicitações válidas foram anonimizadas e pontuadas. A decisão final valorizou o uso concreto descrito e o potencial de ampliar os horizontes de leitura. Detalhes pessoais e de saúde foram omitidos do registro público. A API confirmou livro em `WaitingSend`, solicitação vencedora em `Donated` e zero solicitações em `WaitingAction`.
 
 Em `Álcoois`, 34 solicitações válidas foram anonimizadas e pontuadas. A escolha final ficou entre os Interessados 3 e 5. Raffa escolheu o `Interessado 5` pela paixão mais visível pela experiência específica da edição bilíngue. A API confirmou os mesmos invariantes finais: `WaitingSend`, vencedor em `Donated` e nenhuma solicitação pendente.
 

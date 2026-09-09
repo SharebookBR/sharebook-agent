@@ -6,7 +6,7 @@ O Sharebook passou a consultar programaticamente queries, páginas, cliques, imp
 
 ## Acesso
 
-- Service account: `sharebook-analytics-agent@sharebook-a174c.iam.gserviceaccount.com`.
+- Service account: `<client_email da chave indicada por GA4_KEY_FILE_PATH>`.
 - Propriedade: `sc-domain:sharebook.com.br`.
 - Search Console API habilitada no projeto GCP `sharebook-a174c`.
 - A conta foi adicionada à propriedade e a API confirmou acesso `siteFullUser`.

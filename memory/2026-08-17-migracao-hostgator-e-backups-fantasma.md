@@ -6,8 +6,8 @@
 - **Runtime:** Windows local (`C:\Repos\SHAREBOOK`). PowerShell como shell primário.
 - **Acesso:** SSH nas duas VPS via `scripts/infra/vps_ssh.py`; MCP do Gmail para achar os e-mails da HostGator; MCP `scheduled-tasks` para agendar a revisão.
 - **Duração:** sessão longa, começou como "me ajuda a migrar" e terminou em auditoria de backup.
-- **Caixa nova:** `129.121.36.220`, SSH na porta **22022** (não-padrão, escolha da HostGator), Ubuntu 22.04.5 LTS, 4 vCPU, 7,8 GB RAM, 196 GB. Produto: **VPS OCI NVMe 8**.
-- **Caixa velha:** `212.85.23.202` (Hostinger, `srv1005404`), mantida desligada como rollback.
+- **Caixa nova:** `<VPS_HOSTGATOR_SSH_HOST do .env>`, SSH na porta **22022** (não-padrão, escolha da HostGator), Ubuntu 22.04.5 LTS, 4 vCPU, 7,8 GB RAM, 196 GB. Produto: **VPS OCI NVMe 8**.
+- **Caixa velha:** `<IP da VPS antiga removido>` (Hostinger, `srv1005404`), mantida desligada como rollback.
 
 ## 2. Skills acionadas
 
@@ -46,7 +46,7 @@ Nenhuma estava documentada e todas travariam a migração:
 
 ### 3.3 O typo do DNS e o envenenamento de cache
 
-Raffa publicou `29.121.36.220` em vez de `129.121.36.220` — faltou o `1`. Corrigiu em minutos, mas o estrago sobreviveu: **resolvedores públicos cachearam o IP inválido pelo TTL de 3600**.
+Raffa publicou `<IP incorreto removido>` em vez de `<VPS_HOSTGATOR_SSH_HOST do .env>` — faltou o `1`. Corrigiu em minutos, mas o estrago sobreviveu: **resolvedores públicos cachearam o IP inválido pelo TTL de 3600**.
 
 A caixa nova consultou o DNS durante essa janela e guardou o valor errado. Efeito em cadeia, nada óbvio:
 

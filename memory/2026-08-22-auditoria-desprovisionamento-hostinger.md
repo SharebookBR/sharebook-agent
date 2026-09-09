@@ -11,7 +11,7 @@ facts_changed = ["A produção web e os bancos não dependem mais da VPS Hosting
 open_loops = ["Após a expiração definitiva da VPS Hostinger, remover as credenciais VPS_SSH_* antigas e repontar defaults e documentação operacional que ainda usam esse prefixo como caixa padrão."]
 durable_candidates = ["Toda saída definitiva de uma VPS deve auditar dependências de serviços do mesmo fornecedor, especialmente SMTP/IMAP, e a recuperabilidade dos backups de configuração além dos dados."]
 supersedes = []
-evidence = ["DNS público em 2026-08-22: sharebook.com.br, www e api em 129.121.36.220; NS b.sec.dns.br e c.sec.dns.br", "HostGator: onze containers ativos e saudáveis; home e API HTTP 200", "Container sharebook-api: EmailSettings__HostName=smtp.hostinger.com, SMTP 465, IMAP 993, serviço ativo", "DNS de pegasus-soft.com.br: MX mx1.hostinger.com e mx2.hostinger.com, SPF e DKIM Hostinger", "Coolify em 2026-08-22: backups success e s3_uploaded=true para coolify, sharebook, sharebook_importer, pegasus_core, simula_plus e volume de imagens de 1.162.204.881 bytes", "Inspeção de /data/coolify e agendamentos: nenhum backup externo de APP_KEY, SSH e proxy identificado", "Confirmação do Raffa: recomendações executadas integralmente"]
+evidence = ["DNS público em 2026-08-22: sharebook.com.br, www e api em <VPS_HOSTGATOR_SSH_HOST do .env>; NS b.sec.dns.br e c.sec.dns.br", "HostGator: onze containers ativos e saudáveis; home e API HTTP 200", "Container sharebook-api: EmailSettings__HostName=smtp.hostinger.com, SMTP 465, IMAP 993, serviço ativo", "DNS de pegasus-soft.com.br: MX mx1.hostinger.com e mx2.hostinger.com, SPF e DKIM Hostinger", "Coolify em 2026-08-22: backups success e s3_uploaded=true para coolify, sharebook, sharebook_importer, pegasus_core, simula_plus e volume de imagens de 1.162.204.881 bytes", "Inspeção de /data/coolify e agendamentos: nenhum backup externo de APP_KEY, SSH e proxy identificado", "Confirmação do Raffa: recomendações executadas integralmente"]
 +++
 
 # Auditoria para desprovisionamento seguro da Hostinger
@@ -26,7 +26,7 @@ Foram consultados o runtime Windows, o playbook de infraestrutura/Coolify, a ski
 
 ## O que foi feito
 
-Os quatro repositórios operacionais foram sincronizados e permaneceram limpos. Referências locais à Hostinger e à antiga VPS foram auditadas. O DNS público confirmou `sharebook.com.br`, `www` e `api` em `129.121.36.220`, com autoridade no Registro.br, enquanto home, healthcheck e Swagger responderam HTTP 200.
+Os quatro repositórios operacionais foram sincronizados e permaneceram limpos. Referências locais à Hostinger e à antiga VPS foram auditadas. O DNS público confirmou `sharebook.com.br`, `www` e `api` em `<VPS_HOSTGATOR_SSH_HOST do .env>`, com autoridade no Registro.br, enquanto home, healthcheck e Swagger responderam HTTP 200.
 
 A VPS HostGator foi inspecionada por SSH. Os onze containers estavam ativos e saudáveis. Os backups de 22/08 registravam `success` e `s3_uploaded=true` para os bancos `coolify`, `sharebook`, `sharebook_importer`, `pegasus_core` e `simula_plus`; o volume de imagens também havia sido enviado, com aproximadamente 1,16 GB.
 
@@ -44,7 +44,7 @@ Antes da destruição definitiva, o estado crítico de recuperação do Coolify 
 
 ## Contexto relevante
 
-A migração Hostinger para HostGator ocorreu em 17/08/2026. A VPS antiga `212.85.23.202` já estava desligada e mantida apenas como rollback. A produção atual vive em `129.121.36.220`.
+A migração Hostinger para HostGator ocorreu em 17/08/2026. A VPS antiga `<IP da VPS antiga removido>` já estava desligada e mantida apenas como rollback. A produção atual vive em `<VPS_HOSTGATOR_SSH_HOST do .env>`.
 
 Os backups externos atuais protegem os dados transacionais e as imagens, com lifecycle de sessenta dias no GCS. Recuperabilidade integral do Coolify exige mais do que esses dumps: o `APP_KEY` é necessário para decifrar variáveis e chaves armazenadas no banco da instância.
 

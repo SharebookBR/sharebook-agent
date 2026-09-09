@@ -3,7 +3,7 @@
 ## Modelo e ambiente
 - Claude Sonnet 4.6, Windows local
 - Repositório: `sharebook-ebook-importer`
-- Banco: `sharebook_importer` (PostgreSQL, 212.85.23.202)
+- Banco: `sharebook_importer` (PostgreSQL, <IP da VPS antiga removido>)
 
 ## Skills acionadas
 - `skills/runtime/windows-local.md`
@@ -98,7 +98,7 @@
 
 ## Fricções e soluções
 - CHECK constraint bloqueou migração de dados → solução: drop constraint, migrar, recriar
-- Credencial `sharebook_ai_rw` com senha errada na skill → usada do `.env`
+- Credencial `SHAREBOOK_PROD_PG_RW_USER` com senha errada na skill → usada do `.env`
 - Heredoc no PowerShell não funciona → commit via arquivo temporário `commit_msg.txt`
 - `python3` no Windows resolve para stub → usar `python` no Windows local
 

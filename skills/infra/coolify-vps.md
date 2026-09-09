@@ -30,9 +30,9 @@
 
 ## Qual VPS é a produção
 
-Desde **17/08/2026** a produção roda na **HostGator**: `129.121.36.220`, SSH na porta **22022**, credenciais no `.env` sob o prefixo `VPS_HOSTGATOR_SSH_*`.
+Desde **17/08/2026** a produção roda na **HostGator**: host, porta e credenciais no `.env` sob o prefixo `VPS_HOSTGATOR_SSH_*`.
 
-A caixa antiga da Hostinger (`212.85.23.202`, prefixo `VPS_SSH_*`) ficou desligada como rollback até o cancelamento do plano. **Não presumir que `VPS_SSH_*` é produção** — esse prefixo ainda aponta para a máquina velha.
+A VPS antiga da Hostinger foi desprovisionada (confirmado pelo Raffa em 08/09/2026). **Não usar `VPS_SSH_*` como produção** — esse prefixo é legado.
 
 ## Script Base para Windows
 - Script reutilizável: `scripts/infra/vps_ssh.py`

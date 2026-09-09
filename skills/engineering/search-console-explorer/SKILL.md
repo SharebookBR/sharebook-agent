@@ -11,7 +11,7 @@ Explorar o Search Console para responder perguntas e orientar ação. O dashboar
 
 - Propriedade: `sc-domain:sharebook.com.br`.
 - Credencial local protegida: `sharebook-agent/scripts/production/ga4-key.json`.
-- Service account: `sharebook-analytics-agent@sharebook-a174c.iam.gserviceaccount.com`.
+- Service account: `<client_email da chave indicada por GA4_KEY_FILE_PATH>`.
 - Escopo: `https://www.googleapis.com/auth/webmasters.readonly`.
 - Script canônico: `scripts/search_console_query.py` nesta skill.
 

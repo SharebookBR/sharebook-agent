@@ -29,7 +29,7 @@ Para investigação ad hoc no Search Console — queries, páginas, comparação
 - **GA4 API:** Google Analytics Data API v1beta
 - **Search Console property:** `sc-domain:sharebook.com.br`
 - **Search Console API:** Search Analytics REST API, escopo readonly
-- **Service account:** `sharebook-analytics-agent@sharebook-a174c.iam.gserviceaccount.com`
+- **Service account:** `<client_email da chave indicada por GA4_KEY_FILE_PATH>`
 
 As duas integrações reutilizam a mesma credencial via `GA4__CredentialsBase64`. Não criar um segundo segredo para o Search Console.
 

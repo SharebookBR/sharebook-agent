@@ -5,7 +5,7 @@
 - **Modelo:** Claude Opus 5, via Claude Code.
 - **Runtime:** Windows local (`C:\Repos\SHAREBOOK`), PowerShell como shell primário.
 - **Acesso:** SSH na produção via `scripts/infra/vps_ssh.py --prefix VPS_HOSTGATOR_SSH`; MCP do Gmail para achar o canal de suporte da HostGator; MCP `scheduled-tasks` para agendar a revisão de SSH.
-- **Alvo:** VPS HostGator `129.121.36.220`, três dias depois do corte de 17/08.
+- **Alvo:** VPS HostGator `<VPS_HOSTGATOR_SSH_HOST do .env>`, três dias depois do corte de 17/08.
 - **Pedido de partida:** "recentemente migramos para hostgator. pode dar uma revisada e ver se está tudo saudável?"
 
 ## 2. Skills acionadas

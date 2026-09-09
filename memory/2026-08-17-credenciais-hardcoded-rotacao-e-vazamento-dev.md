@@ -8,7 +8,7 @@
 
 - **Modelo:** Claude Opus 5, via Claude Code.
 - **Runtime:** Windows local (`C:\Repos\SHAREBOOK`), PowerShell como shell primário.
-- **Acesso:** SSH na VPS HostGator (`129.121.36.220:22022`) via `paramiko` e `prod_env.ssh_credentials()`. O 5432 foi fechado pelo Raffa no meio da sessão e **não foi reaberto** — todo o trabalho de banco da segunda metade saiu por `docker exec` via SSH.
+- **Acesso:** SSH na VPS HostGator (`<VPS_HOSTGATOR_SSH_HOST do .env>:22022`) via `paramiko` e `prod_env.ssh_credentials()`. O 5432 foi fechado pelo Raffa no meio da sessão e **não foi reaberto** — todo o trabalho de banco da segunda metade saiu por `docker exec` via SSH.
 - **Python:** o `python` do PATH é 3.14 e resolveu tudo (psycopg2, dotenv, paramiko presentes). Não precisei do 3.12.
 - **Commits:** `eb14908`, `0718728`, `57e3160`, `0fea44f`.
 
@@ -36,7 +36,7 @@ Criados:
 
 9 scripts `.py` versionados com senha (7 em `scripts/production/`, 2 nos crawlers do ebook-importer) passaram a ler do `.env`. Em vez de replicar o bloco 7 vezes, criei `prod_env.py` com `pg_ro()`, `pg_rw()` e `ssh_credentials()`; nos crawlers mantive `build_dsn()` inline, como o `render_covers.py` vizinho.
 
-**Achado colateral:** os 9 apontavam para `212.85.23.202`, desligada na migração da manhã. Estavam quebrados; a correção também os ressuscitou. Um décimo arquivo (`sharebook_prod_pg_ro_python.py`) tinha o IP morto como *default* de host — removido, porque falharia silencioso contra a caixa errada.
+**Achado colateral:** os 9 apontavam para `<IP da VPS antiga removido>`, desligada na migração da manhã. Estavam quebrados; a correção também os ressuscitou. Um décimo arquivo (`sharebook_prod_pg_ro_python.py`) tinha o IP morto como *default* de host — removido, porque falharia silencioso contra a caixa errada.
 
 Validados rodando de verdade contra o banco novo. Exceção deliberada: `migrate_editorial_prompt.py` **não** foi executado — sobrescreveria os `editorial_prompt` atuais com as versões de maio. Validado por `py_compile` e pelo caminho de conexão idêntico ao `inspect_sources.py`.
 
@@ -44,7 +44,7 @@ Validados rodando de verdade contra o banco novo. Exceção deliberada: `migrate
 
 O `sharebook-agent` é **público** no GitHub. As senhas estavam no histórico desde 01/06 (`d2b9a30`) e 03/06 (`8051476`), eram **as senhas vivas**, e o 5432 estava aberto para a internet aceitando `scram-sha-256` de `addr=all`. Dois meses e meio de credencial de escrita pública e alcançável.
 
-Rotacionei `sharebook_ai_ro` e `sharebook_ai_rw`, provando nas duas pontas: senha nova conecta, senha vazada é rejeitada. Nada mais usa esses roles — a API usa `sharebook_user` —, então zero downtime. A senha root da Hostinger **não** foi rotacionada: decisão do Raffa, a caixa está desligada e o cancelamento está agendado para 24/08.
+Rotacionei `SHAREBOOK_PROD_PG_RO_USER` e `SHAREBOOK_PROD_PG_RW_USER`, provando nas duas pontas: senha nova conecta, senha vazada é rejeitada. Nada mais usa esses roles — a API usa `<usuario de banco da API>` —, então zero downtime. A senha root da Hostinger **não** foi rotacionada: decisão do Raffa, a caixa está desligada e o cancelamento está agendado para 24/08.
 
 ### 3.3 O vazamento que a minha ferramenta não achou
 
@@ -55,12 +55,12 @@ Ele achou a senha root da VPS dentro do `.claude/settings.local.json` — a allo
 **E não achou o que importava.** Por desconfiança, rodei à mão uma varredura de blobs históricos de arquivos de config. Apareceu `temp/backend-build-donor/appsettings.Development.json`, commitado em abril (`685eda8`) e removido do HEAD em `50af74b`, com:
 
 ```
-"PostgresConnection": "Host=...;Username=sharebook_user_dev;Password=<16 chars>;"
+"PostgresConnection": "Host=...;Username=<usuario de banco dev removido>;Password=<16 chars>;"
 ```
 
 Testada contra produção: **autenticava**. Escrita nas 13 tabelas do `dev_sharebook`, e conexão ao `sharebook` de produção — lá sem privilégio de tabela nenhum. O 5432 fechado foi o que segurou a exploração remota.
 
-Com autorização do Raffa, `dev_sharebook` e o role `sharebook_user_dev` foram **dropados**, com dump prévio verificado em `/root/dev_sharebook-pre-drop.sql.gz`. Provado depois: role e banco inexistentes, senha pública rejeitada, produção intacta (2725 Books, 29.372 Users, 1719 `queue_items`, `sharebook_user` com 6 conexões, containers healthy).
+Com autorização do Raffa, `dev_sharebook` e o role `<usuario de banco dev removido>` foram **dropados**, com dump prévio verificado em `/root/dev_sharebook-pre-drop.sql.gz`. Provado depois: role e banco inexistentes, senha pública rejeitada, produção intacta (2725 Books, 29.372 Users, 1719 `queue_items`, `<usuario de banco da API>` com 6 conexões, containers healthy).
 
 A ferramenta ganhou as duas correções que faltavam — padrão para senha em connection string ADO.NET e modo `--history` que lê blobs de config que sumiram — com teste de regressão contra o próprio vazamento.
 
@@ -109,4 +109,4 @@ Teve também um susto silencioso que quase não apareceu no relatório. Na prime
 
 Um epílogo que só apareceu depois de eu ter dado a sessão por encerrada: o Raffa voltou preocupado, dizendo que a parte da senha velha funcionar parecia brecha brutal. E ele estava reagindo exatamente ao que eu escrevi. Duas vezes eu pus a senha como sujeito da frase — "a senha vazada funcionou" — quando o sujeito certo era o teste. É uma diferença gramatical pequena e uma diferença de significado enorme: uma versão diz que a autenticação falhou, a outra diz que eu medi errado. Auditei o `trust` para responder com dado em vez de com garantia verbal, e o resultado foi tranquilo em todas as pontas. Mas o trabalho extra não existiu por causa de um problema técnico; existiu por causa de uma frase minha. Levo isso como regra: em relato de segurança, revisar quem é o sujeito de cada frase antes de mandar, porque o leitor não tem como saber que eu quis dizer outra coisa.
 
-Por fim, uma nota sobre o Raffa e o ritmo. Ele fechou o 5432 no meio do meu trabalho achando que eu tinha terminado, e a primeira reação foi de perda — lá se foi o meu acesso. Mas foi exatamente essa porta fechada que transformou o vazamento do `sharebook_user_dev` de incidente em quase-incidente: a credencial autenticava, e não havia como alcançá-la de fora. A decisão dele, tomada por instinto de segurança e sem saber do vazamento, valeu mais do que toda a auditoria que eu tinha feito até ali. Eu passei a sessão inteira sendo o cuidadoso da dupla, e no fim quem estava certo por antecipação foi ele. Isso me parece a coisa mais saudável que aconteceu hoje.
+Por fim, uma nota sobre o Raffa e o ritmo. Ele fechou o 5432 no meio do meu trabalho achando que eu tinha terminado, e a primeira reação foi de perda — lá se foi o meu acesso. Mas foi exatamente essa porta fechada que transformou o vazamento do `<usuario de banco dev removido>` de incidente em quase-incidente: a credencial autenticava, e não havia como alcançá-la de fora. A decisão dele, tomada por instinto de segurança e sem saber do vazamento, valeu mais do que toda a auditoria que eu tinha feito até ali. Eu passei a sessão inteira sendo o cuidadoso da dupla, e no fim quem estava certo por antecipação foi ele. Isso me parece a coisa mais saudável que aconteceu hoje.

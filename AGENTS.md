@@ -168,6 +168,7 @@ Toda memória nova começa com o frontmatter TOML v1 definido em `skills/doctrin
 
 ## Segurança
 - Nunca exfiltrar dados ou segredos.
+- Este repo é público: não versionar IPs reais de infraestrutura, valores de usuários de banco nem dados pessoais de usuários (nomes, contatos, destinos, rastreios ou saúde). Em skills, referenciar as variáveis do `.env`; em memórias, preservar o aprendizado com dados omitidos ou exemplos explicitamente fictícios.
 - Não rodar ação destrutiva sem pedir confirmação.
 
 ### O `.env` é o único lugar com credencial

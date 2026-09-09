@@ -15,7 +15,7 @@ Claude Sonnet 4.6, Windows local, hot reload Angular ativo, acesso direto ao ban
 - `pg_db.py` instrumentado em 3 pontos: `mark_item`, `set_plan`, `set_status` com `changed_by` semântico
 - Backend: CTE `yesterday_counts` com corte `America/Sao_Paulo`, 12 campos D-1 nullable no DTO
 - Frontend: `formatDelta()`, `getStatusCountD1()`, delta inline cinza nos cards, mock removido
-- GRANT faltante para `sharebook_user` corrigido em produção
+- GRANT faltante para `<usuario de banco da API>` corrigido em produção
 - Ciclo completo validado: triagem (#1225), editorial (#1146), publicação (duplicate detectado)
 - Seed D-1 fake para validação visual do frontend
 - Fix: delta zero oculto
@@ -29,11 +29,11 @@ Claude Sonnet 4.6, Windows local, hot reload Angular ativo, acesso direto ao ban
 
 ## 5. Contexto relevante
 - 3 players no importer: Python worker (triagem/publicação via cron), agente editorial (CLI `plan-set`), admin (CLI `status-set`)
-- Backend usa `sharebook_user` para leitura do banco importer — usuário diferente de `sharebook_ai_rw` que criou a tabela
+- Backend usa `<usuario de banco da API>` para leitura do banco importer — usuário diferente de `SHAREBOOK_PROD_PG_RW_USER` que criou a tabela
 - Seed D-1 com `changed_by='seed_d1'` deixado no banco — vai ser diluído pelos dados reais a partir de amanhã
 
 ## 6. Fricções e soluções
-- **GRANT faltante**: tabela criada por `sharebook_ai_rw`, backend usa `sharebook_user` — detectado via `pg_stat_activity`, corrigido com GRANT SELECT
+- **GRANT faltante**: tabela criada por `SHAREBOOK_PROD_PG_RW_USER`, backend usa `<usuario de banco da API>` — detectado via `pg_stat_activity`, corrigido com GRANT SELECT
 - **PowerShell + `*` no SQL**: inline Python falhou, resolvido escrevendo script em arquivo temporário
 - **Seed retornou só `done`**: LIMIT 30 numa query multi-status só pegou um bucket — resolvido com query por status separado
 
@@ -43,4 +43,4 @@ Sessão longa e satisfatória. Começamos com uma conversa sobre UX — o Raffa 
 
 A parte da modelagem foi a mais rica. A rejeição do snapshot pelo Raffa foi precisa — ele foi direto ao ponto: snapshot aumenta chance de dado errado. Concordei sem hesitar porque a razão era boa. A alternativa de event sourcing não só resolve o delta mas cria fundação para análises futuras (tempo em cada status, quem moveu o quê, funil de conversão da fila).
 
-A fricção do GRANT foi clássica de banco compartilhado: usuário que cria a tabela ≠ usuário que lê. Demorei uma rodada pra diagnosticar porque a solução óbvia (GRANT para `sharebook_ai_ro` e `sharebook_ai_rw`) não resolveu. Checar `pg_stat_activity` foi o movimento certo — evidência bruta antes de chute. Resolveu na segunda rodada.
+A fricção do GRANT foi clássica de banco compartilhado: usuário que cria a tabela ≠ usuário que lê. Demorei uma rodada pra diagnosticar porque a solução óbvia (GRANT para `SHAREBOOK_PROD_PG_RO_USER` e `SHAREBOOK_PROD_PG_RW_USER`) não resolveu. Checar `pg_stat_activity` foi o movimento certo — evidência bruta antes de chute. Resolveu na segunda rodada.

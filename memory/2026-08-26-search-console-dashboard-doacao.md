@@ -28,7 +28,7 @@ A skill de analytics foi atualizada como visão consolidada. Para investigação
 
 ## O que foi feito
 
-Raffa habilitou a Search Console API e adicionou a service account `sharebook-analytics-agent@sharebook-a174c.iam.gserviceaccount.com` à propriedade de domínio. A API confirmou `sc-domain:sharebook.com.br` com nível `siteFullUser`. O primeiro recorte real, de 27/07 a 23/08, mostrou 1.167 cliques, 24.103 impressões, CTR de 4,84% e posição média 9,11; o período anterior teve 981 cliques, 25.785 impressões, CTR de 3,80% e posição 5,04.
+Raffa habilitou a Search Console API e adicionou a service account `<client_email da chave indicada por GA4_KEY_FILE_PATH>` à propriedade de domínio. A API confirmou `sc-domain:sharebook.com.br` com nível `siteFullUser`. O primeiro recorte real, de 27/07 a 23/08, mostrou 1.167 cliques, 24.103 impressões, CTR de 4,84% e posição média 9,11; o período anterior teve 981 cliques, 25.785 impressões, CTR de 3,80% e posição 5,04.
 
 O backend ganhou cliente REST read-only, serviço com atraso de três dias, comparação de janelas, série diária e oportunidades por query e página. A falha do GSC foi isolada para nunca derrubar o GA4. Passaram 108 testes unitários, 23 de integração, build Release e smoke test real. O commit `183fe6c` foi publicado e a imagem exata ficou saudável em produção.
 

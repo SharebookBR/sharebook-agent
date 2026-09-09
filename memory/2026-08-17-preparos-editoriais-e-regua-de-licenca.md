@@ -7,7 +7,7 @@
 - **Modelo:** Claude Opus 5, via Claude Code.
 - **Runtime:** Windows local (`C:\Repos\SHAREBOOK`). PowerShell e Bash (Git Bash) alternados.
 - **Python:** 3.14 no PATH; `pypdf`, `psycopg2`, `boto3`, `paramiko`, `dotenv` disponíveis.
-- **Banco:** produção na VPS nova (`129.121.36.220`). No meio da sessão o acesso externo caiu — ver 6.1.
+- **Banco:** produção na VPS nova (`<VPS_HOSTGATOR_SSH_HOST do .env>`). No meio da sessão o acesso externo caiu — ver 6.1.
 - **Acesso:** API do Sharebook, S3 (`sharebook-ebooks-prod`), SSH na VPS, Browser pane para validar páginas públicas.
 
 ## 2. Skills acionadas

@@ -20,7 +20,7 @@ A sessão começou com a investigação de um recorde de downloads de ebooks. O 
 
 Ao revisar a proteção existente, confirmamos que o endpoint já possuía um throttle global de um download a cada cinco segundos, com `VaryByIp=false`. Raffa decidiu preservar esse comportamento global: é aceitável que, na rara colisão, um usuário bloqueie momentaneamente outro, porque essa proteção também reduz a eficácia de ataques coordenados por vários IPs.
 
-O pré-requisito técnico era fazer a API enxergar o IP real do cliente atrás do Traefik. Foi implementado o processamento de `X-Forwarded-For` com confiança restrita às redes conhecidas do proxy (`10.0.1.0/24` e `fd22:a44b:80a6::/64`), `ForwardLimit=1` e middleware posicionado antes do logging HTTP. Três testes cobriram proxy confiável, remetente não confiável e cadeia forjada. Commit `a3b1462` (`feat(api): reconhece IP real via proxy confiável`), publicado e validado em produção.
+O pré-requisito técnico era fazer a API enxergar o IP real do cliente atrás do Traefik. Foi implementado o processamento de `X-Forwarded-For` com confiança restrita às redes conhecidas do proxy (`<rede IPv4 do proxy>` e `<rede IPv6 do proxy>`), `ForwardLimit=1` e middleware posicionado antes do logging HTTP. Três testes cobriram proxy confiável, remetente não confiável e cadeia forjada. Commit `a3b1462` (`feat(api): reconhece IP real via proxy confiável`), publicado e validado em produção.
 
 Na sequência foi criado um limitador diário específico para ebooks:
 

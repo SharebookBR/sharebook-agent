@@ -26,12 +26,12 @@
 - Não entrar em validação de domínio/DNS agora: YAGNI puro para o problema atual.
 
 ## Evidências relevantes
-- Emails problemáticos do dia:
-  - `amantedoslivrosfisicos09.@gmail.com`
-  - `lokapandinha10@gmail..com`
-- Correções aplicadas manualmente no banco:
-  - `Pamela`: `amantedoslivrosfisicos09.@gmail.com` -> `amantedoslivrosfisicos09@gmail.com`
-  - `Sabrina Batista Cavalheiro Ortiz`: `lokapandinha10@gmail..com` -> `lokapandinha10@gmail.com`
+- Exemplos fictícios equivalentes aos emails problemáticos do dia:
+  - `pessoa-a.@example.com`
+  - `pessoa-b@example..com`
+- Correções aplicadas manualmente no banco (identidades e emails anonimizados):
+  - `Pessoa A`: `pessoa-a.@example.com` -> `pessoa-a@example.com`
+  - `Pessoa B`: `pessoa-b@example..com` -> `pessoa-b@example.com`
 - Eles não chegaram a ser enviados de fato; o erro acontecia localmente no `MimeKit` antes de `client.SendAsync(...)`.
 - Commit publicado no backend:
   - `7a29047` - `Skip invalid emails before queueing and sending`

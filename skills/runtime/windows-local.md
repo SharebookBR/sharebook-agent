@@ -92,7 +92,7 @@ Ambiente configurado em 2026-05-23. Não há fricção de setup — tudo já est
 - **Python 3.12**: instalado em `C:\Users\raffa\AppData\Local\Programs\Python\Python312\` e no PATH permanente do usuário.
 - **psycopg2-binary**: instalado. `import psycopg2` funciona direto.
 - **Credenciais**: todas em `C:\Repos\SHAREBOOK\sharebook-agent\.env`. Carregar com `python-dotenv` ou ler manualmente.
-- **Host**: `129.121.36.220:5432`. Mudou em **17/08/2026** com a migração Hostinger → HostGator; o antigo `212.85.23.202` está desligado.
+- **Host e porta do banco**: consultar `SHAREBOOK_PROD_PG_RO_HOST` / `SHAREBOOK_PROD_PG_RO_PORT` (ou equivalentes `RW`) no `.env`. Produção migrou para HostGator em **17/08/2026**; a VPS antiga foi desprovisionada (confirmado pelo Raffa em 08/09/2026).
 - **A porta 5432 fica FECHADA por padrão** (desde 17/08/2026). Não presumir acesso direto: `Connection refused` no 5432 é o firewall, **não** senha errada nem banco fora do ar. Antes de diagnosticar credencial, confirmar se a porta está aberta.
 
 ### Protocolo do 5432: abrir, usar, fechar
@@ -111,8 +111,8 @@ Deixar a porta aberta porque pode ser útil depois é o mesmo antipadrão do mon
 
 Para testar credencial sem abrir nada, ver "Testar credencial de banco — o falso verde do `trust`" em `skills/infra/coolify-vps.md`.
 - **Bancos disponíveis**:
-  - `sharebook` — banco transacional principal (user: `sharebook_ai_ro` para leitura, `sharebook_ai_rw` para escrita)
-  - `sharebook_importer` — fila e runs do importer (schema `importer`, user: `sharebook_ai_rw`)
+  - `sharebook` — banco transacional principal (usuários: valores de `SHAREBOOK_PROD_PG_RO_USER` para leitura e `SHAREBOOK_PROD_PG_RW_USER` para escrita no `.env`)
+  - `sharebook_importer` — fila e runs do importer (schema `importer`, usuário: valor de `SHAREBOOK_PROD_PG_RW_USER` no `.env`)
 - **Acesso de fora depende de um toggle do Coolify.** O Coolify tem a opção de expor (ou não) o Postgres na internet. Com ela desligada — postura mais segura, e o estado normal — a porta 5432 não é publicada no host e toda conexão direta do Windows morre com `Connection refused`, embora o container esteja sadio e o app o alcance pela rede interna do Docker.
   - **Não confundir com firewall.** Em 2026-08-17 diagnostiquei `ufw` inativo, nenhuma regra DROP, e o sintoma real apareceu em `docker ps --format '{{.Ports}}'`: `5432/tcp` sozinho, sem `0.0.0.0:5432->`. Esse é o sinal de que a porta não está publicada.
   - **O Raffa pode ligar o toggle temporariamente** quando o trabalho exigir. Pedir em vez de presumir indisponibilidade.
@@ -151,7 +151,7 @@ Ele varre os 4 repos por **valor** (pega cada segredo do `.env` e procura litera
 
 Rodar **antes de commit que mexa em credencial** e **depois de qualquer rotação**.
 
-**`--history` não é opcional depois de incidente.** Ele lê os blobs de arquivos de config que já existiram e sumiram. Foi assim que apareceu, em 17/08/2026, a senha de `sharebook_user_dev` dentro de um `appsettings.Development.json` copiado para `temp/` em abril, commitado no repo **público** e removido do HEAD depois. A busca por valor nunca acharia: a senha não estava no `.env`, e o arquivo não existe mais na árvore.
+**`--history` não é opcional depois de incidente.** Ele lê os blobs de arquivos de config que já existiram e sumiram. Foi assim que apareceu, em 17/08/2026, a senha de `<usuario de banco dev removido>` dentro de um `appsettings.Development.json` copiado para `temp/` em abril, commitado no repo **público** e removido do HEAD depois. A busca por valor nunca acharia: a senha não estava no `.env`, e o arquivo não existe mais na árvore.
 
 Duas lições que vieram junto:
 

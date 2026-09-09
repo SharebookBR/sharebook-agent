@@ -58,7 +58,7 @@ PATTERNS = [
     ("DSN com senha", re.compile(r"""(?i)postgres(ql)?://[^:\s"']+:[^@\s"']{6,}@""")),
     # Connection string ADO.NET: a senha vem SEM aspas, dentro de um valor maior.
     # O padrao "senha inline" acima nao pega, e foi assim que a senha de
-    # sharebook_user_dev ficou publica dentro de "PostgresConnection": "Host=...;Password=...".
+    # <usuario de banco dev removido> ficou publica dentro de "PostgresConnection": "Host=...;Password=...".
     ("senha em connection string", re.compile(r"(?i)[;\"']\s*(password|pwd)\s*=\s*[^;\"'\s]{6,}\s*;")),
 ]
 
@@ -154,7 +154,7 @@ def varrer_configs_historicos(root: Path) -> list[str]:
 
     E a varredura que encontra o que a busca por valor nao encontra: segredo que
     foi commitado, depois apagado, e que nunca esteve no .env. Foi assim que a
-    senha de sharebook_user_dev apareceu, num appsettings temporario commitado
+    senha de <usuario de banco dev removido> apareceu, num appsettings temporario commitado
     no repo publico em abril/2026 e removido depois.
     """
     print("\n=== D) Segredo em arquivo de config que ja existiu no historico ===")

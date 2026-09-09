@@ -20,7 +20,7 @@ Trabalhei como GPT-5 Codex no runtime Windows local, nos repositórios do Shareb
 
 ## Skills acionadas
 
-Usei as orientações de runtime Windows, backend, PostgreSQL read-only, analytics, Coolify/VPS e governança do harness. A governança de encerramento revelou que o fallback oficial de consulta read-only ainda apontava para a VPS antiga e dependia de uma porta PostgreSQL que hoje fica corretamente fechada. Atualizei a skill de PostgreSQL para registrar o caminho real: SSH na HostGator e `psql` dentro do container com o papel `sharebook_ai_ro`.
+Usei as orientações de runtime Windows, backend, PostgreSQL read-only, analytics, Coolify/VPS e governança do harness. A governança de encerramento revelou que o fallback oficial de consulta read-only ainda apontava para a VPS antiga e dependia de uma porta PostgreSQL que hoje fica corretamente fechada. Atualizei a skill de PostgreSQL para registrar o caminho real: SSH na HostGator e `psql` dentro do container com o papel `SHAREBOOK_PROD_PG_RO_USER`.
 
 ## O que foi feito
 
@@ -32,7 +32,7 @@ O backend ganhou geração por colisão do slug final, preservação do slug ao 
 
 O backlog foi mantido em alto nível, sem explodir o épico de SEO em dezenas de cartões. A fatia de meta descriptions e a fatia de unicidade de slugs foram concluídas; Breadcrumb + múltiplos JSON-LD ficou como a próxima fatia interna. A recuperação da suíte completa do frontend foi registrada como um único item consolidado, como Raffa pediu.
 
-No encerramento, corrigi e validei o fallback read-only de produção. Ele manteve a porta do banco fechada, entrou por SSH na HostGator, descobriu o container PostgreSQL e consultou como `sharebook_ai_ro`; a prova retornou o banco `sharebook` e 2.729 livros.
+No encerramento, corrigi e validei o fallback read-only de produção. Ele manteve a porta do banco fechada, entrou por SSH na HostGator, descobriu o container PostgreSQL e consultou como `SHAREBOOK_PROD_PG_RO_USER`; a prova retornou o banco `sharebook` e 2.729 livros.
 
 ## Decisões tomadas
 
