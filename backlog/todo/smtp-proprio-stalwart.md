@@ -21,6 +21,7 @@ Avaliar e, se a entregabilidade for comprovada, migrar o envio transacional do S
 - Em 2026-09-08, a caixa `bounce@bounces.sharebook.com.br` foi validada por IMAP no Stalwart (`INBOX`) e recebeu um DSN real gerado por envio proposital para destinatário inexistente do Gmail.
 - Em 2026-09-08, envio real com `Return-Path: bounce@bounces.sharebook.com.br` e `From: admin@sharebook.com.br` caiu na Inbox do Gmail com SPF `pass`, DKIM RSA `pass` para `bounces.sharebook.com.br` e DMARC `pass` por alinhamento relaxado. O script do agente passou a usar esse Return-Path por padrão.
 - Em 2026-09-08, o backend foi deployado no commit `da77b34` com `EmailSettings` desacoplado (`Smtp*` / `Imap*`), variáveis Coolify apontando para Stalwart e teste real via `POST /api/Operations/EmailTest`. O Gmail recebeu na Inbox com `Return-Path: bounce@bounces.sharebook.com.br`, SPF `pass`, DKIM RSA `pass` e DMARC `pass`.
+- Em 2026-09-09, primeiro dia de tráfego real após o corte: `MailSender` rodou 269 vezes desde 00:00 UTC, com 269 sucessos e 0 falhas; 100 emails foram enviados, 3 destinatários foram pulados por bounce pré-existente, a fila terminou zerada e não houve rate limit, erro SMTP, rejeição relevante, webhook de bounce ou DSN assíncrono novo na caixa de bounce. A amostra incluiu Gmail, Hotmail, Yahoo e `aluno.uece.br`.
 - Decisão operacional em 2026-09-08: **não cancelar a Hostinger ainda**. O corte técnico para Stalwart está feito, mas a Hostinger deve permanecer como rollback durante aquecimento/observação, teste em Outlook/Hotmail e validação de rotina dos bounces.
 - Plano de observação aceito em 2026-09-08: aguardar **uma semana** antes de reavaliar cancelamento da Hostinger. Raffaello vai doar livros físicos nessa semana, gerando volumetria real para analisar logs, fila, entregabilidade e bounces do novo SMTP.
 - O backend reutiliza `EmailSettings.HostName`, credenciais e SSL tanto para SMTP quanto para ler bounces por IMAP. Trocar apenas o host SMTP quebraria o processamento atual de bounces.
@@ -42,10 +43,11 @@ Avaliar e, se a entregabilidade for comprovada, migrar o envio transacional do S
 - IMAP da caixa de bounce no Stalwart comprovado: login OK, `INBOX` acessível e DSN real recebido.
 - Endpoint de bounce `POST /api/bounce` criado, commitado e no ar (200 OK).
 - Backend de produção já envia pelo Stalwart com Return-Path de bounce (`da77b34`, deploy `mlmevr5swovwyuhbdvy2l6zg`).
+- Primeiro dia real de observação sem erro: 100 enviados em 2026-09-09 até 22:20 UTC, fila zerada, sem rate limit, sem bounce novo e containers `healthy`.
 
 **Pendente (próximos passos, em ordem):**
 1. Configurar webhook `delivery.*` do Stalwart para `POST /api/bounce` e implementar o tratamento real dos eventos síncronos.
-2. Envio real controlado para ferramenta de diagnóstico e Outlook. Gmail já foi validado.
+2. Envio real controlado para ferramenta de diagnóstico e Outlook. Gmail já foi validado; Hotmail/Yahoo apareceram em amostra real pequena sem rejeição SMTP.
 3. Aquecimento + observação com Hostinger como rollback.
 4. Emitir/configurar certificado TLS válido para `mail.sharebook.com.br` no Stalwart como melhoria posterior.
 
