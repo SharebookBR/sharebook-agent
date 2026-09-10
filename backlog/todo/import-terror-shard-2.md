@@ -2,9 +2,9 @@
 
 ## Entradas
 
-- [waiting_triage] O Vampiro | https://archive.org/details/thevampyretale00poliuoft | Internet Archive; original The Vampyre, John William Polidori; resolver do importer encontrou PDF público.
-- [waiting_triage] O Horla | https://archive.org/details/dli.ministry.14267 | Internet Archive; The Horla and Other Stories, Guy de Maupassant; resolver do importer encontrou PDF público.
-- [waiting_triage] O Castelo de Otranto | https://archive.org/details/castleofotrant00walp | Internet Archive; original The Castle of Otranto, Horace Walpole; resolver do importer encontrou PDF público.
+- [done] O Vampiro | https://archive.org/details/thevampyretale00poliuoft | publicado em 2026-09-10; id `01a08cac-d768-7565-ae07-edc94ff1ac2d`; slug `o-vampiro`.
+- [done] O Horla | https://archive.org/details/dli.ministry.14267 | publicado em 2026-09-10; id `01a08cac-e892-7e23-b6b0-afe0c39a5a7f`; slug `o-horla`.
+- [done] O Castelo de Otranto | https://archive.org/details/castleofotrant00walp | publicado em 2026-09-10; id `01a08cac-fcc7-7494-a9b4-6b84445a0db0`; slug `o-castelo-de-otranto`.
 
 ## Notas
 

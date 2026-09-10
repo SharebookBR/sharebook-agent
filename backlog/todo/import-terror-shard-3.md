@@ -2,8 +2,8 @@
 
 ## Entradas
 
-- [waiting_triage] O Gato Preto | https://archive.org/details/TheBlackCat_339 | Internet Archive; The Black Cat, Edgar Allan Poe; resolver do importer encontrou PDF publico.
-- [waiting_triage] A Queda da Casa de Usher | https://archive.org/details/fallofhouseofush00poee | Internet Archive; The Fall of the House of Usher and Other Tales, Edgar Allan Poe; resolver do importer encontrou PDF público.
+- [done] O Gato Preto | https://archive.org/details/TheBlackCat_339 | publicado em 2026-09-10; id `01a08cad-0b12-728b-9d3f-da1b38d6efa5`; slug `o-gato-preto`.
+- [source_blocked] A Queda da Casa de Usher | https://archive.org/details/fallofhouseofush00poee | item `1863`; PDF usa handler EBX e falha no `pdftoppm`; requer troca de edição.
 - [waiting_triage] O Coração Delator | https://archive.org/details/telltaleheart0000poee_p6g0 | Internet Archive; The Tell-Tale Heart, Edgar Allan Poe; resolver do importer encontrou PDF público.
 
 ## Notas

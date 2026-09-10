@@ -2,9 +2,9 @@
 
 ## Entradas
 
-- [waiting_triage] O Médico e o Monstro | https://archive.org/details/strangecasedrje00stevgoog | Internet Archive; original The Strange Case of Dr. Jekyll and Mr. Hyde, Robert Louis Stevenson; resolver do importer encontrou PDF público.
-- [waiting_triage] Carmilla | https://archive.org/details/carmilla_20220725 | Internet Archive; Sheridan Le Fanu; resolver do importer encontrou PDF público.
-- [waiting_triage] A Volta do Parafuso | https://archive.org/details/twomagicsturnofs00jameuoft | Internet Archive; original The Turn of the Screw, Henry James; resolver do importer encontrou PDF público.
+- [done] O Médico e o Monstro | https://archive.org/details/strangecasedrje00stevgoog | publicado em 2026-09-10; id `01a08cac-9eb2-763e-8a3d-63b6194c790c`; slug `o-medico-e-o-monstro`.
+- [done] Carmilla | https://archive.org/details/carmilla_20220725 | publicado em 2026-09-10; id `01a08cac-b827-785a-8022-9a0c370357cf`; slug `carmilla`.
+- [done] A Volta do Parafuso | https://archive.org/details/twomagicsturnofs00jameuoft | publicado em 2026-09-10; id `01a08cac-ca1a-77a0-8cd8-f1376afb0deb`; slug `a-volta-do-parafuso`.
 
 ## Notas
 
