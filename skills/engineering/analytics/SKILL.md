@@ -197,6 +197,10 @@ Parâmetros só ficam disponíveis na Data API após registro em **GA4 Admin →
 
 Credenciais via variável de ambiente `GA4__CredentialsBase64` (base64 do `ga4-key.json`). No Coolify, duplo underscore é separador de seção. O `appsettings.json` tem a seção `GA4.CredentialsBase64` vazia (só documentação).
 
+### Scripts operacionais
+
+- `scripts/production/backfill_book_download_events_ga4.py` — importa os últimos N dias de `ebook_download` do GA4 para `BookDownloadEvents` como eventos sintéticos `Ga4Backfill`. Usa `customEvent:book_slug` e cai para `pagePath` se a dimensão não estiver disponível. Idempotência: remove/recria apenas eventos `Ga4Backfill` do intervalo; nunca toca em eventos `Live`. Rodar primeiro com `--dry-run`; para escrever em produção, usar `--yes` após a migration existir no banco.
+
 ### Dashboard Analytics (`/admin/analytics`)
 
 Endpoint: `GET /api/analytics/dashboard` — cache 12h no backend (`IMemoryCache`).
