@@ -10,6 +10,17 @@ A Home já tem uma vitrine editorial fixa de mitologia grega. Novas vitrines edi
 
 Melhorar a descoberta com uma prateleira de prova social baseada em comportamento real: **Mais baixados nos últimos 30 dias**.
 
+## Status em 2026-09-10
+
+Fatia principal entregue em produção.
+
+- Backend `sharebook-backend` commit `5e459868`: `BookDownloadEvent`, migration, endpoint `GET /api/home/top-downloaded-ebooks?days=30` e fluxo novo `POST /api/book/DownloadEBookUrl/{slug}`.
+- Frontend `sharebook-frontend` commit `ff41eb09`: prateleira **Mais baixados** usando `app-book-shelf`, com cache SSR preservado.
+- Backfill GA4 commit `fdeb525` no `sharebook-agent`: 355 eventos `Ga4Backfill` inseridos para os últimos 30 dias, com 177/177 slugs resolvidos.
+- Produção validada: endpoint novo respondeu `200`, fluxo novo de download respondeu `200`, endpoint antigo manteve `302`, backend e frontend ficaram healthy.
+
+Próximo passo: observar se a prateleira puxa clique/download melhor que as prateleiras aleatórias. Se o ranking fossilizar, avaliar ponderação por recência dentro dos 30 dias.
+
 ## Decisões de produto
 
 - Implementar direto a versão baseada em eventos, sem uma v1 apenas com `Book.DownloadCount`.
@@ -69,19 +80,19 @@ Ordem:
 - Não consultar GA4 durante renderização da Home. GA4 entra apenas no backfill/rotina operacional.
 - Se a consulta por eventos ficar pesada no futuro, criar agregação/materialização por janela; não começar por isso sem necessidade.
 
-## Critérios de aceite da próxima fatia
+## Critérios de aceite
 
-- hipótese e métrica de sucesso definidas antes do código;
-- `BookDownloadEvent` persistido com migration e índices adequados para `DownloadedAtUtc` + `BookId`;
-- download real grava evento `Live` com `UserId` opcional via JWT quando possível;
-- backfill GA4 de 30 dias executável e idempotente;
-- prateleira **Mais baixados nos últimos 30 dias** aparece na Home usando o componente existente;
-- contrato do backend alinhado antes do componente Angular;
-- SSR e cache integral da Home preservados;
-- experiência mobile continua simples e rápida;
-- thumbnails permanecem nos cards;
-- testes mantidos apenas quando protegem comportamento relevante;
-- build SSR, pipeline e validação em produção passam.
+- [x] hipótese e métrica de sucesso definidas antes do código;
+- [x] `BookDownloadEvent` persistido com migration e índices adequados para `DownloadedAtUtc` + `BookId`;
+- [x] download real grava evento `Live` com `UserId` opcional via JWT quando possível;
+- [x] backfill GA4 de 30 dias executável e idempotente;
+- [x] prateleira **Mais baixados nos últimos 30 dias** aparece na Home usando o componente existente;
+- [x] contrato do backend alinhado antes do componente Angular;
+- [x] SSR e cache integral da Home preservados;
+- [x] experiência mobile continua simples e rápida;
+- [x] thumbnails permanecem nos cards;
+- [x] testes mantidos apenas quando protegem comportamento relevante;
+- [x] build SSR, pipeline e validação em produção passam.
 
 ## Fora de escopo imediato
 

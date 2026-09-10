@@ -44,6 +44,7 @@ Ver `2026-07-22-logs-estruturados-postgres-e-incidente-eflogs.md` na memória ep
 3. Fazer a mudança mínima coerente.
 4. Validar com `dotnet test` ou, no mínimo, `dotnet build`.
 5. Se houver deploy via container, pensar no startup real: `Database.Migrate()`, seed e health check.
+6. Para tabela nova em Postgres, validar permissões do role da aplicação depois da migration. Não presumir herança automática de grants: checar acesso real e aplicar `GRANT SELECT, INSERT, UPDATE, DELETE` ou default privileges quando necessário. Caso real em 2026-09-10: `BookDownloadEvents` exigiu grant explícito para `sharebook_ai_rw` após deploy.
 
 ## Heurísticas de migration
 
