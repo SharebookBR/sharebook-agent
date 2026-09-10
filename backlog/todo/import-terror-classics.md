@@ -32,10 +32,10 @@ Cadastrar obras classicas de terror/horror para abastecer a vitrine Literatura d
 - Source segmentada por origem: todos os itens desta missao apontam para Internet Archive.
 - `A Queda da Casa de Usher` ficou `source_blocked` no item `1863`: o PDF escolhido no Internet Archive usa handler EBX e falha no `pdftoppm`.
 - Metadados publicados corrigidos em 2026-09-10 para evitar surpresa de idioma. Os titulos e as sinopses publicados seguem o idioma real do PDF:
-  - `o-medico-e-o-monstro` -> `Strange Case of Dr. Jekyll and Mr. Hyde` (PDF em ingles).
-  - `carmilla` -> `Carmilla (edición en español)` (PDF em espanhol).
-  - `a-volta-do-parafuso` -> `The Turn of the Screw` (PDF em ingles).
-  - `o-vampiro` -> `The Vampyre` (PDF em ingles).
-  - `o-horla` -> `The Horla` (PDF em ingles).
-  - `o-castelo-de-otranto` -> `The Castle of Otranto` (PDF em ingles).
-  - `o-gato-preto` -> `The Black Cat` (PDF em ingles).
+  - `strange-case-of-dr-jekyll-and-mr-hyde` -> `Strange Case of Dr. Jekyll and Mr. Hyde` (PDF em ingles).
+  - `carmilla-edicion-en-espanol` -> `Carmilla (edición en español)` (PDF em espanhol).
+  - `the-turn-of-the-screw` -> `The Turn of the Screw` (PDF em ingles).
+  - `the-vampyre` -> `The Vampyre` (PDF em ingles).
+  - `the-horla` -> `The Horla` (PDF em ingles).
+  - `the-castle-of-otranto` -> `The Castle of Otranto` (PDF em ingles).
+  - `the-black-cat` -> `The Black Cat` (PDF em ingles).
