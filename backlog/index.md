@@ -26,6 +26,7 @@ Revisada em **2026-09-04**, após refinamento de produto da Lista de Desejos. A 
 17. **[Unificação Scripts + Renomeação do Corpus](todo/unificacao-scripts-memory-durable.md)** — baixo valor para produto, esforço médio. Não competir com trabalho de produto e operação.
 18. **[SMTP próprio com Stalwart](todo/smtp-proprio-stalwart.md)** — economia potencial, esforço e risco operacional médios. Retomar quando o custo do provedor justificar PTR próprio, aquecimento de reputação e desacoplamento SMTP/IMAP dos bounces.
 19. **[Migração dos backups GCP para AWS](todo/migracao-backups-gcp-aws.md)** — baixa urgência no curto prazo: há R$ 16,81 de crédito na GCP e gasto perto de R$ 4/mês. Retomar quando formos consolidar storage ou quando o crédito estiver perto do fim.
+20. **[Vitrine Bruxas & Magia](todo/vitrine-bruxas-e-magia.md)** — aposta temática de catálogo com Project Gutenberg como source preferencial, validação jurídica BR e pipeline agêntico de tradução PT-BR antes de publicar uma vitrine pequena e curada.
 
 
 ---
