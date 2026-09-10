@@ -31,3 +31,11 @@ Cadastrar obras classicas de terror/horror para abastecer a vitrine Literatura d
 - URLs Internet Archive testadas com `resolve_source_assets()` do extractor tecnico `ebook_foundation`.
 - Source segmentada por origem: todos os itens desta missao apontam para Internet Archive.
 - `A Queda da Casa de Usher` ficou `source_blocked` no item `1863`: o PDF escolhido no Internet Archive usa handler EBX e falha no `pdftoppm`.
+- Metadados publicados corrigidos em 2026-09-10 para evitar surpresa de idioma:
+  - `o-medico-e-o-monstro` -> `Strange Case of Dr. Jekyll and Mr. Hyde` (PDF em ingles).
+  - `carmilla` -> `Carmilla (edición en español)` (PDF em espanhol).
+  - `a-volta-do-parafuso` -> `The Turn of the Screw` (PDF em ingles).
+  - `o-vampiro` -> `The Vampyre` (PDF em ingles).
+  - `o-horla` -> `The Horla` (PDF em ingles).
+  - `o-castelo-de-otranto` -> `The Castle of Otranto` (PDF em ingles).
+  - `o-gato-preto` -> `The Black Cat` (PDF em ingles).
