@@ -126,7 +126,13 @@ Regra:
 
 Também é necessário separar os direitos da obra original dos direitos de uma tradução existente.
 
-Não reutilizar traduções comerciais protegidas.
+Tradução existente protegida **não bloqueia** a obra quando o original for elegível para a régua do Sharebook. Ela só bloqueia o reuso daquela tradução específica.
+
+Regra prática:
+
+- Original elegível: pode seguir para tradução própria do Sharebook.
+- Tradução comercial ou protegida: não reutilizar.
+- Tradução PT-BR do Sharebook: criar do zero a partir do original elegível, com rastreabilidade.
 
 ## Tradução
 
