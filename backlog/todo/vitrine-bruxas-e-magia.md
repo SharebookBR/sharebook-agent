@@ -80,6 +80,39 @@ A vitrine deve equilibrar:
 
 Esta é uma lista de candidatos, não uma lista automaticamente aprovada para publicação.
 
+## Curadoria Jurídica Preliminar — 2026-09-11
+
+Rodada feita por 3 subagentes, dividindo os 15 candidatos em blocos de 5.
+
+Regra usada nesta rodada: **otimista**. Bloquear apenas quando houver impedimento concreto; na dúvida honesta, considerar que pode importar com nota de risco. Para Brasil, aplicar vida + 70 anos como regra prática de elegibilidade.
+
+### Pode Importar
+
+| # | Obra | Gutenberg | Autor / morte | Observação |
+|---|---|---|---|---|
+| 1 | The Witch of Salem; or, Credulity Run Mad | [26282](https://www.gutenberg.org/ebooks/26282) | John R. Musick, 1901 | Autor e ilustrador F. A. Carter, 1948, elegíveis no Brasil. |
+| 2 | The Lancashire Witches: A Romance of Pendle Forest | [15493](https://www.gutenberg.org/ebooks/15493) | W. H. Ainsworth, 1882 | Ilustrador John Gilbert, 1897, também elegível. |
+| 4 | Salem Witchcraft, Volumes I and II | [17845](https://www.gutenberg.org/ebooks/17845) | Charles W. Upham, 1875 | Documental forte para a vitrine. |
+| 5 | Letters on Demonology and Witchcraft | [14461](https://www.gutenberg.org/ebooks/14461) | Walter Scott, 1832 | Editor Henry Morley, 1894, elegível; usar tradução própria. |
+| 6 | The Superstitions of Witchcraft | [22822](https://www.gutenberg.org/ebooks/22822) | Howard Williams, 1931 | Fonte Gutenberg clara; risco baixo. |
+| 8 | Black Magic | [77782](https://www.gutenberg.org/ebooks/77782) | Marjorie Bowen, 1952 | Elegível no Brasil desde 2023; usar tradução própria. |
+| 10 | Living Alone | [14907](https://www.gutenberg.org/ebooks/14907) | Stella Benson, 1933 | Ficção/fantasia com bom encaixe temático. |
+| 11 | Dulcibel: A Tale of Old Salem | [20569](https://www.gutenberg.org/ebooks/20569) | Henry Peterson, 1891 | Ilustrador Howard Pyle, 1911, também elegível. |
+| 14 | The Discovery of Witches | [14015](https://www.gutenberg.org/ebooks/14015) | Matthew Hopkins, 1647 | Texto arcaico; exige revisão editorial cuidadosa. |
+| 15 | Mary Schweidler, the Amber Witch | [8743](https://www.gutenberg.org/ebooks/8743) | Wilhelm Meinhold, 1851 | Tradução inglesa por Lady Duff Gordon, 1869, elegível; final PT seria tradução de tradução. |
+
+### Não Importar Nesta Rodada
+
+| # | Obra | Gutenberg | Autor / morte | Motivo |
+|---|---|---|---|---|
+| 3 | The Witch-Cult in Western Europe | [20411](https://www.gutenberg.org/ebooks/20411) | Margaret Alice Murray, 1963 | Protegida no Brasil até 2034. |
+| 7 | A History of Witchcraft in England from 1558 to 1718 | [31511](https://www.gutenberg.org/ebooks/31511) | Wallace Notestein, 1969 | Protegida no Brasil até 2040. |
+| 9 | Brood of the Witch-Queen | [19706](https://www.gutenberg.org/ebooks/19706) | Sax Rohmer, 1959 | Protegida no Brasil até 2030. |
+| 12 | A Mirror for Witches | [75212](https://www.gutenberg.org/ebooks/75212) | Esther Forbes, 1967 | Protegida no Brasil até 2038; ilustrador Robert Gibbings, 1958, também exige cautela. |
+| 13 | With Force and Arms | [54371](https://www.gutenberg.org/ebooks/54371) | Howard R. Garis, 1962 | Protegida no Brasil até 2033. |
+
+Resultado preliminar: **10 candidatos importáveis** e **5 bloqueados por impedimento jurídico concreto**. Para chegar a 15, buscar pelo menos 5 substitutos no Project Gutenberg antes de iniciar a tradução em lote.
+
 ## Regra Jurídica
 
 O fato de uma obra estar em domínio público no Project Gutenberg não significa automaticamente que esteja em domínio público no Brasil.
