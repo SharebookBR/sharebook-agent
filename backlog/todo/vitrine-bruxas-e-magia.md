@@ -113,6 +113,30 @@ Regra usada nesta rodada: **otimista**. Bloquear apenas quando houver impediment
 
 Resultado preliminar: **10 candidatos importáveis** e **5 bloqueados por impedimento jurídico concreto**. Para chegar a 15, buscar pelo menos 5 substitutos no Project Gutenberg antes de iniciar a tradução em lote.
 
+## Substitutos Selecionados — 2026-09-11
+
+Após revisão de aderência temática, a vitrine deve privilegiar **Bruxas & Magia** em sentido mais literal, mantendo abertura para ocultismo, folclore e horror mágico quando o encaixe for forte.
+
+### Entram no pool principal
+
+| Obra | Gutenberg | Autor / morte | Encaixe |
+|---|---|---|---|
+| The Witch of Prague: A Fantastic Tale | [3816](https://www.gutenberg.org/ebooks/3816) | F. Marion Crawford, 1909 | Bruxa/romance fantástico; substitui The King in Yellow por aderência temática mais direta. |
+| The Great God Pan | [389](https://www.gutenberg.org/ebooks/389) | Arthur Machen, 1947 | Paganismo, ritual, ocultismo e horror sobrenatural. |
+| The Necromancers | [14275](https://www.gutenberg.org/ebooks/14275) | Robert Hugh Benson, 1914 | Necromancia, espiritualismo e contato com mortos. |
+| Zanoni | [2664](https://www.gutenberg.org/ebooks/2664) | Edward Bulwer-Lytton, 1873 | Rosacrucianismo, iniciação, imortalidade e sabedoria oculta. |
+| The Book of Were-Wolves | [5324](https://www.gutenberg.org/ebooks/5324) | Sabine Baring-Gould, 1924 | Folclore sombrio/licantropia; adjacente, mas dentro do eixo folclore e horror mágico. |
+
+### Fica fora do pool principal por enquanto
+
+| Obra | Gutenberg | Motivo |
+|---|---|---|
+| The King in Yellow | [8492](https://www.gutenberg.org/ebooks/8492) | Excelente para catálogo, mas mais adequado a uma vitrine futura de horror cósmico/oculto do que a **Bruxas & Magia**. |
+
+Lista operacional dos 15 itens cadastráveis: [Missão - Importar Bruxas & Magia via Project Gutenberg](import-bruxas-e-magia-gutenberg.md).
+
+Source criada no importer em 2026-09-11: `project_gutenberg_witches_magic`, source id `8`, com 15 itens (`1868` a `1882`). A source ficou staged (`enabled = false`) até o pipeline Gutenberg/tradução estar pronto para consumir EPUB/texto sem cair no worker genérico de PDF.
+
 ## Regra Jurídica
 
 O fato de uma obra estar em domínio público no Project Gutenberg não significa automaticamente que esteja em domínio público no Brasil.
