@@ -63,12 +63,74 @@ Substituição aplicada em 2026-09-11:
 Quando o importer for adaptado, manter a mudança pequena:
 
 - adicionar na source um indicador explícito como `requires_translation`;
+- adicionar na source um campo `translation_prompt TEXT NULL`, equivalente conceitual do `editorial_prompt`;
 - source sem tradução segue `triagem -> preparo editorial -> publicação`;
 - source com tradução segue `triagem -> tradução -> preparo editorial -> publicação`;
 - adicionar apenas dois status novos no início: `waiting_translation` e `translating`;
 - depois da tradução aprovada, o item volta para o fluxo atual em `waiting_editorial`;
 - guardar progresso, prompt, modelo, custo e artefatos em `metadata_json.translation`;
 - no dashboard, exibir o card **Tradução** apenas para source com tradução ou quando houver itens em `waiting_translation`/`translating`.
+
+### Contrato do agente de tradução
+
+Espelhar o padrão do preparo editorial atual:
+
+- `editor-next` entrega item + contexto + `sources.editorial_prompt` para o agente editorial;
+- `translation-next` deve entregar item + original estruturado + `sources.translation_prompt` para o agente de tradução.
+
+Não misturar `translation_prompt` dentro de `editorial_prompt`. São fases diferentes:
+
+- preparo editorial decide sinopse, categoria, capa, metadados públicos e publicação;
+- tradução decide fidelidade, voz, glossário, estrutura do manuscrito e rastreabilidade da versão PT-BR.
+
+Comando proposto:
+
+```bash
+python cli.py translation-next --source project_gutenberg_witches_magic
+```
+
+Payload esperado:
+
+- `id`
+- `source_id`
+- `source_name`
+- `source_url`
+- `translation_prompt`
+- `title`
+- `author`
+- `original_language`
+- `target_language`
+- `gutenberg_id`
+- `original_text_path` ou `original_html_path`
+- `chapter_manifest`
+- `chapter_to_translate`
+- `metadata.translation` existente, quando houver
+
+Conclusão proposta:
+
+```bash
+python cli.py translation-set --id <ID> --translated-manuscript <FILE> --model gpt-5.4-mini --prompt-file <FILE>
+```
+
+Responsabilidades de `translation-set`:
+
+- fazer merge em `metadata_json.translation`;
+- registrar modelo, prompt, custo estimado, arquivos, data e executor;
+- preservar o original como fonte imutável;
+- mover o item de `translating` para `waiting_editorial` quando a tradução estiver pronta.
+
+### Prompt de tradução por source
+
+Para Project Gutenberg, o `translation_prompt` deve cobrir pelo menos:
+
+- traduzir do inglês para PT-BR do zero;
+- não reutilizar tradução existente;
+- preservar estrutura de capítulos e divisões internas;
+- preservar nomes próprios salvo decisão explícita;
+- manter tom literário sem português artificialmente arcaico;
+- não resumir, cortar, explicar ou inventar;
+- registrar termos recorrentes e decisões de glossário;
+- sinalizar ambiguidades em notas internas, não no texto final.
 
 Modelo inicial decidido para teste:
 
