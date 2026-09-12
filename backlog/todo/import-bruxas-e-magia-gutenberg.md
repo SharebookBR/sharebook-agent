@@ -92,6 +92,8 @@ Quando o importer for adaptado, manter a mudança pequena:
 - guardar progresso, prompt, modelo, custo e artefatos em `metadata_json.translation`;
 - no dashboard, exibir o card **Tradução** apenas para source com tradução ou quando houver itens em `waiting_translation`/`translating`.
 
+Implementado em produção em 2026-09-12: dashboard do importador passou a contar `waiting_translation`/`translating`, expor `requiresTranslation` e mostrar o card **Tradução** para a source `project_gutenberg_witches_magic`.
+
 ### Contrato do agente de tradução
 
 Espelhar o padrão do preparo editorial atual:

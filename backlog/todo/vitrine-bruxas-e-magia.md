@@ -141,6 +141,8 @@ Categoria criada em produção em 2026-09-12: `Ficção > Bruxas & Magia` (`01a0
 
 Primeiro livro publicado em 2026-09-12: **A Bruxa de Praga**, de F. Marion Crawford, a partir de `The Witch of Prague: A Fantastic Tale` (Gutenberg 3816, importer item `1878`). Livro Sharebook `01a096a7-5686-766e-8d12-29728e7f291f`, categoria `Ficção > Bruxas & Magia`, PDP `https://www.sharebook.com.br/livros/a-bruxa-de-praga`.
 
+Dashboard do importador atualizado em produção em 2026-09-12 para abrir com a source `project_gutenberg_witches_magic` como foco preferencial e exibir a etapa **Tradução** nas sources que exigem tradução.
+
 Este primeiro livro validou a linha editorial da vitrine: tradução PT-BR própria, capa autoral cinematográfica em 4:5, selo Sharebook Brasil, página 2 institucional reaproveitável e PDF final publicado.
 
 ## Regra Jurídica
