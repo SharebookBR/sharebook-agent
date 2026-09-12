@@ -27,7 +27,7 @@ Esta missão não publica automaticamente a vitrine. Ela alimenta a fila para o 
 - [waiting_triage] Dulcibel: A Tale of Old Salem | https://www.gutenberg.org/ebooks/20569 | Henry Peterson; Salem/ficção histórica; elegível BR provável.
 - [waiting_triage] The Discovery of Witches | https://www.gutenberg.org/ebooks/14015 | Matthew Hopkins; caça às bruxas; elegível BR provável.
 - [waiting_triage] Mary Schweidler, the Amber Witch | https://www.gutenberg.org/ebooks/8743 | Wilhelm Meinhold; bruxa/ficção gótica; elegível BR provável.
-- [waiting_triage] The Witch of Prague: A Fantastic Tale | https://www.gutenberg.org/ebooks/3816 | F. Marion Crawford; bruxa/romance fantástico; substitui The King in Yellow por aderência temática mais forte.
+- [done] The Witch of Prague: A Fantastic Tale | https://www.gutenberg.org/ebooks/3816 | F. Marion Crawford; publicado como **A Bruxa de Praga** em 2026-09-12; livro `01a096a7-5686-766e-8d12-29728e7f291f`.
 - [waiting_triage] The Great God Pan | https://www.gutenberg.org/ebooks/389 | Arthur Machen; paganismo/ocultismo/horror; elegível BR provável.
 - [waiting_triage] The Necromancers | https://www.gutenberg.org/ebooks/14275 | Robert Hugh Benson; necromancia/espiritualismo; elegível BR provável.
 - [waiting_triage] Zanoni | https://www.gutenberg.org/ebooks/2664 | Edward Bulwer-Lytton; rosacrucianismo/iniciação/ocultismo; elegível BR provável.
@@ -57,6 +57,27 @@ Substituição aplicada em 2026-09-11:
 - Status inicial dos itens: `waiting_triage`
 - URLs fora de `gutenberg.org`: `0`
 - Source mantida como `enabled = false` por enquanto, porque esta fila depende do pipeline de tradução/derivação Gutenberg e não deve ser consumida pelo worker genérico de PDF antes desse ajuste.
+
+## Primeiro Livro Publicado — 2026-09-12
+
+- Item `1878`: **The Witch of Prague: A Fantastic Tale**.
+- Título publicado: **A Bruxa de Praga**.
+- Autor publicado: **F. Marion Crawford**.
+- Categoria: `Ficção > Terror`.
+- Livro Sharebook: `01a096a7-5686-766e-8d12-29728e7f291f`.
+- PDP: `https://www.sharebook.com.br/livros/a-bruxa-de-praga`.
+- Artefato local final: `sharebook-ebook-importer/var/tmp/translation-1878/a-bruxa-de-praga-sharebook-ptbr.pdf`.
+- Estrutura do PDF: capa 4:5, página 2 institucional Sharebook 4:5, 27 capítulos traduzidos, licença/origem Project Gutenberg no final.
+- Validação feita: item `done` no importer, livro `Available` em produção, capa e thumbnail públicas, PDP HTTP 200, endpoint de download com PDF remoto válido.
+
+## Pontas Soltas Após o Primeiro Livro
+
+- Transformar a geração do PDF em CLI reprodutível; hoje o primeiro PDF foi montado por fluxo manual com Chromium, Ghostscript e Pillow.
+- Decidir se a v1 da vitrine aceita PDF como formato final ou se também exige EPUB.
+- Trocar o selo Sharebook Brasil pelo PNG original transparente exportado do ChatGPT web quando disponível; o asset atual foi recuperado do JPG enviado pelo Telegram.
+- Aplicar ou revisar as propostas pendentes do Skill Workshop sobre o selo de capa e a página 2 institucional.
+- Atualizar o pipeline para registrar o PDF final de tradução em `metadata_json.manifest.downloaded_pdf_path` sem intervenção SQL manual.
+- Definir QA mínimo antes de escalar para os outros 14 itens: hoje houve validação estrutural e publicação, mas não revisão literária linha a linha.
 
 ## Decisões de Arquitetura Pendentes — tradução
 
