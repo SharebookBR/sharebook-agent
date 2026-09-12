@@ -1,0 +1,17 @@
+{
+  "asset": "sharebook-translation-page-02.jpg",
+  "kind": "pdf-page",
+  "usage": "Pagina institucional reutilizavel como pagina 2 de livros digitais traduzidos pelo Sharebook para leitores do Brasil.",
+  "source": "Imagem refinada por Raffa no ChatGPT web e recebida via Telegram; salva como asset canonico visual do Sharebook-agent.",
+  "default_pdf_context": {
+    "page_number": 2,
+    "page_ratio": "4:5",
+    "placement": "usar apos a capa e antes do miolo traduzido",
+    "reuse": "reutilizar o mesmo asset em toda geracao de PDF de traducao Sharebook, salvo decisao editorial explicita em contrario"
+  },
+  "validation": [
+    "A pagina deve manter identidade Sharebook.",
+    "Nao alterar texto, logo ou proporcao sem decisao editorial.",
+    "Usar o arquivo canonico deste diretorio como fonte para geracao de PDFs."
+  ]
+}
