@@ -137,7 +137,9 @@ Lista operacional dos 15 itens cadastráveis: [Missão - Importar Bruxas & Magia
 
 Source criada no importer em 2026-09-11: `project_gutenberg_witches_magic`, source id `8`, com 15 itens (`1868` a `1882`). A source ficou staged (`enabled = false`) até o pipeline Gutenberg/tradução estar pronto para consumir EPUB/texto sem cair no worker genérico de PDF.
 
-Primeiro livro publicado em 2026-09-12: **A Bruxa de Praga**, de F. Marion Crawford, a partir de `The Witch of Prague: A Fantastic Tale` (Gutenberg 3816, importer item `1878`). Livro Sharebook `01a096a7-5686-766e-8d12-29728e7f291f`, PDP `https://www.sharebook.com.br/livros/a-bruxa-de-praga`.
+Categoria criada em produção em 2026-09-12: `Ficção > Bruxas & Magia` (`01a0974c-f122-75ee-9d2b-c3f81497e6dc`).
+
+Primeiro livro publicado em 2026-09-12: **A Bruxa de Praga**, de F. Marion Crawford, a partir de `The Witch of Prague: A Fantastic Tale` (Gutenberg 3816, importer item `1878`). Livro Sharebook `01a096a7-5686-766e-8d12-29728e7f291f`, categoria `Ficção > Bruxas & Magia`, PDP `https://www.sharebook.com.br/livros/a-bruxa-de-praga`.
 
 Este primeiro livro validou a linha editorial da vitrine: tradução PT-BR própria, capa autoral cinematográfica em 4:5, selo Sharebook Brasil, página 2 institucional reaproveitável e PDF final publicado.
 

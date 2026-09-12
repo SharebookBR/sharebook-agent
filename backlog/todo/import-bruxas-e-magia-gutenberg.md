@@ -63,7 +63,7 @@ Substituição aplicada em 2026-09-11:
 - Item `1878`: **The Witch of Prague: A Fantastic Tale**.
 - Título publicado: **A Bruxa de Praga**.
 - Autor publicado: **F. Marion Crawford**.
-- Categoria: `Ficção > Terror`.
+- Categoria: `Ficção > Bruxas & Magia` (`01a0974c-f122-75ee-9d2b-c3f81497e6dc`), criada após a primeira publicação para a linha temática.
 - Livro Sharebook: `01a096a7-5686-766e-8d12-29728e7f291f`.
 - PDP: `https://www.sharebook.com.br/livros/a-bruxa-de-praga`.
 - Artefato local final: `sharebook-ebook-importer/var/tmp/translation-1878/a-bruxa-de-praga-sharebook-ptbr.pdf`.
