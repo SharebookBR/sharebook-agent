@@ -265,13 +265,20 @@ O MVP é:
 
 Antes de implementar o pipeline automático no importer, fazer uma POC manual com **um trecho ou um capítulo representativo** de uma obra do Project Gutenberg.
 
-Decisão:
+POC realizada com trecho inicial de **The Witch of Prague**:
 
 - deixar o importer de lado nesta primeira prova;
-- usar `gpt-5.4-mini` como modelo inicial de tradução, por cautela de custo;
-- revisar manualmente o resultado com Raffa antes de escalar;
-- avaliar se a tradução parece publicável como livro em PT-BR, não apenas "correta";
-- só depois decidir se `gpt-5.4-mini` serve para rascunho completo ou se será necessário um modelo mais forte na revisão.
+- `gpt-5.4-mini` gerou rascunho útil e editável;
+- o texto preservou estrutura, atmosfera e sequência semântica;
+- a amostra exigiu revisão literária para ficar publicável;
+- tentativa de usar `mini -> revisão forte localizada` mostrou viabilidade técnica, mas aumentou complexidade operacional.
+
+Decisão para a v1:
+
+- usar modelo forte direto para tradução;
+- manter apenas os status `waiting_translation` e `translating` no primeiro desenho;
+- não criar fila separada de revisão forte na v1;
+- guardar `gpt-5.4-mini` como hipótese futura de otimização de custo para obras simples.
 
 Artefatos esperados da POC:
 
@@ -283,6 +290,8 @@ Artefatos esperados da POC:
 - observações de revisão: fidelidade, fluidez, nomes próprios, tom literário, omissões e invenções.
 
 Regra de segurança editorial: a POC não publica nada e não promove item para catálogo. Ela serve apenas para medir qualidade, custo e viabilidade.
+
+Conclusão: para a primeira vitrine, simplicidade e qualidade são mais importantes do que otimizar tokens cedo demais.
 
 Isso permite validar:
 
@@ -298,19 +307,20 @@ Somente depois dos resultados, considerar expansão do catálogo.
 
 ## Próximos Passos
 
-1. Escolher uma obra e um trecho/capítulo representativo para a POC manual.
-2. Baixar o original estruturado do Project Gutenberg.
-3. Traduzir manualmente com `gpt-5.4-mini`.
-4. Revisar com Raffa e decidir se a qualidade é aceitável.
-5. Estimar custo por capítulo e por livro.
-6. Se aprovado, implementar o fluxo mínimo de tradução no importer.
-7. Processar 1 livro como golden case.
-8. Revisar manualmente o resultado do golden case.
-9. Ajustar prompts, agentes e critérios de QA.
-10. Processar os outros 14.
-11. Criar capas e sinopses.
-12. Publicar a vitrine.
-13. Medir resultado.
+1. Escolher o modelo forte da v1 entre os modelos disponíveis no runtime.
+2. Definir prompt de tradução forte para Project Gutenberg.
+3. Baixar o original estruturado do Project Gutenberg.
+4. Traduzir 1 capítulo completo com modelo forte.
+5. Revisar com Raffa e decidir se a qualidade é aceitável.
+6. Estimar custo por capítulo e por livro.
+7. Se aprovado, implementar o fluxo mínimo de tradução no importer.
+8. Processar 1 livro como golden case.
+9. Revisar manualmente o resultado do golden case.
+10. Ajustar prompts e critérios de QA.
+11. Processar os outros 14.
+12. Criar capas e sinopses.
+13. Publicar a vitrine.
+14. Medir resultado.
 
 ## Critério de Sucesso Inicial
 

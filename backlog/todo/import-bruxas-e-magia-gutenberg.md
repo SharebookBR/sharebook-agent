@@ -46,7 +46,7 @@ Substituição aplicada em 2026-09-11:
 - A source é segmentada por origem, não por campanha genérica: todos os itens apontam para `gutenberg.org`.
 - O pipeline atual do importer ainda deve tratar esta source como uma missão de tradução/derivação, não como importação direta de PDF pronto.
 - Antes de publicar, manter a regra: original elegível + tradução PT-BR própria + QA + rastreabilidade.
-- Decisão de 2026-09-12: antes de mexer no importer, fazer uma POC manual de tradução com `gpt-5.4-mini` em apenas um trecho/capítulo. A source cadastrada permanece staged até a prova de qualidade e custo.
+- Decisão de 2026-09-12: antes de mexer no importer, foi feita uma POC manual de tradução com `gpt-5.4-mini` em apenas um trecho/capítulo. Resultado: mini gerou rascunho editável, mas a v1 deve usar modelo forte direto para reduzir complexidade e elevar qualidade. A source cadastrada permanece staged até o pipeline de tradução estar pronto.
 
 ## Cadastro no Importer — 2026-09-11
 
@@ -109,7 +109,7 @@ Payload esperado:
 Conclusão proposta:
 
 ```bash
-python cli.py translation-set --id <ID> --translated-manuscript <FILE> --model gpt-5.4-mini --prompt-file <FILE>
+python cli.py translation-set --id <ID> --translated-manuscript <FILE> --model <STRONG_TRANSLATION_MODEL> --prompt-file <FILE>
 ```
 
 Responsabilidades de `translation-set`:
@@ -132,9 +132,10 @@ Para Project Gutenberg, o `translation_prompt` deve cobrir pelo menos:
 - registrar termos recorrentes e decisões de glossário;
 - sinalizar ambiguidades em notas internas, não no texto final.
 
-Modelo inicial decidido para teste:
+Modelo para v1:
 
-- `translation_model = gpt-5.4-mini`
-- sem modelo revisor obrigatório no MVP manual
+- usar modelo forte direto como tradutor principal;
+- não usar fluxo `mini -> revisão forte` na v1;
+- manter `gpt-5.4-mini` apenas como hipótese futura de otimização de custo para obras simples, caso dados reais justifiquem.
 
-Hipótese a validar: `gpt-5.4-mini` talvez seja suficiente para rascunho de obras simples, mas obras góticas/literárias do século XIX podem exigir revisão posterior com modelo mais forte.
+Racional da decisão: o fluxo `mini -> revisão forte` aumenta estados, custo de leitura dupla e complexidade operacional. Para a primeira vitrine, qualidade e simplicidade valem mais do que otimização prematura de custo.
