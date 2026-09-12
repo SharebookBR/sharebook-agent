@@ -261,6 +261,29 @@ O MVP é:
 
 > 15 livros muito bons, juridicamente seguros, bem traduzidos, bem apresentados e reunidos em uma excelente vitrine.
 
+### POC manual de tradução — decisão de 2026-09-12
+
+Antes de implementar o pipeline automático no importer, fazer uma POC manual com **um trecho ou um capítulo representativo** de uma obra do Project Gutenberg.
+
+Decisão:
+
+- deixar o importer de lado nesta primeira prova;
+- usar `gpt-5.4-mini` como modelo inicial de tradução, por cautela de custo;
+- revisar manualmente o resultado com Raffa antes de escalar;
+- avaliar se a tradução parece publicável como livro em PT-BR, não apenas "correta";
+- só depois decidir se `gpt-5.4-mini` serve para rascunho completo ou se será necessário um modelo mais forte na revisão.
+
+Artefatos esperados da POC:
+
+- trecho original;
+- tradução PT-BR;
+- prompt usado;
+- modelo usado;
+- custo aproximado;
+- observações de revisão: fidelidade, fluidez, nomes próprios, tom literário, omissões e invenções.
+
+Regra de segurança editorial: a POC não publica nada e não promove item para catálogo. Ela serve apenas para medir qualidade, custo e viabilidade.
+
 Isso permite validar:
 
 - Interesse dos usuários
@@ -275,15 +298,15 @@ Somente depois dos resultados, considerar expansão do catálogo.
 
 ## Próximos Passos
 
-1. Validar juridicamente os 15 candidatos no Brasil.
-2. Confirmar o ID e os arquivos disponíveis no Project Gutenberg.
-3. Ranqueá-los por popularidade e potencial para o Sharebook.
-4. Substituir candidatos juridicamente problemáticos.
-5. Fechar a lista definitiva de 15.
-6. Implementar/ajustar o pipeline de tradução.
+1. Escolher uma obra e um trecho/capítulo representativo para a POC manual.
+2. Baixar o original estruturado do Project Gutenberg.
+3. Traduzir manualmente com `gpt-5.4-mini`.
+4. Revisar com Raffa e decidir se a qualidade é aceitável.
+5. Estimar custo por capítulo e por livro.
+6. Se aprovado, implementar o fluxo mínimo de tradução no importer.
 7. Processar 1 livro como golden case.
 8. Revisar manualmente o resultado do golden case.
-9. Ajustar prompts, agentes e critérios do Judge.
+9. Ajustar prompts, agentes e critérios de QA.
 10. Processar os outros 14.
 11. Criar capas e sinopses.
 12. Publicar a vitrine.

@@ -46,6 +46,7 @@ Substituição aplicada em 2026-09-11:
 - A source é segmentada por origem, não por campanha genérica: todos os itens apontam para `gutenberg.org`.
 - O pipeline atual do importer ainda deve tratar esta source como uma missão de tradução/derivação, não como importação direta de PDF pronto.
 - Antes de publicar, manter a regra: original elegível + tradução PT-BR própria + QA + rastreabilidade.
+- Decisão de 2026-09-12: antes de mexer no importer, fazer uma POC manual de tradução com `gpt-5.4-mini` em apenas um trecho/capítulo. A source cadastrada permanece staged até a prova de qualidade e custo.
 
 ## Cadastro no Importer — 2026-09-11
 
@@ -56,3 +57,22 @@ Substituição aplicada em 2026-09-11:
 - Status inicial dos itens: `waiting_triage`
 - URLs fora de `gutenberg.org`: `0`
 - Source mantida como `enabled = false` por enquanto, porque esta fila depende do pipeline de tradução/derivação Gutenberg e não deve ser consumida pelo worker genérico de PDF antes desse ajuste.
+
+## Decisões de Arquitetura Pendentes — tradução
+
+Quando o importer for adaptado, manter a mudança pequena:
+
+- adicionar na source um indicador explícito como `requires_translation`;
+- source sem tradução segue `triagem -> preparo editorial -> publicação`;
+- source com tradução segue `triagem -> tradução -> preparo editorial -> publicação`;
+- adicionar apenas dois status novos no início: `waiting_translation` e `translating`;
+- depois da tradução aprovada, o item volta para o fluxo atual em `waiting_editorial`;
+- guardar progresso, prompt, modelo, custo e artefatos em `metadata_json.translation`;
+- no dashboard, exibir o card **Tradução** apenas para source com tradução ou quando houver itens em `waiting_translation`/`translating`.
+
+Modelo inicial decidido para teste:
+
+- `translation_model = gpt-5.4-mini`
+- sem modelo revisor obrigatório no MVP manual
+
+Hipótese a validar: `gpt-5.4-mini` talvez seja suficiente para rascunho de obras simples, mas obras góticas/literárias do século XIX podem exigir revisão posterior com modelo mais forte.
