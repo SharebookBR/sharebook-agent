@@ -1,0 +1,17 @@
+{
+  "asset": "sharebook-br-translation-seal.png",
+  "kind": "cover-reference",
+  "usage": "Selo comemorativo Sharebook Brasil para capas autorais de traducoes PT-BR do Sharebook.",
+  "source": "Telegram image from Raffa, converted locally from JPG to transparent PNG as a provisional canonical asset.",
+  "preferred_source_note": "Replace with the original transparent PNG exported from ChatGPT web when available.",
+  "default_cover_context": {
+    "cover_ratio": "4:5",
+    "cover_style": "cinematic movie-poster",
+    "generator_usage": "Provide this asset as a reference image during cover generation so the image model composes the seal naturally into the cover."
+  },
+  "validation": [
+    "Seal must remain recognizable.",
+    "Seal must not cover title, author, face, main figure, or primary dramatic focal point.",
+    "Final cover must still read well as a thumbnail."
+  ]
+}
