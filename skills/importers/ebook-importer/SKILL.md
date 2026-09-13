@@ -104,6 +104,10 @@ Saídas legítimas do handoff:
 
 Não usar `status-set` genérico para rejeição curatorial. O caminho canônico é `python cli.py editorial-reject --id <ID> --reason "<motivo humano>"`.
 
+Para source Project Gutenberg que exige tradução e PDF final, o agente de preparo editorial deve ler `../sharebook-pdf-typesetting/SKILL.md` antes de gerar, revisar ou aprovar o PDF.
+
+Para `project_gutenberg_witches_magic`, essa leitura é obrigatória sempre que o item chegar ao preparo editorial: a edição Sharebook combina capa autoral 4:5, página institucional, miolo traduzido e publicação final.
+
 ### 3. Publicação
 
 ```bash
@@ -162,6 +166,7 @@ O Sharebook assume conscientemente o risco operacional de casos incertos para fo
 - Idioma padrão: português
 - Plano incompleto → volta para `waiting_editorial`
 - Capa: preferir fonte (capa original do PDF/editora). Se a primeira página for só folha de rosto acadêmica sem valor de capa, seguir `skills/product-ux/cover-direction/SKILL.md`: com geração nativa, criar 3 capas distintas e escolher criticamente a melhor; sem essa capacidade, usar `scripts/covers/cover_generate.py` como fallback local. Gerar via API OpenAI cobrada **apenas com confirmação explícita do Raffa**.
+- Miolo PDF de tradução Project Gutenberg: seguir `../sharebook-pdf-typesetting/SKILL.md`. O baseline é 512 x 640 pt, proporção 4:5, Liberation Serif 12/17.2, margens 72/60 pt e conforto de leitura acima de reduzir páginas.
 - Validação pós-publicação: confirmar `done` no importer, livro íntegro na API e página pública com capa, categoria e ação de download disponíveis.
 
 ---
