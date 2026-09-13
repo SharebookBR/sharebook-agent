@@ -58,6 +58,11 @@ Variantes sazonais conhecidas:
 
 Para posts, campanhas, banners e peças visuais do Sharebook, sempre fornecer `sharebook-frontend/src/assets/img/logo.png` como imagem de referência ao gerador quando a ferramenta permitir referência visual. Não duplicar o asset na skill; usar o arquivo real do frontend.
 
+## Assets canônicos
+
+- `assets/sharebook-translation-page-02.jpg` — página institucional reutilizável para a página 2 de PDFs de traduções PT-BR do Sharebook, em proporção 4:5.
+- `assets/sharebook-translation-page-02.meta.json` — contrato de uso, origem e validação da página institucional. Não alterar texto, logo ou proporção sem decisão editorial explícita.
+
 ## Voz visual
 
 A peça deve parecer Sharebook: acolhedora, simples, confiável e ligada a leitura, doação, acesso e compartilhamento de conhecimento.

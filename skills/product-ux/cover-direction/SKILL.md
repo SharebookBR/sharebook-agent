@@ -15,6 +15,13 @@ Usar direção visual, não improviso.
 - `sharebook-agent/scripts/covers/INDEX.md`
 - `sharebook-agent/scripts/production/sharebook_prod_book.py`
 
+## Assets canônicos
+
+A pasta `assets/` guarda referências visuais deliberadas para capas.
+
+- `assets/sharebook-br-translation-seal.png` — selo Sharebook Brasil para capas autorais de traduções PT-BR.
+- `assets/sharebook-br-translation-seal.meta.json` — contrato de uso, origem e validação do selo. Usar como referência durante geração de capa quando a obra fizer parte do fluxo de tradução Sharebook; substituir pelo PNG transparente original exportado do ChatGPT web quando disponível.
+
 Os scripts mandam nos detalhes mecânicos; esta skill manda na escolha do caminho por capacidade.
 
 ## Workflow canônico

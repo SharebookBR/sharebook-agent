@@ -3,6 +3,35 @@
 Checkpoint oficial da consolidação de memória do projeto.
 
 ## Último dream
+- Data: `2026-09-13`
+- Tipo: `dream semanal automatizado customizado via OpenClaw cron`
+- Última memória absorvida: `memory/2026-09-10-home-mais-baixados.md`
+- Total de memórias lidas: `5 memórias episódicas absorvidas (2026-09-06 a 2026-09-10)`.
+
+## Consolidação produzida em 2026-09-13
+
+### Doctor zerado
+- O Harness Doctor abriu com 5 achados e fechou limpo.
+- Os 5 achados eram artefatos deliberados de tradução Gutenberg/Sharebook Brasil adicionados depois da última memória absorvida: página institucional de tradução em `art-director` e selo de capa em `cover-direction`.
+- `skills/product-ux/art-director/assets/sharebook-translation-page-02.jpg` e seu `.meta.json` foram indexados em `skills/product-ux/art-director/SKILL.md`.
+- A pasta `skills/product-ux/cover-direction/assets`, o selo `sharebook-br-translation-seal.png` e seu `.meta.json` foram indexados em `skills/product-ux/cover-direction/SKILL.md`.
+
+### Decisões conscientes de não agir
+- Loops de produto/infra da safra permanecem fora do mandato do Dream autônomo: publicação/cron dos quatro ebooks em waiting_publish, observação final do SMTP próprio/Stalwart, webhook delivery.* do Stalwart, validação Outlook/Hotmail, bounces/supressão, higiene operacional do Stalwart, reputação/listas de bloqueio, métricas da prateleira Mais baixados, ponderação por recência, memory_search/OpenClaw embeddings, deploy automático GitHub/Coolify e grants/default privileges de novas tabelas.
+- Não houve promoção nova para `SOUL.md`; a safra não trouxe decisão constitutiva que justificasse reescrita autônoma.
+- Os commits recentes de tradução Gutenberg geraram backlog e assets, mas ainda não tinham memória episódica própria; este Dream registrou apenas o reparo de governança dos assets, sem inferir decisões de produto além do que já estava no backlog.
+
+### Validação
+- `python3 skills/doctrine/harness-governance/scripts/harness_doctor.py --root .` terminou limpo.
+- `python3 -m unittest discover -s skills/doctrine/harness-governance/scripts -p 'test_*.py' -v` terminou com 29 testes aprovados.
+- A memória do ciclo é `memory/2026-09-13-dream.md`.
+
+## Próximo dream
+- O checkpoint agora parte de `memory/2026-09-10-home-mais-baixados.md`.
+- Observar se os commits de Gutenberg/tradução ganham memória episódica própria em ciclos futuros; o Doctor pode revelar artefatos pós-checkpoint que o relatório de safra ainda não enxerga.
+- Continuar tratando achados do Doctor como objetos de triagem individual; baseline atual é limpo.
+
+## Histórico — 2026-09-06
 - Data: `2026-09-06`
 - Tipo: `dream semanal automatizado customizado via OpenClaw cron`
 - Última memória absorvida: `memory/2026-09-03-editorial-subagentes-e-harness.md`
