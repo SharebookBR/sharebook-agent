@@ -66,9 +66,12 @@ Substituição aplicada em 2026-09-11:
 - Categoria: `Ficção > Bruxas & Magia` (`01a0974c-f122-75ee-9d2b-c3f81497e6dc`), criada após a primeira publicação para a linha temática.
 - Livro Sharebook: `01a096a7-5686-766e-8d12-29728e7f291f`.
 - PDP: `https://www.sharebook.com.br/livros/a-bruxa-de-praga`.
-- Artefato local final: `sharebook-ebook-importer/var/tmp/translation-1878/a-bruxa-de-praga-sharebook-ptbr.pdf`.
+- Artefato local final original: `sharebook-ebook-importer/var/tmp/translation-1878/a-bruxa-de-praga-sharebook-ptbr.pdf`.
+- Artefato local final atualizado em 2026-09-13 para o baseline de miolo: `sharebook-ebook-importer/var/tmp/translation-1878/a-bruxa-de-praga-sharebook-ptbr-baseline.pdf`.
 - Estrutura do PDF: capa 4:5, página 2 institucional Sharebook 4:5, 27 capítulos traduzidos, licença/origem Project Gutenberg no final.
+- Miolo atualizado para `sharebook-pdf-typesetting`: 512 x 640 pt, Liberation Serif 12 pt, entrelinha 17.2 pt, margens 72/60 pt, parágrafos sem espaço extra e recuo de primeira linha.
 - Validação feita: item `done` no importer, livro `Available` em produção, capa e thumbnail públicas, PDP HTTP 200, endpoint de download com PDF remoto válido.
+- PDF publicado substituído direto no S3 em `ebooks/a-bruxa-de-praga.pdf` em 2026-09-13. Validação: objeto S3 remoto com `2031980` bytes, `ContentType=application/pdf`, hash SHA-256 igual ao arquivo local (`9094b62294815cd6...`) e download público respondendo `%PDF-`.
 
 ## Pontas Soltas Após o Primeiro Livro
 
