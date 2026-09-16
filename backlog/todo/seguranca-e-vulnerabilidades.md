@@ -39,6 +39,8 @@ Validação da fatia:
 
 Próxima decisão: tratar o bloco Angular/Universal como migração planejada ou mitigação explícita de SSR, não como `npm audit fix --force`.
 
+**Atualização — 2026-09-16**: plano de migração incremental do Angular (13 → LTS) detalhado em [`migracao-angular-13-lts.md`](migracao-angular-13-lts.md), hop a hop, com pré-requisitos (rxjs-compat, Node fixado, tslint→eslint, destino do Protractor) e alvo recomendado (Angular 20 LTS). A auditoria desse plano também encontrou uma discrepância: `base64-img`, registrado como removido abaixo, continua presente em `package.json` na `develop` atual — verificar antes de tratar este baseline de segurança como válido.
+
 Segunda fatia segura aplicada no `sharebook-backend`, sem mudança de arquitetura:
 
 - atualizado `MailKit` de `4.15.0` para `4.16.0`;
