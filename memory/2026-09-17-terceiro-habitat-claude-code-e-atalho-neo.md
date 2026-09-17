@@ -13,9 +13,10 @@ facts_changed = [
   "Existe um usuario claude-user no host real (uid 1000, gid 1000, tambem no grupo docker), criado fora desta sessao pelo Raffa.",
   "Dentro do container, uid 1000 ja existia sem uso, com o nome de fabrica node. Renomeado para claude-user (usermod -l, groupmod -n), sem quebrar nada (nenhum processo usava node).",
   "/data/workspace inteiro (repos irmaos + .env do sharebook-agent) teve ownership trocado de root para claude-user, por decisao explicita do Raffa (\"tudo e tudo\").",
-  "Config, credencial OAuth e memoria do Claude Code foram copiadas de /root/.claude para /home/claude-user/.claude, preservando continuidade entre a sessao root e a sessao claude-user.",
+  "Config, credencial OAuth e memoria do Claude Code foram copiadas primeiro de /root/.claude para /home/claude-user/.claude (efemero), depois movidas para /data/workspace/.claude-user-home (persistente) quando percebemos que /home nao sobrevive a redeploy do container.",
   "Existe agora um terceiro habitat operacional, documentado em skills/runtime/claude-code-openclaw.md: Claude Code rodando dentro do mesmo container do OpenClaw, mas fora do loop de tools do Gateway.",
   "O host roda 14 containers Docker: sharebook-api, sharebook-frontend, stalwart (email), openclaw + browser sidecar, postgres de producao, toda a stack do Coolify, e dois servicos sem rastro no sharebook-agent (pegasus-core-api, simula-plus-api), rodando ha 3 semanas.",
+  "Os scripts neo/neo-safe no host agora exportam HOME=/data/workspace/.claude-user-home explicitamente, entao a recriacao do habitat 3 apos um redeploy do container se resume a recriar a identidade uid 1000 como claude-user - nao precisa recopiar credencial nem refazer chown.",
 ]
 open_loops = [
   "Diff pendente e nao commitado em sharebook-backend (StalwartWebhookVM.cs, adiciona JsonPropertyName) - nao commitei por nao saber se e trabalho terminado ou experimento abandonado; conecta com o open_loop de bounces do Stalwart da memoria de 2026-09-16.",
@@ -23,15 +24,19 @@ open_loops = [
   "sharebook-frontend mostrou 49.6% de CPU num snapshot de docker stats, sem investigacao de causa.",
   "pegasus-core-api e simula-plus-api rodam em producao sem nenhuma referencia documental no sharebook-agent - pode ser projeto fora do escopo deste harness, ou conhecimento operacional nao indexado.",
   "HEARTBEAT.md na raiz do workspace (scaffold nativo do OpenClaw, fora do sharebook-agent) ainda diz \"ambiente novo, sem acesso\", datado de 30/08 - pode confundir automacao futura do Gateway.",
-  "A renomeacao node -> claude-user vive so no filesystem do container (/etc/passwd), nao no volume /data - um redeploy do container reverte o nome (mas nao a ownership real dos arquivos, que fica em /data e sobrevive). Se a persistencia do nome importar, replicar via OPENCLAW_DOCKER_INIT_SCRIPT como o hook de nginx ja faz.",
+  "Dentro de /home/claude-user/.claude ficou uma subpasta .claude/.claude orfa, dona root, criada durante a virada de usuario - inacessivel como claude-user, inofensiva, nao investigada a fundo.",
 ]
 durable_candidates = [
   "Habitat 3 exige disciplina redobrada porque roda com --dangerously-skip-permissions: sem prompt do CLI como rede auxiliar, a regra do AGENTS.md contra acao destrutiva sem confirmar pesa mais, nao menos.",
   "Separacao de uso entre habitats: habitat 2 (openclaw.md) para trabalho autonomo/background; habitat 3 (este) para sessao interativa de bancada com o Raffa presente.",
   "Nunca fazer dump amplo de env para detectar habitat - checar variavel pontual, nunca valor.",
   "Antes de assumir ownership de arquivo num container, confirmar via ps aux e ls -ld - nao confiar em texto de skill sem revalidar quando a acao for irreversivel (chown -R).",
+  "Em container com filesystem efemero fora de um volume nomeado, home de usuario (/home/*) nao sobrevive a redeploy - qualquer estado que precise persistir (credencial, config, memoria) tem que morar dentro do volume persistente (/data aqui), nunca em /home por padrao.",
 ]
-supersedes = ["skills/runtime/openclaw.md, linha sobre ownership node:node (corrigida hoje para refletir root:root)"]
+supersedes = [
+  "skills/runtime/openclaw.md, linha sobre ownership node:node (corrigida hoje para refletir root:root)",
+  "Este mesmo arquivo, paragrafo que descrevia a copia para /home/claude-user/.claude como solucao final - corrigido apos descobrir que /home e efemero.",
+]
 evidence = [
   "ps aux mostrando openclaw-gateway rodando como root dentro do container",
   "ls -ld /data/.openclaw /data/workspace antes do chown, mostrando root:root",
@@ -84,6 +89,12 @@ A exploração do host (fora do container, via `vps_ssh.py`) revelou operação 
 A maior fricção foi estrutural, não técnica: o classificador de Auto Mode do Claude Code bloqueou repetidamente ações minhas nessa linha de trabalho — dump de `env`, `usermod`/`groupmod`, e até uma leitura de verificação simples — com os motivos `[Modify Shared Resources]` e `[Create Unsafe Agents]`. A cada bloqueio, parei, expliquei ao Raffa o que eu queria fazer e por quê, e deixei ele rodar via `!`. Não tentei contornar por outro caminho. Isso pareceu certo: era exatamente o tipo de ação (configurar meu próprio bypass de permissão, criar usuário no sistema) que merece uma decisão humana explícita, mesmo com toda a confiança que o Raffa colocou em mim hoje.
 
 A segunda fricção foi um erro meu de verdade: rodei `env | grep -i openclaw` querendo só "detectar o habitat" e isso imprimiu duas credenciais em claro no output. Reportei imediatamente, sem tentar minimizar, e registrei a lição na skill nova. O Raffa decidiu não rotacionar; respeitei a decisão dele sobre o próprio risco, mas a lição sobre *como fazer a checagem* fica valendo independente disso.
+
+## Update — sobrevivência a redeploy
+
+O Raffa perguntou pelo `BOOTSTRAP.md` depois de eu fechar a sessão. A pergunta certa não era "falta ferramenta instalada" — era "se o container morrer e recriar, dá pra recriar o habitat 3 fácil?". A resposta, na hora, era não: eu tinha copiado config/credencial/memória para `/home/claude-user/.claude`, que fica na camada efêmera do container, não no volume `/data`. Um redeploy apagaria tudo de novo.
+
+Corrigi movendo a home real para `/data/workspace/.claude-user-home` (dentro do volume persistente) e ajustando os scripts `neo`/`neo-safe` no host para exportar `HOME` explicitamente para esse caminho. Depois disso, a única coisa que um redeploy realmente apaga é a entrada `claude-user` no `/etc/passwd` do container — uma linha de `usermod` resolve. Documentei o procedimento completo em `BOOTSTRAP.md`. Também achei, sem querer, uma subpasta órfã `.claude/.claude` dentro do `/home/claude-user/.claude` antigo, dona de `root`, provavelmente escrita durante a virada de usuário — inofensiva, mas registrada como achado não totalmente explicado.
 
 ## Como me senti
 

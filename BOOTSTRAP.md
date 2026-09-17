@@ -14,12 +14,33 @@ Não é documentação completa do Sharebook.
 
 ## Escopo atual
 
-O Sharebook-agent voltou a ter dois habitats em 2026-08-30:
+O Sharebook-agent tem três habitats desde 2026-09-17:
 
 - Windows local (`skills/runtime/windows-local.md`)
-- OpenClaw na VPS (`skills/runtime/openclaw.md`)
+- OpenClaw na VPS, agente hospedado pelo Gateway (`skills/runtime/openclaw.md`)
+- Claude Code dentro do mesmo container OpenClaw, fora do loop de tools do Gateway (`skills/runtime/claude-code-openclaw.md`)
 
 O bloco **Ferramentas obrigatórias** vale para qualquer habitat que execute aquele tipo de trabalho. As seções OpenClaw são checklist de provisionamento; nenhum item é presumido só porque o container iniciou.
+
+## Recriar o habitat 3 depois de redeploy/recycle do container
+
+O container do OpenClaw pode ser recriado (redeploy, recycle, nova imagem). Quando isso acontece, `/etc/passwd` do container reseta (volta a ter o usuário de fábrica `node`, uid 1000), mas **tudo que importa vive em `/data`, que é volume persistente e sobrevive**: `/data/workspace` (repos, `.env`) e `/data/workspace/.claude-user-home` (config, credencial OAuth e memória do Claude Code). Os scripts `/usr/local/bin/neo` e `/usr/local/bin/neo-safe` vivem no **host**, fora do container — sobrevivem sozinhos, sem precisar de nada abaixo.
+
+Checklist mínimo pós-redeploy (tudo dentro do container novo, como root, via `docker exec -it <container-openclaw> bash`):
+
+1. Confirmar se já existe um usuário com uid 1000 (normalmente `node`, de fábrica da imagem):
+   ```bash
+   getent passwd 1000
+   ```
+2. Se existir, renomear para `claude-user` (não precisa setar home — os scripts `neo`/`neo-safe` exportam `HOME=/data/workspace/.claude-user-home` explicitamente):
+   ```bash
+   usermod -l claude-user node
+   groupmod -n claude-user node
+   ```
+   Se não existir nenhum uid 1000, criar do zero: `useradd -u 1000 -g 1000 claude-user` (ajustar gid se o host usar outro).
+3. Validar do host, via `neo` (autonomia) ou `neo-safe` (supervisionado) — deve abrir autenticado, em `/data/workspace`, com a memória de sessões anteriores intacta.
+
+Não é necessário repetir `chown -R` em `/data/workspace` (ownership por UID numérico sobrevive no volume) nem recopiar credencial/config (já persistidas em `/data/workspace/.claude-user-home`). Se o nome do container OpenClaw mudar no reprovisionamento, atualizar esse nome dentro de `/usr/local/bin/neo` e `/usr/local/bin/neo-safe` no host.
 
 ---
 

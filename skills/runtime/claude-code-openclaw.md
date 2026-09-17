@@ -40,8 +40,13 @@ Na primeira sessão deste habitat, um `env | grep -i openclaw` para "detectar ha
 
 - A memória canônica deste habitat é a mesma do Sharebook-agent: `sharebook-agent/memory/*.md`, com o ritual de início/fim de sessão do `AGENTS.md`.
 - Claude Code mantém, à parte, seu próprio sistema de memória persistente (fora deste repo). Ele guarda contexto sobre como colaborar com o Raffa em geral; a memória operacional do Sharebook continua vivendo aqui, em `sharebook-agent/memory/` e nas skills — não duplicar uma fonte na outra.
+- **A home do Claude Code (config, credencial OAuth, essa memória pessoal) vive em `/data/workspace/.claude-user-home`, não em `/home/claude-user`.** `/home` é camada do container, não sobrevive a redeploy; `/data` é volume persistente. Os scripts `neo`/`neo-safe` exportam `HOME=/data/workspace/.claude-user-home` explicitamente antes de abrir o Claude Code — não depender do `$HOME` default do usuário do sistema.
 - Git: commits deste habitat levam atribuição de Claude Sonnet 5 (ou o modelo Claude vigente), distinguíveis de memórias/commits anteriores de GPT-5 Codex no habitat `openclaw.md`. Isso é dado útil para entender de qual habitat uma decisão histórica veio.
 - **Sem `memory_search` neste habitat.** Diferente do habitat 2 (embeddings via OpenClaw), aqui a leitura de memória episódica é manual: glob por `memory/*.md`, ordenar por data de modificação. Funciona enquanto o volume for pequeno (dezenas de arquivos); ponto de atenção para revisitar se `memory/` crescer muito e a leitura manual virar gargalo real — não construir busca semântica antes de a dor aparecer de fato.
+
+## Sobrevivência a redeploy/recycle do container
+
+`/etc/passwd` do container é efêmero (reseta num container novo); `/data` é volume persistente e sobrevive. Por isso a identidade `claude-user` (uid 1000) some num redeploy, mas o que importa — `/data/workspace` (repos, `.env`) e `/data/workspace/.claude-user-home` (config, credencial, memória) — continua intacto. Recriar o habitat depois de um redeploy é só recriar a identidade de uid 1000 no container novo; procedimento completo em `BOOTSTRAP.md`, seção "Recriar o habitat 3 depois de redeploy/recycle do container". Não precisa repetir `chown` nem recopiar credencial.
 
 ## Disciplina sem prompt de permissão
 
@@ -55,13 +60,13 @@ No host real (`vpsbr-15883715.vpshostgator.com.br`, HostGator), existem dois scr
   ```bash
   #!/usr/bin/env bash
   set -euo pipefail
-  exec docker exec -it openclaw-uj0tkohotwrp4epy0leaz28z su - claude-user -c 'cd /data/workspace && exec claude --dangerously-skip-permissions'
+  exec docker exec -it openclaw-uj0tkohotwrp4epy0leaz28z su - claude-user -c 'export HOME=/data/workspace/.claude-user-home && cd /data/workspace && exec claude --dangerously-skip-permissions'
   ```
 - **`neo-safe`** — mesma cadeia, sem o flag de bypass; o CLI volta a perguntar antes de cada tool call:
   ```bash
   #!/usr/bin/env bash
   set -euo pipefail
-  exec docker exec -it openclaw-uj0tkohotwrp4epy0leaz28z su - claude-user -c 'cd /data/workspace && exec claude'
+  exec docker exec -it openclaw-uj0tkohotwrp4epy0leaz28z su - claude-user -c 'export HOME=/data/workspace/.claude-user-home && cd /data/workspace && exec claude'
   ```
 
 Uso: SSH no host, digitar `neo` (padrão, autonomia) ou `neo-safe` (supervisionado). Ambos caem em Claude Code como `claude-user`, em `/data/workspace`. Se o nome do container OpenClaw mudar (novo provisionamento), atualizar os dois scripts.
