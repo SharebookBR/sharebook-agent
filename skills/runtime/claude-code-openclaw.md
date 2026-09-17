@@ -52,6 +52,7 @@ Na primeira sessão deste habitat, um `env | grep -i openclaw` para "detectar ha
 
 - `scripts/infra/vps_ssh.py --prefix VPS_HOSTGATOR_SSH` funciona de primeira: `paramiko` instalado, `ssh` e `sshpass` no PATH, `.env` canônico em `/data/workspace/sharebook-agent/.env`. Este é hoje o único habitat Claude Code com SSH pra VPS **e** autonomia de execução ao mesmo tempo (claude-code-web não tem SSH; windows-local tem, com prompt). Deploy/operacão do Coolify cai naturalmente aqui — receita e fricções específicas em `skills/infra/coolify-vps.md`.
 - `git pull`/`fetch` por HTTPS: `sharebook-agent` e `sharebook-frontend` puxam sem credencial; `sharebook-ebook-importer` pede usuário. Usar o token do `.env` de forma não interativa via `-c http.extraheader=...` montado no shell, sem ecoar o valor; nunca colar o token na URL do remote.
+- Build do `sharebook-frontend` funciona aqui (Node 22, `npm ci` ~30s, `npm run build:ssr` ~35s). O `node_modules` do volume pode estar de outra era da migração Angular — se o build quebrar com `TS6046` no `target` do tsconfig, é dependência stale, não config: `npm ci` primeiro.
 - `sleep` em foreground no Bash do Claude Code é bloqueado. Espera por deploy/job: loop em `run_in_background` que imprime status a cada volta e sai no primeiro estado terminal — assim "vazio" e "terminou" são distinguíveis, ao contrário do monitor silencioso que a skill do Windows já descarta.
 
 ## Disciplina sem prompt de permissão
