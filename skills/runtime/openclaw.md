@@ -185,7 +185,7 @@ Referência oficial: [automações](https://docs.openclaw.ai/cli/cron).
 - Preferir ferramenta nativa quando houver ação de primeira classe; usar `exec` para scripts e diagnóstico local.
 - O perfil `coding` inclui filesystem, runtime, web, sessions, memory e automação, mas políticas allow/deny ainda podem remover tools.
 - Repositórios ficam em pastas irmãs do workspace persistente. Confirmar o path real antes de Git.
-- Arquivos editáveis devem pertencer ao usuário do processo. O histórico usava `node:node`, mas não rodar `chown -R` até confirmar UID/GID e mount corretos.
+- Arquivos editáveis devem pertencer ao usuário do processo. Checado em 2026-09-17: o processo `openclaw-gateway` roda como `root`, e `/data/workspace` e `/data/.openclaw` pertenciam a `root:root` (não `node:node` como o texto histórico dizia). Confirmar ownership real via `ps aux` e `ls -ld` antes de assumir qualquer um dos dois; não rodar `chown -R` sem essa confirmação.
 - Se `git add`, rename ou escrita falhar depois de uma operação root, checar ownership antes de culpar Git.
 
 ## Diagnóstico de sessões silenciosas / falhas de modelo

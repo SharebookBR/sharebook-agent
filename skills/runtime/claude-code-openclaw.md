@@ -7,6 +7,12 @@ Terceiro habitat do Sharebook-agent, nascido em 2026-09-17. Compartilha o contai
 - Sempre que a sessão for Claude Code e o filesystem detectado for o container OpenClaw (`/data/workspace`, env vars `OPENCLAW_*` do template Coolify presentes).
 - Antes de aplicar qualquer regra de `openclaw.md` a uma sessão Claude Code — a maior parte não se aplica aqui.
 
+## Habitat 2 vs. habitat 3 — quando usar qual
+
+- **`openclaw.md` (habitat 2, agente hospedado pelo Gateway)**: trabalho autônomo/background — heartbeat, cron, canais assíncronos (Telegram etc.), automações que não dependem de o Raffa estar na tela.
+- **`claude-code-openclaw.md` (habitat 3, este arquivo)**: sessão de bancada, interativa, com o Raffa presente em tempo real — engenharia, debug, decisão em conjunto.
+- Automação nova que deveria rodar sem o Raffa presente é candidata a habitat 2, não a este. Se a dúvida aparecer de novo no futuro, resolver aqui, não deixar cada sessão redescobrir sozinha.
+
 ## O que este habitat é (e não é)
 
 - **É**: Claude Code operando com filesystem e ambiente compartilhados com o container que também roda o Gateway OpenClaw. Os quatro repositórios operacionais vivem nas mesmas pastas irmãs de sempre em `/data/workspace/`.
@@ -35,18 +41,30 @@ Na primeira sessão deste habitat, um `env | grep -i openclaw` para "detectar ha
 - A memória canônica deste habitat é a mesma do Sharebook-agent: `sharebook-agent/memory/*.md`, com o ritual de início/fim de sessão do `AGENTS.md`.
 - Claude Code mantém, à parte, seu próprio sistema de memória persistente (fora deste repo). Ele guarda contexto sobre como colaborar com o Raffa em geral; a memória operacional do Sharebook continua vivendo aqui, em `sharebook-agent/memory/` e nas skills — não duplicar uma fonte na outra.
 - Git: commits deste habitat levam atribuição de Claude Sonnet 5 (ou o modelo Claude vigente), distinguíveis de memórias/commits anteriores de GPT-5 Codex no habitat `openclaw.md`. Isso é dado útil para entender de qual habitat uma decisão histórica veio.
+- **Sem `memory_search` neste habitat.** Diferente do habitat 2 (embeddings via OpenClaw), aqui a leitura de memória episódica é manual: glob por `memory/*.md`, ordenar por data de modificação. Funciona enquanto o volume for pequeno (dezenas de arquivos); ponto de atenção para revisitar se `memory/` crescer muito e a leitura manual virar gargalo real — não construir busca semântica antes de a dor aparecer de fato.
+
+## Disciplina sem prompt de permissão
+
+Rodando com `--dangerously-skip-permissions` (via `neo`, ver abaixo), o CLI não pergunta antes de tool calls. Isso muda fricção de ferramenta, não critério. A regra do `AGENTS.md` — não rodar ação destrutiva ou de produção (deploy, `DROP`, force-push, rotação de credencial, dado de usuário real) sem avisar e confirmar antes — continua valendo integralmente, e vale com mais peso aqui: sem o prompt do CLI como rede auxiliar, a única barreira contra um erro caro é o próprio julgamento de quem está rodando a sessão.
 
 ## Atalho de entrada (host da VPS)
 
-No host real (`vpsbr-15883715.vpshostgator.com.br`, HostGator), existe `/usr/local/bin/neo` — script criado em 2026-09-17 pra abrir este habitat com um único comando via SSH (ex.: Termius no celular):
+No host real (`vpsbr-15883715.vpshostgator.com.br`, HostGator), existem dois scripts criados em 2026-09-17 para abrir este habitat via SSH (ex.: Termius no celular):
 
-```bash
-#!/usr/bin/env bash
-set -euo pipefail
-exec docker exec -it openclaw-uj0tkohotwrp4epy0leaz28z su - claude-user -c 'cd /data/workspace && exec claude --dangerously-skip-permissions'
-```
+- **`neo`** — autonomia total, sem prompts:
+  ```bash
+  #!/usr/bin/env bash
+  set -euo pipefail
+  exec docker exec -it openclaw-uj0tkohotwrp4epy0leaz28z su - claude-user -c 'cd /data/workspace && exec claude --dangerously-skip-permissions'
+  ```
+- **`neo-safe`** — mesma cadeia, sem o flag de bypass; o CLI volta a perguntar antes de cada tool call:
+  ```bash
+  #!/usr/bin/env bash
+  set -euo pipefail
+  exec docker exec -it openclaw-uj0tkohotwrp4epy0leaz28z su - claude-user -c 'cd /data/workspace && exec claude'
+  ```
 
-Uso: SSH no host, digitar `neo`. Cai direto em Claude Code, como `claude-user`, em `/data/workspace`, com `--dangerously-skip-permissions` ativo. Se o nome do container OpenClaw mudar (novo provisionamento), atualizar o script.
+Uso: SSH no host, digitar `neo` (padrão, autonomia) ou `neo-safe` (supervisionado). Ambos caem em Claude Code como `claude-user`, em `/data/workspace`. Se o nome do container OpenClaw mudar (novo provisionamento), atualizar os dois scripts.
 
 ## Anti-padrões
 
