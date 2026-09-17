@@ -100,6 +100,26 @@ Validar em três camadas:
 
 Enfileirar backend e frontend em sequência quando ambos mudarem, para não disputar CPU de build no mesmo servidor.
 
+### Acompanhar a fila a partir do container OpenClaw (habitat 3)
+
+Validado em 2026-09-17 (promoção do Angular 19, dev e prod). Duas armadilhas do `vps_ssh.py` que custam um ciclo cada:
+
+- **Não colocar `sleep` no comando remoto.** O canal do paramiko tem timeout curto; `sleep 150; psql ...` estoura `socket.timeout` antes de responder. O polling fica do lado de cá: loop local chamando o script a cada ~30s, uma conexão por checagem, saindo no primeiro status terminal (`finished`, `failed`, `cancelled`). Build de Angular SSR leva ~3 min.
+- **O output do script termina com linha vazia.** `... | tail -1` devolve string vazia e um `case` que testa `in_progress|queued` sai na primeira volta achando que terminou. Usar `grep -v '^$' | tail -1`.
+
+Padrão que funcionou:
+```bash
+for i in $(seq 1 18); do
+  s=$(python3 scripts/infra/vps_ssh.py --prefix VPS_HOSTGATOR_SSH \
+      --cmd "docker exec coolify-db psql -U coolify -d coolify -Atc \"select status from application_deployment_queues where deployment_uuid='UUID'\"" \
+      2>/dev/null | grep -v '^$' | tail -1)
+  echo "$(date +%H:%M:%S) $s"
+  case "$s" in in_progress|queued) sleep 30;; *) break;; esac
+done
+```
+
+Teste de 404 real na validação funcional: desde o `@angular/ssr` 19, `CommonEngine` sem `allowedHosts` cai silenciosamente em CSR e a home continua 200 com HTML plausível. `curl -D - https://HOST/rota-inexistente` precisa devolver `HTTP/2 404` com `<title>Página não encontrada | ShareBook</title>` — só isso prova que o SSR está de pé.
+
 ## Containers que merecem atenção
 - `coolify`: aplicação web do painel. Primeiro suspeito em lentidão da interface.
 - `coolify-proxy`: Traefik/proxy reverso. Observar, mas não culpar no escuro.
