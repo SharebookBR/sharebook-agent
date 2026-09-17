@@ -39,7 +39,9 @@ Validação da fatia:
 
 Próxima decisão: tratar o bloco Angular/Universal como migração planejada ou mitigação explícita de SSR, não como `npm audit fix --force`.
 
-**Atualização — 2026-09-16**: plano de migração incremental do Angular (13 → LTS) detalhado em [`migracao-angular-13-lts.md`](migracao-angular-13-lts.md), hop a hop, com pré-requisitos (rxjs-compat, Node fixado, tslint→eslint, destino do Protractor) e alvo recomendado (Angular 20 LTS). A auditoria desse plano também encontrou uma discrepância: `base64-img`, registrado como removido abaixo, continua presente em `package.json` na `develop` atual — verificar antes de tratar este baseline de segurança como válido.
+**Atualização — 2026-09-16**: plano de migração incremental do Angular (13 → LTS) detalhado em [`migracao-angular-13-lts.md`](migracao-angular-13-lts.md), hop a hop, com pré-requisitos (rxjs-compat, Node fixado, tslint→eslint, destino do Protractor) e alvo recomendado (Angular 20 LTS).
+
+**Correção — 2026-09-17**: a auditoria de 16/09 rodou em cima da `develop` do `sharebook-frontend`, desatualizada há meses em relação ao `master` real (SSR com Angular Universal, dashboards de analytics/importer, etc.). Sinalizei por engano uma "discrepância" (`base64-img` supostamente não removido) — na verdade o `base64-img` já estava removido no `master` desde 31/08, exatamente como este documento registra; o erro era eu estar olhando o branch errado. Baseline de segurança confirmado correto. O plano de migração do Angular foi corrigido para refletir o `master` (inclui agora o SSR real que faltava na primeira versão).
 
 Segunda fatia segura aplicada no `sharebook-backend`, sem mudança de arquitetura:
 
