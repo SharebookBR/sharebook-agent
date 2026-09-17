@@ -43,6 +43,14 @@ Achados por hop:
 
 Pendências antes do próximo hop (17): decidir o que fazer com o Protractor (segue não tocado), fixar `.nvmrc`/`engines`, migrar `tslint`→`eslint`, remover `core-js@2`, eliminar `rxjs-compat` — nenhum desses bloqueou os hops 1-3, mas ficam mais urgentes a partir do hop 16→17 (onde `@nguniversal` precisa virar `@angular/ssr`).
 
+### Push e impacto em segurança — 2026-09-17
+
+Os 3 repos foram pushados com sucesso depois que o Raffa instalou o Claude GitHub App na org (`https://github.com/apps/claude/installations/select_target` — reconectar a conta pessoal em claude.ai/customize/connectors não bastou, é um passo diferente). Branch `claude/angular-lts-migration` em `sharebook-frontend`, `sharebook-agent` e `sharebook-backend`.
+
+Rodei `npm audit --omit=dev` antes e depois: **105 → 31** vulnerabilidades de produção só com o salto 13→16 do Angular (3 críticas→2, 58 altas→14, 36 moderadas→8, 8 baixas→7 — números do branch padrão antigo reportados pelo próprio GitHub no push). Depois, `npm audit fix` (sem `--force`) resolveu mais 9 dentro dos ranges semver já existentes no `package.json` (`engine.io`, `form-data`, `immutable`, `picomatch`, `socket.io-parser`) — **31 → 22**, sem nenhum bump de major manual. Commit `b40ce7e`.
+
+Das 22 restantes: a maioria está presa em `@angular/*` (fix real é saltar pra v21, fora do hop atual) ou em `@nguniversal/*` — incluindo as 2 críticas — cujo fix real não é patch, é a migração pra `@angular/ssr` já prevista no hop 16→17.
+
 ## Alvo recomendado
 
 Angular 22 é a release ativa (jun/2026); Angular 21 e 20 estão em LTS (até 19/05/2027 e 28/11/2026 respectivamente). Dado o tamanho do salto (13 → 22 = 9 majors), o risco concentrado em Angular Material (rewrite MDC no v15) **e agora o SSR real a carregar em cada hop**, recomendo:

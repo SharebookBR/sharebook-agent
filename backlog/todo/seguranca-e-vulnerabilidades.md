@@ -43,6 +43,8 @@ Próxima decisão: tratar o bloco Angular/Universal como migração planejada ou
 
 **Correção — 2026-09-17**: a auditoria de 16/09 rodou em cima da `develop` do `sharebook-frontend`, desatualizada há meses em relação ao `master` real (SSR com Angular Universal, dashboards de analytics/importer, etc.). Sinalizei por engano uma "discrepância" (`base64-img` supostamente não removido) — na verdade o `base64-img` já estava removido no `master` desde 31/08, exatamente como este documento registra; o erro era eu estar olhando o branch errado. Baseline de segurança confirmado correto. O plano de migração do Angular foi corrigido para refletir o `master` (inclui agora o SSR real que faltava na primeira versão).
 
+**Terceira fatia — 2026-09-17**: hops 13→14→15→16 do Angular executados e validados (detalhe completo em [`migracao-angular-13-lts.md`](migracao-angular-13-lts.md)). Resultado direto em segurança: `npm audit --omit=dev` caiu de 105 para 31 vulnerabilidades só com o salto de major (3 críticas→2, 58 altas→14, 36 moderadas→8), e mais 9 foram embora com `npm audit fix` sem `--force` (31→22, sem breaking change). As 22 remanescentes exigem continuar a migração (saltar Angular até v21, ou trocar `@nguniversal` por `@angular/ssr`) — não são resolvíveis por patch isolado. Branch `claude/angular-lts-migration` pushada nos três repos depois que o Claude GitHub App foi instalado na org.
+
 Segunda fatia segura aplicada no `sharebook-backend`, sem mudança de arquitetura:
 
 - atualizado `MailKit` de `4.15.0` para `4.16.0`;

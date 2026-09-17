@@ -25,8 +25,9 @@ No início da sessão, é **obrigatório** detectar o habitat atual e ler a skil
 Mapeamento:
 - Windows local do Raffa → `sharebook-agent/skills/runtime/windows-local.md`
 - Container OpenClaw na VPS → `sharebook-agent/skills/runtime/openclaw.md`
+- Sessão cloud do Claude Code on the web → `sharebook-agent/skills/runtime/claude-code-web.md`
 
-Os dois habitats compartilham este harness, mas não compartilham automaticamente paths, processos, memória ativa, sessões, credenciais nem ferramentas. Capacidade de um habitat nunca é evidência de capacidade do outro.
+Os três habitats compartilham este harness, mas não compartilham automaticamente paths, processos, memória ativa, sessões, credenciais nem ferramentas. Capacidade de um habitat nunca é evidência de capacidade do outro.
 
 Em conflito entre convenção genérica e regra específica de runtime, a regra específica do runtime vence, exceto quando houver política superior do sistema.
 
