@@ -378,6 +378,52 @@ docker exec coolify php artisan tinker --execute='try { $v = \App\Models\Environ
 ### O que mais copiar
 `/data/coolify/ssh` (chaves de deploy), `/data/coolify/proxy`, `/data/coolify/databases` (nginx conf dos proxies de banco), `/data/coolify/services`. Pular `/data/coolify/backups` — é histórico, não estado.
 
+## Criar aplicação nova via API do Coolify (sem UI)
+
+Validado em 2026-09-17, provisionando `sharebook-frontend-dev` (preview de `develop` batendo na API de produção, antes de promover pra `master`).
+
+### A API vem desligada por padrão
+`instance_settings.is_api_enabled = false` é o estado normal deste ambiente. Sem ligar, todo endpoint `/api/v1/...` responde `{"success":true,"message":"API is disabled."}` com HTTP 403 — tem cara de problema de auth e é feature flag.
+
+Mesmo protocolo do 5432: **ligar, usar, desligar**.
+```sql
+update instance_settings set is_api_enabled = true where id = 0;
+-- ... chamadas à API ...
+update instance_settings set is_api_enabled = false where id = 0;
+```
+
+### Achar a rota certa lendo o próprio código, não `route:list`
+`php artisan route:list` quebra fora de contexto HTTP nesta versão (4.3.21) — não é confiável pra descobrir rotas aqui. Caminho que funcionou: `docker exec coolify sh -lc "grep -rn 'padrão' /var/www/html/routes/api.php"` e depois ler o método correspondente em `app/Http/Controllers/Api/ApplicationsController.php` direto no container.
+
+O endpoint certo depende do tipo de fonte git da aplicação. Repo privado ligado via Github App (caso do Sharebook) → `POST /api/v1/applications/private-github-app`, **não** `/applications/dockerfile` (esse último é só pra Dockerfile "solto", sem repositório git nenhum, mesmo que o build pack final também se chame `dockerfile`).
+
+Campos obrigatórios pra esse endpoint: `project_uuid`, `server_uuid`, `environment_name` (ou `environment_uuid`), `github_app_uuid`, `git_repository`, `git_branch`, `build_pack`. Úteis: `dockerfile_location`, `ports_exposes`, `domains`, `name`, `limits_memory`/`limits_cpus` (vale limitar app de dev pra não competir recurso com prod), `instant_deploy: true` (já enfileira o primeiro deploy sozinho).
+
+UUIDs necessários, todos por leitura direta no Postgres do Coolify:
+```sql
+select uuid from projects;                              -- project_uuid
+select uuid from servers;                                -- server_uuid
+select uuid, name from github_apps;                      -- github_app_uuid (achar pelo nome certo)
+```
+
+### Token de API sem passar pela UI, sem vazar o valor
+`User::createToken()` do Coolify depende de `session('currentTeam')->id`, que não existe em `tinker` via CLI — chamar direto quebra. Workaround: montar o token manualmente com a mesma lógica (o model `PersonalAccessToken` já tem `team_id` no `$fillable`), fixando `team_id = 0` (Root Team, único time deste ambiente):
+```php
+$user = \App\Models\User::find(0);
+$prefix = config('sanctum.token_prefix','');
+$entropy = \Illuminate\Support\Str::random(40);
+$plain = $prefix.$entropy.hash('crc32b',$entropy);
+$t = $user->tokens()->create(['name'=>'...','token'=>hash('sha256',$plain),'abilities'=>['write'],'expires_at'=>now()->addHour(),'team_id'=>0]);
+echo $t->id.'|'.$plain;
+```
+O texto puro do token é um segredo efêmero e **não pode aparecer no output visível da sessão** — a regra do `.env` como único lugar com credencial vale também pra segredo de vida curta. Gerar, usar e revogar tudo dentro do **mesmo script remoto de uma linha só** (gerar token → chamar a API local `http://127.0.0.1:8000/api/v1/...` → apagar o token), transmitido como `echo <base64 do script> | base64 -d | sh` num único `--cmd` do `vps_ssh.py`. Assim nenhuma etapa intermediária passa pelo terminal do agente, só a resposta final da API (sem segredo dentro). Revogar no fim:
+```php
+\App\Models\PersonalAccessToken::where('id', <id>)->delete();
+```
+
+### Deploy manual ainda se aplica mesmo em app madura
+O webhook do GitHub não enfileirou o deploy da promoção `develop → master` do `sharebook-frontend`, app que já existe e está configurada há meses — reforça que a causa é o webhook em si, não a aplicação ser nova. Seguir a receita já documentada em "Deploy manual quando o webhook não enfileira" (usar sempre o SHA completo de 40 caracteres).
+
 ## O que registrar depois
 - Em `sharebook-agent/memory/`: diagnóstico, evidências, mudança aplicada e efeito percebido (memória episódica).
 - Em `AGENTS.md`: apenas descobertas duráveis e heurísticas, nunca segredos.
