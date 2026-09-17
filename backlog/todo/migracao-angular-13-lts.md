@@ -30,6 +30,19 @@ Isso também resolve a "discrepância" registrada na versão anterior: `base64-i
 - `npm test -- --watch=false`: `44 SUCCESS`.
 - `npm run build:ssr`: browser + servidor buildaram sem erro; só warnings pré-existentes (budget CSS em `app.component`, `home.component`, `importer-dashboard.component`; CommonJS bailout do `easymde`/`codemirror`).
 
+## Progresso — 2026-09-17
+
+Hops 13→14→15→16 concluídos e validados localmente (branch `claude/angular-lts-migration`, `sharebook-frontend`), commits `90d478e`, `b2ae442`, `a5df5cd`, `392af3a`, `ebeedad`, `3eba54f`. **Push para o remoto ainda bloqueado** — Claude Code on the web não tem acesso de escrita ao GitHub nesta sessão (nem por App nem por token pessoal, é bloqueio de rede da plataforma, não de credencial); commits ficam locais até resolução externa (admin da org libera o GitHub App, ou o Raffa puxa os commits e dá push de outro habitat).
+
+Achados por hop:
+- **13→14**: `ng update` em fatias (core+cli+nguniversal juntos primeiro, material+cdk depois — juntar tudo num comando só confundiu a resolução de peer deps e tentou pular pra Angular 15). Migração automática de Typed Forms trocou `FormBuilder`/`FormControl`/`FormGroup` por `Untyped*` em 15 arquivos — opção conservadora, sem forms tipados forçados.
+- **14→15**: `ng-recaptcha` precisou subir de 9 para 11 (trava peer dep em `@angular/core ^13`, não estendia até 15; a lib segue a major do Angular 1:1). O rewrite MDC do Material **não quebrou nada visualmente** — o schematic escolheu o caminho `Legacy*` (`MatLegacyDialogModule`, `mat.legacy-core()`), preservando DOM/CSS pré-MDC; confirmado via classes `mat-*` renderizadas na Home (não `mdc-*`). O próprio schematic tem um bug: corrompeu um import em `donations.component.ts` (`MMatLegacyDialog`, `@@angular/...`, string sem fechar) — corrigido manualmente, sem outras ocorrências no repo. `@import '~bootstrap/scss/bootstrap'` (sintaxe tilde) virou erro duro nesta versão, trocado para import sem tilde.
+- **15→16**: `ng-recaptcha` 11→12 (mesmo padrão 1:1). **`BrowserTransferStateModule` foi removido de `@angular/platform-browser`** (TransferState agora é provido automaticamente) — quebrava o build. Corrigido em `app.module.ts` (produção) e no spec do `FormComponent`. `TransferStateInterceptor` continua funcionando sem erro de DI.
+- **Cache da Home**: validado hop a hop (MISS→HIT, corpo idêntico, coalescing) em todos os 3 hops. `server.ts` e a camada de cache nunca foram tocados pelas migrações automáticas — risco antecipado no plano original não se concretizou até aqui.
+- **Limitação de validação**: não foi possível confirmar o payload real de `TransferState` fim a fim porque toda chamada à API de produção retorna 403 neste sandbox (bloqueio de rede da plataforma, documentado à parte). Isso já era assim na baseline pré-migração — não é regressão, mas significa que a hidratação real com dados nunca foi exercitada de fato nesta sessão, só a mecânica de cache/render.
+
+Pendências antes do próximo hop (17): decidir o que fazer com o Protractor (segue não tocado), fixar `.nvmrc`/`engines`, migrar `tslint`→`eslint`, remover `core-js@2`, eliminar `rxjs-compat` — nenhum desses bloqueou os hops 1-3, mas ficam mais urgentes a partir do hop 16→17 (onde `@nguniversal` precisa virar `@angular/ssr`).
+
 ## Alvo recomendado
 
 Angular 22 é a release ativa (jun/2026); Angular 21 e 20 estão em LTS (até 19/05/2027 e 28/11/2026 respectivamente). Dado o tamanho do salto (13 → 22 = 9 majors), o risco concentrado em Angular Material (rewrite MDC no v15) **e agora o SSR real a carregar em cada hop**, recomendo:
