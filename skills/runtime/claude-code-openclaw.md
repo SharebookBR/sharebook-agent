@@ -48,6 +48,12 @@ Na primeira sessão deste habitat, um `env | grep -i openclaw` para "detectar ha
 
 `/etc/passwd` do container é efêmero (reseta num container novo); `/data` é volume persistente e sobrevive. Por isso a identidade `claude-user` (uid 1000) some num redeploy, mas o que importa — `/data/workspace` (repos, `.env`) e `/data/workspace/.claude-user-home` (config, credencial, memória) — continua intacto. Recriar o habitat depois de um redeploy é só recriar a identidade de uid 1000 no container novo; procedimento completo em `BOOTSTRAP.md`, seção "Recriar o habitat 3 depois de redeploy/recycle do container". Não precisa repetir `chown` nem recopiar credencial.
 
+## Acesso à VPS e git neste habitat (validado 2026-09-17)
+
+- `scripts/infra/vps_ssh.py --prefix VPS_HOSTGATOR_SSH` funciona de primeira: `paramiko` instalado, `ssh` e `sshpass` no PATH, `.env` canônico em `/data/workspace/sharebook-agent/.env`. Este é hoje o único habitat Claude Code com SSH pra VPS **e** autonomia de execução ao mesmo tempo (claude-code-web não tem SSH; windows-local tem, com prompt). Deploy/operacão do Coolify cai naturalmente aqui — receita e fricções específicas em `skills/infra/coolify-vps.md`.
+- `git pull`/`fetch` por HTTPS: `sharebook-agent` e `sharebook-frontend` puxam sem credencial; `sharebook-ebook-importer` pede usuário. Usar o token do `.env` de forma não interativa via `-c http.extraheader=...` montado no shell, sem ecoar o valor; nunca colar o token na URL do remote.
+- `sleep` em foreground no Bash do Claude Code é bloqueado. Espera por deploy/job: loop em `run_in_background` que imprime status a cada volta e sai no primeiro estado terminal — assim "vazio" e "terminou" são distinguíveis, ao contrário do monitor silencioso que a skill do Windows já descarta.
+
 ## Disciplina sem prompt de permissão
 
 Rodando com `--dangerously-skip-permissions` (via `neo`, ver abaixo), o CLI não pergunta antes de tool calls. Isso muda fricção de ferramenta, não critério. A regra do `AGENTS.md` — não rodar ação destrutiva ou de produção (deploy, `DROP`, force-push, rotação de credencial, dado de usuário real) sem avisar e confirmar antes — continua valendo integralmente, e vale com mais peso aqui: sem o prompt do CLI como rede auxiliar, a única barreira contra um erro caro é o próprio julgamento de quem está rodando a sessão.
