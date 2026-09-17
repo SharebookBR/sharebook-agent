@@ -36,6 +36,18 @@ Na primeira sessão deste habitat, um `env | grep -i openclaw` para "detectar ha
 - Claude Code mantém, à parte, seu próprio sistema de memória persistente (fora deste repo). Ele guarda contexto sobre como colaborar com o Raffa em geral; a memória operacional do Sharebook continua vivendo aqui, em `sharebook-agent/memory/` e nas skills — não duplicar uma fonte na outra.
 - Git: commits deste habitat levam atribuição de Claude Sonnet 5 (ou o modelo Claude vigente), distinguíveis de memórias/commits anteriores de GPT-5 Codex no habitat `openclaw.md`. Isso é dado útil para entender de qual habitat uma decisão histórica veio.
 
+## Atalho de entrada (host da VPS)
+
+No host real (`vpsbr-15883715.vpshostgator.com.br`, HostGator), existe `/usr/local/bin/neo` — script criado em 2026-09-17 pra abrir este habitat com um único comando via SSH (ex.: Termius no celular):
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+exec docker exec -it openclaw-uj0tkohotwrp4epy0leaz28z su - claude-user -c 'cd /data/workspace && exec claude --dangerously-skip-permissions'
+```
+
+Uso: SSH no host, digitar `neo`. Cai direto em Claude Code, como `claude-user`, em `/data/workspace`, com `--dangerously-skip-permissions` ativo. Se o nome do container OpenClaw mudar (novo provisionamento), atualizar o script.
+
 ## Anti-padrões
 
 - Tratar este habitat como o habitat `openclaw.md` só porque o filesystem é o mesmo container.
