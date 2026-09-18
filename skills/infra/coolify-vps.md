@@ -444,6 +444,18 @@ O texto puro do token é um segredo efêmero e **não pode aparecer no output vi
 ### Deploy manual ainda se aplica mesmo em app madura
 O webhook do GitHub não enfileirou o deploy da promoção `develop → master` do `sharebook-frontend`, app que já existe e está configurada há meses — reforça que a causa é o webhook em si, não a aplicação ser nova. Seguir a receita já documentada em "Deploy manual quando o webhook não enfileira" (usar sempre o SHA completo de 40 caracteres).
 
+## Dockerfile pode ficar defasado da engine declarada no repo
+
+Descoberto em 2026-09-18, promoção da migração Angular 19→22 do `sharebook-frontend`.
+
+Uma sessão anterior fixou `node >=24.15.0 <25` em `package.json`/`.nvmrc` como parte da migração, mas o `devops/Dockerfile` (as duas stages, build e runtime) continuou pinado em `node:20-*`. Nenhum teste local pegou isso: `npm ci`/`npm run build:ssr` rodaram no Node do host (22.23, acima do piso real do Angular CLI, `>=22.22.3`), então o build local "passou" mesmo com o Dockerfile desatualizado — só o build **dentro da imagem Docker** teria travado.
+
+**Checagem obrigatória depois de qualquer mudança de versão de Node/engine em `package.json` ou `.nvmrc`**: abrir `devops/Dockerfile` e conferir se as tags `FROM node:X-*` (build e runtime) batem com o `engines.node`. Build local verde não prova nada aqui — ele usa o Node do PATH da sessão, não o da imagem.
+
+Imagens confirmadas existentes no ECR público espelhado (`public.ecr.aws/docker/library/node`): `24-bookworm-slim` e `24-alpine`, mesmo padrão de nome que as tags `20-*` já em uso.
+
+Container de produção do `sharebook-frontend` (app id 4) roda com o nome literal `sharebook-frontend` no `docker ps` — diferente do container de dev (app id 11, `sharebook-frontend-dev`), que leva o UUID da app como sufixo (`pwwrreeh1cecuit1lgl7jdjp-<timestamp>`). Filtrar `docker ps --filter name=<uuid>` funciona pra dev e falha silenciosamente (lista vazia) pra prod — usar `docker ps -a | grep -i frontend` quando o filtro por UUID não achar nada.
+
 ## O que registrar depois
 - Em `sharebook-agent/memory/`: diagnóstico, evidências, mudança aplicada e efeito percebido (memória episódica).
 - Em `AGENTS.md`: apenas descobertas duráveis e heurísticas, nunca segredos.

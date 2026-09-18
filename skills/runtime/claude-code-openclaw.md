@@ -78,6 +78,10 @@ No host real (`vpsbr-15883715.vpshostgator.com.br`, HostGator), existem dois scr
 
 Uso: SSH no host, digitar `neo` (padrão, autonomia) ou `neo-safe` (supervisionado). Ambos caem em Claude Code como `claude-user`, em `/data/workspace`. Se o nome do container OpenClaw mudar (novo provisionamento), atualizar os dois scripts.
 
+### Sessão via Termius/celular — preferir texto puro
+
+Validado em 2026-09-18: quando o Raffa entra por Termius num celular (hoje um Galaxy Fold 5), ele pode pedir explicitamente pra reduzir formatação markdown pesada (negrito, bullets, cabeçalhos) porque o terminal fica "sujo"/difícil de ler numa tela estreita. Nesse caso, responder em texto puro, frases curtas, sem tabelas — vale até o pedido mudar ou a sessão fechar. Não é regra permanente do habitat, é ajuste sob demanda quando o sinal aparecer (celular, Termius, reclamação de legibilidade).
+
 ## Anti-padrões
 
 - Tratar este habitat como o habitat `openclaw.md` só porque o filesystem é o mesmo container.
