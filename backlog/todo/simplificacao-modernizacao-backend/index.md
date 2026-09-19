@@ -2,10 +2,23 @@
 
 ## Estado
 
-- **Status:** não iniciado. Ainda na fase de diagnóstico — nenhuma refatoração começou.
+- **Status:** diagnóstico entregue em 2026-09-19, aguardando revisão do Raffa. Nenhuma refatoração começou.
 - **Prioridade:** logo depois de [Simplificação e modernização do código (frontend)](../simplificacao-modernizacao-frontend/index.md), como continuação natural da mesma frente de redução de custo cognitivo, agora do lado do backend.
 - **Valor:** alto — mesmo racional do épico do frontend: reduzir custo cognitivo de manutenção e destravar features futuras com menos atrito.
 - **Origem:** pedido direto do Raffa em 2026-09-19. O `sharebook-backend` carrega muitos anos de história (.NET, camadas, patterns) que nunca foram revisados com a lente de "isso ainda paga o próprio custo cognitivo?".
+- **Diagnóstico completo:** feito em sessão de 2026-09-19, com leitura real do código na branch `develop` pós-sync com `master` (commit `b27a6a6`). Ver [`diagnostico.md`](diagnostico.md).
+
+## Diagnóstico — números que sustentam o épico
+
+- 9 projetos .NET 10 organizados por camada técnica, com grafo de dependências limpo e sem ciclos (`Domain → Helper` · `Repository → Domain` · `Service → Helper, Repository` · `Jobs/Api` no topo).
+- `BookController` com 823 linhas e `BookService` com 1101 linhas / 30 métodos públicos, misturando CRUD, aprovação de doação, admin/stats, sitemap, busca full-text, recomendações e e-book num único arquivo cada.
+- `OperationsController` (313 linhas) esconde todo o domínio do importer de ebooks (dashboard, prompts editoriais/tradução, notas, histórico) atrás de um nome de infraestrutura — descoberta ruim confirmada.
+- Camada dupla `RepositoryGeneric<T>` + `BaseService<T>` reimplementando, com indireção extra, o que `DbSet<T>`/`IQueryable<T>` do EF Core já resolve nativamente.
+- 28 das 29 interfaces em `ShareBook.Service` têm exatamente 1 implementação — existem só para permitir mock em teste (Moq consegue mockar `virtual` sem isso).
+- `Thread.CurrentPrincipal?.Identity?.Name` repetido 20 vezes por falta de um acessor único de usuário autenticado, sustentado por cópia manual desnecessária de `HttpContext.User`.
+- Pastas `AWSSQS/`/`AwsSqs/` duplicadas por casing (mesmo namespace, dev em máquina Windows case-insensitive). `BookDownload` (abril) e `BookDownloadEvent` (setembro) coexistindo como duas fontes paralelas do mesmo dado — achado durante o merge `develop`↔`master` desta sessão.
+- `Nullable` (nullable reference types) nunca ligado em nenhum projeto de produção, apesar de todos rodarem .NET 10 com `ImplicitUsings` habilitado.
+- Cobertura de teste: 11/27 services (41%) e 3/10 controllers (Category, Meetup, Home) — `BookController` e `AccountController`, os dois mais críticos, sem nenhuma cobertura direta ou de integração.
 
 ## Objetivo
 
@@ -27,9 +40,9 @@ Pergunta a fazer durante o diagnóstico: **quanto contexto um agente precisa car
 
 Não assumir de antemão que a solução é Clean Architecture, Hexagonal, Vertical Slice, DDD, CQRS, MediatR, Repository Pattern, Unit of Work ou qualquer outro pattern. São ferramentas, não objetivos. Se algo disso já existe no backend hoje, questionar se está pagando o próprio custo cognitivo. Se alguma dessas ideias simplificar concretamente o Sharebook, propor; se aumentar arquivos/indireções/conceitos sem benefício proporcional, não propor. Também não copiar automaticamente a organização adotada no frontend — o backend deve encontrar suas próprias fronteiras naturais.
 
-## Primeira entrega: diagnóstico, não implementação
+## Próximo passo
 
-Igual ao combinado com o Raffa: **nenhuma refatoração começa antes do diagnóstico**. A Tarefa 1 é a única tarefa aberta deste épico por enquanto — ela produz o diagnóstico completo (mapa da arquitetura, fontes de custo cognitivo, análise IA-friendly, o que eliminar/unir/dividir/mover/renomear, arquitetura recomendada, comparação antes/depois em fluxos reais, plano incremental de migração). As tarefas de execução (2, 3, 4...) só existem depois que o diagnóstico está pronto e revisado pelo Raffa — igual ao frontend, onde o diagnóstico completo (números concretos da auditoria de código) veio antes de fatiar as tarefas 1-9.
+O diagnóstico propõe um plano incremental de 6 lotes (ver `diagnostico.md`, seção 8): unificação mecânica de pastas duplicadas, decisão sobre qual tabela de tracking de download manter, extração do domínio do importer de `OperationsController`, divisão dos god services, redução da indireção genérica dupla, e higiene de nullability/`Thread.CurrentPrincipal`. As tarefas de execução (2, 3, 4...) só são fatiadas depois que o Raffa revisar o diagnóstico e decidir prioridade/cadência — igual ao frontend.
 
 ## Princípios (herdados do épico do frontend, válidos aqui também)
 
@@ -48,4 +61,4 @@ Igual ao combinado com o Raffa: **nenhuma refatoração começa antes do diagnó
 
 | # | Tarefa | Benefício | Risco | Esforço | Status |
 |---|---|---|---|---|---|
-| 1 | [Diagnóstico de arquitetura e custo cognitivo](tarefa01-diagnostico.md) | Alto — base de evidência para todo o resto do épico | Baixo (é investigação, não muda código) | Médio | Pendente |
+| 1 | [Diagnóstico de arquitetura e custo cognitivo](tarefa01-diagnostico.md) | Alto — base de evidência para todo o resto do épico | Baixo (é investigação, não muda código) | Médio | **Entregue em 2026-09-19** — aguardando revisão do Raffa |
