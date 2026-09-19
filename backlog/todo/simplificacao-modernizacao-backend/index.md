@@ -2,7 +2,7 @@
 
 ## Estado
 
-- **Status:** diagnóstico entregue e revisado pelo Raffa em 2026-09-19. Tarefas de execução fatiadas (2-11). Tarefa 2 concluída, PR aberto.
+- **Status:** diagnóstico entregue e revisado pelo Raffa em 2026-09-19. Tarefas de execução fatiadas (2-11). Tarefas 2 e 3 concluídas, PRs abertos.
 - **Prioridade:** logo depois de [Simplificação e modernização do código (frontend)](../simplificacao-modernizacao-frontend/index.md), como continuação natural da mesma frente de redução de custo cognitivo, agora do lado do backend.
 - **Valor:** alto — mesmo racional do épico do frontend: reduzir custo cognitivo de manutenção e destravar features futuras com menos atrito.
 - **Origem:** pedido direto do Raffa em 2026-09-19. O `sharebook-backend` carrega muitos anos de história (.NET, camadas, patterns) que nunca foram revisados com a lente de "isso ainda paga o próprio custo cognitivo?".
@@ -17,7 +17,7 @@
 - 28 das 29 interfaces em `ShareBook.Service` têm exatamente 1 implementação — existem só para permitir mock em teste.
 - `Thread.CurrentPrincipal?.Identity?.Name` repetido 20 vezes, `DateTime.UtcNow` direto 16 vezes — ambos sem abstração testável.
 - Pastas `AWSSQS/`/`AwsSqs/` duplicadas por casing (**resolvido na Tarefa 2**). `BookDownload` (abril) e `BookDownloadEvent` (setembro) coexistindo como duas fontes paralelas do mesmo dado — decisão tomada e validada contra o frontend: manter `BookDownloadEvent`.
-- `Nullable` nunca ligado em nenhum projeto de produção; só 1 arquivo usa primary constructors (C# 12); `DatabaseProvider` cai pro motor errado (`sqlserver`, morto desde a migração pra Postgres) quando não configurado.
+- `Nullable` nunca ligado em nenhum projeto de produção; só 1 arquivo usa primary constructors (C# 12); `DatabaseProvider` cai pro motor errado (`sqlserver`, morto desde a migração pra Postgres) quando não configurado (**resolvido na Tarefa 3**).
 - Cobertura de teste: 11/27 services (41%) e 3/10 controllers (Category, Meetup, Home) — `BookController` e `AccountController`, os dois mais críticos, sem nenhuma cobertura direta ou de integração.
 
 ## Objetivo
@@ -64,7 +64,7 @@ Cada tarefa é de tema único e fecha com build limpo, suíte de teste verde (va
 |---|---|---|---|---|
 | 1 | [Diagnóstico de arquitetura e custo cognitivo](tarefa01-diagnostico.md) | Alto — base de evidência para todo o resto do épico | Baixo (é investigação) | **Entregue e revisado em 2026-09-19** |
 | 2 | [Limpeza mecânica: AWSSQS/AwsSqs + namespaces file-scoped](tarefa02-limpeza-mecanica-namespaces.md) | Legibilidade generalizada | Zero | **Concluída em 2026-09-19** — [PR #611](https://github.com/SharebookBR/sharebook-backend/pull/611) |
-| 3 | [Default de banco local: sqlite](tarefa03-default-banco-local-sqlite.md) | Zero fricção de onboarding | Baixo | Pendente |
+| 3 | [Default de banco local: sqlite](tarefa03-default-banco-local-sqlite.md) | Zero fricção de onboarding | Baixo | **Concluída em 2026-09-19** — [PR #612](https://github.com/SharebookBR/sharebook-backend/pull/612) |
 | 4 | [Aposentar BookDownload, manter BookDownloadEvent](tarefa04-aposentar-bookdownload.md) | Elimina duplicação + reduz PII guardada à toa | Alto — única tarefa que dropa tabela de produção | Pendente |
 | 5 | [Extrair domínio do importer (backend + frontend)](tarefa05-extracao-importer-backend-frontend.md) | Descoberta melhora nos dois repositórios | Médio — coordenação de deploy cross-repo | Pendente |
 | 6 | [Dividir BookController/BookService](tarefa06-divisao-god-classes-book.md) | Maior redução de custo cognitivo do épico | Médio — acoplamento interno sutil entre métodos | Pendente |
