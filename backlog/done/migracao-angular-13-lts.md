@@ -1,5 +1,15 @@
 # Migração incremental do Angular (13 → LTS ativa)
 
+## Status final — CONCLUÍDO em 2026-09-18
+
+Migração foi além do alvo original (Angular 20 LTS): chegou a **Angular 22** por decisão explícita do Raffa ("não se apegue a dependências velhas... quero um upgrade de verdade e corajoso"), depois que os hops 13→16 (registrados abaixo) destravaram o caminho. Hops 17→22 resolveram cada trava de peer dependency pela causa raiz em vez de `--force`: `ng-recaptcha` removido (substituído por integração própria com o script do Google), `tslint`→`eslint` (schematic oficial de conversão já descontinuado, config escrita manual), Node 24 LTS via `nvm`/`.nvmrc`. `@nguniversal` migrado para `@angular/ssr` conforme previsto no hop 16→17.
+
+Todos os pré-requisitos listados abaixo foram cumpridos: `rxjs-compat` eliminado, `.nvmrc`/`engines` fixados, lint em `eslint`, Protractor descontinuado em favor de Playwright (decisão do Raffa), `core-js@2` removido.
+
+Um bug de produção real foi descoberto e corrigido no caminho: a partir do Angular 21, `.subscribe()` sem `catchError` em chamada HTTP deixa de ser engolido pelo `ErrorHandler` global e derruba o processo Node inteiro no SSR. Corrigido nos componentes globais (`home`, `footer`); ~16 componentes com o mesmo padrão ficaram como open loop — hoje endereçado como tarefa própria em `simplificacao-modernizacao-frontend/`.
+
+Detalhe completo hop a hop, evidências e fricções: memórias `2026-09-18-migracao-angular-19-22-e-vulnerabilidades.md` e `2026-09-18-promocao-angular-22-dev-e-prod-habitat3.md`.
+
 ## Objetivo
 
 Sair do Angular 13 (end-of-life, sem patch de segurança) e pousar numa versão sob LTS ativa, sem salto cego de major — respeitando a Regra de Ouro já registrada em `seguranca-e-vulnerabilidades.md`.

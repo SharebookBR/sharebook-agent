@@ -1,5 +1,15 @@
 # Missão — Dependências e Segurança
 
+## Status final — CONCLUÍDO em 2026-09-18
+
+`sharebook-frontend` chegou ao Angular 22 (release ativa), não parou no LTS 20 como o plano original recomendava — decisão do Raffa em sessão de 18/09 ("upgrade de verdade e corajoso"), depois de destravar as travas de peer dependency pela raiz em vez de `--force` (ver `migracao-angular-13-lts.md` para o detalhe hop a hop).
+
+Vulnerabilidades de produção (`npm audit --omit=dev`, branch de trabalho): **105 → 4** (as 4 remanescentes são moderadas, em dev-tooling do próprio `@angular-devkit/build-angular`, sem fix disponível sem `--force` — Raffa decidiu deixar pra depois, fora desta leva). Toolchain modernizada junto: `tslint`→`eslint`, `protractor`→Playwright, `ng-recaptcha` removido (integração própria), `core-js@2`/`rxjs-compat` removidos, Node fixado em 24 LTS via `.nvmrc`/`engines`. Promovido e validado em produção (memórias `2026-09-18-migracao-angular-19-22-e-vulnerabilidades.md` e `2026-09-18-promocao-angular-22-dev-e-prod-habitat3.md`).
+
+Backend (`sharebook-backend`) segue com 0 pacotes vulneráveis desde a fatia de 31/08 registrada abaixo — sem trabalho pendente desse lado.
+
+Abriu open loops de qualidade (não de segurança) que viraram o próprio próximo item do backlog: `simplificacao-modernizacao-frontend/`.
+
 ## Objetivo
 Reduzir o passivo de vulnerabilidades do projeto e modernizar a toolchain de desenvolvimento.
 
