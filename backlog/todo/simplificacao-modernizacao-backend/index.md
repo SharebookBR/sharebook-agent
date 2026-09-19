@@ -2,7 +2,7 @@
 
 ## Estado
 
-- **Status:** diagnóstico entregue e revisado pelo Raffa em 2026-09-19. Tarefas de execução fatiadas (2-11). Tarefas 2 e 3 concluídas, PRs abertos.
+- **Status:** diagnóstico entregue e revisado pelo Raffa em 2026-09-19. Tarefas 2, 3 e 4 concluídas. A partir da Tarefa 4, commit direto em `develop`, sem PR (decisão do Raffa: "pare de abrir PR").
 - **Prioridade:** logo depois de [Simplificação e modernização do código (frontend)](../simplificacao-modernizacao-frontend/index.md), como continuação natural da mesma frente de redução de custo cognitivo, agora do lado do backend.
 - **Valor:** alto — mesmo racional do épico do frontend: reduzir custo cognitivo de manutenção e destravar features futuras com menos atrito.
 - **Origem:** pedido direto do Raffa em 2026-09-19. O `sharebook-backend` carrega muitos anos de história (.NET, camadas, patterns) que nunca foram revisados com a lente de "isso ainda paga o próprio custo cognitivo?".
@@ -16,9 +16,14 @@
 - Camada dupla `RepositoryGeneric<T>` + `BaseService<T>` reimplementando, com indireção extra, o que `DbSet<T>`/`IQueryable<T>` do EF Core já resolve nativamente — decisão tomada de remover a camada genérica de repository, mantendo `BaseService<T>`.
 - 28 das 29 interfaces em `ShareBook.Service` têm exatamente 1 implementação — existem só para permitir mock em teste.
 - `Thread.CurrentPrincipal?.Identity?.Name` repetido 20 vezes, `DateTime.UtcNow` direto 16 vezes — ambos sem abstração testável.
-- Pastas `AWSSQS/`/`AwsSqs/` duplicadas por casing (**resolvido na Tarefa 2**). `BookDownload` (abril) e `BookDownloadEvent` (setembro) coexistindo como duas fontes paralelas do mesmo dado — decisão tomada e validada contra o frontend: manter `BookDownloadEvent`.
+- Pastas `AWSSQS/`/`AwsSqs/` duplicadas por casing (**resolvido na Tarefa 2**). `BookDownload` (abril) e `BookDownloadEvent` (setembro) coexistindo como duas fontes paralelas do mesmo dado (**resolvido na Tarefa 4** — `BookDownload` aposentado, tabela dropada por migration).
 - `Nullable` nunca ligado em nenhum projeto de produção; só 1 arquivo usa primary constructors (C# 12); `DatabaseProvider` cai pro motor errado (`sqlserver`, morto desde a migração pra Postgres) quando não configurado (**resolvido na Tarefa 3**).
 - Cobertura de teste: 11/27 services (41%) e 3/10 controllers (Category, Meetup, Home) — `BookController` e `AccountController`, os dois mais críticos, sem nenhuma cobertura direta ou de integração.
+
+## Achados adicionais durante a execução (fora do escopo original, registrados para o futuro)
+
+- **`ApplicationDbContextFactory` (design-time do `dotnet ef`) nunca lia variável de ambiente** — só `appsettings.json`. Corrigido na Tarefa 4 (`.AddEnvironmentVariables()`), porque sem isso toda migration nova seria gerada com tipo de coluna SQLite por engano depois que a Tarefa 3 mudou o default do `appsettings.json`.
+- **Migration `RenameEFLogs` depende de nome de índice hardcoded específico do banco de produção real** (`idx_17657_...`), impedindo rodar a cadeia de migrations do zero num banco limpo. Pré-existente, sem relação com este épico — candidato a item futuro de backlog (destrava validação de migration em CI/ambiente limpo).
 
 ## Objetivo
 
@@ -42,7 +47,7 @@ Não assumir de antemão que a solução é Clean Architecture, Hexagonal, Verti
 
 ## Cadência de execução
 
-Cada tarefa é de tema único e fecha com build limpo, suíte de teste verde (validado nesta sessão com o SDK do .NET 10 instalado: `dotnet build`/`dotnet test` rodam de verdade) e commit isolado — nunca lote misturado. A Tarefa 4 (decisão de banco de dados de tracking) e a Tarefa 5 (extração do importer, cross-repo com o frontend) são as que pedem mais cuidado de coordenação — ver risco em cada arquivo de tarefa.
+Cada tarefa é de tema único e fecha com build limpo, suíte de teste verde (validado nesta sessão com o SDK do .NET 10 instalado: `dotnet build`/`dotnet test` rodam de verdade) e commit isolado — nunca lote misturado. Commit direto em `develop`, sem PR, a partir da Tarefa 4. A Tarefa 5 (extração do importer, cross-repo com o frontend) é a próxima que pede mais cuidado de coordenação de deploy — ver risco no arquivo da tarefa.
 
 ## Princípios (herdados do épico do frontend, válidos aqui também)
 
@@ -57,6 +62,7 @@ Cada tarefa é de tema único e fecha com build limpo, suíte de teste verde (va
 - Mudar comportamento de negócio, UX visível ou contrato de API.
 - Adotar arquitetura sofisticada só por ser mais moderna — a métrica de sucesso é custo cognitivo, não quantidade de patterns aplicados.
 - A hierarquia genérica de controllers de 3 níveis (`BaseController<T,R,A>`/`BaseCrudController`/`BaseDeleteController`) — tem só 1 consumidor real (`CategoryController`), mas baixo risco de manutenção no estado atual; fica como observação para decisão futura, não entrou nesta rodada.
+- Corrigir a migration `RenameEFLogs` (nome de índice hardcoded) — achado incidental, vira item de backlog próprio.
 
 ## Tarefas
 
@@ -65,7 +71,7 @@ Cada tarefa é de tema único e fecha com build limpo, suíte de teste verde (va
 | 1 | [Diagnóstico de arquitetura e custo cognitivo](tarefa01-diagnostico.md) | Alto — base de evidência para todo o resto do épico | Baixo (é investigação) | **Entregue e revisado em 2026-09-19** |
 | 2 | [Limpeza mecânica: AWSSQS/AwsSqs + namespaces file-scoped](tarefa02-limpeza-mecanica-namespaces.md) | Legibilidade generalizada | Zero | **Concluída em 2026-09-19** — [PR #611](https://github.com/SharebookBR/sharebook-backend/pull/611) |
 | 3 | [Default de banco local: sqlite](tarefa03-default-banco-local-sqlite.md) | Zero fricção de onboarding | Baixo | **Concluída em 2026-09-19** — [PR #612](https://github.com/SharebookBR/sharebook-backend/pull/612) |
-| 4 | [Aposentar BookDownload, manter BookDownloadEvent](tarefa04-aposentar-bookdownload.md) | Elimina duplicação + reduz PII guardada à toa | Alto — única tarefa que dropa tabela de produção | Pendente |
+| 4 | [Aposentar BookDownload, manter BookDownloadEvent](tarefa04-aposentar-bookdownload.md) | Elimina duplicação + reduz PII guardada à toa | Alto — única tarefa que dropa tabela de produção | **Concluída em 2026-09-19** — commit `3b98ef1` direto em `develop` |
 | 5 | [Extrair domínio do importer (backend + frontend)](tarefa05-extracao-importer-backend-frontend.md) | Descoberta melhora nos dois repositórios | Médio — coordenação de deploy cross-repo | Pendente |
 | 6 | [Dividir BookController/BookService](tarefa06-divisao-god-classes-book.md) | Maior redução de custo cognitivo do épico | Médio — acoplamento interno sutil entre métodos | Pendente |
 | 7 | [Remover repository genérico](tarefa07-remocao-repository-generico.md) | Menos indireção, EF Core exposto direto | Médio — toca lógica de query real | Pendente |
