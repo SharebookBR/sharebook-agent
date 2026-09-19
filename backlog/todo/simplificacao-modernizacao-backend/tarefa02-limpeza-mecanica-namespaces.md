@@ -2,7 +2,9 @@
 
 ## Status
 
-Pendente.
+**Concluída em 2026-09-19** — PR aberto: https://github.com/SharebookBR/sharebook-backend/pull/611 (`chore/limpeza-mecanica-namespaces` → `develop`).
+
+Achado extra durante a execução: o `.editorconfig` do repo tinha `csharp_style_namespace_declarations = block_scoped` explícito, na contramão do resto do arquivo (já pedia primary constructors, collection expressions, UTF8 string literals — tudo moderno). Não fazia sentido manter esse valor "porque já estava configurado assim" sem ninguém ter decidido isso de propósito (decisão do Raffa: "esse .editor é algo ultrapassado, melhor atualizar ele sem confiar muito nele"). Atualizado pra `file_scoped:warning` antes de rodar a conversão em massa, num commit separado.
 
 ## O que existe hoje
 
@@ -27,3 +29,10 @@ Nenhum risco lógico — `dotnet build` detecta 100% qualquer referência quebra
 - `dotnet build ShareBook.sln` limpo.
 - `dotnet test` sem regressão (baseline: 145/146 passando, 1 falha ambiental de proxy sem relação com o código).
 - Revisão visual rápida de que nenhum arquivo de `AWSSQS/`/`AwsSqs/` ficou duplicado ou órfão.
+
+## Execução real (2026-09-19)
+
+- Commit 1 (`1ffaf46`): `git mv` unificando as pastas + correção do arquivo com espaço no nome. 4 arquivos, 0 inserções/deleções (rename puro).
+- Commit 2 (`9151d92`): atualização do `.editorconfig` (decisão de estilo, isolada do rename mecânico).
+- Commit 3 (`9eef825`): `dotnet format style --diagnostics IDE0161` aplicado no projeto inteiro. 271 arquivos, ~14 mil linhas (só sintático). `--verify-no-changes` confirmou zero namespace block-scoped remanescente.
+- Build limpo e 145/146 testes passando em cada commit (mesma baseline da falha ambiental já conhecida).
