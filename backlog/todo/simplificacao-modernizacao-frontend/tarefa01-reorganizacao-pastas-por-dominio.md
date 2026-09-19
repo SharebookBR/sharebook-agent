@@ -1,5 +1,27 @@
 # Tarefa 1 — Reorganização de pastas por domínio
 
+## Status final — CONCLUÍDA em 2026-09-19
+
+Todos os 7 lotes fechados, commitados e pushados em `claude/agents-md-reading-ybnyaq` (sharebook-frontend), na ordem planejada (menor pro maior risco):
+
+| Lote | Commit | Validação |
+|---|---|---|
+| static-pages | `d573e5b` | tsc + testes + SSR real |
+| contact | `65fad22` | idem + removida duplicata morta (`ContactUsComponent` 2x em declarations) |
+| category | `99a0db5` | idem + confirmado que crash em `/categorias/:slug` já era pré-existente |
+| account | `28ec35a` | idem |
+| auth | `7ce9439` | **funcional real** — backend local (.NET 10 + SQLite) + login via Playwright com credencial do seed |
+| admin | `8a180e5` | idem, 4 dashboards navegados autenticado, 1 com dado real (Painel de Jobs) |
+| book | `6e0c5c8` | idem, mais espalhado do épico — home (21 book-card reais), detalhe de livro real, 4 telas autenticadas de gestão |
+
+Estrutura final: `core/` só com singleton de app inteiro; `shared/` criado pela primeira vez (`book-card`, `book-shelf`); `features/{static-pages,contact,category,account,auth,admin,book}/` com colocation componente+service+model por domínio.
+
+Decisão consistente aplicada em todos os lotes: services/models genuinamente cross-cutting (`UserService`, `AuthenticationService`) ficaram em `core/`; services/models que são "donos conceituais" de um domínio (`CategoryService`, `BookService`, `book.ts`) foram para o respectivo `features/`, mesmo quando consumidos por outras features — cross-import entre features é normal em feature-folder.
+
+Unificação de convenção de nome dos models (PascalCase, sem sufixo `VM` inconsistente) foi **adiada deliberadamente**, não feita ad hoc por lote — fica como decisão própria futura, se for retomada.
+
+Achado incidental corrigido no caminho: bug real de rota no backend (`AmbiguousMatchException` em `CategoryController`) que parecia atual — investigação revelou que já tinha sido corrigido na master do `sharebook-backend` em 23/08/2026; o problema era a branch de trabalho do backend estar divergida da master (resetada por pedido do Raffa).
+
 **Prioridade #1 do épico**, por pedido explícito do Raffa (2026-09-19): "o objetivo é diminuir o custo cognitivo e facilitar a descoberta. Com desapego total ao passado. Com coragem."
 
 ## O que existe hoje
