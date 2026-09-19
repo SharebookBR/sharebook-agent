@@ -2,7 +2,7 @@
 
 ## Estado
 
-- **Status:** em andamento. Tarefa 1 (reorganização de pastas) concluída em 2026-09-19. Faltam tarefas 2-9. Lote 1 do checkpoint de dev (tarefas 1-3) ainda não fechado — falta validar tarefas 2 e 3.
+- **Status:** em andamento. Tarefas 1, 2 e 3 concluídas em 2026-09-19 — **lote 1 do checkpoint de dev completo**. Falta a validação em ambiente de dev de verdade (Raffa) antes do lote 2 (tarefas 4-6).
 - **Prioridade:** logo depois de "Dependências e Segurança" (concluído em 2026-09-18, ver `backlog/done/seguranca-e-vulnerabilidades.md`)
 - **Valor:** alto — reduz custo cognitivo de manutenção e destrava as próximas features com menos atrito
 - **Origem:** o `sharebook-frontend` acabou de migrar de Angular 13 para 22 (ver `backlog/done/migracao-angular-13-lts.md`), mas a migração deliberadamente não tocou estrutura, organização nem padrões — só o motor. Esta é a fase de modernizar a carroceria.
@@ -46,7 +46,7 @@ Cada checkpoint fecha só depois de validação real em dev (não apenas `npm te
 |---|---|---|---|---|---|
 | 1 | [Reorganização de pastas por domínio](tarefa01-reorganizacao-pastas-por-dominio.md) | Alto — resolve o problema #1 apontado pelo Raffa: custo cognitivo e descoberta | Mecânico (detectável 100% por `tsc`), não lógico | Alto (toca quase todo import), mas fatiável por domínio | **Concluída em 2026-09-19** — 7 lotes, commits `d573e5b`..`6e0c5c8` |
 | 2 | [Hydration no SSR](tarefa02-hydration-ssr.md) | Alto — elimina flicker e trabalho duplicado no cliente | Médio na validação (hydration mismatch) | Baixo | **Concluída em 2026-09-19** — commit `27945c1` |
-| 3 | [Fechar subscribes HTTP sem catchError](tarefa03-subscribes-sem-catcherror.md) | Alto — já causou incidente real de produção | Baixo | Baixo-médio | Pendente |
+| 3 | [Fechar subscribes HTTP sem catchError](tarefa03-subscribes-sem-catcherror.md) | Alto — já causou incidente real de produção | Baixo | Baixo-médio | **Concluída em 2026-09-19** — commit `fab46ec` |
 | 4 | [Higiene: versão do rxjs + código morto](tarefa04-higiene-rxjs-e-codigo-morto.md) | Baixo, mas grátis | Baixo | Trivial | Pendente |
 | 5 | [Specs de caracterização dos services críticos](tarefa05-specs-caracterizacao-services-criticos.md) | Alto — habilita com segurança tudo que vem depois | Baixo | Médio | **Pendente — antes de mexer nos 3 services sem teste** |
 | 6 | [Interceptors e guards funcionais](tarefa06-interceptors-guards-funcionais.md) | Médio — idiomático, menos boilerplate | Baixo | Médio | Pendente |
