@@ -2,7 +2,7 @@
 
 ## Estado
 
-- **Status:** em andamento. Tarefas 1, 2 e 3 concluídas e validadas em dev pelo Raffa em 2026-09-19 — **checkpoint do lote 1 fechado**. Lote 2 (tarefas 4, 5 e 6) concluído e validado em dev (via Playwright, próprio agente) em 2026-09-19 — **checkpoint do lote 2 fechado, falta validação do Raffa**. Próximo é o lote 3 (tarefas 7-9).
+- **Status:** em andamento. Tarefas 1, 2 e 3 concluídas e validadas em dev pelo Raffa em 2026-09-19 — **checkpoint do lote 1 fechado**. Lote 2 (tarefas 4, 5 e 6) concluído, validado via Playwright pelo agente e confirmado em dev pelo Raffa em 2026-09-19 — **checkpoint do lote 2 fechado**. Iniciando lote 3 (tarefas 7-9).
 - **Prioridade:** logo depois de "Dependências e Segurança" (concluído em 2026-09-18, ver `backlog/done/seguranca-e-vulnerabilidades.md`)
 - **Valor:** alto — reduz custo cognitivo de manutenção e destrava as próximas features com menos atrito
 - **Origem:** o `sharebook-frontend` acabou de migrar de Angular 13 para 22 (ver `backlog/done/migracao-angular-13-lts.md`), mas a migração deliberadamente não tocou estrutura, organização nem padrões — só o motor. Esta é a fase de modernizar a carroceria.
