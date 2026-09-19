@@ -20,10 +20,11 @@
 - `Nullable` nunca ligado em nenhum projeto de produção; só 1 arquivo usa primary constructors (C# 12); `DatabaseProvider` cai pro motor errado (`sqlserver`, morto desde a migração pra Postgres) quando não configurado (**resolvido na Tarefa 3**).
 - Cobertura de teste: 11/27 services (41%) e 3/10 controllers (Category, Meetup, Home) — `BookController` e `AccountController`, os dois mais críticos, sem nenhuma cobertura direta ou de integração.
 
-## Achados adicionais durante a execução (fora do escopo original, registrados para o futuro)
+## Achados adicionais durante a execução
 
-- **`ApplicationDbContextFactory` (design-time do `dotnet ef`) nunca lia variável de ambiente** — só `appsettings.json`. Corrigido na Tarefa 4 (`.AddEnvironmentVariables()`), porque sem isso toda migration nova seria gerada com tipo de coluna SQLite por engano depois que a Tarefa 3 mudou o default do `appsettings.json`.
-- **Migration `RenameEFLogs` depende de nome de índice hardcoded específico do banco de produção real** (`idx_17657_...`), impedindo rodar a cadeia de migrations do zero num banco limpo. Pré-existente, sem relação com este épico — candidato a item futuro de backlog (destrava validação de migration em CI/ambiente limpo).
+Dois achados incidentais viraram item próprio de backlog: **[Débitos técnicos backend](../debitos-tecnicos-backend.md)** — `HelperTests.ImageResize` (teste "unitário" que faz chamada HTTP de verdade pra URL externa de terceiro, frágil por design) e a migration `RenameEFLogs` (nome de índice hardcoded do banco de produção real, impede rodar a cadeia de migrations do zero num ambiente limpo — descoberto validando a Tarefa 4). Nenhum dos dois é causado por este épico, mas ambos foram encontrados no caminho.
+
+O fix de `ApplicationDbContextFactory` (design-time do `dotnet ef` nunca lia variável de ambiente) já foi corrigido dentro da própria Tarefa 4 — não precisou virar item de backlog à parte, porque sem ele a Tarefa 4 não seria concluída corretamente.
 
 ## Objetivo
 
@@ -62,7 +63,7 @@ Cada tarefa é de tema único e fecha com build limpo, suíte de teste verde (va
 - Mudar comportamento de negócio, UX visível ou contrato de API.
 - Adotar arquitetura sofisticada só por ser mais moderna — a métrica de sucesso é custo cognitivo, não quantidade de patterns aplicados.
 - A hierarquia genérica de controllers de 3 níveis (`BaseController<T,R,A>`/`BaseCrudController`/`BaseDeleteController`) — tem só 1 consumidor real (`CategoryController`), mas baixo risco de manutenção no estado atual; fica como observação para decisão futura, não entrou nesta rodada.
-- Corrigir a migration `RenameEFLogs` (nome de índice hardcoded) — achado incidental, vira item de backlog próprio.
+- Corrigir o `HelperTests.ImageResize` flaky e a migration `RenameEFLogs` — achados incidentais, viraram [item de backlog próprio](../debitos-tecnicos-backend.md).
 
 ## Tarefas
 
