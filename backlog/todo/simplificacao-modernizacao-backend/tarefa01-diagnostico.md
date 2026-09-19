@@ -2,7 +2,19 @@
 
 ## Status
 
-Pendente. Esta é a única tarefa aberta do épico até o diagnóstico ser entregue e revisado pelo Raffa — nenhuma refatoração começa antes disso.
+**Diagnóstico entregue em 2026-09-19** — ver [`diagnostico.md`](diagnostico.md). Aguardando revisão do Raffa antes de fatiar as tarefas de execução (2, 3, 4...). Nenhuma refatoração foi feita ainda; a investigação foi só leitura de código real na branch `develop` pós-sync com `master` (commit `b27a6a6`).
+
+Resumo dos achados principais (detalhe completo em `diagnostico.md`):
+- `BookController` (823 linhas) e `BookService` (1101 linhas / 30 métodos públicos) concentram responsabilidades não relacionadas (CRUD, busca, admin/stats, sitemap, recomendação, e-book).
+- `OperationsController` (313 linhas) é uma gaveta genérica que esconde todo o domínio do importer de ebooks atrás de um nome de infraestrutura.
+- Camada dupla `RepositoryGeneric<T>` + `BaseService<T>` reimplementando, com indireção extra, o que `DbSet<T>`/`IQueryable<T>` do EF Core já resolve.
+- 28 das 29 interfaces em `ShareBook.Service` têm exatamente 1 implementação — existem só para permitir mock em teste.
+- `Thread.CurrentPrincipal?.Identity?.Name` repetido 20 vezes por falta de um acessor único de usuário autenticado.
+- Pastas `AWSSQS/`/`AwsSqs/` duplicadas por casing; `BookDownload` (abril) e `BookDownloadEvent` (setembro) coexistindo como duas fontes paralelas do mesmo dado, achado durante o merge `develop`↔`master` desta sessão.
+- `Nullable` (nullable reference types) nunca ligado em nenhum projeto de produção, apesar de todos rodarem .NET 10.
+- Cobertura de teste: 11/27 services (41%) e 3/10 controllers — `BookController` e `AccountController`, os dois mais críticos, sem nenhuma cobertura direta ou de integração.
+
+⚠️ Esta investigação foi feita só com leitura estática de código — não havia .NET SDK disponível no ambiente desta sessão para rodar build ou testes.
 
 ## Briefing original (Raffa, 2026-09-19)
 
@@ -250,4 +262,4 @@ Modernização tecnológica é bem-vinda quando ajudar nisso. Simplificação ve
 
 ## Como validar que a tarefa está concluída
 
-O diagnóstico é aceito quando cobre as 8 entregas da seção "Primeira entrega" acima, com evidência real do código (branch `develop` pós-sync com `master`, ver `backlog/done/` quando este épico avançar), não estimativa — mesmo padrão do diagnóstico que abriu o épico do frontend (`todo/simplificacao-modernizacao-frontend/index.md`, seção "Diagnóstico — números que sustentam as tarefas"). Depois de revisado pelo Raffa, o diagnóstico vira a base para fatiar as tarefas de execução (2, 3, 4...) deste épico, com prioridade e cadência de lote decididas então — igual ao frontend.
+O diagnóstico é aceito quando cobre as 8 entregas da seção "Primeira entrega" acima, com evidência real do código, não estimativa — mesmo padrão do diagnóstico que abriu o épico do frontend (`todo/simplificacao-modernizacao-frontend/index.md`, seção "Diagnóstico — números que sustentam as tarefas"). Entregue em `diagnostico.md`. Depois de revisado pelo Raffa, vira a base para fatiar as tarefas de execução (2, 3, 4...) deste épico, com prioridade e cadência de lote decididas então — igual ao frontend.
