@@ -14,7 +14,7 @@ Resumo dos achados principais (detalhe completo em `diagnostico.md`):
 - `Nullable` (nullable reference types) nunca ligado em nenhum projeto de produção, apesar de todos rodarem .NET 10.
 - Cobertura de teste: 11/27 services (41%) e 3/10 controllers — `BookController` e `AccountController`, os dois mais críticos, sem nenhuma cobertura direta ou de integração.
 
-⚠️ Esta investigação foi feita só com leitura estática de código — não havia .NET SDK disponível no ambiente desta sessão para rodar build ou testes.
+**Validado com build e testes reais** (o .NET 10 SDK não estava disponível na sessão inicial, mas foi instalado via `apt-get install dotnet-sdk-10.0` — o mirror padrão do Ubuntu tinha o pacote): `dotnet build ShareBook.sln` compilou limpo (0 erros) e `dotnet test` rodou 146 testes unitários, 145 passando — a única falha (`HelperTests.ImageResize`) é ambiental, causada pelo proxy da sandbox bloqueando uma chamada HTTP de teste a uma imagem externa (`images.sympla.com.br`), sem relação com o diagnóstico nem com o merge `develop`↔`master` desta sessão.
 
 ## Briefing original (Raffa, 2026-09-19)
 
