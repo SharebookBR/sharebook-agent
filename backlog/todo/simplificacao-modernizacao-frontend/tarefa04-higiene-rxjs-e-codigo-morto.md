@@ -25,3 +25,12 @@ Baixo em ambos. A correção do rxjs é só metadado (a versão resolvida não m
 ## Como validar que nada quebrou
 
 `npm install` limpo + `tsc --noEmit` + `ng build` + `build:ssr` + suíte de testes completa. Se `fake-backend.ts` for removido, grep final confirmando zero referência restante antes de apagar o arquivo.
+
+## Status final — CONCLUÍDA em 2026-09-19
+
+Commit `a23acf4` (branch `develop`, sharebook-frontend).
+
+- `rxjs` ajustado para `^7.8.0`; `npm install` dedupou 5 cópias aninhadas do rxjs puxadas por `@angular-devkit/*` (lockfile líquido: -170 linhas). Resolução real continua `7.8.2`, como esperado.
+- `fakeBackendProvider` removido de `app.module.ts`; `fake-backend.ts` apagado (grep confirmou zero uso restante); export removido de `core/helpers/index.ts`.
+- Bônus não previsto: a dedup do rxjs expôs um erro de tipo real em `details.component.ts` (`myUser = x || {}` não era assignable a `UserInfo`) que antes passava batido pela resolução de tipos duplicada. Corrigido para `new UserInfo()`.
+- Validação: `tsc --noEmit` limpo, suíte Karma 44/44 (42 executados + 2 skip, mesmo baseline de antes), `build:ssr` limpo.
