@@ -25,3 +25,15 @@ Alto — é precisamente onde um refactor de reorganização ou de interceptors 
 ## Como validar
 
 As specs em si são a validação — cobertura de comportamento real (login, refresh de token, fluxo de erro de autenticação; CRUD e transições de status de livro; leitura/atualização de perfil de usuário), rodando contra o comportamento atual antes de qualquer mudança estrutural.
+
+## Status final — CONCLUÍDA em 2026-09-19
+
+Commit `499e526` (branch `develop`, sharebook-frontend). Suíte Karma foi de 44 para 80 specs (78 executadas + 2 skip).
+
+- `authentication.service.spec.ts` — login (via `response.success` e via `response.value.authenticated`, e falha), `logout`, `checkTokenValidity` (sem sessão, expirada, válida).
+- `user.service.spec.ts` — pub/sub de usuário logado, leitura de `localStorage`, `register` (sucesso/falha), contrato HTTP de `getUserData`/`update`/`getProfile`, `whoAccessed` (extrai userId da sessão) e `unsubscribe`.
+- `book.service.spec.ts` — CRUD básico, todas as transições de status (request, cancelRequest, approve, donate, cancelDonation, markAsDelivered, renewChooseDate), montagem condicional de query params de `getAdminBooks`, cache de `getCategoriesShowcase` (hit vs miss) e progresso de `createWithProgress`.
+
+Decisão registrada: os ~20 métodos GET de puro repasse do `book.service` sem lógica condicional ficaram fora de propósito — não protegem regra de negócio, na linha do princípio já em `AGENTS.md` do sharebook-frontend ("poucos testes de alto sinal" em vez de cobertura por checklist). Os outros 14 services sem teste (categoria, contato, etc.) seguem de prioridade menor, cobertos oportunisticamente quando outra tarefa tocar neles.
+
+Validação: `tsc --noEmit` limpo, suíte 78/80 verde (2 skip pré-existentes), `build:ssr` limpo.

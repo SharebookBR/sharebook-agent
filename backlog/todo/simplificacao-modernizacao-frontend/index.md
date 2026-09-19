@@ -2,7 +2,7 @@
 
 ## Estado
 
-- **Status:** em andamento. Tarefas 1, 2 e 3 concluídas e validadas em dev pelo Raffa em 2026-09-19 — **checkpoint do lote 1 fechado**. Lote 2 (tarefas 4-6) iniciado: tarefa 4 concluída.
+- **Status:** em andamento. Tarefas 1, 2 e 3 concluídas e validadas em dev pelo Raffa em 2026-09-19 — **checkpoint do lote 1 fechado**. Lote 2 (tarefas 4-6): tarefas 4 e 5 concluídas. Falta a 6 (interceptors/guards funcionais) antes do próximo checkpoint de dev.
 - **Prioridade:** logo depois de "Dependências e Segurança" (concluído em 2026-09-18, ver `backlog/done/seguranca-e-vulnerabilidades.md`)
 - **Valor:** alto — reduz custo cognitivo de manutenção e destrava as próximas features com menos atrito
 - **Origem:** o `sharebook-frontend` acabou de migrar de Angular 13 para 22 (ver `backlog/done/migracao-angular-13-lts.md`), mas a migração deliberadamente não tocou estrutura, organização nem padrões — só o motor. Esta é a fase de modernizar a carroceria.
@@ -48,7 +48,7 @@ Cada checkpoint fecha só depois de validação real em dev (não apenas `npm te
 | 2 | [Hydration no SSR](tarefa02-hydration-ssr.md) | Alto — elimina flicker e trabalho duplicado no cliente | Médio na validação (hydration mismatch) | Baixo | **Concluída em 2026-09-19** — commit `27945c1` |
 | 3 | [Fechar subscribes HTTP sem catchError](tarefa03-subscribes-sem-catcherror.md) | Alto — já causou incidente real de produção | Baixo | Baixo-médio | **Concluída em 2026-09-19** — commit `fab46ec` |
 | 4 | [Higiene: versão do rxjs + código morto](tarefa04-higiene-rxjs-e-codigo-morto.md) | Baixo, mas grátis | Baixo | Trivial | **Concluída em 2026-09-19** — commit `a23acf4` |
-| 5 | [Specs de caracterização dos services críticos](tarefa05-specs-caracterizacao-services-criticos.md) | Alto — habilita com segurança tudo que vem depois | Baixo | Médio | **Pendente — antes de mexer nos 3 services sem teste** |
+| 5 | [Specs de caracterização dos services críticos](tarefa05-specs-caracterizacao-services-criticos.md) | Alto — habilita com segurança tudo que vem depois | Baixo | Médio | **Concluída em 2026-09-19** — commit `499e526` |
 | 6 | [Interceptors e guards funcionais](tarefa06-interceptors-guards-funcionais.md) | Médio — idiomático, menos boilerplate | Baixo | Médio | Pendente |
 | 7 | [Lazy loading + standalone incremental](tarefa07-lazy-loading-standalone-incremental.md) | Alto — bundle inicial, code-splitting real | Médio-alto se em massa, baixo por feature | Alto | Pendente |
 | 8 | [OnPush/Signals oportunista](tarefa08-onpush-signals-oportunista.md) | Médio, cauda longa | Médio | Contínuo, não é frente própria | Sem prazo — só ao tocar componente por outro motivo |
