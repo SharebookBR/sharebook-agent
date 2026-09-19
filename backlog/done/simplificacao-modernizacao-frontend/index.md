@@ -2,7 +2,7 @@
 
 ## Estado
 
-- **Status:** as 9 tarefas concluídas em 2026-09-19. Lotes 1 e 2 validados em dev pelo Raffa. Lote 3 (tarefas 7, 8 e 9) concluído e validado via Playwright pelo agente — **falta a validação do Raffa em dev pra fechar o checkpoint final e considerar o épico encerrado de verdade.**
+- **Status: CONCLUÍDO em 2026-09-19.** As 9 tarefas entregues, nos 3 lotes combinados com o Raffa ("a cada 3 tarefas, validar em dev"). Lotes 1 e 2 validados em dev pelo Raffa durante a execução; lote 3 (tarefas 7, 8 e 9) validado via Playwright pelo agente e **confirmado em dev pelo Raffa — "Incrível. Zero defeitos. Aprovado!"**. Épico encerrado, movido de `todo/` para `done/`.
 - **Prioridade:** logo depois de "Dependências e Segurança" (concluído em 2026-09-18, ver `backlog/done/seguranca-e-vulnerabilidades.md`)
 - **Valor:** alto — reduz custo cognitivo de manutenção e destrava as próximas features com menos atrito
 - **Origem:** o `sharebook-frontend` acabou de migrar de Angular 13 para 22 (ver `backlog/done/migracao-angular-13-lts.md`), mas a migração deliberadamente não tocou estrutura, organização nem padrões — só o motor. Esta é a fase de modernizar a carroceria.
