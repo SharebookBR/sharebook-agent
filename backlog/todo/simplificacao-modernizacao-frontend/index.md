@@ -2,7 +2,7 @@
 
 ## Estado
 
-- **Status:** em andamento. Tarefas 1, 2 e 3 concluídas e validadas em dev pelo Raffa em 2026-09-19 — **checkpoint do lote 1 fechado**. Lote 2 (tarefas 4, 5 e 6) concluído, validado via Playwright pelo agente e confirmado em dev pelo Raffa em 2026-09-19 — **checkpoint do lote 2 fechado**. Lote 3 iniciado: tarefas 7 e 8 concluídas (ver notas de escopo em cada tarefa).
+- **Status:** as 9 tarefas concluídas em 2026-09-19. Lotes 1 e 2 validados em dev pelo Raffa. Lote 3 (tarefas 7, 8 e 9) concluído e validado via Playwright pelo agente — **falta a validação do Raffa em dev pra fechar o checkpoint final e considerar o épico encerrado de verdade.**
 - **Prioridade:** logo depois de "Dependências e Segurança" (concluído em 2026-09-18, ver `backlog/done/seguranca-e-vulnerabilidades.md`)
 - **Valor:** alto — reduz custo cognitivo de manutenção e destrava as próximas features com menos atrito
 - **Origem:** o `sharebook-frontend` acabou de migrar de Angular 13 para 22 (ver `backlog/done/migracao-angular-13-lts.md`), mas a migração deliberadamente não tocou estrutura, organização nem padrões — só o motor. Esta é a fase de modernizar a carroceria.
@@ -52,7 +52,7 @@ Cada checkpoint fecha só depois de validação real em dev (não apenas `npm te
 | 6 | [Interceptors e guards funcionais](tarefa06-interceptors-guards-funcionais.md) | Médio — idiomático, menos boilerplate | Baixo | Médio | **Concluída em 2026-09-19** — commit `4abaa60` |
 | 7 | [Lazy loading + standalone incremental](tarefa07-lazy-loading-standalone-incremental.md) | Alto — bundle inicial, code-splitting real | Médio-alto se em massa, baixo por feature | Alto | **Concluída (escopo admin) em 2026-09-19** — commit `eeb0287` |
 | 8 | [OnPush/Signals oportunista](tarefa08-onpush-signals-oportunista.md) | Médio, cauda longa | Médio | Contínuo, não é frente própria | **Concluída (escopo home+PDP) em 2026-09-19** — commit `00d32e9`; restante segue oportunista sem prazo |
-| 9 | [Strict mode incremental](tarefa09-strict-mode-incremental.md) | Alto, longo prazo | Alto | Alto | Fase 3 — só depois da reorganização e da rede de testes |
+| 9 | [Strict mode incremental](tarefa09-strict-mode-incremental.md) | Alto, longo prazo | Alto | Alto | **Concluída em 2026-09-19** — commit `b76eb61` |
 
 ## Princípios
 

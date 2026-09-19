@@ -31,3 +31,22 @@ Alto se feito de uma vez ou apressado — é a tarefa deste épico com maior cha
 ## Como validar
 
 Por feature convertida: `tsc --noEmit` limpo sem uso de `!`/`as any` novo introduzido só pra silenciar erro, suíte de teste da feature passando, revisão manual de cada ponto onde o compilador apontou null/undefined não tratado (não assumir que "não pode ser null" sem checar a evidência real do fluxo de dado).
+
+## Status final — CONCLUÍDA em 2026-09-19
+
+Commit `b76eb61` (branch `develop`, sharebook-frontend). **Última tarefa do épico — fecha o lote 3 e o épico inteiro.**
+
+Antes de decidir estratégia, medi o impacto real em vez de supor: `strictNullChecks: true` sozinho expôs **64 erros em 16 arquivos** — bem menos do que o diagnóstico original temia. Como o TypeScript não suporta strictness parcial por pasta dentro de um único `tsconfig`, corrigi todos os 64 nesta sessão (o "por feature" da abordagem original virou "por domínio, na mesma sessão, com commits organizados por área").
+
+`strict: true` completo foi testado à parte e **descartado deliberadamente**: gera 340 erros, 289 deles `strictPropertyInitialization` (campos de componente Angular sem inicializador no construtor — padrão legítimo do framework, não um bug; "corrigir" em massa significaria `!` espalhado por toda parte). Mantido `strict: false`, só `strictNullChecks: true` ligado.
+
+Padrões corrigidos de verdade (confirmado por grep no diff: zero `!`/`as any` novos introduzidos):
+- Fallback `catchError(() => of(null as X))` (repetido em ~9 arquivos) → `of<X | null>(null)` tipado corretamente.
+- `formGroup.get(name)` do Reactive Forms em `form.component.ts` (28 dos 64 erros, o maior arquivo do domínio book): helper `getRequiredControl()` que lança erro claro se o controle não existir, em vez de assumir silenciosamente.
+- `RouteReuseStrategy.retrieve()` tinha assinatura mais estreita que a interface real do Angular (`DetachedRouteHandle` vs. `DetachedRouteHandle | null`) — corrigida com guard clauses.
+- Modelos `Address` e `BookToAdminProfile` mentiam sobre nulabilidade real (a própria implementação do serviço/API deixa campos `null`/`undefined`) — corrigidos os modelos, não só os pontos de uso.
+- `PasswordValidation.MatchPassword` e `SeoService.generateTags`: resolvidos de forma tipada, sem repetir null-check ad-hoc.
+
+Durante a validação, um fixture de teste (`form.component.spec.ts`) que eu tinha "corrigido" de `null` pra `undefined` quebrou uma asserção real — investiguei, descobri que o modelo `BookToAdminProfile` é que estava errado (campos de API devem aceitar `null`, não só `undefined`), revertido o fixture e corrigido o modelo. Exemplo concreto do próprio risco que esta tarefa avisa: a correção óbvia não é sempre a certa.
+
+Validação: `tsc --noEmit` limpo (app + specs), suíte 93/95 verde, `build:ssr` limpo, e interação real via Playwright no formulário de doação (toggle físico↔digital, que exercita a cadeia inteira de `getRequiredControl` — o ponto de maior risco do refactor) sem nenhum erro de JS.
