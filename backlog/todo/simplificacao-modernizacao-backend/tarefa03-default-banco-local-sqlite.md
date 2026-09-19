@@ -2,7 +2,7 @@
 
 ## Status
 
-Pendente.
+**Concluída em 2026-09-19** — PR aberto: https://github.com/SharebookBR/sharebook-backend/pull/612 (`chore/default-banco-local-sqlite` → `develop`).
 
 ## O que existe hoje
 
@@ -30,3 +30,9 @@ Baixo. Único cenário de risco seria algum ambiente que dependia do fallback im
 - Clonar o repo do zero (ou simular) e rodar `dotnet run --project ShareBook.Api` sem nenhuma variável de ambiente extra — esperado: sobe com sqlite, sem erro de conexão.
 - `curl /health` retornando saudável.
 - CI e deploy de produção continuam verdes (não dependem do valor checked-in).
+
+## Execução real (2026-09-19)
+
+- Commit único (`0df4fce`): mudança de uma linha em `appsettings.json`.
+- Build limpo, 145/146 testes passando (mesma baseline da falha ambiental já conhecida).
+- Validação end-to-end real: subi o backend do zero com `ASPNETCORE_URLS` + `TokenConfigurations__SecretJwtKey` (único setup que já era exigido antes) e **sem** `DatabaseProvider` — respondeu `Healthy` em `/health`, confirmando o cenário que a tarefa resolve.
