@@ -296,6 +296,15 @@ Caso real — CodeMirror no modal editorial:
 - **Branch Desatualizada**: Se encontrar um erro "misterioso" onde o código local não parece refletir a realidade da CI, a suspeita primária deve ser branch local defasada em relação à `master`.
 - **Validar Sintaxe**: Em alterações de HTML/JS/SCSS, uma verificação rápida de sintaxe ou build local economiza rodadas de CI falhas.
 
+### Modernização incremental sem reescrita (lazy loading, OnPush, strict mode)
+Lições de uma migração real (épico de simplificação do `sharebook-frontend`, 2026-09-19) que economizam uma rodada de medo antes da próxima vez.
+
+- **Antes de fatiar por medo, medir o impacto real.** Ligar `strictNullChecks` numa base sem ele há anos parece pedir uma migração por feature — mas TypeScript não suporta strictness parcial por pasta num tsconfig só. Rodar o compilador com a flag ligada e contar os erros de verdade primeiro; pode ser uma fração do que a intuição sugere (64 erros concentrados em 16 arquivos, não uma enxurrada).
+- **`strict: true` completo não é o mesmo pedido que `strictNullChecks`.** `strictPropertyInitialization` sozinho pode gerar centenas de erros em campos de componente Angular sem inicializador no construtor — padrão legítimo do framework (valor chega no ciclo de vida, não no construtor), não bug. "Corrigir" isso em massa vira `!` espalhado por todo canto: pior que não ligar. Ligar as flags uma de cada vez e avaliar o custo real de cada uma antes de decidir.
+- **`loadComponent` não exige migrar o bootstrap da app.** Um componente standalone com `loadComponent` na rota funciona dentro de uma app ainda bootstrada via `NgModule` desde o Angular 14+. Não é preciso arriscar `bootstrapApplication` + `provideRouter` só para ganhar code-splitting real.
+- **OnPush via `ChangeDetectorRef.markForCheck()` é a via de menor risco em página de negócio crítico.** Colocar `markForCheck()` explícito em cada callback assíncrono que muda estado (subscribe HTTP, `afterClosed()` de dialog) dá o ganho de performance do OnPush sem tocar em uma linha de template. Signals é mais idiomático, mas exige reescrever toda leitura no template — vale a pena quando o risco de regressão é aceitável, não em home/PDP de um app em produção.
+- **Quando uma correção de tipo quebra um teste que antes passava, o teste raramente é o culpado.** Ao alinhar um fixture pra bater com uma flag nova do compilador, se uma asserção real quebrar, a pergunta é "qual dos dois lados mente sobre a realidade" — o teste ou o modelo de dados. Um campo de API que a classe declara como não-nulável, mas a implementação real deixa `null`/`undefined`, é o modelo mentindo — corrigir o modelo, não o fixture.
+
 ## Comandos Úteis
 
 ```bash
