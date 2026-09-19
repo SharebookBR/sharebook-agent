@@ -2,7 +2,7 @@
 
 ## Estado
 
-- **Status:** em andamento. Tarefas 1, 2 e 3 concluídas e validadas em dev pelo Raffa em 2026-09-19 — **checkpoint do lote 1 fechado**. Lote 2 (tarefas 4, 5 e 6) concluído, validado via Playwright pelo agente e confirmado em dev pelo Raffa em 2026-09-19 — **checkpoint do lote 2 fechado**. Iniciando lote 3 (tarefas 7-9).
+- **Status:** em andamento. Tarefas 1, 2 e 3 concluídas e validadas em dev pelo Raffa em 2026-09-19 — **checkpoint do lote 1 fechado**. Lote 2 (tarefas 4, 5 e 6) concluído, validado via Playwright pelo agente e confirmado em dev pelo Raffa em 2026-09-19 — **checkpoint do lote 2 fechado**. Lote 3 iniciado: tarefa 7 concluída (escopo admin, ver nota na própria tarefa).
 - **Prioridade:** logo depois de "Dependências e Segurança" (concluído em 2026-09-18, ver `backlog/done/seguranca-e-vulnerabilidades.md`)
 - **Valor:** alto — reduz custo cognitivo de manutenção e destrava as próximas features com menos atrito
 - **Origem:** o `sharebook-frontend` acabou de migrar de Angular 13 para 22 (ver `backlog/done/migracao-angular-13-lts.md`), mas a migração deliberadamente não tocou estrutura, organização nem padrões — só o motor. Esta é a fase de modernizar a carroceria.
@@ -50,7 +50,7 @@ Cada checkpoint fecha só depois de validação real em dev (não apenas `npm te
 | 4 | [Higiene: versão do rxjs + código morto](tarefa04-higiene-rxjs-e-codigo-morto.md) | Baixo, mas grátis | Baixo | Trivial | **Concluída em 2026-09-19** — commit `a23acf4` |
 | 5 | [Specs de caracterização dos services críticos](tarefa05-specs-caracterizacao-services-criticos.md) | Alto — habilita com segurança tudo que vem depois | Baixo | Médio | **Concluída em 2026-09-19** — commit `499e526` |
 | 6 | [Interceptors e guards funcionais](tarefa06-interceptors-guards-funcionais.md) | Médio — idiomático, menos boilerplate | Baixo | Médio | **Concluída em 2026-09-19** — commit `4abaa60` |
-| 7 | [Lazy loading + standalone incremental](tarefa07-lazy-loading-standalone-incremental.md) | Alto — bundle inicial, code-splitting real | Médio-alto se em massa, baixo por feature | Alto | Pendente |
+| 7 | [Lazy loading + standalone incremental](tarefa07-lazy-loading-standalone-incremental.md) | Alto — bundle inicial, code-splitting real | Médio-alto se em massa, baixo por feature | Alto | **Concluída (escopo admin) em 2026-09-19** — commit `eeb0287` |
 | 8 | [OnPush/Signals oportunista](tarefa08-onpush-signals-oportunista.md) | Médio, cauda longa | Médio | Contínuo, não é frente própria | Sem prazo — só ao tocar componente por outro motivo |
 | 9 | [Strict mode incremental](tarefa09-strict-mode-incremental.md) | Alto, longo prazo | Alto | Alto | Fase 3 — só depois da reorganização e da rede de testes |
 
