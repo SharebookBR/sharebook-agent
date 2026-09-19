@@ -1,5 +1,11 @@
 # Tarefa 2 — Hydration no SSR
 
+## Status final — CONCLUÍDA em 2026-09-19
+
+`provideClientHydration(withEventReplay())` adicionado aos providers do `AppModule` (commit `27945c1`, `claude/agents-md-reading-ybnyaq`). `withEventReplay()` também captura interações do usuário antes da hidratação completar.
+
+Validado com Playwright contra o SSR compilado real (`dist/angular/server/main.js`, não `ng serve`): zero mensagens de hydration mismatch/NG05xx em 4 rotas (home, página estática, 404, detalhe de livro com API falhando). Cache SSR da home confirmado intacto (`X-SSR-Cache HIT` consistente). `tsc`, `npm test` (42/42) e `build:ssr` limpos.
+
 ## O que existe hoje
 
 `app.server.module.ts` sobe `ServerModule`, mas **`provideClientHydration()` não existe em nenhum lugar do código** (confirmado por grep na árvore inteira).
