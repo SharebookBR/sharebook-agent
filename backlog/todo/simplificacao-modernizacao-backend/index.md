@@ -1,4 +1,4 @@
-up# Épico — Simplificação e modernização do código (sharebook-backend)
+# Épico — Simplificação e modernização do código (sharebook-backend)
 
 ## Estado
 
