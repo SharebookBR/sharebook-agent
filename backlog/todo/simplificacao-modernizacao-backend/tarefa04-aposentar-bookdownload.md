@@ -2,7 +2,7 @@
 
 ## Status
 
-Pendente.
+**Concluída em 2026-09-19** — commit `3b98ef1` direto em `develop` do `sharebook-backend` (a partir desta tarefa, sem PR — commit direto, por decisão do Raffa).
 
 ## O que existe hoje
 
@@ -38,3 +38,15 @@ O lote de decisão mais delicado do épico: é o único que envolve **dropar tab
 - `dotnet build`/`dotnet test` limpos após a remoção de código.
 - Smoke test real do endpoint `DownloadEBook`/`DownloadEBookUrl` confirmando que `BookDownloadEvent` continua sendo gravado normalmente.
 - Confirmar em produção (ou staging) que a prateleira "Mais baixados" da Home continua funcionando sem alteração — ela depende só de `BookDownloadEvent`.
+
+## Execução real (2026-09-19)
+
+Removido: entidade `BookDownload`, `BookDownloadValidator`, `BookDownloadService`/`IBookDownloadService`, `BookDownloadRepository`/`IBookDownloadRepository`, `BookDownloadMap`, `DbSet<BookDownload>` do `ApplicationDbContext`, os 3 registros de DI e as duas chamadas em `BookController.DownloadEBookAsync`.
+
+**Achado real durante a execução — o diff automático do EF não funcionava.** A migration anterior da linha `master` (`AddBookDownloadEvents`) tem o próprio snapshot congelado (`.Designer.cs`) sem `BookDownload`, porque na `master` essa tabela nunca existiu — só na `develop`, de abril. Isso fazia `dotnet ef migrations add` gerar `Up()`/`Down()` vazios (o EF achava que não havia diferença a aplicar). Migration `DropBookDownloads` escrita manualmente, revertendo o `CreateTable` exato da migration original `AddBookDownload`.
+
+**Achado extra, independente, corrigido no caminho**: `ApplicationDbContextFactory` (usado só em design-time pelo `dotnet ef`) nunca lia variável de ambiente, só `appsettings.json`/`appsettings.Development.json` — então `DatabaseProvider=postgres` no shell não tinha efeito nenhum ali, mesmo funcionando em `dotnet run`. Sem esse fix, **toda migration nova geraria coluna tipada pra SQLite por engano**, desde que a Tarefa 3 mudou o default do `appsettings.json` pra sqlite. Corrigido adicionando `.AddEnvironmentVariables()` + pacote `Microsoft.Extensions.Configuration.EnvironmentVariables`.
+
+**Validação real, não só leitura de código**: subiu Postgres 16 local (`apt-get install postgresql`), criou a tabela `BookDownloads` com o DDL original da migration `AddBookDownload`, inseriu uma linha de dado real, e aplicou a cadeia completa de migrations até `DropBookDownloads` via `dotnet ef database update` — dropou limpo, sem afetar `Books`/`BookDownloadEvents`. Build limpo, 145/146 testes (mesma falha ambiental de sempre), app sobe e responde `Healthy` em `/health`.
+
+**Achado à parte, fora de escopo, não corrigido**: a migration `RenameEFLogs` (pré-existente) depende de um nome de índice hardcoded específico do banco de produção real (`idx_17657_...`), impedindo rodar a cadeia de migrations do zero num banco limpo. Sem relação com esta mudança — candidato a item futuro de backlog (facilitaria a Tarefa 3/onboarding se corrigido).
