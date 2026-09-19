@@ -30,6 +30,16 @@ Prioridade #1 explícita do Raffa (2026-09-19): **simplificação, refactoring e
 - `fakeBackendProvider` é importado em `app.module.ts` mas nunca aparece no array de `providers` — código morto encontrado durante o diagnóstico.
 - `tsconfig.json` tem `strict: false` e `strictNullChecks: false` explícitos, herdados deliberadamente da migração (TypeScript 6.0 expôs código legado que assumia `AbstractControl.get()` nunca null). 29 usos de `: any`.
 
+## Cadência de execução
+
+Regra do Raffa (2026-09-19): **a cada 3 tarefas concluídas, validar no ambiente de dev antes de seguir para o próximo lote.** Não é só rodar teste local/CI — é subir em dev e confirmar de verdade.
+
+- **Lote 1 (tarefas 1-3):** reorganização de pastas → hydration SSR → fechar subscribes sem catchError. Três independentes entre si, todas tocam código real e comportamento observável em dev.
+- **Lote 2 (tarefas 4-6):** higiene (rxjs + código morto) → specs de caracterização → interceptors/guards funcionais. Ordem interna obrigatória dentro do lote: a 6 depende da 5 (não convertemos interceptor de autenticação sem rede de teste antes).
+- **Lote 3 (tarefas 7-9):** lazy loading/standalone → OnPush/Signals oportunista → strict mode incremental. **Ressalva:** a tarefa 8 não tem escopo fechado nem entrega própria (é prática contínua, adotada ao tocar componente por outro motivo) — o checkpoint do lote 3 valida o que a 7 e a 9 entregaram de concreto; o que a 8 acumulou organicamente no meio do caminho entra no relato, mas não bloqueia o checkpoint esperando ela "terminar".
+
+Cada checkpoint fecha só depois de validação real em dev (não apenas `npm test`/`ng build` local) — smoke manual das telas afetadas pelo lote, mais os testes automatizados específicos de cada tarefa já descritos nela.
+
 ## Tarefas
 
 | # | Tarefa | Benefício | Risco | Esforço | Status |
