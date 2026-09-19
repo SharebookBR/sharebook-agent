@@ -217,24 +217,6 @@ Mesma classe do backup que reportava `success` gerando arquivo de 1 KB: verde qu
 5. Validar novamente durante navegação real.
 6. Persistir o ajuste no script operacional correspondente.
 
-## DNS na VPS HostGator — três camadas independentes
-
-Aprendido no corte de 2026-08-17, depois de um typo no IP publicado por alguns minutos.
-
-Um erro de digitação no DNS (`29.` em vez de `129.`) sobrevive muito depois de corrigido, porque resolvedores públicos cacheiam o valor errado pelo TTL inteiro. No corte, o Google DNS segurou o IP inválido por quase uma hora enquanto o Cloudflare já servia o correto.
-
-**A caixa tem três caminhos de resolução, e eles não conversam:**
-
-1. **`/etc/resolv.conf`** — arquivo comum (não link), fixado pela HostGator em `8.8.8.8`. É o que `getent`, `curl` e praticamente todo processo do host usam de verdade.
-2. **systemd-resolved** — está ativo, mas o `/etc/nsswitch.conf` é `hosts: files dns`, **sem o módulo `resolve`**. Então `resolvectl dns` e os drop-ins de `resolved.conf.d` não afetam a resolução real do host. Mexer só neles dá a ilusão de conserto.
-3. **Docker** — containers ignoram o `resolv.conf` do host quando ele aponta para loopback; o que vale é `"dns"` no `/etc/docker/daemon.json`. Exige `systemctl restart docker`.
-
-**Sintoma diagnóstico**: `resolvectl query X` responde certo e `getent hosts X` responde errado. Isso não é cache teimoso — é a camada 2 não estar no caminho. Ir direto na camada 1.
-
-Configuração aplicada: Cloudflare primeiro nas camadas 1 e 3, com backups em `/root/resolv.conf.bak-pre-migracao` e `/root/daemon.json.bak-pre-migracao`. **O `resolv.conf` pode ser reescrito em reboot ou reprovisionamento** — reconferir depois de qualquer um dos dois.
-
-**Efeito colateral não óbvio**: o frontend faz SSR chamando `api.sharebook.com.br` pelo nome público. Com DNS envenenado, cada render trava até o timeout, o healthcheck de 5s nunca passa, o container nunca fica `healthy` e o Traefik devolve **503**. O 503 parece falha de proxy e é falha de DNS. Antes de culpar Traefik ou healthcheck, rodar `docker exec <app> getent hosts <api>`.
-
 ## Backup agendado — "success" não prova backup
 
 Descoberto em 2026-08-17, valendo desde pelo menos setembro de 2025.
@@ -358,45 +340,9 @@ Ao escolher o horário novo, conferir o `crontab -l` do host: neste ambiente o `
 
 **Generalização que vale para além do Coolify**: toda rotina que se auto-atualiza reiniciando a si mesma é incompatível com o horário em que ela também executa trabalho longo. Não é bug — é agenda mal desenhada, e o default é que sejam o mesmo minuto.
 
-## Migração de instância Coolify entre VPS
+## Migração de VPS
 
-Validado em 2026-08-17 (Hostinger → HostGator), Coolify 4.3.6 nos dois lados.
-
-### Duas caixas ao mesmo tempo
-- `vps_ssh.py` aceita `--prefix` (default `VPS_SSH`). Credenciais da caixa nova vivem em `VPS_HOSTGATOR_SSH_*` no `.env`.
-- Para mover volume de dados, criar confiança SSH **direta entre as caixas** — nunca trafegar conteúdo pelo contexto do agente. `ssh-keygen` na origem, **append** da pública no `authorized_keys` do destino.
-- **Nunca sobrescrever o `authorized_keys` de uma VPS HostGator.** Ela chega com ~11 chaves da plataforma; remover qualquer uma quebra o gerenciamento pelo painel deles. Só `>>`, nunca `>`.
-
-### O que dumpar
-- Dumpar **só o banco `coolify`** (`pg_dump -U coolify -d coolify --no-owner --no-acl`), **não `pg_dumpall`**. O dumpall arrasta roles com senha e conflita com a senha que a instalação nova gravou no volume do `coolify-db`.
-- Com o dump de banco único, o único segredo que precisa atravessar é o `APP_KEY`.
-
-### APP_KEY — a armadilha cara
-O `APP_KEY` de `/data/coolify/source/.env` decifra env vars e chaves de deploy no banco. Trocar o arquivo **não basta**:
-
-- `docker stop` + `docker start` **não relê `env_file`**. O container foi criado com a chave antiga e continua com ela na memória.
-- É obrigatório recriar: `cd /data/coolify/source && docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --force-recreate coolify soketi`
-- **Os nomes de serviço do compose não são os nomes dos containers.** Serviços: `redis`, `soketi`, `postgres`, `coolify`. O container `coolify-realtime` corresponde ao serviço `soketi`. Passar nome de container faz o compose abortar inteiro sem recriar nada — e o sintoma é idêntico ao de não ter feito nada.
-- Trocar o `APP_KEY` no arquivo com `sed` é frágil: o valor é base64 e contém `/` e `+`. Preferir `grep -v '^APP_KEY=' .env > novo && cat chave-antiga >> novo`.
-
-### Diagnóstico honesto de `DecryptException`
-Não presumir chave errada. Comparar por hash, sem imprimir segredo:
-```
-docker exec coolify printenv APP_KEY | tr -d '\n' | sha256sum | cut -c1-16
-grep '^APP_KEY=' /data/coolify/source/.env | cut -d= -f2- | tr -d '\n' | sha256sum | cut -c1-16
-```
-Hashes diferentes → problema é container, não chave.
-
-Validar a decifragem sem vazar valor:
-```
-docker exec coolify php artisan tinker --execute='try { $v = \App\Models\EnvironmentVariable::first()->value; echo "OK len=" . strlen($v); } catch (\Throwable $e) { echo "FALHOU: " . get_class($e); }'
-```
-
-### Certificados
-`/data/coolify/proxy/acme.json` guarda os certificados Let's Encrypt. **Certificado é vinculado a domínio, não a IP** — copiar o `acme.json` para a caixa nova faz o Traefik novo nascer com certificado válido, sem reemissão no corte e sem exposição a rate limit.
-
-### O que mais copiar
-`/data/coolify/ssh` (chaves de deploy), `/data/coolify/proxy`, `/data/coolify/databases` (nginx conf dos proxies de banco), `/data/coolify/services`. Pular `/data/coolify/backups` — é histórico, não estado.
+Playbook completo (checklist proativo, DNS de três camadas, restore do Coolify entre caixas, GitHub App source quebrando silenciosamente) vive em `skills/infra/vps-migration.md`. Abrir aquela skill antes de qualquer migração de VPS ou investigação que possa ter origem numa migração passada — não duplicar aqui.
 
 ## Criar aplicação nova via API do Coolify (sem UI)
 
