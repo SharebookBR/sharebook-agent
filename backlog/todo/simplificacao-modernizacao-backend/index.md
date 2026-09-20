@@ -3,7 +3,7 @@
 ## Estado
 
 - **Status:** diagnóstico entregue e revisado pelo Raffa em 2026-09-19. Todas as 11 tarefas do épico concluídas em 2026-09-20. A partir da Tarefa 4, commit direto em `develop`, sem PR (decisão do Raffa: "pare de abrir PR"). Falta a validação do Raffa em dev pra fechar o checkpoint final do épico de verdade — nunca declarar vitória sem essa confirmação.
-- **Prioridade:** logo depois de [Simplificação e modernização do código (frontend)](../simplificacao-modernizacao-frontend/index.md), como continuação natural da mesma frente de redução de custo cognitivo, agora do lado do backend.
+- **Prioridade:** logo depois de [Simplificação e modernização do código (frontend)](../../done/simplificacao-modernizacao-frontend/index.md), como continuação natural da mesma frente de redução de custo cognitivo, agora do lado do backend.
 - **Valor:** alto — mesmo racional do épico do frontend: reduzir custo cognitivo de manutenção e destravar features futuras com menos atrito.
 - **Origem:** pedido direto do Raffa em 2026-09-19. O `sharebook-backend` carrega muitos anos de história (.NET, camadas, patterns) que nunca foram revisados com a lente de "isso ainda paga o próprio custo cognitivo?".
 - **Diagnóstico completo:** feito em sessão de 2026-09-19, com leitura real do código na branch `develop` pós-sync com `master` (commit `b27a6a6`), depois refinado numa rodada de revisão com o Raffa. Ver [`diagnostico.md`](diagnostico.md), incluindo a seção "Atualização pós-revisão".

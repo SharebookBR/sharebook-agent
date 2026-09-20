@@ -3,6 +3,37 @@
 Checkpoint oficial da consolidação de memória do projeto.
 
 ## Último dream
+- Data: `2026-09-20`
+- Tipo: `dream semanal automatizado customizado via OpenClaw cron`
+- Última memória absorvida: `memory/2026-09-20-tarefas-9-11-nullable-merge-master.md`
+- Total de memórias lidas: `17 memórias episódicas absorvidas (2026-09-13 a 2026-09-20)`.
+
+## Consolidação produzida em 2026-09-20
+
+### Doctor zerado
+- O Harness Doctor abriu com 1 achado e fechou limpo.
+- O achado era `broken_markdown_link` em `backlog/todo/simplificacao-modernizacao-backend/index.md:6`.
+- Classificação: regressão estrutural segura causada pela movimentação do épico de frontend para `backlog/done/simplificacao-modernizacao-frontend/`, enquanto o épico backend ainda apontava para o caminho antigo em `backlog/todo/`.
+- Correção aplicada: o link relativo do épico backend agora aponta para `../../done/simplificacao-modernizacao-frontend/index.md`.
+
+### Decisões conscientes de não agir
+- Nenhuma nova Skill foi criada: os candidatos duráveis recorrentes da safra já tinham sido promovidos nas próprias sessões, especialmente em `AGENTS.md`, `skills/runtime/claude-code-openclaw.md`, `skills/runtime/claude-code-web.md` e `skills/infra/coolify-vps.md`.
+- O épico backend não foi movido para `done/`: apesar das 11 tarefas concluídas, o próprio backlog registra que falta validação do Raffa em dev para fechar o checkpoint final.
+- Não houve promoção nova para `SOUL.md`; a safra teve densidade constitutiva, mas não trouxe decisão deliberada suficiente para reescrita autônoma.
+- Loops de produto/infra seguem preservados fora do mandato do Dream autônomo: SSH hardening/HostGator, bounces e supressão do Stalwart, destino de `dev.sharebook.com.br`, confirmação residual de CI/CD em produção, `footer-build-info`, templates de e-mail restantes, métricas de IA-friendly/tokens e decisões editoriais/produto não validadas.
+
+### Validação
+- `python3 skills/doctrine/harness-governance/scripts/harness_doctor.py --root .` terminou limpo.
+- `python3 -m unittest discover -s skills/doctrine/harness-governance/scripts -p 'test_*.py' -v` terminou com 29 testes aprovados.
+- A memória do ciclo é `memory/2026-09-20-dream.md`.
+
+## Próximo dream
+- O checkpoint agora parte de `memory/2026-09-20-tarefas-9-11-nullable-merge-master.md`.
+- Conferir se o épico backend recebeu validação do Raffa em dev e se pode ser movido para `backlog/done/`.
+- Observar se os loops de Stalwart, SSH hardening, CI/CD residual, `footer-build-info` e templates de e-mail restantes ganharam resolução ou evidência nova.
+- Continuar tratando achados do Doctor como objetos de triagem individual; baseline atual é limpo.
+
+## Histórico — 2026-09-13
 - Data: `2026-09-13`
 - Tipo: `dream semanal automatizado customizado via OpenClaw cron`
 - Última memória absorvida: `memory/2026-09-10-home-mais-baixados.md`
