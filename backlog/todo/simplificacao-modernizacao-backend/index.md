@@ -2,7 +2,7 @@
 
 ## Estado
 
-- **Status:** diagnóstico entregue e revisado pelo Raffa em 2026-09-19. Tarefas 2, 3, 4, 5 e 6 concluídas. A partir da Tarefa 4, commit direto em `develop`, sem PR (decisão do Raffa: "pare de abrir PR").
+- **Status:** diagnóstico entregue e revisado pelo Raffa em 2026-09-19. Tarefas 2, 3, 4, 5, 6 e 7 concluídas. A partir da Tarefa 4, commit direto em `develop`, sem PR (decisão do Raffa: "pare de abrir PR").
 - **Prioridade:** logo depois de [Simplificação e modernização do código (frontend)](../simplificacao-modernizacao-frontend/index.md), como continuação natural da mesma frente de redução de custo cognitivo, agora do lado do backend.
 - **Valor:** alto — mesmo racional do épico do frontend: reduzir custo cognitivo de manutenção e destravar features futuras com menos atrito.
 - **Origem:** pedido direto do Raffa em 2026-09-19. O `sharebook-backend` carrega muitos anos de história (.NET, camadas, patterns) que nunca foram revisados com a lente de "isso ainda paga o próprio custo cognitivo?".
@@ -13,7 +13,7 @@
 - 9 projetos .NET 10 organizados por camada técnica, com grafo de dependências limpo e sem ciclos (`Domain → Helper` · `Repository → Domain` · `Service → Helper, Repository` · `Jobs/Api` no topo).
 - `BookController` com 823 linhas e `BookService` com 1101 linhas / 30 métodos públicos, misturando CRUD, aprovação de doação, admin/stats, sitemap, busca full-text, recomendações e e-book num único arquivo cada (**resolvido na Tarefa 6** — `BookService` dividido em partial classes por sub-responsabilidade; `BookController` reorganizado em regions).
 - `OperationsController` escondia todo o domínio do importer de ebooks atrás de um nome de infraestrutura — e o mesmo cheiro tinha atravessado pro frontend: `OperationsService` lá tinha 6 de 7 métodos que eram do importer (**resolvido na Tarefa 5** — `ImporterController`/`ImporterService` novos nos dois repositórios).
-- Camada dupla `RepositoryGeneric<T>` + `BaseService<T>` reimplementando, com indireção extra, o que `DbSet<T>`/`IQueryable<T>` do EF Core já resolve nativamente — decisão tomada de remover a camada genérica de repository, mantendo `BaseService<T>`.
+- Camada dupla `RepositoryGeneric<T>` + `BaseService<T>` reimplementando, com indireção extra, o que `DbSet<T>`/`IQueryable<T>` do EF Core já resolve nativamente (**resolvido na Tarefa 7** — `IRepositoryGeneric`/`RepositoryGeneric` deletados; `BaseService<T>` fala direto com `ApplicationDbContext`; repositories vazios de CRUD genérico também foram eliminados).
 - 28 das 29 interfaces em `ShareBook.Service` têm exatamente 1 implementação — existem só para permitir mock em teste.
 - `Thread.CurrentPrincipal?.Identity?.Name` repetido 20 vezes, `DateTime.UtcNow` direto 16 vezes — ambos sem abstração testável.
 - Pastas `AWSSQS/`/`AwsSqs/` duplicadas por casing (**resolvido na Tarefa 2**). `BookDownload` (abril) e `BookDownloadEvent` (setembro) coexistindo como duas fontes paralelas do mesmo dado (**resolvido na Tarefa 4** — `BookDownload` aposentado, tabela dropada por migration).
@@ -29,6 +29,8 @@ O fix de `ApplicationDbContextFactory` (design-time do `dotnet ef` nunca lia var
 Achado extra na Tarefa 5: o `AGENTS.md` do `sharebook-frontend` ainda documentava Node 20 como versão de teste/build, mas o projeto já exige Node 22.22.3+ desde a migração pra Angular 22 — desatualizado, vale corrigir a documentação (não fez parte desta tarefa).
 
 Achado extra na Tarefa 6: `Random15BooksAsync` já retornava 500 antes desta tarefa quando rodado com o provider SQLite (default local desde a Tarefa 3), porque `.OrderBy(x => Guid.NewGuid())` não é traduzível pelo provider SQLite do EF Core (funciona em SQL Server via `NEWID()`). Código idêntico, só mudou de arquivo na divisão — não é regressão da Tarefa 6, mas é um bug real de compatibilidade de provider que vale investigar depois (fora de escopo agora).
+
+Achado extra na Tarefa 7: `IMeetupParticipantRepository`/`MeetupParticipantRepository` não estava injetado em nenhum construtor do projeto além do próprio registro de DI — código morto, removido junto. E um achado crítico que quase passou despercebido: `BookRepository` tinha três overrides comportamentais reais (tradução de violação de slug único, proteção de campos no update, Include hardcoded no GetAsync) que só funcionavam por despacho polimórfico através do `_repository` do `BaseService` — teriam sido silenciosamente perdidos se a remoção fosse feita sem mapear esse acoplamento; foram portados pra dentro do próprio `BookService`/`MeetupService`, ver detalhes na [Tarefa 7](tarefa07-remocao-repository-generico.md).
 
 ## Objetivo
 
@@ -52,7 +54,7 @@ Não assumir de antemão que a solução é Clean Architecture, Hexagonal, Verti
 
 ## Cadência de execução
 
-Cada tarefa é de tema único e fecha com build limpo, suíte de teste verde (validado nesta sessão com o SDK do .NET 10 instalado: `dotnet build`/`dotnet test` rodam de verdade) e commit isolado — nunca lote misturado. Commit direto em `develop`, sem PR, a partir da Tarefa 4. A Tarefa 7 (remover repository genérico) é a próxima.
+Cada tarefa é de tema único e fecha com build limpo, suíte de teste verde (validado nesta sessão com o SDK do .NET 10 instalado: `dotnet build`/`dotnet test` rodam de verdade) e commit isolado — nunca lote misturado. Commit direto em `develop`, sem PR, a partir da Tarefa 4. A Tarefa 8 (primary constructors) é a próxima, de risco zero.
 
 ## Princípios (herdados do épico do frontend, válidos aqui também)
 
@@ -81,7 +83,7 @@ Cada tarefa é de tema único e fecha com build limpo, suíte de teste verde (va
 | 4 | [Aposentar BookDownload, manter BookDownloadEvent](tarefa04-aposentar-bookdownload.md) | Elimina duplicação + reduz PII guardada à toa | Alto — única tarefa que dropa tabela de produção | **Concluída em 2026-09-19** — commit `3b98ef1` direto em `develop` |
 | 5 | [Extrair domínio do importer (backend + frontend)](tarefa05-extracao-importer-backend-frontend.md) | Descoberta melhora nos dois repositórios | Médio — coordenação de deploy cross-repo | **Concluída em 2026-09-20** — commits `2e4ecc1` (backend) + `6891a1d` (frontend) |
 | 6 | [Dividir BookController/BookService](tarefa06-divisao-god-classes-book.md) | Maior redução de custo cognitivo do épico | Médio — acoplamento interno sutil entre métodos | **Concluída em 2026-09-20** — commit `aa36087` direto em `develop` |
-| 7 | [Remover repository genérico](tarefa07-remocao-repository-generico.md) | Menos indireção, EF Core exposto direto | Médio — toca lógica de query real | Pendente |
+| 7 | [Remover repository genérico](tarefa07-remocao-repository-generico.md) | Menos indireção, EF Core exposto direto | Médio — toca lógica de query real | **Concluída em 2026-09-20** — commit `d93a67d` direto em `develop` |
 | 8 | [Primary constructors](tarefa08-primary-constructors.md) | Menos boilerplate, alto volume | Zero | Pendente |
 | 9 | [Nullable + required](tarefa09-nullable-e-required.md) | Pega bug em compile-time | Baixo por projeto, alto volume de warning inicial | Pendente |
 | 10 | [TimeProvider + acessor único de usuário](tarefa10-timeprovider-e-current-user.md) | Testabilidade real de regra sensível a tempo | Baixo, repetitivo | Pendente |
