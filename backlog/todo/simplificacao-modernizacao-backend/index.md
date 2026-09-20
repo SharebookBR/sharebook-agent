@@ -2,7 +2,7 @@
 
 ## Estado
 
-- **Status:** diagnóstico entregue e revisado pelo Raffa em 2026-09-19. Tarefas 2, 3, 4, 5, 6 e 7 concluídas. A partir da Tarefa 4, commit direto em `develop`, sem PR (decisão do Raffa: "pare de abrir PR").
+- **Status:** diagnóstico entregue e revisado pelo Raffa em 2026-09-19. Tarefas 2, 3, 4, 5, 6, 7 e 8 concluídas. A partir da Tarefa 4, commit direto em `develop`, sem PR (decisão do Raffa: "pare de abrir PR").
 - **Prioridade:** logo depois de [Simplificação e modernização do código (frontend)](../simplificacao-modernizacao-frontend/index.md), como continuação natural da mesma frente de redução de custo cognitivo, agora do lado do backend.
 - **Valor:** alto — mesmo racional do épico do frontend: reduzir custo cognitivo de manutenção e destravar features futuras com menos atrito.
 - **Origem:** pedido direto do Raffa em 2026-09-19. O `sharebook-backend` carrega muitos anos de história (.NET, camadas, patterns) que nunca foram revisados com a lente de "isso ainda paga o próprio custo cognitivo?".
@@ -17,7 +17,7 @@
 - 28 das 29 interfaces em `ShareBook.Service` têm exatamente 1 implementação — existem só para permitir mock em teste.
 - `Thread.CurrentPrincipal?.Identity?.Name` repetido 20 vezes, `DateTime.UtcNow` direto 16 vezes — ambos sem abstração testável.
 - Pastas `AWSSQS/`/`AwsSqs/` duplicadas por casing (**resolvido na Tarefa 2**). `BookDownload` (abril) e `BookDownloadEvent` (setembro) coexistindo como duas fontes paralelas do mesmo dado (**resolvido na Tarefa 4** — `BookDownload` aposentado, tabela dropada por migration).
-- `Nullable` nunca ligado em nenhum projeto de produção; só 1 arquivo usa primary constructors (C# 12); `DatabaseProvider` cai pro motor errado (`sqlserver`, morto desde a migração pra Postgres) quando não configurado (**resolvido na Tarefa 3**).
+- `Nullable` nunca ligado em nenhum projeto de produção; `DatabaseProvider` cai pro motor errado (`sqlserver`, morto desde a migração pra Postgres) quando não configurado (**resolvido na Tarefa 3**). Uso de primary constructors (C# 12), antes restrito a 1 arquivo, agora é o padrão em todo construtor de atribuição pura (**resolvido na Tarefa 8**).
 - Cobertura de teste: 11/27 services (41%) e 3/10 controllers (Category, Meetup, Home) — `BookController` e `AccountController`, os dois mais críticos, sem nenhuma cobertura direta ou de integração.
 
 ## Achados adicionais durante a execução
@@ -31,6 +31,8 @@ Achado extra na Tarefa 5: o `AGENTS.md` do `sharebook-frontend` ainda documentav
 Achado extra na Tarefa 6: `Random15BooksAsync` já retornava 500 antes desta tarefa quando rodado com o provider SQLite (default local desde a Tarefa 3), porque `.OrderBy(x => Guid.NewGuid())` não é traduzível pelo provider SQLite do EF Core (funciona em SQL Server via `NEWID()`). Código idêntico, só mudou de arquivo na divisão — não é regressão da Tarefa 6, mas é um bug real de compatibilidade de provider que vale investigar depois (fora de escopo agora).
 
 Achado extra na Tarefa 7: `IMeetupParticipantRepository`/`MeetupParticipantRepository` não estava injetado em nenhum construtor do projeto além do próprio registro de DI — código morto, removido junto. E um achado crítico que quase passou despercebido: `BookRepository` tinha três overrides comportamentais reais (tradução de violação de slug único, proteção de campos no update, Include hardcoded no GetAsync) que só funcionavam por despacho polimórfico através do `_repository` do `BaseService` — teriam sido silenciosamente perdidos se a remoção fosse feita sem mapear esse acoplamento; foram portados pra dentro do próprio `BookService`/`MeetupService`, ver detalhes na [Tarefa 7](tarefa07-remocao-repository-generico.md).
+
+Achado extra na Tarefa 8: a conversão pra primary constructor expôs 3 warnings novos do compilador (`CS9113`) em `BooksEmailService` — os parâmetros `serverSettings`, `configuration` e `mailSenderHighPriorityQueue` são injetados mas nunca lidos em nenhum método da classe. Código morto pré-existente que só ficou visível porque virou parâmetro de primary constructor; não corrigido (fora de escopo de uma tarefa puramente mecânica).
 
 ## Objetivo
 
@@ -54,7 +56,7 @@ Não assumir de antemão que a solução é Clean Architecture, Hexagonal, Verti
 
 ## Cadência de execução
 
-Cada tarefa é de tema único e fecha com build limpo, suíte de teste verde (validado nesta sessão com o SDK do .NET 10 instalado: `dotnet build`/`dotnet test` rodam de verdade) e commit isolado — nunca lote misturado. Commit direto em `develop`, sem PR, a partir da Tarefa 4. A Tarefa 8 (primary constructors) é a próxima, de risco zero.
+Cada tarefa é de tema único e fecha com build limpo, suíte de teste verde (validado nesta sessão com o SDK do .NET 10 instalado: `dotnet build`/`dotnet test` rodam de verdade) e commit isolado — nunca lote misturado. Commit direto em `develop`, sem PR, a partir da Tarefa 4. A Tarefa 9 (nullable + required) é a próxima.
 
 ## Princípios (herdados do épico do frontend, válidos aqui também)
 
@@ -72,6 +74,7 @@ Cada tarefa é de tema único e fecha com build limpo, suíte de teste verde (va
 - Corrigir o `HelperTests.ImageResize` flaky e a migration `RenameEFLogs` — achados incidentais, viraram [item de backlog próprio](../debitos-tecnicos-backend.md).
 - Atualizar o `AGENTS.md` do frontend (Node 20 → 22.22.3+) — achado incidental da Tarefa 5, sem urgência.
 - Corrigir `Random15BooksAsync` com provider SQLite — achado incidental da Tarefa 6, sem urgência (só afeta ambiente local; produção usa Postgres).
+- Remover os 3 parâmetros não utilizados de `BooksEmailService` — achado incidental da Tarefa 8, sem urgência.
 
 ## Tarefas
 
@@ -84,7 +87,7 @@ Cada tarefa é de tema único e fecha com build limpo, suíte de teste verde (va
 | 5 | [Extrair domínio do importer (backend + frontend)](tarefa05-extracao-importer-backend-frontend.md) | Descoberta melhora nos dois repositórios | Médio — coordenação de deploy cross-repo | **Concluída em 2026-09-20** — commits `2e4ecc1` (backend) + `6891a1d` (frontend) |
 | 6 | [Dividir BookController/BookService](tarefa06-divisao-god-classes-book.md) | Maior redução de custo cognitivo do épico | Médio — acoplamento interno sutil entre métodos | **Concluída em 2026-09-20** — commit `aa36087` direto em `develop` |
 | 7 | [Remover repository genérico](tarefa07-remocao-repository-generico.md) | Menos indireção, EF Core exposto direto | Médio — toca lógica de query real | **Concluída em 2026-09-20** — commit `d93a67d` direto em `develop` |
-| 8 | [Primary constructors](tarefa08-primary-constructors.md) | Menos boilerplate, alto volume | Zero | Pendente |
+| 8 | [Primary constructors](tarefa08-primary-constructors.md) | Menos boilerplate, alto volume | Zero | **Concluída em 2026-09-20** — commit `5bb2482` direto em `develop` |
 | 9 | [Nullable + required](tarefa09-nullable-e-required.md) | Pega bug em compile-time | Baixo por projeto, alto volume de warning inicial | Pendente |
 | 10 | [TimeProvider + acessor único de usuário](tarefa10-timeprovider-e-current-user.md) | Testabilidade real de regra sensível a tempo | Baixo, repetitivo | Pendente |
 | 11 | [Investigar rate limiter nativo](tarefa11-investigar-rate-limiter-nativo.md) | Menos código próprio, se cobrir 1:1 | Baixo — pode terminar em "não mexer" | Pendente |
