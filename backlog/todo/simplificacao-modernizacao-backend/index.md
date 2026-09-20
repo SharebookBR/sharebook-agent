@@ -28,11 +28,13 @@ O fix de `ApplicationDbContextFactory` (design-time do `dotnet ef` nunca lia var
 
 Achado extra na Tarefa 5: o `AGENTS.md` do `sharebook-frontend` ainda documentava Node 20 como versão de teste/build, mas o projeto já exige Node 22.22.3+ desde a migração pra Angular 22 — desatualizado, vale corrigir a documentação (não fez parte desta tarefa).
 
-Achado extra na Tarefa 6: `Random15BooksAsync` já retornava 500 antes desta tarefa quando rodado com o provider SQLite (default local desde a Tarefa 3), porque `.OrderBy(x => Guid.NewGuid())` não é traduzível pelo provider SQLite do EF Core (funciona em SQL Server via `NEWID()`). Código idêntico, só mudou de arquivo na divisão — não é regressão da Tarefa 6, mas é um bug real de compatibilidade de provider que vale investigar depois (fora de escopo agora).
+Achado extra na Tarefa 6, **corrigido em 2026-09-20 (commit `9ec6403`)**: `Random15BooksAsync` retornava 500 com o provider SQLite (default local desde a Tarefa 3), porque `.OrderBy(x => Guid.NewGuid())` só é traduzível pelo provider do SQL Server (via `NEWID()`) — nem Postgres (produção) nem SQLite sabem traduzir essa expressão. Inicialmente registrado como "achado incidental, fora de escopo"; o Raffa apontou corretamente que um bug real não devia ficar parado só por não ser da tarefa em curso. Corrigido trocando para `EF.Functions.Random()`, o mesmo padrão cross-provider já usado com sucesso em `HomeService.GetCategoriesShowcaseAsync` — traduz pra `RANDOM()` nativo tanto em Postgres quanto em SQLite. Validado com build/test limpos e smoke test manual confirmando ordens diferentes em chamadas sucessivas.
 
 Achado extra na Tarefa 7: `IMeetupParticipantRepository`/`MeetupParticipantRepository` não estava injetado em nenhum construtor do projeto além do próprio registro de DI — código morto, removido junto. E um achado crítico que quase passou despercebido: `BookRepository` tinha três overrides comportamentais reais (tradução de violação de slug único, proteção de campos no update, Include hardcoded no GetAsync) que só funcionavam por despacho polimórfico através do `_repository` do `BaseService` — teriam sido silenciosamente perdidos se a remoção fosse feita sem mapear esse acoplamento; foram portados pra dentro do próprio `BookService`/`MeetupService`, ver detalhes na [Tarefa 7](tarefa07-remocao-repository-generico.md).
 
 Achado extra na Tarefa 8: a conversão pra primary constructor expôs 3 warnings novos do compilador (`CS9113`) em `BooksEmailService` — os parâmetros `serverSettings`, `configuration` e `mailSenderHighPriorityQueue` são injetados mas nunca lidos em nenhum método da classe. Código morto pré-existente que só ficou visível porque virou parâmetro de primary constructor; não corrigido (fora de escopo de uma tarefa puramente mecânica).
+
+**Nota sobre achados incidentais não corrigidos**: dado o precedente do `Random15BooksAsync`, os itens abaixo marcados "fora de escopo" continuam genuinamente de baixa prioridade (documentação desatualizada, warnings de parâmetro não lido) — não são bugs de comportamento em produção. Um achado que É um bug real de comportamento (como foi o caso do `Random15BooksAsync`) deve ser corrigido assim que encontrado, não arquivado.
 
 ## Objetivo
 
@@ -64,6 +66,7 @@ Cada tarefa é de tema único e fecha com build limpo, suíte de teste verde (va
 - Nenhuma tarefa deste épico muda comportamento visível do usuário ou contrato de API sem que isso vire decisão de produto à parte.
 - Cada tarefa de execução termina com build limpo, suíte de teste verde e commit isolado — nunca lote misturado de tarefas diferentes.
 - Nada de "modernização por checklist": se um padrão atual já é a solução mais simples, ele fica como está.
+- Um achado incidental que é bug real de comportamento (não só cosmético/documentação) se corrige assim que encontrado, mesmo fora do escopo formal da tarefa em curso — ver nota sobre `Random15BooksAsync` acima.
 
 ## Fora de escopo agora
 
@@ -72,9 +75,8 @@ Cada tarefa é de tema único e fecha com build limpo, suíte de teste verde (va
 - Adotar arquitetura sofisticada só por ser mais moderna — a métrica de sucesso é custo cognitivo, não quantidade de patterns aplicados.
 - A hierarquia genérica de controllers de 3 níveis (`BaseController<T,R,A>`/`BaseCrudController`/`BaseDeleteController`) — tem só 1 consumidor real (`CategoryController`), mas baixo risco de manutenção no estado atual; fica como observação para decisão futura, não entrou nesta rodada.
 - Corrigir o `HelperTests.ImageResize` flaky e a migration `RenameEFLogs` — achados incidentais, viraram [item de backlog próprio](../debitos-tecnicos-backend.md).
-- Atualizar o `AGENTS.md` do frontend (Node 20 → 22.22.3+) — achado incidental da Tarefa 5, sem urgência.
-- Corrigir `Random15BooksAsync` com provider SQLite — achado incidental da Tarefa 6, sem urgência (só afeta ambiente local; produção usa Postgres).
-- Remover os 3 parâmetros não utilizados de `BooksEmailService` — achado incidental da Tarefa 8, sem urgência.
+- Atualizar o `AGENTS.md` do frontend (Node 20 → 22.22.3+) — achado incidental da Tarefa 5, sem urgência (é documentação, não bug de comportamento).
+- Remover os 3 parâmetros não utilizados de `BooksEmailService` — achado incidental da Tarefa 8, sem urgência (é warning de código morto, não bug de comportamento).
 
 ## Tarefas
 
@@ -85,7 +87,7 @@ Cada tarefa é de tema único e fecha com build limpo, suíte de teste verde (va
 | 3 | [Default de banco local: sqlite](tarefa03-default-banco-local-sqlite.md) | Zero fricção de onboarding | Baixo | **Concluída em 2026-09-19** — [PR #612](https://github.com/SharebookBR/sharebook-backend/pull/612) |
 | 4 | [Aposentar BookDownload, manter BookDownloadEvent](tarefa04-aposentar-bookdownload.md) | Elimina duplicação + reduz PII guardada à toa | Alto — única tarefa que dropa tabela de produção | **Concluída em 2026-09-19** — commit `3b98ef1` direto em `develop` |
 | 5 | [Extrair domínio do importer (backend + frontend)](tarefa05-extracao-importer-backend-frontend.md) | Descoberta melhora nos dois repositórios | Médio — coordenação de deploy cross-repo | **Concluída em 2026-09-20** — commits `2e4ecc1` (backend) + `6891a1d` (frontend) |
-| 6 | [Dividir BookController/BookService](tarefa06-divisao-god-classes-book.md) | Maior redução de custo cognitivo do épico | Médio — acoplamento interno sutil entre métodos | **Concluída em 2026-09-20** — commit `aa36087` direto em `develop` |
+| 6 | [Dividir BookController/BookService](tarefa06-divisao-god-classes-book.md) | Maior redução de custo cognitivo do épico | Médio — acoplamento interno sutil entre métodos | **Concluída em 2026-09-20** — commit `aa36087` direto em `develop` (fix do achado `Random15BooksAsync`: commit `9ec6403`) |
 | 7 | [Remover repository genérico](tarefa07-remocao-repository-generico.md) | Menos indireção, EF Core exposto direto | Médio — toca lógica de query real | **Concluída em 2026-09-20** — commit `d93a67d` direto em `develop` |
 | 8 | [Primary constructors](tarefa08-primary-constructors.md) | Menos boilerplate, alto volume | Zero | **Concluída em 2026-09-20** — commit `5bb2482` direto em `develop` |
 | 9 | [Nullable + required](tarefa09-nullable-e-required.md) | Pega bug em compile-time | Baixo por projeto, alto volume de warning inicial | Pendente |
