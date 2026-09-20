@@ -2,7 +2,7 @@
 
 ## Estado
 
-- **Status:** diagnóstico entregue e revisado pelo Raffa em 2026-09-19. Tarefas 2, 3, 4, 5, 6, 7, 8 e 9 concluídas. A partir da Tarefa 4, commit direto em `develop`, sem PR (decisão do Raffa: "pare de abrir PR").
+- **Status:** diagnóstico entregue e revisado pelo Raffa em 2026-09-19. Todas as 11 tarefas do épico concluídas em 2026-09-20. A partir da Tarefa 4, commit direto em `develop`, sem PR (decisão do Raffa: "pare de abrir PR"). Falta a validação do Raffa em dev pra fechar o checkpoint final do épico de verdade — nunca declarar vitória sem essa confirmação.
 - **Prioridade:** logo depois de [Simplificação e modernização do código (frontend)](../simplificacao-modernizacao-frontend/index.md), como continuação natural da mesma frente de redução de custo cognitivo, agora do lado do backend.
 - **Valor:** alto — mesmo racional do épico do frontend: reduzir custo cognitivo de manutenção e destravar features futuras com menos atrito.
 - **Origem:** pedido direto do Raffa em 2026-09-19. O `sharebook-backend` carrega muitos anos de história (.NET, camadas, patterns) que nunca foram revisados com a lente de "isso ainda paga o próprio custo cognitivo?".
@@ -58,7 +58,7 @@ Não assumir de antemão que a solução é Clean Architecture, Hexagonal, Verti
 
 ## Cadência de execução
 
-Cada tarefa é de tema único e fecha com build limpo, suíte de teste verde (validado nesta sessão com o SDK do .NET 10 instalado: `dotnet build`/`dotnet test` rodam de verdade) e commit isolado — nunca lote misturado. Commit direto em `develop`, sem PR, a partir da Tarefa 4. A Tarefa 10 (TimeProvider + acessor único de usuário) é a próxima.
+Cada tarefa é de tema único e fecha com build limpo, suíte de teste verde (validado nesta sessão com o SDK do .NET 10 instalado: `dotnet build`/`dotnet test` rodam de verdade) e commit isolado — nunca lote misturado. Commit direto em `develop`, sem PR, a partir da Tarefa 4. As 11 tarefas do épico estão concluídas.
 
 ## Princípios (herdados do épico do frontend, válidos aqui também)
 
@@ -91,5 +91,5 @@ Cada tarefa é de tema único e fecha com build limpo, suíte de teste verde (va
 | 7 | [Remover repository genérico](tarefa07-remocao-repository-generico.md) | Menos indireção, EF Core exposto direto | Médio — toca lógica de query real | **Concluída em 2026-09-20** — commit `d93a67d` direto em `develop` |
 | 8 | [Primary constructors](tarefa08-primary-constructors.md) | Menos boilerplate, alto volume | Zero | **Concluída em 2026-09-20** — commit `5bb2482` direto em `develop` |
 | 9 | [Nullable + required](tarefa09-nullable-e-required.md) | Pega bug em compile-time | Baixo por projeto, alto volume de warning inicial | **Concluída em 2026-09-20** — commits `7a54043`, `28b4b6b`, `500948b`, `4fa178b`, `3296dd3` direto em `develop` |
-| 10 | [TimeProvider + acessor único de usuário](tarefa10-timeprovider-e-current-user.md) | Testabilidade real de regra sensível a tempo | Baixo, repetitivo | Pendente |
-| 11 | [Investigar rate limiter nativo](tarefa11-investigar-rate-limiter-nativo.md) | Menos código próprio, se cobrir 1:1 | Baixo — pode terminar em "não mexer" | Pendente |
+| 10 | [TimeProvider + acessor único de usuário](tarefa10-timeprovider-e-current-user.md) | Testabilidade real de regra sensível a tempo | Baixo, repetitivo | **Concluída em 2026-09-20** — commit `8291259` direto em `develop` |
+| 11 | [Investigar rate limiter nativo](tarefa11-investigar-rate-limiter-nativo.md) | Menos código próprio, se cobrir 1:1 | Baixo — pode terminar em "não mexer" | **Concluída em 2026-09-20** — decisão: manter o caseiro (investigação, sem mudança de código) |
