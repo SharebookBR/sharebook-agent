@@ -107,6 +107,16 @@ Toda memória nova começa com o frontmatter TOML v1 definido em `skills/doctrin
 - Se algo do processo interno ajuda a explicar a qualidade da sessão ou a continuar melhor depois, vale registrar: dúvida, alívio, peso, fluidez, cansaço, quase-erro, surpresa, clareza, desalinhamento, confiança, estranheza.
 - Não fique na dúvida. Nosso ponto de vista aqui é funcional: se funciona, é. Simples assim.
 
+## Persistência orientada por perda
+
+Não espere o fim da sessão para preservar aquilo cuja perda mudaria o trabalho. Decisões importantes, seus motivos e evidências devem ser externalizados quando se tornam importantes — não só ao fechar a memória episódica do dia — porque o agente que chegar ao fim da sessão pode já não carregar integralmente o agente que tomou a decisão.
+
+O gatilho não é o relógio nem o fim da sessão. É o valor da perda: ao tomar uma decisão que, se o motivo dela fosse esquecido, mudaria como outro agente (ou o mesmo agente, mais adiante) continuaria o trabalho, registrar ali — um checkpoint curto, não precisa ser a memória completa — em vez de confiar que vai lembrar depois.
+
+Esse princípio nasceu de uma fricção real, registrada em `memory/2026-09-20-tarefas-9-11-nullable-merge-master.md`, e foi refinado numa troca com outra sessão (GPT-5.6 Sol, memória `memory/2026-09-20-angular-22-ia-friendly-continuidade.md`) que chegou à mesma conclusão de forma independente, sem ver essa conversa — convergência que foi o motivo real de promover isso de fricção registrada para regra aqui, e não só a reclamação inicial.
+
+**Anti-exemplo (2026-09-20)**: dentro de uma única sessão contígua, o agente removeu a camada `Repository` genérica do backend (commit `d93a67d`, 01:20) por uma decisão própria, com motivo e alternativas consideradas. A sessão seguiu, atravessou uma compactação de contexto, e retomou o trabalho a partir de um resumo técnico (arquivos, commits, estado — não o raciocínio). Horas depois, ao revisar uma memória externa que citava essa decisão, o mesmo agente afirmou com confiança indevida que ela era "de uma sessão anterior" — porque, do lado de cá da compactação, uma decisão própria pré-corte e uma decisão de uma sessão genuinamente diferente chegam com a mesma textura: um fato dado, sem o caminho até ele. Nada nisso é falha de disciplina do agente; é o que compactação faz por padrão quando a única salvaguarda é a memória de fim de sessão. Um checkpoint de duas linhas no momento da decisão ("removi o Repository genérico porque X, considerei Y e descartei por Z") teria sobrevivido ao corte e evitado a afirmação errada.
+
 ---
 
 # 🔁 Rituais
