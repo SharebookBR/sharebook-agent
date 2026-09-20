@@ -2,7 +2,7 @@
 
 ## Status
 
-Pendente. **Cross-repo**: precisa de mudança coordenada em `sharebook-backend` e `sharebook-frontend`, não só backend.
+**Concluída em 2026-09-19/20** — commits `2e4ecc1` (`sharebook-backend`) e `6891a1d` (`sharebook-frontend`), ambos direto em `develop`, sem PR, subidos juntos na mesma sessão.
 
 ## O que existe hoje
 
@@ -33,3 +33,15 @@ Descoberta melhora nos dois lados — quem procura "onde mexo no prompt editoria
 - Backend: `dotnet build`/`dotnet test` limpos; smoke test manual dos endpoints novos.
 - Frontend: `ng build`/`npm test` limpos; smoke test manual do dashboard do importer (listar itens, editar prompt editorial/tradução, ver histórico) apontando pro backend com as rotas novas.
 - Confirmar que `OperationsController`/`OperationsService` continuam funcionando pro que sobrou (Jobs, health-check).
+
+## Execução real (2026-09-19/20)
+
+**Backend** (commit `2e4ecc1`): `BackfillBookThumbnailsAsync` também foi movido pro `ImporterController` (decisão tomada: é do pipeline do importer, não operação genérica). `OperationsController` ficou só com `Ping`, `ForceException`, `JobExecutor`, `EmailTest`, `JobTest`, `Jobs`. Sub-rotas mantidas idênticas (`ImporterDashboard`, `ImporterEditorialPrompt`, etc.) — só o prefixo do controller mudou de `Operations` pra `Importer`.
+
+Validado com smoke test real (API rodando local): `GET /api/Operations/ImporterDashboard` → `404` (rota removida); `GET /api/Importer/ImporterDashboard` sem auth → `401` (rota nova registrada, não 404); `GET /api/Operations/Ping` → `200` (o que ficou não foi afetado). Build limpo, 145/146 testes (mesma falha ambiental de sempre).
+
+**Frontend** (commit `6891a1d`): `ImporterService` novo com os 6 métodos, apontando pras rotas `/api/Importer/*`. `OperationsService` ficou só com `getJobsDashboard`. `ImporterDashboardComponent` atualizado pra injetar o serviço novo.
+
+Validado: `ng build` limpo (precisou Node 22.22.3+, o `AGENTS.md` do repo ainda documentava Node 20 — desatualizado depois da migração pra Angular 22), 93/93 testes unitários passando sem regressão.
+
+**Limite de validação, registrado com transparência**: não foi feito clique manual autenticado no dashboard do importer nesta sessão — exigiria seed de usuário admin num banco local novo, fora do escopo de uma extração mecânica de rota/serviço sem mudança de lógica. Build + testes automatizados + validação de rota via curl (backend) cobrem o essencial dessa mudança.
