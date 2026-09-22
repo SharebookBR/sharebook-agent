@@ -2,7 +2,7 @@
 
 ## Estado
 
-- **Status:** **Ambos os itens corrigidos em 2026-09-20.** Identificados em 2026-09-19, durante a execução do épico [Simplificação e modernização do código (backend)](simplificacao-modernizacao-backend/index.md).
+- **Status:** concluído. Ambos os itens foram corrigidos em 2026-09-20. Identificados em 2026-09-19, durante a execução do épico [Simplificação e modernização do código (backend)](simplificacao-modernizacao-backend/index.md), e movidos para `done/` em 2026-09-22.
 - **Origem:** os dois foram encontrados no caminho, não procurados de propósito — um ao rodar a suíte de testes, outro ao validar a Tarefa 4 (aposentar `BookDownload`) contra Postgres real.
 - **Valor:** médio — não bloqueavam produção, mas cada um corroía confiança (teste que falha por motivo errado ensina a ignorar falha real; migration que só rodava em produção afastava gente de testar migration em ambiente limpo).
 - **Motivo da correção**: o Raffa apontou que um achado incidental que é bug real de comportamento não deveria ficar arquivado como "fora de escopo" só porque não era da tarefa em curso — mesmo racional que motivou o fix do `Random15BooksAsync` (ver [`simplificacao-modernizacao-backend/index.md`](simplificacao-modernizacao-backend/index.md)).
