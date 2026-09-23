@@ -1,5 +1,12 @@
 # Modernização dos templates de e-mail restantes
 
+## Estado
+
+- **Status:** concluído em 2026-09-23.
+- **Execução:** modernizados os templates restantes de aprovação/revisão, lembrete de data de escolha, renovação de data e e-mails internos/admin listados neste item. O template `BookDonatedNotifyDonorTemplate.html`, que já estava no shell moderno mas usava verde, foi alinhado para o azul Sharebook (`#29abe2 → #1e8fc4`).
+- **Validação:** `dotnet test ShareBook.Test.Unit/ShareBook.Test.Unit.csproj -c Release --verbosity minimal --filter EmailTemplateTests` passou com 7/7 testes; `dotnet build ShareBook.Api/ShareBook.Api.csproj -c Release --verbosity minimal` passou com 0 erros e 8 warnings antigos de nulabilidade no AutoMapper.
+- **Escopo preservado:** a decisão de copy do `BookDonatedTemplate.html` enviada ao ganhador continua adiada, conforme decisão anterior do Raffa; este item fechou layout/consistência visual e a correção pontual de paleta.
+
 ## Contexto
 
 Em 2026-09-20, o Raffa apontou que o e-mail de "seu livro recebeu uma solicitação" tinha cara de anos 90 (tabela HTML crua com `bgcolor='#ffff00'`, gerada por concatenação de string em `BookUserEmailService.cs`). Isso revelou um padrão maior: o `sharebook-backend` tem ~25 templates de e-mail transacional em `ShareBook.Service/Email/Templates/`, e só uma minoria segue um design consistente (card branco, header com gradiente, rodapé escuro).
