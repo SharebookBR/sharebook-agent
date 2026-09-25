@@ -28,3 +28,15 @@ Médio-alto se feito de uma vez (58 componentes, DI implícito de módulo pode e
 ## Como validar que nada quebrou
 
 Por rota migrada: build + Playwright smoke test específico da rota, comparação de tamanho de bundle antes/depois (`ng build --stats-json` + `webpack-bundle-analyzer` ou equivalente), confirmação visual manual da área migrada (especialmente dashboards com Angular Material, que já passou por um rewrite MDC na migração anterior).
+
+## Status final — CONCLUÍDA (parcialmente, escopo reduzido) em 2026-09-19
+
+Commit `eeb0287` (branch `develop`, sharebook-frontend). Migradas as 4 rotas de admin (`importer-dashboard`, `jobs-dashboard`, `analytics-dashboard`, `download-logs-dashboard`) pra standalone + `loadComponent`.
+
+**Divergência da abordagem original, decidida em execução:** não foi feita a migração de bootstrap pra `bootstrapApplication` + `provideRouter` (passo 1 do plano original). Não era pré-requisito real — `loadComponent` com componente standalone funciona dentro de uma app ainda bootstrada via `NgModule` desde o Angular 14+. Reduz drasticamente o risco (não mexe no bootstrap da app inteira) sem abrir mão do benefício de code-splitting. A migração de bootstrap fica como possível trabalho futuro, sem urgência — não há benefício adicional claro em fazê-la agora que o code-splitting já foi alcançado.
+
+Resultado: bundle inicial do browser (produção) caiu de 3.19 MB pra 2.87 MB. Os 4 dashboards viraram chunks lazy carregados só ao navegar pra rota (`chart.js`, usado só em analytics/download-logs, saiu do bundle inicial).
+
+Validação: `build:ssr` limpo, suíte 93/95 verde, smoke test real via Playwright contra backend local logado como Administrator — as 4 rotas renderizam sem erro de JS. `jobs` e `importer` com dados reais; `analytics` e `download-logs` mostram a tela e o estado de erro esperado (esse backend local de teste não tem os endpoints de GA4/Search Console — não é regressão da migração).
+
+**Restam os outros 54 componentes não convertidos** — decisão consciente de escopo, não pendência esquecida: a abordagem incremental do próprio plano diz pra converter só quando entra numa rota lazy, e as próximas rotas de baixo risco já foram esgotadas nesta rodada. Próxima onda de lazy loading (se houver) é trabalho novo, não continuação desta tarefa.

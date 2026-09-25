@@ -103,10 +103,22 @@ A rota exata `/` usa microcache do HTML SSR completo em `server.ts`, com TTL de 
 - `HIT`: enviar o HTML armazenado sem inicializar o Angular SSR. Isso precisa produzir zero chamadas a `/api/*` no servidor.
 - O HTML cacheado deve preservar o `TransferState` da primeira renderização. Assim, um carregamento direto no navegador também hidrata sem repetir chamadas a `/api/*`.
 - Capas em `/Images/*` continuam sendo assets carregados pelo navegador; não confundir esses GETs estáticos com chamadas de dados ou conexões ao Postgres.
-- Não ampliar o cache para outras rotas sem decisão explícita. Páginas privadas, personalizadas e respostas diferentes de HTTP 200 não podem entrar no cache público.
+- Não ampliar o cache para outras rotas sem decisão explícita. Páginas privadas, personalizadas e respostas diferentes de HTTP 200 não podem entrar no cache público. (Decisão explícita já tomada para PDP — ver seção abaixo.)
 - Deploy ou restart naturalmente esvazia o cache. Na expiração, o single-flight garante uma única atualização.
 
 Validação mínima após mudança no fluxo: build SSR, rajada concorrente comprovando `1 MISS + N COALESCED`, acesso posterior `HIT` e navegador headless comprovando zero requests para `https://api.sharebook.com.br/api/*` durante a hidratação do `HIT`.
+
+### Cache SSR da PDP — mesmo contrato de 30 minutos, chave por path
+
+**Incidente real em 2026-09-21**: PDP pública (`/livros/:slug`) é superfície de crawler — alto valor SEO/social, muito visitada por bots (confirmado via access log: SemrushBot, `meta-externalagent` da Meta/Facebook) — e antes disso era renderizada 100% on-demand a cada request, disparando `book/Slug`, `book/freightOptions`, `book/Recommendations` e o `category/Counts` do footer global a cada visita. Sob crawler ou pico, isso acopla tráfego público diretamente ao Postgres (ver `skills/engineering/backend.md`, seção de pool do Npgsql, para o incidente de conexão que essa mesma investigação destravou).
+
+- Cache SSR de 30 minutos para `/livros/:slug` em `server.ts`, mesma mecânica de módulo Node.js da home, chave por `req.path` **ignorando query string** (não multiplicar cache por UTM), com coalescing por slug e limite de entradas em memória (1000).
+- Cache SSR reduz o acoplamento imediatamente; não substitui pré-renderização/SSG completa, que segue como passo estrutural em aberto se o tráfego de crawler continuar crescendo.
+- Dados globais e pouco voláteis renderizados em toda página (ex: contagem de categorias do footer, via `CategoryService.getAllWithCounts()`) merecem cache próprio no backend além do cache de página — um footer compartilhado por todas as rotas não deveria bater API a cada render que não seja HIT de página inteira.
+
+### Access log SSR — `ssr_access`
+
+Log de uma linha em JSON no Express SSR (`server.ts`), por página renderizada: método, path **sem query string** (só um booleano `hasQuery`, para não vazar parâmetros nem virar ruído de UTM), status, duração, cache SSR (`MISS`/`HIT`/`COALESCED`), rota de cache, IP via proxy e user-agent truncado. Filtrar healthcheck local (`Wget` batendo a home) para não virar ruído. Foi o que transformou "suspeita de crawler" em evidência operacional real (bots identificados por nome batendo PDPs específicas) — sem esse log, a única fonte de tráfego real do SSR era `docker logs` efêmero.
 
 ### SsrCacheService — escopo de módulo, não de classe
 
@@ -311,6 +323,15 @@ Metodologia validada na migração 13→22 (2026-09-17/18, seis sessões, três 
 - **Antes de remover uma dependência por parecer "não usada"**, buscar também nos arquivos de configuração de build/test na raiz (`karma.conf.js`, `webpack.config`, etc.), não só em `src/`/`e2e/`/`scripts/`. `puppeteer` foi removido por engano numa sessão real porque a busca só cobriu `src/`, quebrando o Karma — o `karma.conf.js` tinha um comentário explícito avisando do fallback, não lido antes de remover.
 - Migração completa (13→22) removeu `tslint`/`codelyzer` (→ `eslint` manual, schematic oficial de conversão foi descontinuado), `Protractor` (→ Playwright, era boilerplate nunca customizado), `core-js@2`/`rxjs-compat` (peso morto de era ES5/rxjs5) e fixou Node em `.nvmrc`/`engines` — reduziu vulnerabilidades de produção de 105 para 4.
 
+
+### Modernização incremental sem reescrita (lazy loading, OnPush, strict mode)
+Lições de uma migração real (épico de simplificação do `sharebook-frontend`, 2026-09-19) que economizam uma rodada de medo antes da próxima vez.
+
+- **Antes de fatiar por medo, medir o impacto real.** Ligar `strictNullChecks` numa base sem ele há anos parece pedir uma migração por feature — mas TypeScript não suporta strictness parcial por pasta num tsconfig só. Rodar o compilador com a flag ligada e contar os erros de verdade primeiro; pode ser uma fração do que a intuição sugere (64 erros concentrados em 16 arquivos, não uma enxurrada).
+- **`strict: true` completo não é o mesmo pedido que `strictNullChecks`.** `strictPropertyInitialization` sozinho pode gerar centenas de erros em campos de componente Angular sem inicializador no construtor — padrão legítimo do framework (valor chega no ciclo de vida, não no construtor), não bug. "Corrigir" isso em massa vira `!` espalhado por todo canto: pior que não ligar. Ligar as flags uma de cada vez e avaliar o custo real de cada uma antes de decidir.
+- **`loadComponent` não exige migrar o bootstrap da app.** Um componente standalone com `loadComponent` na rota funciona dentro de uma app ainda bootstrada via `NgModule` desde o Angular 14+. Não é preciso arriscar `bootstrapApplication` + `provideRouter` só para ganhar code-splitting real.
+- **OnPush via `ChangeDetectorRef.markForCheck()` é a via de menor risco em página de negócio crítico.** Colocar `markForCheck()` explícito em cada callback assíncrono que muda estado (subscribe HTTP, `afterClosed()` de dialog) dá o ganho de performance do OnPush sem tocar em uma linha de template. Signals é mais idiomático, mas exige reescrever toda leitura no template — vale a pena quando o risco de regressão é aceitável, não em home/PDP de um app em produção.
+- **Quando uma correção de tipo quebra um teste que antes passava, o teste raramente é o culpado.** Ao alinhar um fixture pra bater com uma flag nova do compilador, se uma asserção real quebrar, a pergunta é "qual dos dois lados mente sobre a realidade" — o teste ou o modelo de dados. Um campo de API que a classe declara como não-nulável, mas a implementação real deixa `null`/`undefined`, é o modelo mentindo — corrigir o modelo, não o fixture.
 ## Comandos Úteis
 
 ```bash

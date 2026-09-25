@@ -25,3 +25,11 @@ Médio-alto se feito em massa (OnPush pode expor bug de mutação que o CD defau
 ## Como validar
 
 Por componente convertido: teste de interação real (não só snapshot), já que `OnPush` pode alterar timing de atualização visual que testes superficiais não capturam.
+
+## Status final — CONCLUÍDA (escopo redefinido: home + PDP) em 2026-09-19
+
+Decisão do Raffa: em vez de deixar 100% oportunista/sem prazo, aplicar `OnPush` de forma deliberada nas duas páginas de maior importância de negócio — home (maior tráfego) e PDP/book details (página de conversão de doação). Commit `00d32e9` (branch `develop`, sharebook-frontend).
+
+Abordagem escolhida: **`ChangeDetectorRef.markForCheck()`** em cada callback assíncrono que muda estado (subscribe HTTP, `afterClosed()` de dialog, `FileReader.onload`), em vez de reescrever os componentes pra Signals. Justificativa: essas duas páginas são as de maior risco de negócio do app inteiro — a via mais segura (markForCheck explícito, zero mudança de template) venceu a mais idiomática (Signals, que exigiria reescrever leituras no template inteiro). Signals continuam oportunistas pros demais 56 componentes, sem prazo, como o texto original desta tarefa já previa.
+
+Validação: interação real via Playwright contra backend local — home renderiza as 3 prateleiras + 9 meetups vindos de chamada assíncrona; PDP logado como Administrator chega a `state: 'ready'` através da cadeia mais funda de subscribes aninhados (`getBook -> getFreightOptions -> getRequested`) e renderiza os botões de ação; clique em "Compartilhar com amigos" abre o modal. Zero erro de JS. Suíte 93/95 e `build:ssr` limpos.

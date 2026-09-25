@@ -1,5 +1,9 @@
 # MVP — Lista de Desejos
 
+## Estado
+
+**Em execução pelo Josué (humano), fora do fluxo de agentes deste harness.** Registrado em 2026-09-20 a pedido do Raffa: agentes que pegarem este backlog não devem assumir este item como livre nem duplicar trabalho — estamos aguardando o Josué. Confirmar com o Raffa antes de tocar em qualquer parte deste item.
+
 ## Objetivo
 
 Permitir que leitores publiquem livros físicos que gostariam de receber, aumentando as chances de conexão entre doadores e leitores.

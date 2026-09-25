@@ -25,3 +25,14 @@ Baixo — comportamento idêntico, só muda a forma de registro (`provideHttpCli
 ## Como validar que nada quebrou
 
 Specs de interceptor/guard (escrever se não existirem — ver Tarefa 5) rodando antes e depois da conversão, mais smoke test real de fluxo de login/logout e de uma rota protegida por guard admin/user.
+
+## Status final — CONCLUÍDA em 2026-09-19
+
+Commit `4abaa60` (branch `develop`, sharebook-frontend). Suíte foi de 80 para 95 specs (93 executadas + 2 skip).
+
+- `jwtInterceptor`, `errorInterceptor`, `transferStateInterceptor` e `authGuardUser`/`authGuardAdmin` convertidos para `HttpInterceptorFn`/`CanActivateFn` com `inject()`. Registro via `provideHttpClient(withXhr(), withInterceptors([...]))`, sem `withInterceptorsFromDi()`. Guards referenciados direto nas rotas (`canActivate: [authGuardUser]`).
+- 5 specs novos de caracterização (nenhum existia antes): comportamento do jwt (injeta Bearer, exceto na chamada externa de CEP), do error (logout+reload em 401, log de SSR fora do browser) e do transfer-state (cache hit/miss entre server e browser), além dos dois guards (bloqueia/libera + redirect correto).
+- Validação real em dev via Playwright contra backend local: `/panel` bloqueado deslogado e libera após login (`authGuardUser`), `/book/list` liberado pro Administrator (`authGuardAdmin`), header `Authorization` saindo numa chamada autenticada real (`jwtInterceptor`). Zero erro de console.
+- `tsc --noEmit` e `build:ssr` limpos.
+
+**Checkpoint do lote 2 fechado** — tarefas 4, 5 e 6 concluídas e validadas em dev.

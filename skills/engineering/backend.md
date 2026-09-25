@@ -188,6 +188,12 @@ dotnet build C:\REPOS\SHAREBOOK\sharebook-backend\ShareBook\ShareBook.Api\ShareB
 ### Testes com `IMemoryCache` e relógio fake
 - Se o teste fixar um relógio manual (`ISystemClock`/similar) numa data no passado enquanto o `MemoryCache` real usa `DateTimeOffset.UtcNow` para expiração, as entradas somem imediatamente e o teste falha de um jeito que parece bug de lógica mas é descompasso de relógio. Iniciar o relógio manual em `DateTimeOffset.UtcNow` e avançá-lo explicitamente dentro do teste, nunca fixar em uma data literal antiga.
 
+### Connection pool do Npgsql vs. `max_connections` do Postgres
+- **Incidente real em 2026-09-21**: a `sharebook-api` não definia `Maximum Pool Size` na connection string, então o Npgsql usava o default implícito de 100 — exatamente o `max_connections` do Postgres de produção. Uma única instância da API podia, sob pico/retry/crawler, tentar ocupar praticamente todos os slots do banco, derrubando outras conexões com `53300` ("remaining connection slots are reserved for roles with the SUPERUSER attribute" / "too many clients already").
+- **Regra**: se `max_connections` do Postgres é N, o pool da aplicação nunca deve mirar N — precisa sobrar margem para administração, healthchecks e outras sessões/serviços que também conversam com o mesmo banco. Definir `Maximum Pool Size` explicitamente na connection string, nunca confiar no default implícito.
+- **Idle alto no pool não é o problema** — `Connection Idle Lifetime` generoso (ex: 300s) é bom, porque reaproveita conexão em vez de abrir/fechar toda hora. O risco real é o teto do pool poder chegar perto do teto do banco, não a conexão ficar parada.
+- Dados globais e pouco voláteis consultados em toda página pública via SSR (ex: contagem de categorias no footer) devem ser cacheados no backend (cache em memória com TTL, protegido contra thundering herd no vencimento com `SemaphoreSlim` estático) — cada render público não deveria virar query nova.
+
 ### Arquitetura e Persistência
 - **Bancos Isolados**: O banco do Importador e o banco da App são isolados na VPS. **NÃO tentar fazer JOIN SQL** entre eles. A composição de dados deve ser feita na camada de Serviço através de **Enriquecimento em Lote** (coletar IDs e fazer uma única consulta via repositório).
 

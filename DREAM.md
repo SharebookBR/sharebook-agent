@@ -232,6 +232,7 @@ Ele tem mandato para:
 - quando o corpus mostrar sinais de inchaço, redundância ou desorganização
 
 ### Como executar
+0. **Sincronizar o repositório com o remoto (`git fetch`/`pull`) antes de ler qualquer coisa**, mesmo que o ritual genérico de início de sessão já peça isso. O checkpoint em `_dream-state.md` só é confiável contra o estado real do remoto — um clone local desatualizado pode mostrar "up to date" sem nunca ter conferido de verdade, e o Dream é o processo onde esse erro é mais caro, porque o próprio objeto de trabalho é o checkpoint. Achado real em 2026-09-25: um ciclo inteiro rodou sobre um checkpoint cinco dias mais antigo que o real, reprocessando uma safra já absorvida por outro Dream, só descoberto quando o `git push` final foi rejeitado por divergência.
 1. Ler este `DREAM.md` para realinhar com a doutrina.
 2. Abrir `skills/doctrine/harness-governance/SKILL.md`, gerar o relatório de evidências da safra e rodar o Harness Doctor para obter a fotografia estrutural de abertura.
 3. Ler as memórias desde o último checkpoint, usando o relatório como mapa, não como veredito.

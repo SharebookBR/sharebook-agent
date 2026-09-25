@@ -371,6 +371,24 @@ Exceções existem: WAF agressivo, fluxo assinado, domínio quebrado de forma ú
   - `browser_print_html_book` → ex.: `raytracing.github.io`, `pbr-book.org`
 - O erro canônico deve explicar a família (`livro HTML/bookdown...`, `livro HTML/mdBook...`) para diferenciar falta estrutural de PDF público de falha transitória. `discover_assets_from_html()` emite erro semântico quando não encontra PDF redistribuível → `triage_worker` interpreta como `triage_rejected` limpo, não `source_blocked`.
 
+### Fallback genérico pega qualquer `.pdf` da página — precisa de família explícita antes
+
+Incidente real (2026-09-19): três itens da fila (1435, 1442, 1443), todos da source `ebook_foundation_subjects`, chegaram ao preparo editorial com o asset errado porque nenhuma família específica reconheceu a URL, e o fallback final de `discover_assets_from_html()` (`direct_patterns`) pega **o primeiro link `.pdf` que aparecer em qualquer lugar do HTML**, sem checar se tem qualquer relação com o título:
+
+- `coursera.org/learn/...` (curso pago, não livro) → pegou um PDF de rodapé irrelevante (declaração de compliance da empresa).
+- `analyticsvidhya.com/blog/...` (post de blog) → pegou um paper acadêmico citado no corpo do artigo (arXiv), sem relação com o título do "livro".
+- `intechopen.com/books/...` (coletânea de capítulos avulsos, sem PDF único) → pegou o formulário de pedido de exemplar, boilerplate em toda página de livro do site.
+
+Correção aplicada: três novas famílias em `classify_url_family()`/`resolve_source_assets()` que rejeitam **antes** de qualquer request de rede, com mensagem que bate em `_TRIAGE_REJECTED_ERROR_MARKERS` do `triage_worker.py` (precisa conter uma substring como `"nao para ebook/pdf publicavel"` ou `"sem pdf publico direto"`, já sem acento — normalização é NFKD + lowercase):
+
+- `coursera_course` — `coursera.org/learn/` e `coursera.org/specializations/`.
+- `blog_article` — `analyticsvidhya.com/blog/`. Generalizar para outros domínios de blog/listicle só quando aparecer um segundo caso real; não inventar lista extensa no escuro.
+- `intechopen_book` — `intechopen.com/books/`. IntechOpen publica como coletânea de capítulos; não existe PDF único do livro na página landing.
+
+Regressão coberta em `tests/test_ebook_foundation_classify.py` (roda com `python3 -m pytest` ou, na ausência de pytest no ambiente, chamando as funções `test_*` diretamente via `python3 -c`). Cobre a classificação da família, a não-quebra das famílias vizinhas na cadeia de `if`, e que a mensagem de erro efetivamente classifica como `triage_rejected` limpo (não `error`/`retry`) via `_TRIAGE_REJECTED_ERROR_MARKERS`.
+
+Se aparecer um novo caso do mesmo padrão (fallback genérico pegando PDF errado), o diagnóstico rápido é comparar `manifest.original_source_url` com `manifest.source_url`: quando a URL original é uma página de curso, blog ou landing page — não um link direto de PDF ou página de livro — o extractor tem alta chance de ter pego o primeiro PDF que encontrou na página em vez do livro.
+
 ### Backoff por fase e threshold de bloqueio
 
 Tentativas por fase (não mais global `retry_count`):
