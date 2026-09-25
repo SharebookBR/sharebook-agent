@@ -241,6 +241,16 @@ Sem isso, qualquer correção é chute. Um chute pode acertar por sorte, mas nã
 
 **Nunca:** assumir que o erro é "provavelmente X" e corrigir X sem ver a evidência. Isso é diagnóstico por ego.
 
+## Regra: Memória e relato de sessão anterior não são prova
+
+Memória episódica, frontmatter de outra sessão ou um "já fiz isso" registrado em texto são contexto valiosíssimo, mas nunca substituem conferir o estado real antes de agir sobre ele — sobretudo entre sessões, modelos e habitats diferentes, onde quem escreveu o registro não é quem vai usá-lo.
+
+Padrão recorrente encontrado de forma independente em pelo menos quatro sessões na mesma semana (17 a 19/09/2026): uma memória registrou "master promovida" quando o `git log` real mostrava a branch ainda atrás; um commit "funcionou sem erro" mas publicou conteúdo corrompido (base64 mal codificado) que só apareceu ao ler o arquivo de verdade; um teste unitário passou "por sorte" escondendo um bug real (RxJS relança erro de forma assíncrona); um filtro SQL vazio quase virou "webhook não funcionou" sem cruzar com o log do container.
+
+- **Antes de agir sobre uma afirmação de estado — sua, de outra sessão, ou de uma memória episódica — reconferir com a fonte primária**: `git log`/`git fetch` real, não o que a memória diz que foi pushado; o conteúdo de verdade do arquivo, não o retorno "sem erro" do commit; o comportamento funcional (curl, docker ps, log do container), não só "build verde" ou "teste passou".
+- Isso não é desconfiança do trabalho alheio — é reconhecer que relato e realidade podem divergir por motivo nenhum (push que falhou silenciosamente, encoding, timing), e que só a fonte primária decide.
+- Vale com mais peso em qualquer habitat sem prompt de permissão como rede auxiliar (ex.: `--dangerously-skip-permissions`).
+
 ## Anti-padrões
 - Diagnóstico por ego.
 - Fluxo novo para problema velho.

@@ -80,7 +80,10 @@ Heurística de bolso: se uma correção futura precisaria ser aplicada nas mesma
 
 ## SSR v2 (Angular Universal)
 
-O Sharebook utiliza Angular 13 Universal + Express (ngExpressEngine) para SSR de SEO e performance. Siga estes padrões para evitar quebras no ambiente Node:
+O Sharebook utiliza `@angular/ssr` (Angular 22, `CommonEngine`) para SSR de SEO e performance — migrado de Angular 13/`ngExpressEngine` em 2026-09-17/18 (ver seção "Migração de major do Angular" abaixo). Siga estes padrões para evitar quebras no ambiente Node:
+
+- **`allowedHosts` obrigatório em `server.ts`** desde o `@angular/ssr` 19: sem essa lista explícita (hoje: `sharebook.com.br`, `www.sharebook.com.br`, `dev.sharebook.com.br`, `localhost`), o `CommonEngine` degrada silenciosamente para client-side-rendering puro — sem erro visível, sem status HTTP diferente. Uma rota 200 (home cacheada) continua parecendo certa nesse fallback quebrado; só uma rota que deveria devolver status != 200 (404 real, redirect) expõe o problema. Validação funcional de SSR depois de qualquer bump de `@angular/ssr` precisa testar isso, não só a home.
+- **Bomba-relógio de `.subscribe()` sem `catchError` em chamadas HTTP** — a partir do Angular 21 (mudança de scheduler/zone), um erro HTTP não tratado dentro de um `.subscribe()` deixou de ser só um log do `ErrorHandler` global e passou a escapar como unhandled rejection, derrubando o processo Node inteiro no SSR. Corrigido em `home.component.ts` e `footer.component.ts` (renderizados em toda página) em 2026-09-18. **Ainda existem ~16 componentes com o mesmo padrão** (search-results, categories-list, myaccount, book/form, book/list, book/donations, book/requesteds, book/details, mais-sheet, account, header parcial, unsubscribe, parent-aproval, bottom-nav, importer-dashboard) — risco menor por não serem globais, mas real se a página específica for visitada durante falha de API. Todo `.subscribe()` novo ou tocado numa chamada HTTP deve levar `catchError()` com fallback, sem exceção — um teste passando não prova ausência desse bug, porque o RxJS relança o erro de forma assíncrona (`setTimeout 0`) e a suíte pode terminar antes do timer disparar.
 
 ### Princípios gerais
 
@@ -295,6 +298,18 @@ Caso real — CodeMirror no modal editorial:
 - **Build Real > Ambiente Local**: O comportamento no ambiente de produção (CI/CD) é a única verdade. Sempre valide se o build passa antes de considerar a tarefa concluída.
 - **Branch Desatualizada**: Se encontrar um erro "misterioso" onde o código local não parece refletir a realidade da CI, a suspeita primária deve ser branch local defasada em relação à `master`.
 - **Validar Sintaxe**: Em alterações de HTML/JS/SCSS, uma verificação rápida de sintaxe ou build local economiza rodadas de CI falhas.
+- **"Testes passando" e "build verde" não são prova de comportamento funcional** — só provam que o código compila e que o caminho testado não quebrou. Validar o comportamento real (SSR servindo HTML de verdade via `curl`, rota 404 real, cache HIT com corpo idêntico) é o que efetivamente prova algo, especialmente depois de bump de versão de framework.
+
+### Migração de major do Angular
+
+Metodologia validada na migração 13→22 (2026-09-17/18, seis sessões, três habitats):
+
+- **Hop a hop, nunca pular versão**: `ng update` com pacotes demais de uma vez confunde a resolução de peer deps do npm e pode tentar pular versão sozinho. Migrar em fatias (core+cli primeiro, satélites como `@nguniversal`/`@angular/ssr` e Material/CDK depois), um commit isolado por hop, pra manter bisect/rollback possível.
+- **Validar cada hop com build + teste + teste funcional específico**, não só `npm test` verde: cache SSR (MISS→HIT, corpo idêntico), uma rota 404 real (ver `allowedHosts` acima), e — depois de qualquer bump de `package.json`/`.nvmrc` — conferir se `devops/Dockerfile` (as duas stages) ainda bate com a engine declarada. Build local roda no Node do PATH da sessão, não no da imagem Docker; um Dockerfile desatualizado pode passar batido no build local e só quebrar dentro da imagem.
+- **`ng update --force` é sinal de alerta, não atalho**: geralmente esconde uma dependência morta ou peer dependency incompatível que precisa ser substituída de qualquer jeito (ex.: `ng-recaptcha`, travado em Angular 16, resolvido escrevendo integração própria fina com o script oficial do Google). Resolver a causa raiz evita empurrar a mesma dívida pros próximos hops.
+- **Schematics automáticos podem ter bugs reais**: a migração MDC do Material (`ng generate @angular/material:mdc-migration`) já corrompeu um seletor CSS e um comentário de sourcemap numa migração real. Revisar o diff inteiro linha a linha antes de confiar no build verde, nunca aceitar schematic como caixa-preta.
+- **Antes de remover uma dependência por parecer "não usada"**, buscar também nos arquivos de configuração de build/test na raiz (`karma.conf.js`, `webpack.config`, etc.), não só em `src/`/`e2e/`/`scripts/`. `puppeteer` foi removido por engano numa sessão real porque a busca só cobriu `src/`, quebrando o Karma — o `karma.conf.js` tinha um comentário explícito avisando do fallback, não lido antes de remover.
+- Migração completa (13→22) removeu `tslint`/`codelyzer` (→ `eslint` manual, schematic oficial de conversão foi descontinuado), `Protractor` (→ Playwright, era boilerplate nunca customizado), `core-js@2`/`rxjs-compat` (peso morto de era ES5/rxjs5) e fixou Node em `.nvmrc`/`engines` — reduziu vulnerabilidades de produção de 105 para 4.
 
 ## Comandos Úteis
 

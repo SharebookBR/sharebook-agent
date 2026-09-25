@@ -32,6 +32,13 @@ IGNORED_DIRECTORIES = {
     "var",
 }
 
+IGNORED_DIRECTORY_PREFIXES = (".venv",)
+
+
+def _is_ignored_directory_name(name: str) -> bool:
+    return name in IGNORED_DIRECTORIES or name.startswith(IGNORED_DIRECTORY_PREFIXES)
+
+
 REFERENCE_LINK_RE = re.compile(r"^\s{0,3}\[[^\]\n]+\]:\s*(<[^>\n]+>|\S+)")
 URI_SCHEME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*:")
 WINDOWS_DRIVE_RE = re.compile(r"^[A-Za-z]:[\\/]")
@@ -111,7 +118,7 @@ class HarnessDoctor:
 
         findings: list[Finding] = []
         for family in sorted(path for path in skills_root.iterdir() if path.is_dir()):
-            if family.name in IGNORED_DIRECTORIES:
+            if _is_ignored_directory_name(family.name):
                 continue
             family_index = family / "INDEX.md"
             index_text = self._read_text(family_index) if family_index.is_file() else ""
@@ -150,10 +157,10 @@ class HarnessDoctor:
 
         # Immediate family children are either standalone Markdown skills or skill folders.
         for family in sorted(path for path in skills_root.iterdir() if path.is_dir()):
-            if family.name in IGNORED_DIRECTORIES:
+            if _is_ignored_directory_name(family.name):
                 continue
             for child in sorted(path for path in family.iterdir() if path.is_dir()):
-                if child.name in IGNORED_DIRECTORIES:
+                if _is_ignored_directory_name(child.name):
                     continue
                 if child.resolve() not in skill_directories:
                     findings.append(
@@ -178,7 +185,7 @@ class HarnessDoctor:
                 directory_names[:] = sorted(
                     name
                     for name in directory_names
-                    if name not in IGNORED_DIRECTORIES
+                    if not _is_ignored_directory_name(name)
                     and (current / name).resolve() not in nested_skill_directories
                 )
 
@@ -377,7 +384,7 @@ class HarnessDoctor:
             relative = path.resolve().relative_to(self.root)
         except ValueError:
             return True
-        return any(part in IGNORED_DIRECTORIES for part in relative.parts)
+        return any(_is_ignored_directory_name(part) for part in relative.parts)
 
     def _is_memory_file(self, path: Path) -> bool:
         try:

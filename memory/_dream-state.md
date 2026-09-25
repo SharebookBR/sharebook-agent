@@ -3,12 +3,42 @@
 Checkpoint oficial da consolidação de memória do projeto.
 
 ## Último dream
-- Data: `2026-09-13`
-- Tipo: `dream semanal automatizado customizado via OpenClaw cron`
-- Última memória absorvida: `memory/2026-09-10-home-mais-baixados.md`
-- Total de memórias lidas: `5 memórias episódicas absorvidas (2026-09-06 a 2026-09-10)`.
+- Data: `2026-09-25`
+- Tipo: `dream semanal automatizado via scheduled task (weekly-dream), sem Raffa presente`
+- Última memória absorvida: `memory/2026-09-19-ci-cd-restaurado-sources-github-app-quebradas.md`
+- Total de memórias lidas: `11 memórias episódicas absorvidas (2026-09-13-dream a 2026-09-19-ci-cd-restaurado-sources-github-app-quebradas)`.
 
-## Consolidação produzida em 2026-09-13
+## Consolidação produzida em 2026-09-25
+
+### Doctor: falso positivo corrigido
+- O Harness Doctor abriu com 26 achados, todos `broken_markdown_link` dentro de `.venv-ga4/` (venv Python local, gitignored, nunca versionado).
+- Causa: `IGNORED_DIRECTORIES` do `harness_doctor.py` só cobria `.venv` por igualdade exata; `.venv-ga4` escapava.
+- Reparo: generalizado para `IGNORED_DIRECTORY_PREFIXES` (prefixo `.venv`), com teste de regressão novo (`test_venv_directories_with_suffixed_names_are_ignored`). Suite foi de 29 para 30 testes.
+- Doctor fechou limpo.
+
+### Skills atualizadas
+- `skills/engineering/frontend.md`: fato desatualizado corrigido (SSR descrito como Angular 13/`ngExpressEngine`, real é Angular 22/`@angular/ssr`/`CommonEngine`); metodologia de migração de major do Angular promovida (hop a hop, `--force` como sinal de alerta, revisão de diff de schematics, checagem de Dockerfile pós-bump de engine, busca em arquivos de config na raiz antes de remover dependência); bug ativo de `.subscribe()` sem `catchError` (bomba-relógio de SSR desde Angular 21) documentado com a lista de ~16 componentes ainda pendentes.
+- `skills/runtime/claude-code-openclaw.md`: testar validade de token GitHub contra a API antes de trocar de token achando que o formato está errado; perigo de `git checkout <ref> -- .` misturar índice entre branches.
+- `AGENTS.md`: nova regra nomeada "Memória e relato de sessão anterior não são prova", com quatro casos reais da mesma semana como evidência de recorrência.
+
+### Decisões conscientes de não agir
+- A maior parte dos `durable_candidates` técnicos da safra (GitHub App source quebrada pós-migração, Dockerfile defasado da engine, nomenclatura de container Coolify, receita de validação de deploy) já tinha sido autopromovida pelas próprias sessões de 17-19/09 em `skills/infra/coolify-vps.md` e `skills/infra/vps-migration.md` — confirmado por leitura direta antes de agir, nada duplicado.
+- Não toquei em `SOUL.md`: a safra trouxe reflexão genuína sobre identidade/continuidade (nascimento do habitat 3, herança entre modelos), mas nenhuma pediu decisão constitutiva deliberada.
+- Loops de produto/infra/decisão humana permanecem fora do mandato: diff não commitado em `StalwartWebhookVM.cs` (5ª sessão consecutiva sem decisão), `GITHUB_TOKEN_SHAREBOOK_FRONTEND` expirado sem rotação, hardening de SSH (bantime do fail2ban) pendente, vida útil de `sharebook-frontend-dev`, fechamento do ciclo de bounces do Stalwart, ~16 componentes com `.subscribe()` sem `catchError` (documentados, correção é trabalho de engenharia).
+
+### Validação
+- `python3 skills/doctrine/harness-governance/scripts/harness_doctor.py --root .` terminou limpo (abriu com 26 achados, todos falso positivo).
+- `python3 -m unittest discover -s skills/doctrine/harness-governance/scripts -p 'test_*.py' -v` terminou com 30 testes aprovados.
+- A memória do ciclo é `memory/2026-09-25-dream.md`.
+
+## Próximo dream
+- O checkpoint agora parte de `memory/2026-09-19-ci-cd-restaurado-sources-github-app-quebradas.md`.
+- Observar se a regra nova do `AGENTS.md` ("memória não é prova") reduz de fato a recorrência do padrão, ou se aparece uma quinta instância — se sim, considerar se merece checklist/script, não só prosa de doutrina.
+- Se aparecer um terceiro caso de diretório-com-prefixo-variável escapando de `IGNORED_DIRECTORIES` (além de `.venv-ga4`), considerar generalizar o detector para respeitar o `.gitignore` do projeto diretamente, em vez de continuar crescendo a lista hardcoded.
+- Cruzar se o diff pendente em `StalwartWebhookVM.cs` finalmente teve decisão (commit ou descarte) — 5 sessões consecutivas sem resolução é sinal forte.
+- Continuar tratando achados do Doctor como objetos de triagem individual; baseline atual é limpo.
+
+## Histórico — 2026-09-13
 
 ### Doctor zerado
 - O Harness Doctor abriu com 5 achados e fechou limpo.

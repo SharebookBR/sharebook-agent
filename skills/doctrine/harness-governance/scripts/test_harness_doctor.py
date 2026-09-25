@@ -98,6 +98,15 @@ class HarnessDoctorTests(unittest.TestCase):
         self.assertEqual(1, len(broken))
         self.assertEqual("missing/file.md", broken[0].target)
 
+    def test_venv_directories_with_suffixed_names_are_ignored(self) -> None:
+        self.fixture.make_clean()
+        self.fixture.write(
+            ".venv-ga4/backlog/index.md",
+            "[quebrado](backlog/does-not-exist.md)\n",
+        )
+
+        self.assertNotIn("broken_markdown_link", self.codes())
+
     def test_broken_links_inside_episodic_memory_are_not_structural_findings(self) -> None:
         self.fixture.make_clean()
         self.fixture.write("memory/2026-08-20-with-dead-link.md", "[histórico](old/path.md)\n")
