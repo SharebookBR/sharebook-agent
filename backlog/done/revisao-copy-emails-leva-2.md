@@ -36,6 +36,6 @@ O problema do nome já foi resolvido de forma transversal no mesmo dia: `ToFirst
 - **Ameaça falsa no "último aviso" de doação atrasada.** O texto dizia que a conta seria bloqueada, mas nenhum código bloqueia conta. O que existe é o job `CancelAbandonedDonations`: a doação é cancelada automaticamente (config `MaxLateDonationDaysAutoCancel`, hoje 10 dias de atraso) e quem fez solicitação é avisado. Um teste unitário **exigia** a frase do bloqueio; foi trocado por `DoesNotContain("bloquead")`.
 - **E-mails fora de template escapam de revisão.** Os dois avisos de atraso eram HTML concatenado no C# e por isso passaram pelas duas levas sem ninguém ver. Varredura de `<p>`/`<br>` em `.cs` no fim da rodada: sobrou só o e-mail de teste de SMTP (admin) e fragmentos de lista dos digests.
 
-## Para o Raffa decidir (não mexido)
+## Decisão de produto registrada
 
-- **Cadência dos avisos de atraso.** `LateDonationNotification` roda **diariamente**: quem não escolhe recebe o lembrete no dia da data de escolha, depois o aviso suave todo dia por 5 dias e o "último aviso" todo dia do 6º ao 10º (com cópia para admins), até o cancelamento automático. São até ~11 e-mails. Talvez valha espaçar (ex.: suave no 1º e 3º dia, último aviso só uma vez), mas é decisão de produto.
+- **Cadência dos avisos de atraso é diária, de propósito.** `LateDonationNotification` roda todo dia: lembrete na data de escolha, aviso suave do 1º ao 5º dia de atraso, "último aviso" do 6º ao 10º (com cópia para admins), depois cancelamento automático. Levantei que são até ~11 e-mails e sugeri espaçar; o Raffa decidiu manter (2026-09-26: "Eu gosto de cobrar todo dia"). Não reabrir sem motivo novo.

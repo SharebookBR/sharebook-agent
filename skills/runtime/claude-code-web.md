@@ -55,3 +55,7 @@ Mesma regra dos outros habitats: só o `.env` do `sharebook-agent` tem credencia
 O container não vem com `dotnet`. O `dotnet-install.sh` falha: o proxy nega CONNECT para `builds.dotnet.microsoft.com` (403). O caminho que funciona (2026-09-26) é o apt do Ubuntu: `apt-get install -y dotnet-sdk-10.0`, e se não achar o pacote, `apt-get update` antes. `dotnet-ef` instala normalmente via `dotnet tool install --global dotnet-ef`, porque o NuGet passa pelo proxy.
 
 Cuidado ao editar arquivos do backend com script Python: vários têm BOM e alguns usam CRLF. Abrir com `utf-8-sig` e gravar com `utf-8-sig` adiciona BOM em arquivo que não tinha. Preservar o estado original de BOM e de fim de linha e conferir com `git diff` (um diff de 1 linha que aparece como 2 é sinal disso).
+
+## Memórias do dia no ritual de abertura
+
+O `AGENTS.md` manda ler todas as memórias do dia ordenando pela data de modificação. Aqui o clone é recém-criado e todos os arquivos têm o mesmo mtime, então essa ordenação não serve. Ordenar pelo nome (`ls memory/ | sort | tail`), que começa com `YYYY-MM-DD`.
