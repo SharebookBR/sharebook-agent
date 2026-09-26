@@ -17,7 +17,7 @@ Esta missão não publica automaticamente a vitrine. Ela alimenta a fila para o 
 
 ## Fila
 
-- [waiting_triage] The Witch of Salem; or, Credulity Run Mad | https://www.gutenberg.org/ebooks/26282 | John R. Musick; bruxaria/Salem; elegível BR provável.
+- [done] The Witch of Salem; or, Credulity Run Mad | https://www.gutenberg.org/ebooks/26282 | John R. Musick; publicado como **A Bruxa de Salem** em 2026-09-26; livro `01a0de6a-6f62-718a-a07a-83ee2d7400e7`.
 - [waiting_triage] The Lancashire Witches: A Romance of Pendle Forest | https://www.gutenberg.org/ebooks/15493 | W. H. Ainsworth; romance de bruxas; elegível BR provável.
 - [waiting_triage] Salem Witchcraft, Volumes I and II | https://www.gutenberg.org/ebooks/17845 | Charles W. Upham; Salem/documental; elegível BR provável.
 - [waiting_triage] Letters on Demonology and Witchcraft | https://www.gutenberg.org/ebooks/14461 | Walter Scott; demonologia/bruxaria; elegível BR provável.
@@ -81,6 +81,20 @@ Substituição aplicada em 2026-09-11:
 - Aplicar ou revisar as propostas pendentes do Skill Workshop sobre o selo de capa e a página 2 institucional.
 - Atualizar o pipeline para registrar o PDF final de tradução em `metadata_json.manifest.downloaded_pdf_path` sem intervenção SQL manual.
 - Definir QA mínimo antes de escalar para os outros 14 itens: hoje houve validação estrutural e publicação, mas não revisão literária linha a linha.
+
+## Segundo Livro Publicado — 2026-09-26
+
+- Item `1868`: **The Witch of Salem; or, Credulity Run Mad**.
+- Título publicado: **A Bruxa de Salem**.
+- Autor publicado: **John R. Musick**.
+- Categoria: `Ficção > Bruxas & Magia` (`01a0974c-f122-75ee-9d2b-c3f81497e6dc`).
+- Livro Sharebook: `01a0de6a-6f62-718a-a07a-83ee2d7400e7`.
+- PDP: `https://www.sharebook.com.br/livros/a-bruxa-de-salem`.
+- Artefato local final: `sharebook-ebook-importer/var/tmp/translation-1868/a-bruxa-de-salem-preview.pdf`.
+- Estrutura do PDF: capa 4:5, página 2 institucional Sharebook 4:5, 20 capítulos traduzidos, 22 ilustrações narrativas originais do Gutenberg, nota/licença Project Gutenberg no final.
+- Decisão editorial: mapa, frontispício e assets decorativos/editoriais ficaram fora desta edição; as plates narrativas foram preservadas.
+- Validação feita: item `done` no importer, livro `Available` em produção, capa pública, PDP HTTP 200, endpoint de download com PDF remoto válido (`343` páginas, `512 x 640 pt`, `24` imagens contando capa/página institucional/plates).
+- Fricção operacional: o OpenClaw acessou o banco do importer por túnel SSH para o container Postgres interno da HostGator; o Postgres não estava exposto em `129.121.36.220:5432`.
 
 ## Decisões de Arquitetura Pendentes — tradução
 
