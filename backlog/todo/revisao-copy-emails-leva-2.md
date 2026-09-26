@@ -24,7 +24,7 @@ O problema do nome já foi resolvido de forma transversal no mesmo dia: `ToFirst
 
 - [x] `EbookWaitingApprovalTemplate` — backend `7d37062`
 - [x] `EbookApprovedTemplate` (+ assunto próprio "Seu livro digital está no ar!", CTA para a PDP) — backend `f590980`
-- [ ] `BookApprovedTemplate` — livro físico aprovado
+- [x] `BookApprovedTemplate` (+ assunto "Seu livro está na vitrine!", CTA para a PDP) — backend `5481ced`
 - [ ] `WaitingApprovalTemplate` — livro físico em revisão
 - [ ] `ChooseDateReminderTemplate` / `ChooseDateReminderMultipleTemplate` — lembrete da data de escolha
 - [ ] `ChooseDateRenewTemplate` — livro saiu da vitrine / renovação
