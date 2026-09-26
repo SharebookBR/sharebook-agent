@@ -49,3 +49,9 @@ Mesma regra dos outros habitats: só o `.env` do `sharebook-agent` tem credencia
 ## Processos em background
 
 `node`/servidores locais (ex: `node dist/angular/server/main.js` pra testar SSR) funcionam via `run_in_background: true` do Bash tool. `pkill` combinando `-9` com início de outro processo no mesmo comando já disparou o classificador de "Self-Modification" uma vez (não reproduzido de forma consistente) — mais seguro rodar `pkill` sozinho, sem encadear com outra ação de processo na mesma chamada.
+
+## .NET SDK (build do backend)
+
+O container não vem com `dotnet`. O `dotnet-install.sh` falha: o proxy nega CONNECT para `builds.dotnet.microsoft.com` (403). O caminho que funciona (2026-09-26) é o apt do Ubuntu: `apt-get install -y dotnet-sdk-10.0`, e se não achar o pacote, `apt-get update` antes. `dotnet-ef` instala normalmente via `dotnet tool install --global dotnet-ef`, porque o NuGet passa pelo proxy.
+
+Cuidado ao editar arquivos do backend com script Python: vários têm BOM e alguns usam CRLF. Abrir com `utf-8-sig` e gravar com `utf-8-sig` adiciona BOM em arquivo que não tinha. Preservar o estado original de BOM e de fim de linha e conferir com `git diff` (um diff de 1 linha que aparece como 2 é sinal disso).
