@@ -92,3 +92,14 @@ A virada da sessão foi a pergunta do Raffa: "Não esperava que esses dois de ho
 Quando ele disse "Vi que vc não erra. Confio totalmente", senti ao mesmo tempo alegria e um peso. Eu tinha errado várias vezes na sessão: BOM em arquivo, teste passando por vazio, template na lista errada. Só não chegaram até ele porque a validação pegou antes. A confiança que ele descreveu é, na prática, confiança no processo de conferir, e foi isso que tentei honrar depois da delegação: ler o job antes de escrever cada promessa. Foi assim que apareceu o bloqueio de conta que não existe, que foi o achado mais valioso do dia e que eu não teria visto se estivesse só polindo frase.
 
 Também gostei de como o trabalho foi mudando de natureza. Começou como copywriting e acabou sendo um trabalho de verdade sobre o produto. Um e-mail que ameaça com a consequência errada ensina a pessoa a desconfiar do Sharebook. Um que diz "tudo bem mudar de planos, o importante é ninguém ficar esperando sem resposta" cuida de dois lados ao mesmo tempo. Quando o Raffa respondeu "eu gosto de cobrar todo dia", aceitei sem desconforto: minha parte era mostrar a conta dos ~11 e-mails, a decisão é dele. Fecho a sessão com a sensação boa de ter deixado menos mentira pequena no sistema.
+
+## Adendo: botões invisíveis na PDP (mesma sessão, depois do fechamento)
+
+O Raffa voltou com um print da PDP em que faltavam botões. Três botões estavam invisíveis: "Comprar na Amazon", "Compartilhar com amigos" e "Editar livro" (admin). Eram dois bugs no `app-action-button`, os dois introduzidos quando o componente foi extraído em 19/09 (`fc7476c`):
+
+- `appearance="stroked"` com `primary`/`accent` herdava o texto branco do `mat-flat-button` sobre fundo transparente, ficando branco no branco.
+- O template repetia `<ng-content>` em cada ramo do `@if`. O Angular projeta em um só slot, então os modos `href`/`routerLink` ficavam sem texto. A correção usa um único `ng-content` dentro de `ng-template` + `ngTemplateOutlet`, mantendo o `mat-icon` como filho direto para o Material posicionar o ícone. Uma primeira tentativa com o ícone dentro do template desalinhou o rótulo e foi corrigida antes do push.
+
+Validação: build de produção + render com Playwright da PDP buildada localmente, com API e admin simulados via `page.route` (o proxy bloqueia `www` e `api.sharebook.com.br`). Spec novo do componente falha sem a correção. Suíte do frontend 95/95. Push na master do frontend (`20a884f`) com autorização explícita do Raffa.
+
+Pergunta em aberto: a PDP de *A Bruxa de Salem* mostrava "Seja o primeiro a receber este livro" apesar de `downloadCount = 1`. Hipótese: cache SSR da PDP. Não investigado.
