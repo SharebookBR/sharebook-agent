@@ -108,6 +108,29 @@ Para source Project Gutenberg que exige tradução e PDF final, o agente de prep
 
 Para `project_gutenberg_witches_magic`, essa leitura é obrigatória sempre que o item chegar ao preparo editorial: a edição Sharebook combina capa autoral 4:5, página institucional, miolo traduzido e publicação final.
 
+Para traduções que geram PDF final próprio, nunca atualizar `metadata_json.manifest.downloaded_pdf_path` por SQL/Python manual como caminho normal. Use a interface de alto nível do importer:
+
+```bash
+python cli.py final-artifact-set \
+  --id <ID> \
+  --pdf-path <PDF_FINAL> \
+  --cover-path <CAPA_FINAL> \
+  --kind translated_illustrated_pt_br \
+  --included-plates <N> \
+  --excluded-asset map \
+  --excluded-asset frontispiece
+```
+
+Fluxo recomendado:
+
+1. `translation-set` registra a tradução e devolve o item para `waiting_editorial`.
+2. `final-artifact-set` registra PDF/capa finais no manifest e valida PDF/capa antes da escrita.
+3. `plan-set` registra título, autor, categoria e sinopse.
+4. `publish-once --id <ID> --dry-run` valida o pacote.
+5. `publish-once --id <ID>` publica.
+
+O agente não deve precisar conhecer a estrutura interna do `metadata_json` para publicar uma tradução.
+
 ### 3. Publicação
 
 ```bash
@@ -167,6 +190,7 @@ O Sharebook assume conscientemente o risco operacional de casos incertos para fo
 - Plano incompleto → volta para `waiting_editorial`
 - Capa: preferir fonte (capa original do PDF/editora). Se a primeira página for só folha de rosto acadêmica sem valor de capa, seguir `skills/product-ux/cover-direction/SKILL.md`: com geração nativa, criar 3 capas distintas e escolher criticamente a melhor; sem essa capacidade, usar `scripts/covers/cover_generate.py` como fallback local. Gerar via API OpenAI cobrada **apenas com confirmação explícita do Raffa**.
 - Miolo PDF de tradução Project Gutenberg: seguir `../sharebook-pdf-typesetting/SKILL.md`. O baseline é 512 x 640 pt, proporção 4:5, Liberation Serif 12/17.2, margens 72/60 pt e conforto de leitura acima de reduzir páginas.
+- PDF final de tradução Project Gutenberg: registrar com `final-artifact-set`, não por escrita manual em `metadata_json`.
 - Validação pós-publicação: confirmar `done` no importer, livro íntegro na API e página pública com capa, categoria e ação de download disponíveis.
 
 ---
