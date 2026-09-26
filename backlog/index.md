@@ -28,7 +28,6 @@ Revisada em **2026-09-25**, após entrega do Painel de Jobs v2 enxuto e transfor
 17. **[Vitrine Bruxas & Magia](todo/vitrine-bruxas-e-magia.md)** — aposta temática de catálogo com Project Gutenberg como source preferencial. POC manual com `gpt-5.4-mini` validou que mini serve como rascunho, mas a v1 deve usar modelo forte direto para simplicidade e qualidade.
 18. **[Footer de build-info mostra "dev-local"](todo/footer-build-info-dev-local.md)** — valor baixo, esforço baixo depois de ter o log de build real do Coolify. Bug conhecido, deliberadamente adiado pelo Raffa em 2026-09-19; movido da memória episódica pro backlog em 2026-09-20 só pra não ficar esquecido.
 
-19. **[Revisão de copy dos e-mails da leva 2](todo/revisao-copy-emails-leva-2.md)** — valor médio (momentos-chave de doação), esforço baixo por e-mail. A modernização de 23/09 foi só visual; revisão em andamento um e-mail por vez, com aprovação do Raffa.
 
 ---
 Para detalhes de execução de cada item, consulte o arquivo correspondente na pasta `todo/`.
