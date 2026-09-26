@@ -66,6 +66,23 @@ A identidade forte do Sharebook fica concentrada em:
 
 O texto do livro não deve competir visualmente com a obra.
 
+## Ilustrações do Project Gutenberg
+
+Em fontes Project Gutenberg, marcadores como `[Illustration: ...]` ou `[Ilustração: ...]` são pontos de controle editorial, não texto narrativo.
+
+Quando a obra tiver marcadores de ilustração:
+
+- inspecionar o pacote HTML/EPUB do Gutenberg antes de fechar o PDF;
+- classificar os assets em ilustrações narrativas, mapas, frontispício, capa, marcas editoriais/decorativas, lombada e duplicatas;
+- nunca entregar PDF final com placeholder órfão de ilustração;
+- escolher explicitamente entre incluir as imagens originais, remover os placeholders ou manter asset não narrativo por decisão editorial;
+- preferir os arquivos de imagem originais do Gutenberg a screenshots, copiar/colar de PDF ou recorte manual;
+- preservar o mapeamento placeholder -> imagem em script, manifest ou outro artefato auditável;
+- se a decisão for focar apenas em ilustrações narrativas, excluir mapa, frontispício, capa, marcas editoriais, lombada e ornamentos, salvo pedido explícito;
+- renderizar plates como páginas limpas centralizadas ou blocos centralizados consistentes, sem legendas soltas.
+
+PDF com legenda de ilustração visível e imagem ausente é trabalho editorial inacabado.
+
 ## Regra de Ouro
 
 O PDF deve parecer um livro feito para ser lido, não um documento feito para caber.
@@ -82,3 +99,10 @@ Antes de considerar o PDF pronto:
 - confirmar ausência de header/footer automático do navegador;
 - conferir que o miolo não está poluído por identidade visual excessiva;
 - conferir que o texto está confortável, sem espaços enormes causados por justificação ruim.
+
+Para edições ilustradas do Gutenberg, conferir também:
+
+- contagem esperada de referências de imagem no manuscrito consolidado;
+- zero placeholders standalone `[Ilustração: ...]` / `[Illustration: ...]` no manuscrito final;
+- `pdfimages -list` com total esperado, considerando capa, página institucional e plates incluídas;
+- renderização visual da primeira, de uma intermediária e da última plate incluída, validando ausência de página em branco, corte, asset errado, centralização ruim ou página só com legenda.
