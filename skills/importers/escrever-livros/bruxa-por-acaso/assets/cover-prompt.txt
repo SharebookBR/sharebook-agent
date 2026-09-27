@@ -1,0 +1,22 @@
+Bruxa por Acaso & o Galã de Milhões — prompts de capa e ilustrações (ChatGPT web)
+
+Base comum a todas as imagens:
+Ilustração digital estilo capa de romance young adult contemporâneo (romantasy), cores saturadas, luz cinematográfica, paleta dominante roxo elétrico + dourado âmbar sobre azul-noite. São Paulo atual. Personagens:
+- Maya Sampaio, 19 anos, brasileira, cabelo castanho ondulado na altura dos ombros, expressiva, moletom oversized no dia a dia; a magia dela é roxa.
+- Caio Valverde, 21 anos, brasileiro, cabelo escuro levemente bagunçado, jaqueta de couro preta, olhos castanho-escuros que brilham em dourado-âmbar quando o lobo aparece.
+Sem texto dentro das ilustrações de miolo.
+
+CAPA (4:5, 1024x1280)
+Maya e Caio de costas um para o outro, olhando por cima do ombro, com um fio de luz dourada saindo do peito dela e ligando ao peito dele. Ela segura um celular com faíscas roxas saindo da tela; ele tem os olhos brilhando em âmbar. Atrás, skyline noturno de São Paulo e lua cheia enorme; sombra sutil de lobo recortada na lua. Espaço limpo no terço superior para o título "Bruxa por Acaso & o Galã de Milhões" em tipografia divertida e elegante (roxo/dourado). Selo "Sharebook Originals" (usar sharebook-originals-seal.png como referência) pequeno no canto inferior, sem cobrir rostos ou título. Deve funcionar como thumbnail.
+
+ILUSTRAÇÃO 1 — O Vídeo do Caos (cap. 1) — ilustracao-1-video.png, 4:5
+Quarto pequeno iluminado por néon rosa, celular num tripé, velas e cristais sobre pano roxo, caderno antigo de couro aberto. O LED explode em roxo elétrico e uma faísca dourada salta da tela do celular direto para o peito de Maya, que tropeça para trás assustada.
+
+ILUSTRAÇÃO 2 — O Contrato de 30 Dias (cap. 2) — ilustracao-2-contrato.png, 4:5
+Canto escondido de biblioteca antiga, estantes altas. Maya e Caio frente a frente numa mesa de madeira, um bloco de notas escrito "ACORDO DE CONVIVÊNCIA TEMPORÁRIA" entre eles (pode ser ilegível), caneta dourada. Ela assinando, desafiadora; ele sério, olhos com brilho dourado sutil. Cacos de lâmpada estourada na mesa.
+
+ILUSTRAÇÃO 3 — A Cabana (cap. 7) — ilustracao-3-cabana.png, 4:5
+Cabana de madeira abandonada na serra, tempestade, lua cheia pela janela quebrada. Caio encostado na parede, meio transformado (garras, olhos em fogo dourado), lutando contra a lua; Maya ajoelhada tocando o rosto dele. Uma aura roxa e dourada entrelaçada envolve os dois, acalmando a transformação. Íntimo, nada assustador.
+
+ILUSTRAÇÃO 4 — O Baile (cap. 9) — ilustracao-4-baile.png, 4:5
+Salão com milhares de luzinhas no teto. Maya num vestido azul-noite com bordados prateados de constelações e luvas longas; Caio de terno preto sem gravata. Ela estende a mão sobre o contrato que ele segura, que queima em chamas roxas com fios dourados; cinzas brilhantes sobem como vaga-lumes. Convidados desfocados ao fundo.
