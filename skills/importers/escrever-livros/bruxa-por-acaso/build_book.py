@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Gera o HTML do livro a partir de chapters/*.md e imprime o PDF (512x640 pt).
 
+Capa e ilustrações não passam pelo Chromium: página sem margem no meio do fluxo
+faz o Chromium encolher o documento inteiro. Elas entram depois, via PyMuPDF,
+como páginas inteiras (capa na 1, cada ilustração antes da abertura do capítulo).
+
 Uso: python3 build_book.py [--version vN]
 Requer: pip install markdown pyphen; node com playwright (global) e Chromium do ambiente.
 """
@@ -13,6 +17,7 @@ import subprocess
 import sys
 
 import markdown
+import pymupdf
 import pyphen
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -38,10 +43,12 @@ TAGLINE = "Um feitiço no TikTok, um contrato de 30 dias..."
 
 # capítulo -> ilustração (página inteira antes da abertura do capítulo)
 PLATES = {
-    "01": "ilustracao-1-video.png",
-    "02": "ilustracao-2-contrato.png",
-    "07": "ilustracao-3-cabana.png",
-    "09": "ilustracao-4-baile.png",
+    "01": "ilus-quarto-viral",
+    "02": "ilus-contrato",
+    "03": "ilus-rua-neon",
+    "04": "ilus-caio-lobo",
+    "07": "ilus-cabana",
+    "09": "ilus-baile",
 }
 
 
@@ -69,15 +76,6 @@ def chapter_html(path):
 
 def build_html(missing):
     parts = []
-    cover = find_asset("bruxa-por-acaso-capa")
-    if cover:
-        parts.append(f'<section class="page cover"><img src="file://{cover}" alt=""></section>')
-    else:
-        missing.append("capa")
-        parts.append(
-            '<section class="page cover placeholder"><div>'
-            f'<h1>{html.escape(TITLE)}</h1><p>[capa pendente]</p></div></section>')
-
     seal = f'<img class="seal" src="file://{SEAL}" alt="Sharebook Originals">' if os.path.exists(SEAL) else ""
     parts.append(f"""
 <section class="page title-page">
@@ -103,12 +101,6 @@ def build_html(missing):
         num = os.path.basename(path)[:2]
         label, name, inner = chapter_html(path)
         toc.append(f'<li><span class="toc-label">{html.escape(label)}</span>{html.escape(name)}</li>')
-        if num in PLATES:
-            img = find_asset(os.path.splitext(PLATES[num])[0])
-            if img:
-                chapters.append(f'<section class="page plate"><img src="file://{img}" alt=""></section>')
-            else:
-                missing.append(PLATES[num])
         label_html = f'<p class="ch-label">{html.escape(label)}</p>' if label else ""
         chapters.append(
             f'<section class="chapter">{label_html}<h2>{html.escape(name)}</h2>{inner}</section>')
@@ -122,6 +114,39 @@ def build_html(missing):
             + "\n".join(parts) + "</body></html>")
 
 
+def insert_images(pdf_path, missing):
+    doc = pymupdf.open(pdf_path)
+    w, h = doc[0].rect.width, doc[0].rect.height
+    # página de abertura de cada capítulo, pelo rótulo "CAPÍTULO N"
+    starts = {}
+    for i, page in enumerate(doc):
+        first = page.get_text().strip().split("\n", 1)[0].replace(" ", "")  # rótulo tem letter-spacing
+        m = re.fullmatch(r"CAPÍTULO(\d+)", first)
+        if m:
+            starts.setdefault(f"{int(m.group(1)):02d}", i)
+    inserts = []
+    for num, stem in PLATES.items():
+        img = find_asset(stem)
+        if not img:
+            missing.append(stem)
+        elif num not in starts:
+            missing.append(f"abertura do cap. {num}")
+        else:
+            inserts.append((starts[num], img))
+    cover = find_asset("bruxa-por-acaso-capa")
+    if cover:
+        inserts.append((0, cover))
+    else:
+        missing.append("capa")
+    for idx, img in sorted(inserts, reverse=True):
+        page = doc.new_page(pno=idx, width=w, height=h)
+        page.insert_image(page.rect, filename=img, keep_proportion=False)
+    tmp = pdf_path + ".tmp"
+    doc.save(tmp, garbage=3, deflate=True)
+    doc.close()
+    os.replace(tmp, pdf_path)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--version", default="v1")
@@ -131,6 +156,7 @@ def main():
     open(out_html, "w", encoding="utf-8").write(build_html(missing))
     out_pdf = os.path.join(ROOT, f"bruxa-por-acaso-book-{args.version}.pdf")
     subprocess.run(["node", os.path.join(ROOT, "print_pdf.mjs"), out_html, out_pdf], check=True)
+    insert_images(out_pdf, missing)
     print(out_pdf)
     if missing:
         print("PENDENTE:", ", ".join(missing), file=sys.stderr)

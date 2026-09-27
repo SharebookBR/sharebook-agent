@@ -1,5 +1,4 @@
 @page { size: 512pt 640pt; margin: 60pt 72pt; }
-@page cover { margin: 0; }
 
 html, body { margin: 0; padding: 0; }
 body {
@@ -15,12 +14,6 @@ body {
 }
 
 .page { break-after: page; }
-
-/* Capa e ilustrações: página inteira, sem margem */
-.cover, .plate { page: cover; height: 640pt; width: 512pt; overflow: hidden; }
-.cover img, .plate img { display: block; width: 512pt; height: 640pt; object-fit: cover; }
-.cover.placeholder { display: flex; align-items: center; justify-content: center; background: #2a1540; color: #f3e8ff; text-align: center; }
-.cover.placeholder h1 { font-size: 26pt; line-height: 32pt; padding: 0 40pt; }
 
 /* Folha de rosto */
 .title-page { text-align: center; padding-top: 90pt; }
