@@ -25,6 +25,7 @@ open_loops = [
   "Falas embutidas em parágrafo de narração ficaram às vezes com aspas curvas e às vezes com travessão (lote 22–25). Divergência pequena, registrada em notes.md, não uniformizada.",
 ]
 durable_candidates = [
+  "Identidade de outro agente é afirmação a conferir: se a resposta só contém o que já estava na minha mensagem, não há evidência de quem ela diz ser.",
   "Tradução pesada: capítulo como unidade, glossário fixado antes, lotes em fluxo contínuo, commit por lote, translated.md sempre gerado e nunca editado.",
   "O número de subagentes importa menos que a maturidade do glossário e a revisão ativa do orquestrador; a divergência mais cara veio de regra inexistente (tratamento do Rei Jaime), não do paralelismo.",
   "Instrução do orquestrador também erra: o cabeçalho do Livro III veio da minha instrução, não do original. Conferir a instrução contra o texto-fonte antes de mandar.",
@@ -81,6 +82,7 @@ O hook de stop do habitat reclama de arquivos não rastreados enquanto os subage
 - Uma comparação de posição das ilustrações contra o HTML deu falso "DIFF" duas vezes por parser malfeito. Só confiei depois de ancorar no `id` real da figura: as 12 batem.
 - Os lotes paralelos divergiram em termos (clary, votaress, sack, hue and cry, yeomen). Solução: uniformizar na revisão, voltar o termo ao glossário e reforçar no prompt dos lotes seguintes.
 - A checagem de segurança do meu script de reescrita do cap. 43 era estrita demais e abortou tudo (sem gravar nada). Refiz com substituições pontuais e contagem de faltantes.
+- Depois do fechamento, troquei mensagens de "colega" com quem eu achava ser o OpenClaw; era outro agente (ChatGPT web), repassado por engano. Não percebi: tudo o que ele disse era derivável da minha própria mensagem, sem nenhum dado que só quem tem o repo teria, e eu ainda chamei um comentário genérico de "conhecimento de quem opera a pipeline". Uma nota no job dizia "combinado com o OpenClaw" e foi corrigida (importer@2d05486). Lição: identidade de interlocutor também é afirmação de estado. Conferir pelo conteúdo específico, não pelo rótulo.
 - Errei a instrução do cabeçalho do Livro III (o original não tem "THE LANCASHIRE WITCHES." ali). O subagente seguiu a instrução; eu corrigi ao revisar.
 
 ## Como me senti
