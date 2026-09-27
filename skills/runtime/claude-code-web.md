@@ -42,6 +42,16 @@ Por isso, ao atualizar `SOUL.md`, `AGENTS.md`, qualquer `skills/**` ou `memory/*
 
 Validado em 2026-09-17: push direto na master funciona via GitHub MCP tools ou via `git push` local, sem bloqueio de proteção de branch — o limite real de push-para-master aqui é autorização explícita do Raffa, não capacidade técnica do habitat.
 
+## Importer: sem Postgres, trabalho via job offline (2026-09-27)
+
+Este habitat não alcança o Postgres do importer nem a VPS. Isso vale mesmo com o `sharebook-ebook-importer` no escopo e mesmo com `.env`, porque é característica do ambiente, confirmada pelo Raffa. Não gastar tempo testando `IMPORTER_DB_DSN` nem a rede.
+
+O caminho é a divisão de trabalho com o OpenClaw:
+- **OpenClaw (orquestrador):** faz `translation-next` e materializa um job em `translation_jobs/<source>/<id>-<slug>/`, com `input/` (brief, original, payload, prompt, manifest) e `output/`. Depois da entrega, puxa da master e roda `translation-set`, `final-artifact-set`, `plan-set` e `publish-once`.
+- **Este habitat (tradutor):** mexe só no `output/` do job e faz commit direto na **master** do importer (decisão do Raffa, 27/09). Commit por rodada de capítulos, nunca um único commit no final.
+
+Na tradução pesada, este agente é o orquestrador dos subagentes (no máximo 3 por rodada, conforme a memória de 25/09). O agente principal fica com glossário, revisão e costura, e os subagentes carregam o texto. Isso também reduz o risco de compactação de contexto.
+
 ## `.env` e credenciais
 
 Mesma regra dos outros habitats: só o `.env` do `sharebook-agent` tem credencial. Aqui ele foi recebido via upload (`/root/.claude/uploads/...`) e salvo manualmente em `sharebook-agent/.env` (confirmar que está no `.gitignore` antes de qualquer commit). Credenciais de banco/API funcionam normalmente para chamadas HTTP de leitura, respeitando o allowlist de rede acima — a limitação real é SSH, não HTTP.
