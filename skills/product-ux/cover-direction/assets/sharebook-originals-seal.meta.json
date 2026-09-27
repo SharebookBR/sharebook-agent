@@ -1,0 +1,17 @@
+{
+  "asset": "sharebook-originals-seal.png",
+  "kind": "cover-reference",
+  "usage": "Selo circular Sharebook Originals para capas, paginas institucionais e pecas de divulgacao de obras da linha Sharebook Originals.",
+  "source": "Telegram image sent by Raffa on 2026-09-27, saved as canonical local asset in the cover-direction assets folder.",
+  "default_cover_context": {
+    "cover_ratio": "4:5",
+    "cover_style": "Sharebook Originals campaign/book-cover branding",
+    "generator_usage": "Provide this asset as a reference image when the work belongs to Sharebook Originals so the image model can place the seal without obscuring title, author, face, main character, or focal action."
+  },
+  "validation": [
+    "Seal must remain recognizable as Sharebook Originals.",
+    "Seal must not cover title, author, face, main figure, or primary dramatic focal point.",
+    "Use it deliberately as campaign/brand signal, not as a neutral bookstore cover requirement.",
+    "Final cover must still read well as a thumbnail."
+  ]
+}

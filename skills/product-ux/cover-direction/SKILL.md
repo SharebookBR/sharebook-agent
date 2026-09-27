@@ -21,6 +21,8 @@ A pasta `assets/` guarda referências visuais deliberadas para capas.
 
 - `assets/sharebook-br-translation-seal.png` — selo Sharebook Brasil para capas autorais de traduções PT-BR.
 - `assets/sharebook-br-translation-seal.meta.json` — contrato de uso, origem e validação do selo. Usar como referência durante geração de capa quando a obra fizer parte do fluxo de tradução Sharebook; substituir pelo PNG transparente original exportado do ChatGPT web quando disponível.
+- `assets/sharebook-originals-seal.png` — selo circular Sharebook Originals para capas, páginas institucionais e peças de divulgação de obras da linha Sharebook Originals.
+- `assets/sharebook-originals-seal.meta.json` — contrato de uso, origem e validação do selo Originals. Usar como referência visual quando a obra pertencer à linha Sharebook Originals.
 
 Os scripts mandam nos detalhes mecânicos; esta skill manda na escolha do caminho por capacidade.
 
