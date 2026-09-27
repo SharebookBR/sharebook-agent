@@ -50,7 +50,7 @@ O caminho é a divisão de trabalho com o OpenClaw:
 - **OpenClaw (orquestrador):** faz `translation-next` e materializa um job em `translation_jobs/<source>/<id>-<slug>/`, com `input/` (brief, original, payload, prompt, manifest) e `output/`. Depois da entrega, puxa da master e roda `translation-set`, `final-artifact-set`, `plan-set` e `publish-once`.
 - **Este habitat (tradutor):** mexe só no `output/` do job e faz commit direto na **master** do importer (decisão do Raffa, 27/09). Commit por rodada de capítulos, nunca um único commit no final.
 
-Na tradução pesada, este agente é o orquestrador dos subagentes (no máximo 3 por rodada, conforme a memória de 25/09). O agente principal fica com glossário, revisão e costura, e os subagentes carregam o texto. Isso também reduz o risco de compactação de contexto.
+Na tradução pesada, este agente é o orquestrador dos subagentes. Usar 3 por rodada como teto inicial conservador, conforme a memória de 25/09; 5 funcionaram no item 1869 quando o glossário ja estava maduro e havia revisão ativa, mas isso é evidência de um livro, não novo default. O agente principal fica com glossário, revisão e costura, e os subagentes carregam o texto. Isso também reduz o risco de compactação de contexto.
 
 ## `.env` e credenciais
 

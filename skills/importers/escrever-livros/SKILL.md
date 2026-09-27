@@ -212,6 +212,22 @@ Projeto de referência: `bruxa-por-acaso/` (rom-com YA, 9 capítulos + epílogo,
   - Categoria dos Originals de bruxa: **Bruxas & Magia** (decisão do Raffa), não Amor nem Fantasia genérica.
   - Nos prompts para o OpenClaw, dizer "tente por X, valide pelo download público, se não bater investigue e contorne", em vez de presumir que o script faz o que o nome promete.
 
+### Artefatos indexados da linha Originals
+
+Os projetos abaixo sao artefatos deliberados da linha Sharebook Originals. Mantem texto-fonte, capa, plates, scripts e PDFs de referencia dentro da skill porque sao exemplos vivos do pipeline editorial, nao lixo operacional.
+
+`bruxa-por-acaso/`:
+- estrutura: `.gitignore`, `assets/`, `bruxa-por-acaso/assets/`, `chapters/`, `bruxa-por-acaso/chapters/`, `book.css`, `build_book.py`, `print_pdf.mjs`
+- texto e PDFs: `bruxa-por-acaso-manuscrito-v1.md`, `bruxa-por-acaso-book-v1.pdf`, `bruxa-por-acaso-book-v3.pdf`
+- assets: `assets/cover-prompt.txt`, `assets/bruxa-por-acaso-capa.png`, `assets/ilus-baile.png`, `assets/ilus-cabana.png`, `assets/ilus-caio-lobo.png`, `assets/ilus-contrato.png`, `assets/ilus-quarto-viral.png`, `assets/ilus-rua-neon.png`
+- capitulos: `chapters/01.md`, `chapters/02.md`, `chapters/03.md`, `chapters/04.md`, `chapters/05.md`, `chapters/06.md`, `chapters/07.md`, `chapters/08.md`, `chapters/09.md`, `chapters/10.md`
+
+`lumi-a-bruxinha/`:
+- estrutura: `.gitignore`, `assets/`, `lumi-a-bruxinha/assets/`, `chapters/`, `lumi-a-bruxinha/chapters/`, `book.css`, `build_book.py`, `print_pdf.mjs`
+- texto e PDF: `roteiro-original-raffa.md`, `lumi-a-bruxinha-manuscrito-v1.md`, `lumi-a-bruxinha-book-v1.pdf`
+- assets: `assets/lumi-a-bruxinha-capa.png`, `assets/ilus-01-flor-espirro.png`, `assets/ilus-02-fotografia.png`, `assets/ilus-03-sala-secreta.png`, `assets/ilus-04-festival.png`, `assets/ilus-05-abraco.png`, `assets/ilus-06-amelia.png`, `assets/ilus-07-arvore-mae.png`, `assets/ilus-08-pergunte.png`, `assets/ilus-09-rosa-azul.png`
+- capitulos: `chapters/01.md`, `chapters/02.md`, `chapters/03.md`, `chapters/04.md`, `chapters/05.md`, `chapters/06.md`, `chapters/07.md`, `chapters/08.md`, `chapters/09.md`
+
 ## Estrutura sugerida de arquivos
 
 Exemplo saudável:

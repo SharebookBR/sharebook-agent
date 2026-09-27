@@ -3,6 +3,42 @@
 Checkpoint oficial da consolidação de memória do projeto.
 
 ## Último dream
+- Data: `2026-09-27`
+- Tipo: `dream semanal automatizado customizado via OpenClaw cron, sem Raffa presente`
+- Última memória absorvida: `memory/2026-09-27-traducao-offline-lancashire-witches.md`
+- Total de memórias lidas: `7 memórias episódicas novas desde o checkpoint real (2026-09-22)`.
+
+## Consolidação produzida em 2026-09-27
+
+### Doctor: dívida estrutural recente resolvida
+- O Harness Doctor abriu com 49 achados, todos em `skills/importers/escrever-livros/`: artefatos e pastas dos projetos `bruxa-por-acaso/` e `lumi-a-bruxinha/` não mencionados no `SKILL.md`.
+- Classificação: `dívida histórica/recente segura`, sobre artefatos deliberados. Evidência: memórias de 2026-09-27 e git log mostram que manuscritos, capítulos, assets, scripts e PDFs são pipeline vivo da linha Sharebook Originals.
+- Correção: `skills/importers/escrever-livros/SKILL.md` agora indexa explicitamente os dois projetos, incluindo subpastas `assets/` e `chapters/`, scripts, manuscritos, PDFs, capas e plates.
+- Doctor fechou limpo.
+
+### Skills atualizadas
+- `skills/importers/escrever-livros/SKILL.md`: seção "Artefatos indexados da linha Originals", tornando observável que os projetos Bruxa por Acaso e Lumi são exemplos vivos do pipeline editorial, não lixo operacional.
+- `skills/runtime/claude-code-web.md`: regra de subagentes calibrada. Três segue como teto inicial conservador; cinco funcionaram uma vez no item 1869 com glossário maduro e revisão ativa, sem virar default.
+
+### Decisões conscientes de não agir
+- Não houve alteração em `SOUL.md`: a safra trouxe boa formulação sobre herança/proveniência entre habitats, mas `SOUL.md` já contém a doutrina geral de herança examinada e não houve decisão constitutiva nova que justificasse reescrita autônoma.
+- Não houve nova regra em `AGENTS.md`: a decisão do Raffa na própria safra foi não inflar o arquivo com mais estrutura de memória; `AGENTS.md` já cobre reconferir estado por fonte primária.
+- Open loops de produto/infra seguem fora do mandato: `BookService.UpdateAsync` ignora `PdfBytes`; item 1869 aguarda `translation-set`/PDF/capa/publicação; pseudônimo dos Originals não decidido; proposta errada no Skill Workshop sem lifecycle; seleção fixa da vitrine Bruxas & Magia deve ser revista quando a categoria crescer; loops antigos de frontend/infra/backend permanecem preservados.
+
+### Validação
+- `python3 skills/doctrine/harness-governance/scripts/harness_doctor.py --root .` abriu com 49 achados e fechou limpo.
+- `python3 -m unittest discover -s skills/doctrine/harness-governance/scripts -p 'test_*.py' -v` terminou com 30 testes aprovados.
+- A memória do ciclo é `memory/2026-09-27-dream-semanal-originals-governanca.md`.
+
+## Próximo dream
+- O checkpoint agora parte de `memory/2026-09-27-traducao-offline-lancashire-witches.md`.
+- Continuar tratando achados do Doctor como objetos de triagem individual; baseline atual é limpo.
+- Observar se novos projetos de `escrever-livros` entram já indexados no `SKILL.md` no mesmo commit.
+- Se houver mais evidência sobre 5 subagentes em tradução pesada, reavaliar se o default conservador de 3 deve mudar; por enquanto, 5 é experimento bem-sucedido de um livro.
+
+## Histórico — 2026-09-25
+
+## Último dream
 - Data: `2026-09-25`
 - Tipo: `dream semanal automatizado via scheduled task (weekly-dream), sem Raffa presente`
 - Última memória absorvida: `memory/2026-09-22-incidente-conexoes-cache-ssr.md`
