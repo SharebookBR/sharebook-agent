@@ -140,7 +140,11 @@ def insert_images(pdf_path, missing):
         missing.append("capa")
     for idx, img in sorted(inserts, reverse=True):
         page = doc.new_page(pno=idx, width=w, height=h)
-        page.insert_image(page.rect, filename=img, keep_proportion=False)
+        # PNG de IA pesa ~4 MB por página; JPEG q85 mantém a qualidade visual e corta ~90%
+        pix = pymupdf.Pixmap(img)
+        if pix.alpha:
+            pix = pymupdf.Pixmap(pix, 0)
+        page.insert_image(page.rect, stream=pix.tobytes("jpeg", jpg_quality=85), keep_proportion=False)
     tmp = pdf_path + ".tmp"
     doc.save(tmp, garbage=3, deflate=True)
     doc.close()
