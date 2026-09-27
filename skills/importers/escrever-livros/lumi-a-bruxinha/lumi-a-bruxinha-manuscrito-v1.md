@@ -692,7 +692,7 @@ Nara virou a fotografia, mostrando o verso.
 
 Lumi e Nara se entreolharam.
 
-— Quando ela foi expulsa, eu não disse nada — continuou Íris. — Tive medo. Escrevi isso atrás da foto e escondi aqui, porque era o único lugar onde eu tinha coragem de dizer a verdade. Depois, virei professora. E passei vinte anos ensinando as alunas a fazer exatamente aquilo que ela dizia que estava errado.
+— Quando ela foi expulsa, eu não disse nada — continuou Íris. — Tive medo. Escrevi isso atrás da foto e escondi aqui, porque era o único lugar onde eu tinha coragem de dizer a verdade. Depois, virei professora. E passei cinquenta anos ensinando as alunas a fazer exatamente aquilo que ela dizia que estava errado.
 
 Ela colocou a fotografia sobre a mesa.
 
@@ -1228,7 +1228,7 @@ As outras foram atrás.
 
 A mulher se virou para as duas.
 
-Tinha o rosto cansado e gentil. Cabelos ruivos, compridos, com fios brancos misturados. E, perto da orelha esquerda...
+Tinha o rosto cansado e gentil. Cabelos compridos, quase todos brancos, com uns poucos fios ainda ruivos, como brasa escondida. E, perto da orelha esquerda...
 
 uma mecha dourada.
 
@@ -1263,7 +1263,7 @@ Era a única coisa verde em quilômetros. A luz vinha de um vaso no parapeito da
 
 Amélia olhou para a cesta. Pela primeira vez, o rosto dela pareceu mais jovem.
 
-— Faz vinte anos que eu não como um sanduíche de presunto e queijo.
+— Faz cinquenta anos que eu não como um sanduíche de presunto e queijo.
 
 Nara entregou um. Amélia deu uma mordida, fechou os olhos e ficou em silêncio por um momento, como quem ouve uma música bonita.
 
@@ -1317,7 +1317,7 @@ Amélia ficou quieta por um tempo.
 
 Ela levantou uma ponta do manto. Era pesado. Lumi viu os dedos dela tremerem com o esforço.
 
-— No começo, era um lencinho cinza — disse Amélia. — Depois virou um xale. Depois uma capa. Durante vinte anos, eu fui guardando o cansaço da floresta aqui, pra dar tempo. Tempo pra alguém na escola perceber. Tempo pra alguém escutar.
+— No começo, era um lencinho cinza — disse Amélia. — Depois virou um xale. Depois uma capa. Durante cinquenta anos, eu fui guardando o cansaço da floresta aqui, pra dar tempo. Tempo pra alguém na escola perceber. Tempo pra alguém escutar.
 
 Nara cobriu a boca com a mão.
 
@@ -1441,7 +1441,7 @@ Amélia ficou parada na porta, com o cajado na mão, olhando para a trilha.
 
 Os olhos dela estavam cheios de lágrimas.
 
-— Vinte anos — sussurrou. — Vinte anos, e nunca ninguém pediu por favor.
+— Cinquenta anos — sussurrou. — Cinquenta anos, e nunca ninguém pediu por favor.
 
 Pingo já estava correndo pela trilha, com a barriga acesa.
 
@@ -1580,7 +1580,7 @@ A diretora olhou para Íris.
 
 Íris respondeu:
 
-— Sim. — E olhou para Amélia. — Eu devia ter acreditado há vinte anos.
+— Sim. — E olhou para Amélia. — Eu devia ter acreditado há cinquenta anos.
 
 Silêncio.
 
@@ -1835,7 +1835,7 @@ Deu um abraço tão apertado na professora Íris que o glitter que ainda restava
 
 A diretora Magnólia se aproximou em seguida. Parou na frente de Amélia. Tirou o chapéu enorme, com a casinha das borboletas, e o segurou contra o peito.
 
-— Amélia — disse. — Eu errei. Floraviva errou. E você pagou por isso durante vinte anos, sozinha, na floresta, carregando um peso que era de todos nós. — A voz dela falhou. — Me desculpe.
+— Amélia — disse. — Eu errei. Floraviva errou. E você pagou por isso durante cinquenta anos, sozinha, na floresta, carregando um peso que era de todos nós. — A voz dela falhou. — Me desculpe.
 
 Amélia olhou para ela por um longo momento.
 
@@ -1871,7 +1871,7 @@ Depois para a de Amélia, idêntica.
 
 — Então eu sou parente dela?
 
-Amélia, ao lado, cruzou os braços e ficou esperando a resposta com um sorriso no canto da boca. Como se já soubesse qual era. Como se estivesse esperando vinte anos para ouvir alguém dizer aquilo.
+Amélia, ao lado, cruzou os braços e ficou esperando a resposta com um sorriso no canto da boca. Como se já soubesse qual era. Como se estivesse esperando cinquenta anos para ouvir alguém dizer aquilo.
 
 A professora Íris sorriu.
 
