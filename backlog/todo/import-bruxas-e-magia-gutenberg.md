@@ -18,7 +18,7 @@ Esta missão não publica automaticamente a vitrine. Ela alimenta a fila para o 
 ## Fila
 
 - [done] The Witch of Salem; or, Credulity Run Mad | https://www.gutenberg.org/ebooks/26282 | John R. Musick; publicado como **A Bruxa de Salem** em 2026-09-26; livro `01a0de6a-6f62-718a-a07a-83ee2d7400e7`.
-- [waiting_triage] The Lancashire Witches: A Romance of Pendle Forest | https://www.gutenberg.org/ebooks/15493 | W. H. Ainsworth; romance de bruxas; elegível BR provável.
+- [done] The Lancashire Witches: A Romance of Pendle Forest | https://www.gutenberg.org/ebooks/15493 | W. H. Ainsworth; publicado como **As Bruxas de Lancashire** em 2026-09-27; livro `01a0e081-4d38-7e11-a8ae-45c08dca4eb2`.
 - [waiting_triage] Salem Witchcraft, Volumes I and II | https://www.gutenberg.org/ebooks/17845 | Charles W. Upham; Salem/documental; elegível BR provável.
 - [waiting_triage] Letters on Demonology and Witchcraft | https://www.gutenberg.org/ebooks/14461 | Walter Scott; demonologia/bruxaria; elegível BR provável.
 - [waiting_triage] The Superstitions of Witchcraft | https://www.gutenberg.org/ebooks/22822 | Howard Williams; bruxaria/superstição; elegível BR provável.
@@ -95,6 +95,20 @@ Substituição aplicada em 2026-09-11:
 - Decisão editorial: mapa, frontispício e assets decorativos/editoriais ficaram fora desta edição; as plates narrativas foram preservadas.
 - Validação feita: item `done` no importer, livro `Available` em produção, capa pública, PDP HTTP 200, endpoint de download com PDF remoto válido (`343` páginas, `512 x 640 pt`, `24` imagens contando capa/página institucional/plates).
 - Fricção operacional: o OpenClaw acessou o banco do importer por túnel SSH para o container Postgres interno da HostGator; o Postgres não estava exposto em `129.121.36.220:5432`.
+
+## Terceiro Livro Publicado — 2026-09-27
+
+- Item `1869`: **The Lancashire Witches: A Romance of Pendle Forest**.
+- Título publicado: **As Bruxas de Lancashire**.
+- Autor publicado: **William Harrison Ainsworth**.
+- Categoria: `Ficção > Bruxas & Magia` (`01a0974c-f122-75ee-9d2b-c3f81497e6dc`).
+- Livro Sharebook: `01a0e081-4d38-7e11-a8ae-45c08dca4eb2`.
+- PDP: `https://www.sharebook.com.br/livros/as-bruxas-de-lancashire`.
+- Artefato local final: `sharebook-ebook-importer/var/tmp/translation-1869/as-bruxas-de-lancashire-sharebook-ptbr.pdf`.
+- Estrutura do PDF: capa autoral 4:5, página 2 institucional Sharebook 4:5, 54 capítulos traduzidos, 12 ilustrações narrativas originais do Gutenberg, notas de fim e licença Project Gutenberg no final.
+- Decisão editorial: linha do impressor da edição de 1854 (`M'Corquodale and Co.`) removida apenas do PDF final, mantendo o manuscrito traduzido versionado intacto.
+- Tradução operacional: job offline no importer via `translation_jobs/project_gutenberg_witches_magic/1869-the-lancashire-witches/`, traduzido por Claude Code Web e registrado com `translation-set`.
+- Validação feita: item `done` no importer, livro `Available` em produção, capa e thumbnail públicas, PDP HTTP 200, API de slug com `eBookPdfPath = ebooks/as-bruxas-de-lancashire.pdf`, PDF local com `782` páginas, `512 x 640 pt` e `14` imagens contando capa/página institucional/plates.
 
 ## Decisões de Arquitetura Pendentes — tradução
 
