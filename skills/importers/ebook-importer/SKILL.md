@@ -131,6 +131,15 @@ Fluxo recomendado:
 
 O agente não deve precisar conhecer a estrutura interna do `metadata_json` para publicar uma tradução.
 
+#### Tradução pesada em job offline (habitat sem banco)
+
+Quando a tradução roda num habitat sem acesso ao Postgres (ex.: Claude Code web), o orquestrador com banco (OpenClaw) faz `translation-next` e materializa um job versionado em `sharebook-ebook-importer/translation_jobs/<source>/<id>-<slug>/`, com `input/` (brief, original, payload, prompt, manifest de imagens) e `output/`. O tradutor mexe só em `output/` e faz commit direto na master, uma vez por lote. Depois, o orquestrador puxa e roda `translation-set --translated-manuscript .../output/translated.md`.
+
+Padrão validado no item 1869 (27/09/2026, ≈234 mil palavras), com referência completa em `translation_jobs/project_gutenberg_witches_magic/1869-the-lancashire-witches/output/`:
+- `tools/split_source.py` divide o original em um segmento por capítulo (`segments.json`); `output/chapters/*.md` são a fonte de verdade; `tools/build_manuscript.py` gera o `translated.md`, que nunca se edita à mão, e recusa se faltar capítulo, ilustração ou nota; `tools/check_chapters.py` confere parágrafos 1:1, a razão de palavras e o resíduo de inglês.
+- O glossário é fixado antes da primeira rodada (nomes, tratamentos, títulos dos capítulos, registro dialetal) e cresce a cada lote. O orquestrador revisa e uniformiza cada lote antes do commit, e termo divergente entre lotes volta para o glossário na hora.
+- Limite de subagentes: 3 é o teto de partida (memória de 25/09). No item 1869, 5 funcionaram com o glossário maduro e revisão ativa (ver memória de 27/09): é evidência de um livro, não regra nova.
+
 ### 3. Publicação
 
 ```bash
