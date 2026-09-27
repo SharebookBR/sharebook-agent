@@ -26,8 +26,7 @@ facts_changed = [
   "PDF da Bruxa em produção é a v3 (5.116.691 bytes, 93 páginas), trocado pelo OpenClaw direto no S3. IDs: Bruxa 01a0e34d-294d-75f1-b8b1-7952bd01650d, Lumi 01a0e393-c323-7d0b-ad03-dab14ed6c964, ambos em Bruxas & Magia.",
 ]
 open_loops = [
-  "Bug no backend: BookService.UpdateAsync ignora PdfBytes (update de ebook responde sucesso sem trocar o PDF). OpenClaw contornou sobrescrevendo no S3. Corrigir o backend (upload + EBookPdfPath no update) fica para sessão com build e deploy.",
-  "Revisão de leitura completa dos dois livros não foi feita por mim; só passadas de continuidade.",
+  "Bug no backend: BookService.UpdateAsync ignora PdfBytes (update de ebook responde sucesso sem trocar o PDF). OpenClaw contornou sobrescrevendo no S3. Registrado no backlog: backlog/todo/fix-update-ebook-nao-troca-pdf.md.",
   "Autoria dos Originals segue como 'Sharebook Originals'; pseudônimo nunca foi decidido.",
 ]
 durable_candidates = [
