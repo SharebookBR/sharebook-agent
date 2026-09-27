@@ -68,10 +68,10 @@ Claude Code na web (sessão cloud efêmera), com clone local dos quatro repos. B
 
 ## Decisões tomadas
 
-- Textos do Raffa foram expandidos, não só revisados, a pedido dele.
-- Liberdade artística nas ilustrações; única correção feita por divergência foi a idade da Íris (a arte a fez idosa; mudei no texto de 20 para 50 anos desde a expulsão, o que ainda deixou a Amélia mais tocante).
-- Capa e plates via PyMuPDF depois da impressão, em JPEG q85.
-- Push na master do `sharebook-agent` autorizado pelo Raffa; o GitHub registra bypass da regra de PR.
+- **Expandir o texto do Raffa em vez de só revisar**, porque ele pediu com critério explícito ("prender a atenção do público-alvo, pode apelar"). Considerei revisão leve e descartei: o conto de 2 mil palavras não sustentava um livro. Se outro agente pegar um rascunho dele: perguntar o critério, preservar as cenas que ele vai ilustrar.
+- **Mudar no texto a idade da Íris e da Amélia (20 → 50 anos desde a expulsão)**, porque a ilustração 1 fez a Íris idosa e o texto a tinha com ~33; a divergência quebrava a foto das duas meninas e o reencontro. Considerei pedir a arte de novo e descartei: refazer imagem custa mais, e os 50 anos deixaram a Amélia mais forte. Regra que ficou: ilustração tem liberdade, só se mexe quando quebra a história.
+- **Capa e plates inseridas via PyMuPDF depois da impressão, em JPEG q85**, porque página sem margem dentro do Chromium encolhe o livro inteiro e PNG estoura o tamanho. Considerei `@page` nomeada e descartei (ver fricção). Não voltar a colocar imagem de página inteira no HTML.
+- **Push na master do `sharebook-agent`**, porque o Raffa pediu e o AGENTS.md já manda commitar direto lá. O GitHub registra bypass da regra de PR; é esperado.
 
 ## Contexto relevante
 
@@ -80,11 +80,15 @@ Claude Code na web (sessão cloud efêmera), com clone local dos quatro repos. B
 
 ## Fricções e soluções
 
-- Sinopse de 1 parágrafo: esqueci a `voice-glossary`. Solução: regra agora está na seção de pipeline da `escrever-livros`.
-- Chromium sem hifenização pt-BR: `pyphen` inserindo `&shy;`.
-- `@page` sem margem para capa encolheu o PDF (87 → 53 páginas). Solução: imagens fora do Chromium.
-- PDF de 42,8 MB (PNG) não passou no limite de 30 MB do chat e seria ruim para download. JPEG q85: 7,7 MB.
-- Rótulo `CAPÍTULO N` com letter-spacing extrai como `C A P Í T U L O 1`; o localizador remove espaços.
+Formato: sinal observado → causa → próximo gesto.
+
+- **Sinopse:** entreguei 1 parágrafo; o Raffa corrigiu ("precisa ser 3"). Causa: escrevi sem abrir a `voice-glossary`. Próximo gesto: abrir a skill antes de qualquer texto para usuário final, inclusive quando parece trivial.
+- **Hifenização:** texto justificado com espaços largos no PDF, nenhum hífen. Causa: o Chromium do habitat não baixa o dicionário pt-BR (proxy). Próximo gesto: o build já insere `&shy;` com `pyphen`; se aparecer espaço largo de novo, conferir se o `pyphen` está instalado.
+- **Miolo encolhido:** com a capa real, o PDF caiu de 87 para 53 páginas, com letra minúscula e sem margem. Causa: `@page` sem margem no meio do fluxo faz o Chromium escalar o documento inteiro. Próximo gesto: imagens de página inteira só via PyMuPDF depois da impressão; validar pela contagem de páginas contra a versão anterior.
+- **PDF pesado:** envio no chat falhou com "42.8 MiB exceeds the 30 MiB upload limit". Causa: ilustrações de IA em PNG (~4 MB cada). Próximo gesto: o build recomprime em JPEG q85 (7,7 MB); se passar de ~10 MB, investigar antes de publicar.
+- **Plates fora do lugar:** o localizador não achou nenhuma abertura de capítulo. Causa: o texto extraído vem `C A P Í T U L O 1` por causa do letter-spacing. Próximo gesto: já remove espaços; se mudar o CSS do rótulo, retestar.
+- **Troca de PDF em produção (relato do OpenClaw):** `update --pdf-path` respondeu "Livro alterado com sucesso!", mas o download público seguiu com 27 MB. Causa, conferida no código: `BookService.UpdateAsync` ignora `PdfBytes`. Próximo gesto: não confiar no retorno; trocar pela chave `ebooks/<slug>.pdf` no S3 e validar pelo download. Corrigir o backend numa sessão com build e deploy.
+- **Sinopse vazia (relato do OpenClaw):** o cadastro passou com sinopse em branco ao usar `--synopsis-file <(...)`. Próximo gesto: arquivo real, e conferir a sinopse no retorno da API.
 
 ## Como me senti
 
