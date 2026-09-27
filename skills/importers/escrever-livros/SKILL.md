@@ -206,6 +206,11 @@ Projeto de referência: `bruxa-por-acaso/` (rom-com YA, 9 capítulos + epílogo,
 - **Selo:** folha de rosto usa `product-ux/cover-direction/assets/sharebook-originals-seal.png` (tem fundo preto quadrado; recortar com `clip-path: circle(47%)`).
 - **Capa e ilustrações:** o Raffa gera numa IA de imagem com referência visual das artes anteriores. O agente entrega prompts de cena curtos com "mesmo estilo, mesma paleta e mesmos personagens das ilustrações anteriores". Ele prefere liberdade artística: ilustração não precisa ser fiel ao texto em figurino e detalhes, então não propor ajustar texto nem refazer arte por isso.
 - **Publicação:** quem publica é o OpenClaw, via `scripts/production/sharebook_prod_book.py create --type Eletronic`. A sinopse segue a `voice-glossary` (exatamente 3 parágrafos). Ler a skill antes de redigir, não depois do puxão de orelha.
+- **Armadilhas de publicação (relatadas pelo OpenClaw, 27/09):**
+  - `update --pdf-path` responde "Livro alterado com sucesso!" mas **não troca o PDF**: `BookService.UpdateAsync` ignora `PdfBytes` (o upload só existe no `InsertAsync`). Até o backend ser corrigido, trocar PDF é sobrescrever a chave `ebooks/<slug>.pdf` no S3. Sempre validar pelo download público, nunca pelo retorno do script.
+  - `--synopsis-file` com process substitution (`<(...)`) grava sinopse vazia. Usar arquivo real.
+  - Categoria dos Originals de bruxa: **Bruxas & Magia** (decisão do Raffa), não Amor nem Fantasia genérica.
+  - Nos prompts para o OpenClaw, dizer "tente por X, valide pelo download público, se não bater investigue e contorne", em vez de presumir que o script faz o que o nome promete.
 
 ## Estrutura sugerida de arquivos
 
