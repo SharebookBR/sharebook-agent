@@ -139,6 +139,22 @@ Padrão validado no item 1869 (27/09/2026, ≈234 mil palavras), com referência
 - `tools/split_source.py` divide o original em um segmento por capítulo (`segments.json`); `output/chapters/*.md` são a fonte de verdade; `tools/build_manuscript.py` gera o `translated.md`, que nunca se edita à mão, e recusa se faltar capítulo, ilustração ou nota; `tools/check_chapters.py` confere parágrafos 1:1, a razão de palavras e o resíduo de inglês.
 - O glossário é fixado antes da primeira rodada (nomes, tratamentos, títulos dos capítulos, registro dialetal) e cresce a cada lote. O orquestrador revisa e uniformiza cada lote antes do commit, e termo divergente entre lotes volta para o glossário na hora.
 - Limite de subagentes: 3 é o teto de partida (memória de 25/09). No item 1869, 5 funcionaram com o glossário maduro e revisão ativa (ver memória de 27/09): é evidência de um livro, não regra nova. No item 1870 (28/09) o Raffa mandou voltar para 3 depois de dois estouros de limite de sessão: **paralelismo não muda o custo total em tokens, só o tamanho do estrago quando a parede chega** — com 5 em voo perdem-se 5 trabalhos, com 3 perdem-se 3.
+- **A trava tem de saber em que etapa do pipeline ela roda.** No item 1870 o
+  `check_chapters.py` acusou 17 falhas no livro já publicado, e as 17 eram artefato do
+  `apply_images.py`: alt-text vazado do Gutenberg e lixo de navegação (`Go to Volume II`,
+  `[View larger image (383K)]`) que a etapa de imagem remove **de propósito**, mais uma
+  legenda inserida (`Mapa da Vila de Salem em 1692`) disparando a própria trava Salem
+  Town/Vila. O manuscrito estava certo. Um verificador que grita depois da última etapa
+  normal do pipeline é um verificador que vai ser ignorado — e aí ele não protege mais
+  nada. Verificação de tradução roda **antes** da aplicação de imagem, ou então sabe
+  descontar o que aquela etapa muda.
+- **Handoff entre habitats é mecanismo de projeto, não plano B.** No item 1870 a sessão
+  Claude Code web morreu por limite com 64 de 83 segmentos, e o OpenClaw retomou do estado
+  commitado e fechou o livro sem precisar perguntar nada. O que fez isso funcionar não foi
+  sorte: foi commit por lote e um `PROGRESS.md` que lista **nominalmente** o que falta, a
+  ordem dos passos restantes e os avisos que não se descobrem lendo o texto. Não avalie a
+  sessão contra o livro inteiro; avalie contra o estado que ela deixou legível para quem
+  chegar depois.
 
 Aprendido no item 1870 (≈295 mil palavras, 83 segmentos), referência em `translation_jobs/project_gutenberg_witches_magic/1870-salem-witchcraft-volumes-i-and-ii/output/`:
 
