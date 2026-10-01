@@ -226,7 +226,9 @@ Os projetos abaixo sao artefatos deliberados da linha Sharebook Originals. Mante
 - estrutura: `assets/`, `chapters/`, `build_manuscript.py`
 - texto: `rascunho-original-raffa.md` (rascunho do Raffa, preservado intocado), `chapters/01.md` a `05.md`, `promessa-de-dez-veroes-manuscrito-v1.md` (gerado por script)
 - revisao: `revisao-v1.md` — 20 trechos alterados, cada um com motivo, mais o que NAO foi mudado e precisa de decisao do Raffa. Traz receita de auditoria por diff que reimprime os 20.
-- pendente: capa, ilustracoes, `book.css`/`build_book.py`/`print_pdf.mjs` (copiar de `bruxa-por-acaso/`), PDF, sinopse de catalogo pela `voice-glossary`
+- assets (entregues 2026-10-01, todas 1122x1402, proporcao 4:5 exata = preset do miolo): `assets/promessa-de-dez-veroes-capa.png`, `assets/ilus-01-porta-chuva.png`, `assets/ilus-02-casa-tempestade.png`, `assets/ilus-03-aparador-runas.png`, `assets/ilus-04-varanda-grimorio.png`, mapeadas em `assets/plates.md`
+- pendente: `book.css`/`build_book.py`/`print_pdf.mjs` (copiar de `bruxa-por-acaso/`), PDF, sinopse de catalogo pela `voice-glossary`
+- **armadilha ja identificada:** o build localiza o ponto de insercao pelo rotulo `CAPITULO N` e a `ilus-04` entra antes do **epilogo**, que nao tem numero. Resolver ao copiar o build.
 - cadastro: categoria **Bruxas & Magia**, e precisa de **classificacao adulta** (cap. 3 tem cena explicita)
 
 **Pratica que vale para qualquer revisao desta linha:** manter o rascunho do Raffa num arquivo
