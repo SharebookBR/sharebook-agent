@@ -198,7 +198,14 @@ Checklist mínimo:
 
 ## Linha Sharebook Originals: pipeline de referência (2026-09-27)
 
-Projeto de referência: `bruxa-por-acaso/` (rom-com YA, 9 capítulos + epílogo, ~20 mil palavras, capa + 6 ilustrações). Para livro novo, copiar `build_book.py`, `print_pdf.mjs` e `book.css` de lá e ajustar título, `PLATES` e textos institucionais.
+Projeto de referência: **`sharebook-ebook-importer/originals/bruxa-por-acaso/`** (rom-com YA, 9 capítulos + epílogo, ~20 mil palavras, capa + 6 ilustrações). Para livro novo, copiar `build_book.py`, `print_pdf.mjs` e `book.css` de lá e ajustar título, `PLATES` e textos institucionais.
+
+> **Os artefatos dos Originals NÃO moram mais nesta skill.** Decisão do Raffa em 2026-10-01:
+> guardar livro dentro da skill misturava instrução com artefato e punha ~77 MB de PNG no
+> repo de skills e memória. Texto, capa, ilustrações, scripts e PDFs agora ficam em
+> **`sharebook-ebook-importer/originals/<livro>/`**, ao lado de `translation_jobs/`, que é
+> onde os livros traduzidos já viviam. Esta skill segue sendo a fonte do **processo**.
+> Layout e comando de build: `originals/README.md`.
 
 - **Texto:** um arquivo por capítulo em `chapters/NN.md` (`## Capítulo N — Título`), manuscrito consolidado gerado a partir deles. Rascunho do Raffa é ponto de partida: pode reescrever e expandir livremente mirando o público-alvo, preservando as cenas-chave que ele já ilustrou ou pretende ilustrar.
 - **Miolo:** preset 4:5 da `sharebook-pdf-typesetting` (512x640 pt, Liberation Serif 12/17.2). O Chromium do Claude Code web não hifeniza pt-BR (dicionário bloqueado pelo proxy): o build insere `&shy;` com `pyphen` (`left=3, right=3`).
@@ -212,48 +219,17 @@ Projeto de referência: `bruxa-por-acaso/` (rom-com YA, 9 capítulos + epílogo,
   - Categoria dos Originals de bruxa: **Bruxas & Magia** (decisão do Raffa), não Amor nem Fantasia genérica.
   - Nos prompts para o OpenClaw, dizer "tente por X, valide pelo download público, se não bater investigue e contorne", em vez de presumir que o script faz o que o nome promete.
 
-### Artefatos indexados da linha Originals
+### Onde estão os livros da linha
 
-Os projetos abaixo sao artefatos deliberados da linha Sharebook Originals. Mantem texto-fonte, capa, plates, scripts e PDFs de referencia dentro da skill porque sao exemplos vivos do pipeline editorial, nao lixo operacional.
+| Livro | Caminho | Estado |
+|---|---|---|
+| Bruxa por Acaso & o Galã de Milhões | `sharebook-ebook-importer/originals/bruxa-por-acaso/` | publicado |
+| Lumi, a Bruxinha | `sharebook-ebook-importer/originals/lumi-a-bruxinha/` | publicado |
+| Promessa de Dez Verões | `sharebook-ebook-importer/originals/promessa-de-dez-veroes/` | PDF v1 pronto; falta sinopse de catálogo e cadastro |
 
-`bruxa-por-acaso/`:
-- estrutura: `.gitignore`, `assets/`, `bruxa-por-acaso/assets/`, `chapters/`, `bruxa-por-acaso/chapters/`, `book.css`, `build_book.py`, `print_pdf.mjs`
-- texto e PDFs: `bruxa-por-acaso-manuscrito-v1.md`, `bruxa-por-acaso-book-v1.pdf`, `bruxa-por-acaso-book-v3.pdf`
-- assets: `assets/cover-prompt.txt`, `assets/bruxa-por-acaso-capa.png`, `assets/ilus-baile.png`, `assets/ilus-cabana.png`, `assets/ilus-caio-lobo.png`, `assets/ilus-contrato.png`, `assets/ilus-quarto-viral.png`, `assets/ilus-rua-neon.png`
-- capitulos: `chapters/01.md`, `chapters/02.md`, `chapters/03.md`, `chapters/04.md`, `chapters/05.md`, `chapters/06.md`, `chapters/07.md`, `chapters/08.md`, `chapters/09.md`, `chapters/10.md`
-
-`promessa-de-dez-veroes/` (romance paranormal adulto, 4 capitulos + epilogo, ~2 mil palavras — **mini-livro**, escala muito abaixo dos outros dois da linha):
-- estrutura: `assets/`, `chapters/`, `build_manuscript.py`
-- texto: `rascunho-original-raffa.md` (rascunho do Raffa, preservado intocado), `chapters/01.md` a `05.md`, `promessa-de-dez-veroes-manuscrito-v1.md` (gerado por script)
-- revisao: `revisao-v1.md` — 20 trechos alterados, cada um com motivo, mais o que NAO foi mudado e precisa de decisao do Raffa. Traz receita de auditoria por diff que reimprime os 20.
-- assets (entregues 2026-10-01, todas 1122x1402, proporcao 4:5 exata = preset do miolo): `assets/promessa-de-dez-veroes-capa.png`, `assets/ilus-01-porta-chuva.png`, `assets/ilus-02-casa-tempestade.png`, `assets/ilus-03-aparador-runas.png`, `assets/ilus-04-varanda-grimorio.png`, `assets/ilus-05-varanda-escolha.png` (1072x1340, recortada de 1072x1467 para o 4:5), mapeadas em `assets/plates.md`
-- build: `book.css` e `print_pdf.mjs` copiados de `bruxa-por-acaso/` sem mudanca; `build_book.py` com UMA mudanca de mecanismo (abaixo). PDF: `promessa-de-dez-veroes-book-v1.pdf`, 19 paginas, 3,8 MB, 512x640 pt
-- pendente: sinopse de catalogo pela `voice-glossary`, cadastro pelo OpenClaw
-
-**Conserto que vale portar para os proximos livros da linha:** o `insert_images` do
-`bruxa-por-acaso` localiza a abertura casando a primeira linha da pagina contra
-`CAPITULO (\d+)`. Isso funciona para capitulo numerado e **falha em silencio para secao sem
-numero** — epilogo, prologo, interludio, posfacio: a prancha simplesmente nao entra e o PDF
-sai sem erro nenhum. Em `promessa-de-dez-veroes/build_book.py` o localizador passou a casar
-a primeira linha contra o rotulo **ou** contra o titulo da secao, os dois vindos do proprio
-`chapters/`. Funciona para `CAPITULO 4` e para `Epilogo` sem caso especial.
-
-**Outra que custou um PDF:** o `**FIM**` estava sendo costurado pelo `build_manuscript.py` e
-nao existia em `chapters/`, entao o manuscrito tinha e o PDF **nao**. Fonte unica: o FIM mora
-no ultimo capitulo. Regra geral — se um elemento aparece no manuscrito e no PDF, ele tem de
-vir de `chapters/`, nunca de um dos dois scripts.
-- cadastro: categoria **Bruxas & Magia**, e precisa de **classificacao adulta** (cap. 3 tem cena explicita)
-
-**Pratica que vale para qualquer revisao desta linha:** manter o rascunho do Raffa num arquivo
-proprio e intocado, e descrever a revisao por **diff palavra a palavra**, nao de memoria. A
-contagem de mudancas do `revisao-v1.md` saiu do diff, e a receita esta no proprio relatorio para
-qualquer um reimprimir. Relatorio de revisao sem diff e afirmacao, nao evidencia.
-
-`lumi-a-bruxinha/`:
-- estrutura: `.gitignore`, `assets/`, `lumi-a-bruxinha/assets/`, `chapters/`, `lumi-a-bruxinha/chapters/`, `book.css`, `build_book.py`, `print_pdf.mjs`
-- texto e PDF: `roteiro-original-raffa.md`, `lumi-a-bruxinha-manuscrito-v1.md`, `lumi-a-bruxinha-book-v1.pdf`
-- assets: `assets/lumi-a-bruxinha-capa.png`, `assets/ilus-01-flor-espirro.png`, `assets/ilus-02-fotografia.png`, `assets/ilus-03-sala-secreta.png`, `assets/ilus-04-festival.png`, `assets/ilus-05-abraco.png`, `assets/ilus-06-amelia.png`, `assets/ilus-07-arvore-mae.png`, `assets/ilus-08-pergunte.png`, `assets/ilus-09-rosa-azul.png`
-- capitulos: `chapters/01.md`, `chapters/02.md`, `chapters/03.md`, `chapters/04.md`, `chapters/05.md`, `chapters/06.md`, `chapters/07.md`, `chapters/08.md`, `chapters/09.md`
+O selo da folha de rosto é um só para todos, em `originals/_shared/`. Antes cada build o
+alcançava por `../../../product-ux/cover-direction/assets/`, caminho que **não sobrevive à
+mudança de repo** — foi a única dependência cruzada da migração.
 
 ## Estrutura sugerida de arquivos
 
