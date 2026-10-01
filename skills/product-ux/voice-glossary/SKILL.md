@@ -1,6 +1,6 @@
 ---
 name: voice-glossary
-description: Use quando a tarefa envolver copy, nomenclatura, microcopy, emails, labels, mensagens, UX writing, revisão semântica ou dúvidas sobre termos oficiais do Sharebook. Também usar quando houver suspeita de inconsistência entre livro físico e livro digital, ou ao decidir se termos como doação, solicitação, doador(a), ganhador(a), livro digital, vitrine e data de escolha devem aparecer em frontend, backend, templates ou textos operacionais.
+description: Use quando a tarefa envolver copy, nomenclatura, microcopy, emails, labels, mensagens, UX writing, revisão semântica ou dúvidas sobre termos oficiais do Sharebook. Também usar quando houver suspeita de inconsistência entre livro físico e livro digital, ou ao decidir se termos como doação, solicitação, pessoa doadora, pessoa ganhadora, livro digital, vitrine e data de escolha devem aparecer em frontend, backend, templates ou textos operacionais.
 ---
 
 # Sharebook Voice & Glossary
@@ -15,7 +15,7 @@ Exemplos típicos:
 - revisar email/template do Sharebook
 - decidir entre `pedido` vs `solicitação`
 - decidir entre `ebook` vs `livro digital`
-- validar se `doação` e `ganhador(a)` podem aparecer também em fluxo digital
+- validar se `doação` e `pessoa ganhadora` podem aparecer também em fluxo digital
 - revisar CTA, label, título de tela, estado vazio ou mensagem de erro
 - auditar inconsistência semântica entre backend, frontend e operação
 - responder dúvida sobre voz oficial do Sharebook
@@ -39,12 +39,14 @@ Ao escrever sinopses para o catálogo:
 - Usar **livro digital**, nunca `ebook`, `e-book` ou `livro eletrônico` em texto visível.
 - Usar **doação** como termo oficial do ato de oferecer o livro.
 - Usar **solicitação** em vez de `pedido`.
-- Usar **doador(a)** e **ganhador(a)** como papéis oficiais do fluxo.
+- Usar **pessoa doadora** e **pessoa ganhadora** quando for necessário nomear os papéis humanos do fluxo.
+- Evitar `doador(a)`, `ganhador(a)`, `o(a) doador(a)` e `o(a) ganhador(a)` em textos visíveis.
+- Quando a frase ficar mais humana sem nomear o papel, preferir reformular com **quem doou**, **quem vai receber**, **quem solicitou**, **pessoas interessadas** ou construção equivalente.
 - Usar **entrar** em vez de `login` em labels visíveis.
 - Usar **código de rastreio** para envio.
 - Usar **data de escolha** para o momento da decisão.
-- Depois da escolha de um livro físico, o Sharebook já fornece ao doador todos os
-  dados necessários para o envio. Não pedir ao ganhador que responda, confirme
+- Depois da escolha de um livro físico, o Sharebook já fornece à pessoa doadora todos os
+  dados necessários para o envio. Não pedir à pessoa ganhadora que responda, confirme
   endereço ou combine a entrega, salvo se houver uma exceção real e explícita.
 
 ## Regra crítica sobre físico vs digital
@@ -54,8 +56,8 @@ Não presumir que termos de físico são proibidos no digital.
 No Sharebook, a identidade do produto permite linguagem compartilhada entre físico e digital, inclusive termos como:
 - doação
 - solicitação
-- doador(a)
-- ganhador(a)
+- pessoa doadora
+- pessoa ganhadora
 - vitrine
 
 O que deve ser evitado não é o vocabulário compartilhado, e sim a **mecânica falsa**.

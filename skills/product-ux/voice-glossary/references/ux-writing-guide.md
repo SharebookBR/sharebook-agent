@@ -7,10 +7,10 @@ Fonte canônica de linguagem de produto da agência Sharebook.
 - **Livro digital**: Use sempre este termo (evite *e-book*, *ebook* ou *livro eletrônico*).
 - **Doação**: O ato de oferecer o livro.
 - **Solicitação**: Use este termo em vez de "pedido".
-- **Doador(a) / Ganhador(a)**: Termos oficiais para os papéis no fluxo.
+- **Pessoa doadora / pessoa ganhadora**: Termos oficiais para os papéis humanos no fluxo quando for necessário nomeá-los. Evite `doador(a)` e `ganhador(a)` em textos visíveis.
 - **Entrar**: CTA principal para login (evite o termo em inglês "Login" em labels visíveis).
 - **Código de rastreio**: Para envios.
-- **Data de escolha**: Momento da decisão do ganhador.
+- **Data de escolha**: Momento de escolher quem vai receber a doação.
 
 ## Princípios
 1. **Clareza primeiro**: Frases curtas, diretas e "uma frase, uma ideia".
@@ -29,7 +29,7 @@ Fonte canônica de linguagem de produto da agência Sharebook.
 - **Descoberta**: "Vitrine", "Livros em destaque".
 - **Interesse**: "Tenho interesse", "Solicitar livro".
 - **Pós-solicitação**: "Acompanhar solicitação".
-- **Gestão**: "Minhas doações", "Escolher ganhador(a)".
+- **Gestão**: "Minhas doações", "Escolher quem vai receber".
 - **Estados vazios**: Devem ser convidativos (ex: "Ainda não há livros nesta categoria. Que tal explorar a vitrine?").
 
 ## Regra crítica sobre físico vs digital
@@ -38,8 +38,8 @@ No Sharebook, o vocabulário institucional pode atravessar os dois mundos.
 Isso significa que termos como:
 - doação
 - solicitação
-- doador(a)
-- ganhador(a)
+- pessoa doadora
+- pessoa ganhadora
 - vitrine
 
 podem aparecer também em fluxos digitais, desde que não criem uma promessa operacional falsa.
@@ -56,25 +56,25 @@ Exemplos de erro:
 
 Templates são genéricos por definição — nunca devem conter dados reais de uma doação/pessoa específica (nome, endereço, e-mail, título de livro real de um caso concreto). Ao editar um template:
 - Substituir dado real por **dado mockado plausível**, não por token `{PLACEHOLDER}` — o processo de envio aqui é manual (copy/paste), então o texto deve ler como um exemplo natural, não como campo de merge de sistema automatizado.
-- Usar uma identidade fictícia consistente entre os templates para não confundir (ex: ganhadora "Maria Silva", livro "Dom Casmurro", endereço claramente fictício como "Rua das Acácias, 123").
+- Usar uma identidade fictícia consistente entre os templates para não confundir (ex: pessoa ganhadora "Maria Silva", livro "Dom Casmurro", endereço claramente fictício como "Rua das Acácias, 123").
 - Exceção: destinatários/CC operacionais (ex: lista de administradores) não devem ser mockados — são roteamento real, não conteúdo narrativo. Se um template tiver isso hardcoded, é sinal de que aquele dado não pertence ao corpo do template; remover e tratar como parte do envio, não do texto.
 
 ## Corpo e assunto dos e-mails
 
 - O assunto deve antecipar o evento ou a ação principal em sentence case. Evitar prefixos como `Sharebook -`, caixa alta, `URGENTE!` e nomes internos de template.
 - O corpo deve dizer, nesta ordem: o que aconteceu, o que a pessoa precisa fazer e onde fazer.
-- Não atribuir intenção, emoção ou necessidade sem evidência. Exemplos proibidos: afirmar que o doador escolheu quem “mais precisava”, prometer que um encontro será agradável ou dizer que um livro mudará uma vida.
+- Não atribuir intenção, emoção ou necessidade sem evidência. Exemplos proibidos: afirmar que a pessoa doadora escolheu quem “mais precisava”, prometer que um encontro será agradável ou dizer que um livro mudará uma vida.
 - Não usar culpa, estigma social ou paternalismo para produzir ação.
 - Emojis não são assinatura de voz. Evitar decoração; usar somente quando acrescentarem significado real.
 - Preservar a mecânica exata do fluxo. Cancelamento, não seleção, atraso e renovação são eventos diferentes e devem receber mensagens diferentes.
 
-### Responsabilidade do doador após a escolha
+### Responsabilidade da pessoa doadora após a escolha
 
-- Em lembretes de escolha, não apresentar a automação do Sharebook como se ela encerrasse o papel do doador.
-- Após a escolha, o Sharebook já fornece ao doador todos os dados necessários para realizar o envio.
-- Não orientar o doador a entrar em contato para combinar a entrega e não pedir à pessoa ganhadora que responda, informe ou confirme endereço. Isso inventa uma etapa que não existe.
-- Em mensagens de boa notícia enviadas pelo doador, celebrar a escolha e informar que o envio será preparado. Só solicitar resposta quando houver uma exceção operacional real e explícita.
-- Motivar pelo impacto concreto do próximo passo: a escolha inicia a etapa, e o doador agora deve realizar o envio usando os dados já disponíveis no Sharebook.
+- Em lembretes de escolha, não apresentar a automação do Sharebook como se ela encerrasse o papel da pessoa doadora.
+- Após a escolha, o Sharebook já fornece à pessoa doadora todos os dados necessários para realizar o envio.
+- Não orientar a pessoa doadora a entrar em contato para combinar a entrega e não pedir à pessoa ganhadora que responda, informe ou confirme endereço. Isso inventa uma etapa que não existe.
+- Em mensagens de boa notícia enviadas pela pessoa doadora, celebrar a escolha e informar que o envio será preparado. Só solicitar resposta quando houver uma exceção operacional real e explícita.
+- Motivar pelo impacto concreto do próximo passo: a escolha inicia a etapa, e a pessoa doadora agora deve realizar o envio usando os dados já disponíveis no Sharebook.
 - Manter o convite amigável, sem culpa, cobrança moral ou promessa grandiosa de transformação.
 
 ### Avisos firmes e consequências
@@ -111,7 +111,7 @@ Regras:
 - A frase anterior ao rodapé pode variar conforme o contexto; ajuda, assinatura e slogan não variam.
 - Não incluir Instagram, LinkedIn, Facebook, licença open source ou outros links promocionais. Eles disputam atenção com a ação principal do e-mail.
 - Não orientar a pessoa a responder ao e-mail sem prova de que a caixa de resposta é acompanhada.
-- Não usar o facilitador como canal de ajuda. Dúvidas sobre o Sharebook vão para o Fale Conosco; combinações de entrega acontecem diretamente entre doador(a) e ganhador(a).
+- Não usar o facilitador como canal de ajuda. Dúvidas sobre o Sharebook vão para o Fale Conosco; quando houver uma exceção operacional real, combinações de entrega acontecem diretamente entre pessoa doadora e pessoa ganhadora.
 
 ### Resumos e newsletters
 
