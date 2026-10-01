@@ -1,0 +1,46 @@
+PROMPT — ilustração do Capítulo 4 ("A Escolha")
+
+Cinematic romantic illustration. Same art style, same warm golden palette and the same two
+characters as the previous illustrations in this series: a woman in her late twenties with
+long wavy honey-brown hair, and a tall man with dark curly hair and a short beard.
+
+Early morning on the wooden veranda of a rustic beach house on a Brazilian tropical coast.
+Warm golden sunlight, turquoise sea, palm trees and green hills in the background. Same
+weathered wood, lace textiles, candle lanterns and potted flowers as the earlier images.
+
+She stands at the wooden railing in a long white lace dress, seen in three-quarter view. In
+one hand she holds a smartphone, its screen glowing with unread notifications. Her other
+hand is open, palm up, and a thin white-gold ring rests on it. Delicate glowing golden rune
+symbols trace softly along her forearm. Her expression is thoughtful and resolved — a woman
+weighing two lives.
+
+A few steps behind her he sits on a wicker chair, wearing an open white linen shirt, calm
+and patient, watching her decide without interrupting. A small golden rune glows faintly on
+his inner forearm.
+
+On the low table beside him: an open leather-bound book with handwritten pages, a blue-and-
+white ceramic cup, sprigs of dried lavender. Tiny golden light particles drift in the air.
+
+Warm cinematic lighting, soft shallow depth of field, photorealistic, highly detailed.
+Portrait orientation, aspect ratio 4:5, 1122x1402.
+
+---
+
+NOTAS
+
+Composição escolhida de propósito: o capítulo é a manhã seguinte, mas pedir quarto, cama ou
+casal seminu é o caminho mais curto para o filtro recusar. A varanda resolve melhor o
+capítulo de qualquer forma — "A Escolha" é o celular numa mão e a aliança na outra, não a
+cama. E ainda rima com a capa e com a `ilus-04`, que também são varanda.
+
+Palavras evitadas de propósito: cama, quarto, lençol, sensual, íntimo, paixão, amantes,
+desnudo, seminu, após a noite. O prompt não precisa de nenhuma delas.
+
+Se o gerador ainda recusar, os dois ajustes mais prováveis de destravar, nesta ordem:
+1. trocar `long white lace dress` por `long white linen sundress`
+2. tirar `she stands at the railing` e pôr `she stands beside a wooden table`, afastando a
+   leitura de varanda de quarto
+
+Se ele aceitar mas a composição vier fraca, o detalhe que mais importa preservar é a
+**assimetria das mãos**: celular aceso numa, aliança solta na outra. É o que faz a imagem
+contar o capítulo.
