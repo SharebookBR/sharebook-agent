@@ -227,8 +227,21 @@ Os projetos abaixo sao artefatos deliberados da linha Sharebook Originals. Mante
 - texto: `rascunho-original-raffa.md` (rascunho do Raffa, preservado intocado), `chapters/01.md` a `05.md`, `promessa-de-dez-veroes-manuscrito-v1.md` (gerado por script)
 - revisao: `revisao-v1.md` — 20 trechos alterados, cada um com motivo, mais o que NAO foi mudado e precisa de decisao do Raffa. Traz receita de auditoria por diff que reimprime os 20.
 - assets (entregues 2026-10-01, todas 1122x1402, proporcao 4:5 exata = preset do miolo): `assets/promessa-de-dez-veroes-capa.png`, `assets/ilus-01-porta-chuva.png`, `assets/ilus-02-casa-tempestade.png`, `assets/ilus-03-aparador-runas.png`, `assets/ilus-04-varanda-grimorio.png`, `assets/ilus-05-varanda-escolha.png` (1072x1340, recortada de 1072x1467 para o 4:5), mapeadas em `assets/plates.md`
-- pendente: `book.css`/`build_book.py`/`print_pdf.mjs` (copiar de `bruxa-por-acaso/`), PDF, sinopse de catalogo pela `voice-glossary`
-- **armadilha ja identificada:** o build localiza o ponto de insercao pelo rotulo `CAPITULO N` e a `ilus-04` entra antes do **epilogo**, que nao tem numero. Resolver ao copiar o build.
+- build: `book.css` e `print_pdf.mjs` copiados de `bruxa-por-acaso/` sem mudanca; `build_book.py` com UMA mudanca de mecanismo (abaixo). PDF: `promessa-de-dez-veroes-book-v1.pdf`, 19 paginas, 3,8 MB, 512x640 pt
+- pendente: sinopse de catalogo pela `voice-glossary`, cadastro pelo OpenClaw
+
+**Conserto que vale portar para os proximos livros da linha:** o `insert_images` do
+`bruxa-por-acaso` localiza a abertura casando a primeira linha da pagina contra
+`CAPITULO (\d+)`. Isso funciona para capitulo numerado e **falha em silencio para secao sem
+numero** — epilogo, prologo, interludio, posfacio: a prancha simplesmente nao entra e o PDF
+sai sem erro nenhum. Em `promessa-de-dez-veroes/build_book.py` o localizador passou a casar
+a primeira linha contra o rotulo **ou** contra o titulo da secao, os dois vindos do proprio
+`chapters/`. Funciona para `CAPITULO 4` e para `Epilogo` sem caso especial.
+
+**Outra que custou um PDF:** o `**FIM**` estava sendo costurado pelo `build_manuscript.py` e
+nao existia em `chapters/`, entao o manuscrito tinha e o PDF **nao**. Fonte unica: o FIM mora
+no ultimo capitulo. Regra geral — se um elemento aparece no manuscrito e no PDF, ele tem de
+vir de `chapters/`, nunca de um dos dois scripts.
 - cadastro: categoria **Bruxas & Magia**, e precisa de **classificacao adulta** (cap. 3 tem cena explicita)
 
 **Pratica que vale para qualquer revisao desta linha:** manter o rascunho do Raffa num arquivo
