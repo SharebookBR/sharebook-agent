@@ -131,7 +131,7 @@ python3 - <<'PY'
 import re, glob, difflib
 o = open("rascunho-original-raffa.md", encoding="utf-8").read()
 o = o[o.index("## Capítulo 1"):].replace("**FIM**", "").strip()
-r = "\n\n".join(open(f, encoding="utf-8").read().strip() for f in sorted(glob.glob("chapters/*.md")))
+r = "\n\n".join(open(f, encoding="utf-8").read().strip() for f in sorted(glob.glob("chapters/*.md"))).replace("**FIM**", "")
 n = lambda t: re.sub(r"\s+", " ", re.sub(r"^## .*$", "", t, flags=re.M).replace("---", " ")).strip()
 a, b = n(o).split(), n(r).split()
 for tag, i1, i2, j1, j2 in difflib.SequenceMatcher(None, a, b, autojunk=False).get_opcodes():

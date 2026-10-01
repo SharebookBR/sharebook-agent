@@ -52,7 +52,9 @@ def main():
         partes += [corpo, "", "---", ""]
 
     texto = "\n".join(partes).rstrip()
-    texto = texto[: texto.rfind("---")].rstrip() + "\n\n**FIM**\n"
+    # O "**FIM**" vive em chapters/05.md, nao e costurado aqui: fonte unica, para o
+    # manuscrito e o PDF nunca divergirem (o PDF v1 saiu sem FIM justamente por isso).
+    texto = texto[: texto.rfind("---")].rstrip() + "\n"
 
     # Markdown cru não pode sobrar no caminho do PDF (anti-padrão da skill).
     if re.search(r"\*\*(?!FIM\*\*)", texto.replace("**FIM**", "")):
