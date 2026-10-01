@@ -222,6 +222,18 @@ Os projetos abaixo sao artefatos deliberados da linha Sharebook Originals. Mante
 - assets: `assets/cover-prompt.txt`, `assets/bruxa-por-acaso-capa.png`, `assets/ilus-baile.png`, `assets/ilus-cabana.png`, `assets/ilus-caio-lobo.png`, `assets/ilus-contrato.png`, `assets/ilus-quarto-viral.png`, `assets/ilus-rua-neon.png`
 - capitulos: `chapters/01.md`, `chapters/02.md`, `chapters/03.md`, `chapters/04.md`, `chapters/05.md`, `chapters/06.md`, `chapters/07.md`, `chapters/08.md`, `chapters/09.md`, `chapters/10.md`
 
+`promessa-de-dez-veroes/` (romance paranormal adulto, 4 capitulos + epilogo, ~2 mil palavras — **mini-livro**, escala muito abaixo dos outros dois da linha):
+- estrutura: `assets/`, `chapters/`, `build_manuscript.py`
+- texto: `rascunho-original-raffa.md` (rascunho do Raffa, preservado intocado), `chapters/01.md` a `05.md`, `promessa-de-dez-veroes-manuscrito-v1.md` (gerado por script)
+- revisao: `revisao-v1.md` — 20 trechos alterados, cada um com motivo, mais o que NAO foi mudado e precisa de decisao do Raffa. Traz receita de auditoria por diff que reimprime os 20.
+- pendente: capa, ilustracoes, `book.css`/`build_book.py`/`print_pdf.mjs` (copiar de `bruxa-por-acaso/`), PDF, sinopse de catalogo pela `voice-glossary`
+- cadastro: categoria **Bruxas & Magia**, e precisa de **classificacao adulta** (cap. 3 tem cena explicita)
+
+**Pratica que vale para qualquer revisao desta linha:** manter o rascunho do Raffa num arquivo
+proprio e intocado, e descrever a revisao por **diff palavra a palavra**, nao de memoria. A
+contagem de mudancas do `revisao-v1.md` saiu do diff, e a receita esta no proprio relatorio para
+qualquer um reimprimir. Relatorio de revisao sem diff e afirmacao, nao evidencia.
+
 `lumi-a-bruxinha/`:
 - estrutura: `.gitignore`, `assets/`, `lumi-a-bruxinha/assets/`, `chapters/`, `lumi-a-bruxinha/chapters/`, `book.css`, `build_book.py`, `print_pdf.mjs`
 - texto e PDF: `roteiro-original-raffa.md`, `lumi-a-bruxinha-manuscrito-v1.md`, `lumi-a-bruxinha-book-v1.pdf`
