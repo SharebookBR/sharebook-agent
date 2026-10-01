@@ -225,7 +225,7 @@ Projeto de referência: **`sharebook-ebook-importer/originals/bruxa-por-acaso/`*
 |---|---|---|
 | Bruxa por Acaso & o Galã de Milhões | `sharebook-ebook-importer/originals/bruxa-por-acaso/` | publicado |
 | Lumi, a Bruxinha | `sharebook-ebook-importer/originals/lumi-a-bruxinha/` | publicado |
-| Promessa de Dez Verões | `sharebook-ebook-importer/originals/promessa-de-dez-veroes/` | PDF v1 pronto; falta sinopse de catálogo e cadastro |
+| Promessa de Dez Verões | `sharebook-ebook-importer/originals/promessa-de-dez-veroes/` | publicado |
 
 O selo da folha de rosto é um só para todos, em `originals/_shared/`. Antes cada build o
 alcançava por `../../../product-ux/cover-direction/assets/`, caminho que **não sobrevive à
