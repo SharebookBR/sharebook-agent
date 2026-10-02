@@ -6,9 +6,9 @@
 - **Prioridade:** 3 no backlog principal
 - **Valor:** médio-alto
 - **Esforço:** alto
-- **Próxima tarefa:** revisar a [Tarefa 2 — Vocabulário técnico v0 e governança](tarefa02-vocabulario-tecnico-v0.md).
+- **Próxima tarefa:** revisar a [Tarefa 3 — Modelo de dados para tags](tarefa03-modelo-de-dados-tags.md).
 - **Pendência paralela:** fechar as pendências da [categoria Matemática & Lógica](../revisao-escopo-matematica-corredor-tecnologia.md). A migração já foi executada e verificada na API, mas ainda há decisões abertas de cache, Home e subcategoria.
-- **Critério de avanço:** aprovar vocabulário v0, aliases, regras de criação/revisão e fronteiras entre tag, categoria e campo estruturado.
+- **Critério de avanço:** aprovar o desenho de schema antes de qualquer migration.
 
 ## Tese de produto
 
@@ -49,8 +49,8 @@ Nível não deve ser descartado por ser uma alegação editorial. Deve ser testa
 | # | Tarefa | Status | Depende de | Resultado |
 |---|---|---|---|---|
 | 1 | [Ciclo manual de 5 livros técnicos](tarefa01-ciclo-manual-5-livros.md) | **Fechada para avanço** ([resultado](tarefa01-resultado.md)) | — | Cinco ebooks avaliados com até três tags cada, alternativas rejeitadas e vocabulário v0. |
-| 2 | [Vocabulário técnico v0 e governança](tarefa02-vocabulario-tecnico-v0.md) | **Em revisão editorial** | 1 | Lista controlada inicial, aliases, critérios de criação e regras de revisão. |
-| 3 | [Modelo de dados para tags](tarefa03-modelo-de-dados-tags.md) | **Pendente** | 1–2 | Schema persistente com identidade estável e limite de tags visíveis. |
+| 2 | [Vocabulário técnico v0 e governança](tarefa02-vocabulario-tecnico-v0.md) | **Fechada para avanço** | 1 | Lista controlada inicial, aliases, critérios de criação e regras de revisão. |
+| 3 | [Modelo de dados para tags](tarefa03-modelo-de-dados-tags.md) | **Em discussão técnica** | 1–2 | Schema persistente com identidade estável e limite de tags visíveis. |
 | 4 | [PDP e página pública por tag](tarefa04-pdp-e-pagina-publica-tag.md) | **Pendente** | 2–3 | Tags discretas na PDP e navegação pública por tag com SSR. |
 | 5 | [Sugestão assistida no importer](tarefa05-sugestao-assistida-no-importer.md) | **Pendente** | 2–3 | IA sugere tags do vocabulário controlado para revisão editorial. |
 | 6 | [Backfill controlado do catálogo técnico](tarefa06-backfill-controlado.md) | **Pendente** | 2–5 | Catálogo técnico preenchido de forma idempotente e revisável. |
