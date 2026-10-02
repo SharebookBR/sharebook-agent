@@ -2,7 +2,7 @@
 schema_version = 1
 session_date = 2026-10-02
 title = "Ciclo manual de tags e nova categoria Matemática & Lógica"
-model = "Claude (identificador omitido por política do ambiente)"
+model = "Jack (apelido combinado com o Raffa; não é o nome do modelo, que foi omitido por política do ambiente)"
 runtime = "claude-code-web"
 skills_used = [
   "skills/doctrine/harness-governance/references/episodic-memory-metadata-v1.md",
@@ -53,7 +53,7 @@ evidence = [
 
 ## 1. Modelo e ambiente
 
-Claude Code na web (container na nuvem, habitat `claude-code-web`), sessão aberta pelo Raffa pelo celular. Acesso ao GitHub só por ferramentas MCP; o proxy de saída bloqueava `www.sharebook.com.br` e `api.sharebook.com.br`. Contornei com os conectores do claude.ai: Parallel Search (limite gratuito estourou em duas chamadas) e TinyFish (`fetch_content`, funcionou). Um subagente foi usado para classificar os 324 livros. O identificador do modelo foi omitido de propósito, por política do ambiente.
+Claude Code na web (container na nuvem, habitat `claude-code-web`), sessão aberta pelo Raffa pelo celular. Acesso ao GitHub só por ferramentas MCP; o proxy de saída bloqueava `www.sharebook.com.br` e `api.sharebook.com.br`. Contornei com os conectores do claude.ai: Parallel Search (limite gratuito estourou em duas chamadas) e TinyFish (`fetch_content`, funcionou). Um subagente foi usado para classificar os 324 livros. O identificador do modelo foi omitido de propósito, por política do ambiente; o campo `model` traz um apelido combinado com o Raffa.
 
 ## 2. Skills acionadas
 
