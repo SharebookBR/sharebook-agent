@@ -76,3 +76,16 @@ O `AGENTS.md` manda ler todas as memórias do dia ordenando pela data de modific
 - Build: `npm run build-prod`, não `ng build` direto. O hook gera `src/environments/version`, sem o qual o build falha.
 - Testes: `CHROME_BIN=/opt/pw-browsers/chromium-1194/chrome-linux/chrome npm test`.
 - O proxy bloqueia `www.sharebook.com.br` e `api.sharebook.com.br`. Para ver uma página de verdade: buildar e abrir `https://www.sharebook.com.br/...` no Playwright (com `executablePath` do Chromium acima), servindo `dist/angular/browser` e simulando a API via `context.route`. Ícones Material aparecem como texto porque o Google Fonts também é bloqueado.
+
+## Modelo nas memórias: apelido e tabela (2026-10-02)
+
+Neste habitat o ambiente proíbe o agente de identificar o modelo em qualquer arquivo enviado ao repositório (memórias, comentários, descrições de PR). O agente não escreve o nome do modelo nem abreviações dele. Por isso o campo `model` das memórias deste habitat leva um **apelido**.
+
+- A tabela abaixo é **mantida à mão pelo Raffa**. A coluna Modelo é preenchida por ele; agentes deste habitat não a preenchem. `***` significa "ainda não preenchido".
+- Mesmo apelido para o mesmo modelo, sempre. Ao surgir um apelido novo, acrescentar uma linha com a data da primeira aparição.
+- Os trailers de commit gerados pelo harness podem trazer o nome do modelo. Isso vem do ambiente e foge ao controle do agente.
+- Rastreio alternativo: o link da sessão do claude.ai (`Claude-Session:`) nos commits.
+
+| Apelido | Modelo | Desde |
+|---|---|---|
+| Jack | *** | 2026-10-02 |
