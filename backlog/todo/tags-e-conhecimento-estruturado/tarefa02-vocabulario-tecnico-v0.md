@@ -30,8 +30,14 @@ Transformar o aprendizado do ciclo manual em um vocabulário técnico controlado
 
 | Tag canônica | Aliases / grafias aceitas | Notas |
 |---|---|---|
+| `C#` | `c sharp`, `c-sharp` | Linguagem de alto valor para o público dev; não fundir automaticamente com `.NET`. |
+| `.NET` | `dotnet`, `ASP.NET`, `NET` | Plataforma/ecossistema; pode conviver com `C#` quando ambos forem relevantes. |
+| `Java` | `java` | Não confundir com `JavaScript`. |
+| `JavaScript` | `JS`, `Java Script`, `Node.js`, `NodeJS` | `Node.js` entra como alias inicial; pode virar tag própria se o catálogo justificar. |
 | `Python` | `python`, `py` | `Pygame` não vira alias; é biblioteca/tópico fino demais. |
 | `R` | `linguagem R`, `R language` | Exige curadoria humana; busca textual por "R" gera falso positivo demais. |
+| `Spring Boot` | `Spring`, `Spring Framework` | Framework de alto valor para backend Java; pode existir mesmo antes de grande massa no catálogo. |
+| `TypeScript` | `TS`, `Type Script` | Alto valor para frontend/backend moderno, mesmo com baixa presença atual. |
 | `Docker` | `docker`, `containers`, `contêineres` | `Contêineres` pode ajudar copy/vitrine, mas a tag pública inicial fica `Docker`. |
 | `Kubernetes` | `kubernetes`, `k8s` | Palavra de alto valor para o público, mesmo com baixa contagem. |
 
@@ -114,6 +120,14 @@ Elas podem entrar quando aparecerem em uma rodada editorial concreta. `Seguranç
 | `An Introduction to Statistical Learning` | `Machine Learning`, `Estatística`, `R` | `Data Science` era mais genérico que a intenção real. |
 | `Microservices AntiPatterns and Pitfalls` | `Microsserviços`, `Arquitetura`, `Prático` | Livro de arquitetura pode precisar de uso editorial quando funciona como checklist/revisão de design. |
 | `The Art of High Performance Computing - Volume 1` | `Computação de Alto Desempenho`, `Arquitetura de Computadores`, `Métodos Numéricos` | Livro ambíguo em `Tecnologia > Geral` pode ficar descobrível com tags sem depender de recategorizar tudo. |
+
+## Correção editorial 2026-10-02
+
+Raffa rejeitou o primeiro vocabulário v0 como pobre demais para um catálogo técnico. Ajuste incorporado:
+
+- `C#`, `.NET`, `Java`, `JavaScript`, `TypeScript` e `Spring Boot` entram no vocabulário inicial.
+- O vocabulário v0 não precisa nascer apenas dos 5 livros do ciclo manual; ele deve combinar evidência do ciclo com conhecimento editorial do público dev.
+- Tags de stack de alto valor podem existir mesmo antes de grande massa no catálogo, porque amanhã o acervo cresce e a navegação por tags deve ser livre.
 
 ## Decisões explícitas
 
