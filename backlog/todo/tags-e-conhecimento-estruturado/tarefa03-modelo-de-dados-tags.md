@@ -38,7 +38,7 @@ Campos propostos:
 |---|---|---|
 | `Id` | `Guid` | Identidade estável, padrão `BaseEntity`. |
 | `Name` | `string(100)` | Nome público, ex.: `Kubernetes`, `Machine Learning`, `C#`. |
-| `Slug` | `string(100)` | URL estável, única, ex.: `kubernetes`, `machine-learning`, `csharp`. |
+| `Slug` | `string(100)` | Identificador público amigável e URL estável, único, ex.: `kubernetes`, `machine-learning`, `csharp`. |
 | `Family` | `string(80)` | Família editorial, ex.: `stack`, `backend-architecture`, `data-ai`. Evitar enum rígido para não exigir migration a cada rearranjo editorial. |
 | `Description` | `string(500)?` | Opcional, usada em página pública da tag e admin. |
 | `UsageNotes` | `string(1000)?` | Regra editorial curta: quando usar, quando não usar. |
@@ -50,6 +50,13 @@ Campos propostos:
 - unique `Slug`;
 - index `Status, IsPublic`;
 - index `Family, Name`.
+
+Decisão sobre identidade:
+
+- manter `Id` como chave primária interna e FK para preservar segurança em renomes, fusões e relações;
+- tratar `Slug` como identificador público da tag em rotas, contratos e exploração humana;
+- não expor `Id` em contratos públicos quando o `Slug` resolver o caso de uso;
+- aceitar `Slug` como chave operacional em comandos admin e importadores, convertendo para `Id` no serviço.
 
 #### `TagAlias`
 
@@ -133,7 +140,7 @@ Livro público deve devolver tags aprovadas e públicas:
 ```json
 {
   "tags": [
-    { "name": "Kubernetes", "slug": "kubernetes", "family": "infra-cloud-security" }
+    { "id": "kubernetes", "name": "Kubernetes", "family": "infra-cloud-security" }
   ]
 }
 ```
