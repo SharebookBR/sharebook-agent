@@ -114,10 +114,10 @@ Dúvidas editoriais: série com 3 volumes: Vol. 2 (paralela) e Vol. 3 (programa�
 1. **Nível (Iniciante/Intermediário/Avançado): campo separado**, fora das tags visíveis na v1. Nível responde "serve para mim?", não "o que é isso?". Formato exato do campo fica para as tarefas 3 e 7.
 2. **`Acadêmico` e `Boas Práticas` saem do vocabulário.** Em uso editorial resta `Prático`, e `Referência` segue como candidata a testar.
 3. **Escopo de Cálculo/Álgebra:** virou item de backlog próprio (link acima).
+4. **Limite de tags:** até 3 tags visíveis por livro. Não é obrigatório preencher 3; se 2 tags forem mais honestas, o livro fica com 2.
 
 **Propostas do agente, ainda sem decisão:**
 
-- **Limite de "até 3" tags**: o único sinal é o livro Microservices, que ficou bem com 2. Não há evidência para exigir 3.
 - **Tags de stack com poucos livros**: a tag existe a partir de **3 livros**. A página pública própria de cada tag fica como decisão separada (tarefa 4), para evitar vitrine quase vazia.
 
 ## Vitrines por tag (candidatas)
@@ -142,5 +142,5 @@ Dúvidas editoriais: série com 3 volumes: Vol. 2 (paralela) e Vol. 3 (programa�
 ## Pendências para fechar a Tarefa 1
 
 - [ ] Revisão editorial das tags de cada um dos 5 livros e das rejeições.
-- [ ] Decidir o limite "até 3" e a regra de "3 livros" para tags de stack.
+- [ ] Decidir a regra de "3 livros" para tags de stack e separar existência da tag de página pública.
 - [ ] Só depois: Tarefa 2 (vocabulário v0 e governança).
