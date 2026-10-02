@@ -1,6 +1,6 @@
 # Tarefa 1 — Resultado do ciclo manual (rascunho para revisão)
 
-> **Status:** rascunho de agente, aguardando julgamento editorial humano (Raffa/Josué). Nada aqui foi publicado ou aplicado ao catálogo.
+> **Status:** rascunho de agente. Decisões de 2026-10-02 do Raffa já incorporadas (ver "Decisões"). Falta a revisão editorial das tags de cada livro. Nada aqui foi publicado ou aplicado ao catálogo.
 > **Data:** 2026-10-02. **Fonte dos dados:** API pública (`Book/Slug/{slug}`, `Book/CategoryTree/...`). Sinopses e categorias lidas do catálogo em produção.
 > **Limite do método:** o julgamento dos 5 livros foi feito pelo agente a partir de título, autor, categoria e sinopse (truncada em ~400 caracteres, exceto a do HPC Vol. 1). Nenhum livro foi aberto. A contagem por tag nos 324 livros é por **palavra-chave** em título e sinopse, não classificação curada. É uma proposta, não um veredito.
 
@@ -32,7 +32,7 @@ Contagem de livros cujo título ou sinopse bate com as palavras-chave da tag. Ta
 
 Observações:
 - O acervo pende para fundamentos e material acadêmico (matemática, SO, teoria) mais do que para stack aplicada. Vale confirmar quem é o leitor-alvo dessa fatia.
-- **Cálculo/Álgebra (43 livros) é decisão de escopo:** estão em "Tecnologia › Geral", mas talvez não pertençam a esse corredor.
+- **Cálculo/Álgebra (43 livros) virou item próprio no backlog:** [Revisão de escopo: matemática no corredor de Tecnologia](../revisao-escopo-matematica-corredor-tecnologia.md).
 
 ### Tags de stack com poucos livros (leitura dos títulos)
 
@@ -51,7 +51,7 @@ Os três primeiros se sobrepõem em 5 a 6 livros de contêineres e arquitetura, 
 ```text
 Categoria atual: Tecnologia > Frontend
 Tags escolhidas: Python · Desenvolvimento de Jogos · Prático
-Alternativas rejeitadas: Pygame (fino demais, vira tag de 1 livro), Iniciante (nível, ver decisão abaixo), Frontend (a categoria atual induz ao erro)
+Alternativas rejeitadas: Pygame (fino demais, vira tag de 1 livro), Iniciante (nível, vai para campo separado), Frontend (a categoria atual induz ao erro)
 Dimensões cobertas: stack (Python), área/problema (jogos), uso editorial (prático)
 Valor esperado: dev Python que quer projeto concreto acha o livro; hoje ele está escondido em "Frontend"
 Dúvidas editoriais: "Desenvolvimento de Jogos" cobre Pygame, OpenGL e Unity patterns? Ou separar de "Computação Gráfica"?
@@ -71,7 +71,7 @@ Dúvidas editoriais: Docker e Kubernetes como duas tags ou uma "Contêineres"? B
 ```text
 Categoria atual: Tecnologia > Dados
 Tags escolhidas: Machine Learning · Estatística · R
-Alternativas rejeitadas: Data Science (genérico, já é categoria "Dados"), Acadêmico (uso editorial; livro é didático mas usado na prática), Regressão (tópico, não eixo)
+Alternativas rejeitadas: Data Science (genérico, já é categoria "Dados"), Acadêmico (tag removida do vocabulário), Regressão (tópico, não eixo)
 Dimensões cobertas: área (2), stack (1)
 Valor esperado: alto, porque ML + estatística separa este livro de "IA" generativa e de deep learning
 Dúvidas editoriais: a edição com Python (ISLP) é outro livro? Se existir, "R" vira diferencial real
@@ -80,18 +80,18 @@ Dúvidas editoriais: a edição com Python (ISLP) é outro livro? Se existir, "R
 ### 4. Arquitetura/práticas — Microservices AntiPatterns and Pitfalls (Mark Richards)
 ```text
 Categoria atual: Tecnologia > Backend
-Tags escolhidas: Microsserviços · Arquitetura · Boas Práticas
-Alternativas rejeitadas: Backend (é a categoria), Avançado (nível), Antipadrões (ótimo mas só 1 livro)
-Dimensões cobertas: área (2), uso editorial (1)
+Tags escolhidas: Microsserviços · Arquitetura (duas tags; sem terceira)
+Alternativas rejeitadas: Backend (é a categoria), Avançado (nível, vai para campo separado), Antipadrões (ótimo mas só 1 livro), Boas Práticas (tag removida: o livro trata do que NÃO fazer)
+Dimensões cobertas: área (2)
 Valor esperado: alto para tech lead; "Arquitetura" é exatamente a intenção citada no épico
-Dúvidas editoriais: "Boas Práticas" é tag fraca? O livro é sobre o que NÃO fazer. Talvez "Referência" ou nenhuma terceira tag
+Dúvidas editoriais: nenhuma pendente. Serve de exemplo de que "até 3" não é "exatamente 3"
 ```
 
 ### 5. Ambíguo — The Art of High Performance Computing, Vol. 1 (Victor Eijkhout)
 ```text
 Categoria atual: Tecnologia > Geral
 Tags escolhidas: Computação de Alto Desempenho · Arquitetura de Computadores · Métodos Numéricos
-Alternativas rejeitadas: Redes Neurais (um capítulo de aplicação), Python/C (não ensina linguagem), Acadêmico (uso editorial, teste pendente)
+Alternativas rejeitadas: Redes Neurais (um capítulo de aplicação), Python/C (não ensina linguagem), Acadêmico (tag removida do vocabulário)
 Dimensões cobertas: área/problema (3), nenhuma de stack
 Valor esperado: alto para quem busca HPC; hoje invisível em "Geral"
 Dúvidas editoriais: série com 3 volumes: Vol. 2 (paralela) e Vol. 3 (programação científica). Tags idênticas nos 3 ou específicas?
@@ -99,24 +99,26 @@ Dúvidas editoriais: série com 3 volumes: Vol. 2 (paralela) e Vol. 3 (programa�
 
 ## Vocabulário v0 proposto
 
-**15 tags usadas nos 5 livros** (todas mantidas, inclusive Docker, Kubernetes, Microsserviços e R, por decisão do Raffa em 2026-10-02: nome de stack tem valor direto para o dev mesmo com poucos livros):
+**14 tags usadas nos 5 livros** (inclui Docker, Kubernetes, Microsserviços e R, por decisão do Raffa em 2026-10-02: nome de stack tem valor direto para o dev mesmo com poucos livros):
 
 - **Stack:** Python · R · Docker · Kubernetes
 - **Área/problema:** Machine Learning · Estatística · Microsserviços · Arquitetura · DevOps · Computação de Alto Desempenho · Arquitetura de Computadores · Métodos Numéricos · Desenvolvimento de Jogos
-- **Uso editorial:** Prático · Boas Práticas
+- **Uso editorial:** Prático
 
 **+9 sugeridas pelos descompassos de categoria** (com massa crítica na contagem, mas não testadas em nenhum dos 5 livros): Sistemas Operacionais · Criptografia/Segurança · Computação Gráfica · Controle de Versão (Git) · Computação Quântica · Matemática Discreta · Teoria da Computação · Estruturas de Dados · Bancos de Dados.
 
-## Decisões propostas
+## Decisões
 
-**Nível (Iniciante/Intermediário/Avançado): campo separado, fora das tags visíveis na v1.**
-Evidência fraca: em 2 dos 5 livros (Pygame, Microservices) considerei uma tag de nível, e em ambos ela competiria com tags de área/stack por uma das 3 vagas. Nível responde "serve para mim?", não "o que é isso?". Proposta: metadado próprio, testado na PDP depois. Amostra pequena; reavaliar na tarefa 7.
+**Decididas pelo Raffa em 2026-10-02:**
 
-**Uso editorial: manter só `Prático` e `Referência` como candidatas.** `Acadêmico` e `Boas Práticas` ficaram ambíguos. `Fundamentos` e `Legado` não foram testados.
+1. **Nível (Iniciante/Intermediário/Avançado): campo separado**, fora das tags visíveis na v1. Nível responde "serve para mim?", não "o que é isso?". Formato exato do campo fica para as tarefas 3 e 7.
+2. **`Acadêmico` e `Boas Práticas` saem do vocabulário.** Em uso editorial resta `Prático`, e `Referência` segue como candidata a testar.
+3. **Escopo de Cálculo/Álgebra:** virou item de backlog próprio (link acima).
 
-**Limite de até 3 tags:** não há evidência suficiente para confirmar. O único sinal é que em um livro (Microservices) a terceira tag ficou duvidosa, o que sugere "até 3" em vez de "exatamente 3".
+**Propostas do agente, ainda sem decisão:**
 
-**Tags de stack com poucos livros: manter.** Proposta de regra: a tag existe a partir de **3 livros**. A página pública própria da tag fica como decisão separada (tarefa 4), para evitar uma vitrine quase vazia.
+- **Limite de "até 3" tags**: o único sinal é o livro Microservices, que ficou bem com 2. Não há evidência para exigir 3.
+- **Tags de stack com poucos livros**: a tag existe a partir de **3 livros**. A página pública própria de cada tag fica como decisão separada (tarefa 4), para evitar vitrine quase vazia.
 
 ## Vitrines por tag (candidatas)
 
@@ -135,10 +137,10 @@ Evidência fraca: em 2 dos 5 livros (Pygame, Microservices) considerei uma tag d
 4. Séries devem ter tags consistentes entre volumes; decidir se há exceção por volume.
 5. A API de listagem (`CategoryTree`) devolve `category` e `categoryInfo` nulos, só `categoryId`. Para o importer (tarefa 5) isso importa: resolver nome pelo ID da árvore.
 6. Contagem por palavra-chave exige revisão: uma regra com sensibilidade a maiúsculas errada zerou Docker e Kubernetes numa primeira passada, e outra regra de "R" gerou falsos positivos.
+7. Tags de uso editorial vagas ("Acadêmico", "Boas Práticas") não passaram no teste: o Raffa as rejeitou.
 
 ## Pendências para fechar a Tarefa 1
 
-- [ ] Revisão humana das 15 tags e das rejeições.
-- [ ] Decisão do Raffa/Josué sobre nível (campo separado) e sobre `Acadêmico`.
-- [ ] Decidir o escopo de Cálculo/Álgebra (43 livros) no corredor de Tecnologia.
+- [ ] Revisão editorial das tags de cada um dos 5 livros e das rejeições.
+- [ ] Decidir o limite "até 3" e a regra de "3 livros" para tags de stack.
 - [ ] Só depois: Tarefa 2 (vocabulário v0 e governança).
