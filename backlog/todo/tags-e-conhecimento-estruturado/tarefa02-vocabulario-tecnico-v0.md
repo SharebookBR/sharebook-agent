@@ -2,7 +2,7 @@
 
 ## Status
 
-Fechada para avanço.
+Em revisão editorial.
 
 ## Objetivo
 
