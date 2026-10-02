@@ -2,7 +2,9 @@
 
 ## Status
 
-Em discussão técnica.
+Fatia backend inicial implementada em `sharebook-backend@b12de84`.
+
+Ainda faltam endpoints/admin/backfill para fechar a feature completa.
 
 ## Objetivo
 
@@ -23,6 +25,28 @@ Persistir tags por identidade editorial simples e legível, evitando texto solto
 - regra de limite protegida no backend;
 - contratos admin e públicos desenhados;
 - testes cobrindo regras principais.
+
+## Implementação realizada
+
+Commit backend: `b12de84 feat: add book tag data model`.
+
+Incluído:
+
+- entidade `Tag` com `Id` textual canônico, `Aliases` como `text[]`, família, descrição, notas, status, público e timestamps;
+- entidade `BookTag` ligando livro e tag com `Position`, `Source` e `ReviewStatus`;
+- `Book.BookTags`;
+- `DbSet<Tag>` e `DbSet<BookTag>`;
+- mappings EF;
+- migration `20261002154050_AddBookTags`;
+- `dotnet-ef` local atualizado para `10.0.11`;
+- testes unitários de comportamento de alias e script EF.
+
+Validação executada:
+
+- `dotnet build ShareBook.Api/ShareBook.Api.csproj -m:1`;
+- `dotnet test ShareBook.Test.Unit/ShareBook.Test.Unit.csproj --filter "FullyQualifiedName~TagTests|FullyQualifiedName~TagMappingTests"`;
+- `dotnet test ShareBook.Test.Unit/ShareBook.Test.Unit.csproj`;
+- `dotnet ef migrations has-pending-model-changes` com provider Postgres.
 
 ## Proposta de modelo v1
 
@@ -82,7 +106,7 @@ Campos propostos:
 - unique `(BookId, Position)`;
 - index `(TagId, BookId)`;
 - `Position` entre 1 e 3;
-- limite de até 3 tags públicas por livro protegido no serviço e coberto por teste. Não tentar resolver esse limite só com constraint simples, porque é regra agregada.
+- limite de até 3 tags por livro protegido pela combinação `Position` 1..3 + unique `(BookId, Position)`, e ainda deve ser validado no serviço quando existirem endpoints.
 
 ### Relações no domínio
 
@@ -208,7 +232,6 @@ Criar tabela de histórico só se aparecer necessidade real de auditoria fina.
 
 ## Fora de escopo desta tarefa
 
-- migration real;
 - endpoints implementados;
 - UI admin;
 - página pública por tag;
