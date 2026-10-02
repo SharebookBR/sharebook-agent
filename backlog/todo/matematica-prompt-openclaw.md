@@ -4,7 +4,7 @@ Contexto e decisões em [revisao-escopo-matematica-corredor-tecnologia.md](revis
 
 **Antes de colar:** conferir as duas decisões abertas desse item (Probabilidade e Estatística com 3 livros; *Computação: Matemática Discreta*). Se alguma mudar, ajustar o CSV e as contagens esperadas abaixo.
 
-**Estado:** ainda não executado.
+**Estado:** executado pelo OpenClaw em 2026-10-02 e conferido na API (ver o item de backlog). Não rodar de novo: o prompt é idempotente, mas não há motivo para repetir.
 
 ```text
 Missão: criar a categoria raiz "Matemática & Lógica" com 6 subcategorias e mover 50 livros para elas, DIRETO NO BANCO DE PRODUÇÃO. Decisão já aprovada pelo Raffa. Não reabra a discussão de escopo e não reclassifique livros.
