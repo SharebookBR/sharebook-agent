@@ -2,7 +2,7 @@
 schema_version = 1
 session_date = 2026-10-02
 title = "Ciclo manual de tags e nova categoria Matemática & Lógica"
-model = "Jack (apelido combinado com o Raffa; não é o nome do modelo, que foi omitido por política do ambiente)"
+model = "Jack"
 runtime = "claude-code-web"
 skills_used = [
   "skills/doctrine/harness-governance/references/episodic-memory-metadata-v1.md",
