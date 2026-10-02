@@ -2,7 +2,7 @@
 
 ## Status
 
-Em execução.
+Fechada para avanço.
 
 ## Objetivo
 
@@ -110,3 +110,54 @@ Decisão operacional:
 
 - parar o backfill automático nesta rodada. O próximo avanço no acervo atual exigiria heurísticas mais fracas ou revisão editorial livro a livro;
 - seguir para Tarefa 5, sugestão assistida no importer, para novos livros já nascerem com tags sugeridas dentro do fluxo editorial.
+
+## Execução 2026-10-02 — completion editorial para 100%
+
+Raffa delegou avanço com autonomia para chegar o mais perto possível de 100% sem depender de revisão micro. A rodada anterior tinha parado corretamente em 49,6% de cobertura porque a régua de alta confiança havia zerado; para completar a cobertura, foi criada uma fase separada de completion editorial, não uma flexibilização silenciosa do backfill original.
+
+Scripts criados:
+
+- `scripts/production/complete_technical_tags.py`
+- `scripts/production/refine_technical_tag_overrides.py`
+
+Características:
+
+- cria lacunas reais de vocabulário técnico antes de taguear;
+- aplica apenas em ebooks técnicos ainda sem tags, preservando curadoria anterior;
+- usa fallback editorial por categoria só quando não há evidência específica melhor;
+- grava relatórios em `var/reports/`;
+- inclui uma passada posterior de overrides explícitos para corrigir casos em que o fallback ficou correto, mas pobre.
+
+Lacunas de vocabulário adicionadas nesta rodada incluem:
+
+- `Inteligência Artificial`, `IA Generativa`, `Prompt Engineering`, `Processamento de Linguagem Natural`, `Aprendizado por Reforço`, `MLOps`;
+- `Programação Funcional`, `Programação Orientada a Objetos`, `Métodos Formais`, `Concorrência`, `Engenharia de Software`;
+- `Computação Quântica`, `Fundamentos da Computação`, `Pensamento Computacional`, `Lógica`, `Circuitos Digitais`;
+- `Realidade Virtual`, `Processamento de Imagens`, `Editores de Texto`, `Escrita Técnica`;
+- `Software Livre`, `Gestão de Tecnologia`, `Internet das Coisas`, `Sistemas Embarcados`, `Blockchain`, `Criptomoedas`;
+- linguagens/ferramentas específicas que apareceram no acervo: `Bash`, `Lisp`, `LaTeX`, `Pascal`, `Julia`, `Fortran`, `Assembly`, `Small Basic`, `Tkinter`, `Yii`.
+
+Validação final em produção:
+
+- candidatos técnicos: 274 ebooks disponíveis;
+- livros técnicos com pelo menos 1 tag: 274;
+- livros técnicos sem tag: 0;
+- cobertura: 100,0%;
+- tags públicas com livros: 91 de 100;
+- dry-run posterior: 0 sugestões restantes, 274 livros pulados por já estarem tagueados.
+
+Tags mais frequentes após a completion:
+
+- `fundamentos-da-computacao`: 48 livros;
+- `backend`: 32;
+- `algoritmos`: 26;
+- `inteligencia-artificial`: 25;
+- `machine-learning`: 17;
+- `devops`: 17;
+- `data-science`: 14;
+- `estruturas-de-dados`: 13;
+- `python`: 10.
+
+Observação editorial:
+
+- 100% aqui significa cobertura útil mínima para a navegação pública. Não significa que cada livro recebeu sua classificação ideal definitiva. A Tarefa 5 deve impedir a volta do problema: novos livros precisam nascer com sugestão assistida de tags no fluxo editorial, em vez de exigir novo backfill depois.
