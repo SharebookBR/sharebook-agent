@@ -25,6 +25,7 @@ Operações em produção, autenticação, banco e storage.
 - `plan_set.py` — wrapper fino: encaminha os argumentos para `cli.py plan-set` da CLI canônica do importer via subprocess. Não duplica SQL nem credenciais localmente. Uso: `python plan_set.py --id <ID> --category-id <UUID> --synopsis-file <path> [--author <autor>]`.
 
 ## Scripts de autenticação, produção e storage
+- `backfill_technical_tags.py` — backfill controlado de tags técnicas. Por padrão gera dry-run em `var/reports/`; use `--apply` para aplicar o lote selecionado. Restringe escopo à categoria Tecnologia, pula livros já tagueados e usa regras explícitas de alta confiança.
 - `sharebook_aws_s3.py` — upload, download, list e delete no bucket S3 de ebooks.
 - `sharebook_prod_auth.py` — autenticação para operações em produção.
 - `sharebook_prod_book.py` — find/create/update/delete/approve de livros em produção.

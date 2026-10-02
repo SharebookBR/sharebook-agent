@@ -2,9 +2,9 @@
 
 ## Status
 
-Fatia backend inicial implementada em `sharebook-backend@b12de84`.
+Fechada para avanço.
 
-Ainda faltam endpoints/admin/backfill para fechar a feature completa.
+Modelo, endpoints públicos/admin e contagem pública implementados em produção.
 
 ## Objetivo
 
@@ -40,6 +40,12 @@ Incluído:
 - migration `20261002154050_AddBookTags`;
 - `dotnet-ef` local atualizado para `10.0.11`;
 - testes unitários de comportamento de alias e script EF.
+
+Complementos posteriores:
+
+- `95b5b96 feat: add tag service and endpoints` — serviço/admin mínimo e endpoints públicos;
+- `ee16e91 feat(tags): projeta BookTags no SearchBooksAsync` — tags embutidas no `BookVM`/PDP sem chamada extra;
+- `30b0c5d feat(tags): expose public book counts` — `GET /api/Tag` passa a devolver `totalBooks` para desabilitar tags vazias no frontend.
 
 Validação executada:
 
