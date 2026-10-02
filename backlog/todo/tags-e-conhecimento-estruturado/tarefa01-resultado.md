@@ -2,22 +2,23 @@
 
 > **Status:** rascunho de agente, aguardando julgamento editorial humano (Raffa/Josué). Nada aqui foi publicado ou aplicado ao catálogo.
 > **Data:** 2026-10-02. **Fonte dos dados:** API pública (`Book/Slug/{slug}`, `Book/CategoryTree/...`). Sinopses e categorias lidas do catálogo em produção.
+> **Limite do método:** o julgamento foi feito pelo agente a partir de título, autor, categoria e sinopse (as sinopses lidas estavam truncadas em ~400 caracteres, exceto a do HPC Vol. 1). Nenhum livro foi aberto. É uma proposta, não um veredito.
 
 ## Achado de contexto: a categoria técnica atual é ruidosa
 
 Catálogo de Tecnologia no momento da leitura: **324 ebooks**. Amostra dos 100 primeiros: Geral 25, IA 20, Backend 20, DevOps 14, Dados 10, Frontend 8, Cloud 3.
 
-Exemplos de descompasso entre categoria e conteúdo:
+Exemplos de descompasso entre categoria e conteúdo (todos dentro dessa amostra de 100):
 
 | Categoria atual | Livros que moram nela | Problema |
 |---|---|---|
 | **DevOps** | Think OS, Little Book of Semaphores, Project Oberon, Joy of Cryptography, Gray Hat Hacking | Sistemas operacionais, criptografia e segurança ofensiva não são DevOps |
 | **Frontend** | Learn OpenGL, Ray Tracing Gems, Virtual Reality, Making Games with Python & Pygame | Computação gráfica e games não são frontend web |
 | **Backend** | Git internals, Emacs, GCC, Subversion, Open Data Structures | Ferramentas e estruturas de dados, não backend |
-| **Geral** | Álgebra, Cálculo, Combinatória, CSP, Z, teoria da computação, HPC | Matemática e fundamentos acumulados num balde sem nome |
-| **IA** | 5 livros de computação quântica, 2 de prompts de imagem | Quântica não é IA |
+| **Geral** | Álgebra, Cálculo, Combinatória, CSP, Z, teoria da computação | Matemática e fundamentos acumulados num balde sem nome |
+| **IA** | 5 livros de computação quântica, 2 de prompts (texto e imagem) | Quântica não é IA |
 
-Leitura: a categoria funciona como "onde coube", não como intenção de busca. Isso reforça a tese do épico (tag como eixo transversal) e sugere que parte do valor das tags é **compensar categorização histórica**, não só enriquecer descoberta.
+Leitura: a categoria parece funcionar como "onde coube", não como intenção de busca. Isso reforça a tese do épico (tag como eixo transversal) e sugere que parte do valor das tags é **compensar categorização histórica**, não só enriquecer descoberta. Hipótese a confirmar com os 324 livros.
 
 ## Registro por livro
 
@@ -71,43 +72,44 @@ Valor esperado: alto para quem busca HPC; hoje invisível em "Geral"
 Dúvidas editoriais: série com 3 volumes: Vol. 2 (paralela) e Vol. 3 (programação científica). Tags idênticas nos 3 ou específicas?
 ```
 
-## Vocabulário v0 proposto (24 tags candidatas, só do que apareceu)
+## Vocabulário v0 proposto
+
+**15 tags usadas nos 5 livros:**
 
 - **Stack:** Python · R · Docker · Kubernetes
 - **Área/problema:** Machine Learning · Estatística · Microsserviços · Arquitetura · DevOps · Computação de Alto Desempenho · Arquitetura de Computadores · Métodos Numéricos · Desenvolvimento de Jogos
 - **Uso editorial:** Prático · Boas Práticas
 
-Adicionais sugeridas pelos descompassos de categoria (não testadas ainda): Sistemas Operacionais · Criptografia · Segurança · Computação Gráfica · Controle de Versão (Git) · Computação Quântica · Matemática Discreta · Teoria da Computação · Estruturas de Dados.
+**+9 sugeridas pelos descompassos de categoria (não testadas em nenhum livro):** Sistemas Operacionais · Criptografia · Segurança · Computação Gráfica · Controle de Versão (Git) · Computação Quântica · Matemática Discreta · Teoria da Computação · Estruturas de Dados.
 
 ## Decisões propostas
 
 **Nível (Iniciante/Intermediário/Avançado): campo separado, fora das tags visíveis na v1.**
-Motivo: em 4 dos 5 livros a tentação de usar "Iniciante" apareceu e custou uma das 3 vagas sem agregar eixo de descoberta. Nível responde "serve para mim?", não "o que é isso?". Melhor como metadado próprio, testado na PDP depois. Reavaliar na tarefa 7.
+Evidência fraca: em 2 dos 5 livros (Pygame, Microservices) considerei uma tag de nível, e em ambos ela competiria com tags de área/stack por uma das 3 vagas. Nível responde "serve para mim?", não "o que é isso?". Proposta: metadado próprio, testado na PDP depois. Amostra pequena; reavaliar na tarefa 7.
 
-**Uso editorial: manter só `Prático` e `Referência`.** `Acadêmico` e `Boas Práticas` foram ambíguos. `Fundamentos` e `Legado` ficam sem teste.
+**Uso editorial: manter só `Prático` e `Referência` como candidatas.** `Acadêmico` e `Boas Práticas` ficaram ambíguos. `Fundamentos` e `Legado` não foram testados.
 
-**Limite de 3 tags: confirmado como útil.** Em todos os livros a terceira vaga forçou escolha. Em 2 (Microservices, Pygame) a terceira tag ficou fraca, então **"até 3" é melhor que "exatamente 3"**.
+**Limite de até 3 tags:** não há evidência suficiente para confirmar. O único sinal é que em um livro (Microservices) a terceira tag ficou duvidosa, o que sugere "até 3" em vez de "exatamente 3".
 
-## Vitrines por tag (candidatas)
+## Vitrines por tag (candidatas, a validar com os 324 livros)
 
-- **Computação de Alto Desempenho:** hoje 3 volumes da série Eijkhout, mais livros de Geral/DevOps (arquitetura, OS). Pode virar vitrine real.
+- **Computação de Alto Desempenho:** os 3 volumes da série Eijkhout (Vols. 2 e 3 aparecem como recomendados do Vol. 1), possivelmente mais livros de Geral/DevOps sobre arquitetura e SO.
 - **Machine Learning + Estatística:** ISLR, Think Stats, Bayesian Reasoning, Probabilistic Programming. Distingue ML clássico do deep learning.
-- **Sistemas Operacionais:** Think OS, Operating Systems 0 to 1, Project Oberon, Dive into Systems, Be File System. Hoje espalhados em DevOps.
-- **Docker + Kubernetes:** poucos livros (3 em Cloud), mas buscas de alta intenção.
-- **Computação Quântica:** 5 livros hoje em "IA". Vitrine imediata e categoria errada corrigida.
+- **Sistemas Operacionais:** Think OS, Operating Systems From 0 to 1, Project Oberon, Dive into Systems, Be File System. Hoje espalhados em DevOps.
+- **Docker + Kubernetes:** poucos livros (3 em Cloud, nem todos sobre o tema), mas buscas de alta intenção.
+- **Computação Quântica:** 5 livros hoje em "IA".
 
 ## Fricções e regras aprendidas (insumo da futura skill de tagging)
 
-1. A categoria atual **não é evidência** de conteúdo. Tagar pela sinopse, nunca pela categoria.
-2. Não gastar vaga com nível, formato ou licença.
-3. Tag que só serve para 1 livro é tópico, não tag (ex.: Pygame, Helm).
-4. Nome da ferramenta (Docker, Kubernetes, Python) vence termo guarda-chuva (Cloud Native, Data Science) quando a busca real é pelo nome.
-5. Séries devem ter tags consistentes entre volumes; decidir se há exceção por volume.
-6. A API de listagem devolve `category` e `categoryInfo` nulos, só `categoryId`. Para o importer (tarefa 5) isso importa: resolver nome pelo ID da árvore.
+1. A categoria atual parece não ser evidência de conteúdo. Tagar pela sinopse, não pela categoria.
+2. Tag que só serve para 1 livro é tópico, não tag (ex.: Pygame, Helm).
+3. Nome da ferramenta (Docker, Kubernetes, Python) vence termo guarda-chuva (Cloud Native, Data Science) quando a busca real é pelo nome. Hipótese, sem dado de busca.
+4. Séries devem ter tags consistentes entre volumes; decidir se há exceção por volume.
+5. A API de listagem (`CategoryTree`) devolve `category` e `categoryInfo` nulos, só `categoryId`. Para o importer (tarefa 5) isso importa: resolver nome pelo ID da árvore.
 
 ## Pendências para fechar a Tarefa 1
 
 - [ ] Revisão humana das 15 tags e das rejeições.
 - [ ] Decisão do Raffa/Josué sobre nível (campo separado) e sobre `Acadêmico`.
-- [ ] Validar vitrines candidatas contra a base completa (324 livros, só 100 lidos).
+- [ ] Ler as sinopses completas e validar vitrines contra a base completa (324 livros, só 100 lidos).
 - [ ] Só depois: Tarefa 2 (vocabulário v0 e governança).
