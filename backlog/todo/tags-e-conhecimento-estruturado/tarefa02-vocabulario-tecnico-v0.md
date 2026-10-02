@@ -26,6 +26,8 @@ Transformar o aprendizado do ciclo manual em um vocabulário técnico controlado
 
 ## Vocabulário v0
 
+Status da revisão: aprovado por Raffa em 2026-10-02 após expansão orientada a devs e tech leads.
+
 ### Linguagens, plataformas e frameworks
 
 | Tag canônica | Aliases / grafias aceitas | Notas |
