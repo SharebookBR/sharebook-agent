@@ -80,11 +80,11 @@ Dúvidas editoriais: a edição com Python (ISLP) é outro livro? Se existir, "R
 ### 4. Arquitetura/práticas — Microservices AntiPatterns and Pitfalls (Mark Richards)
 ```text
 Categoria atual: Tecnologia > Backend
-Tags escolhidas: Microsserviços · Arquitetura (duas tags; sem terceira)
-Alternativas rejeitadas: Backend (é a categoria), Avançado (nível, vai para campo separado), Antipadrões (ótimo mas só 1 livro), Boas Práticas (tag removida: o livro trata do que NÃO fazer)
-Dimensões cobertas: área (2)
-Valor esperado: alto para tech lead; "Arquitetura" é exatamente a intenção citada no épico
-Dúvidas editoriais: nenhuma pendente. Serve de exemplo de que "até 3" não é "exatamente 3"
+Tags escolhidas: Microsserviços · Arquitetura · Prático
+Alternativas rejeitadas: Backend (é a categoria), Avançado (nível, vai para campo separado), Antipadrões (descreve o formato do livro, mas é menos útil que Prático para navegação), Boas Práticas (tag removida: o livro trata do que NÃO fazer)
+Dimensões cobertas: área (2), uso editorial (1)
+Valor esperado: alto para tech lead; "Arquitetura" é exatamente a intenção citada no épico, e "Prático" comunica que o livro serve como checklist de diagnóstico/revisão de design
+Dúvidas editoriais: nenhuma pendente.
 ```
 
 ### 5. Ambíguo — The Art of High Performance Computing, Vol. 1 (Victor Eijkhout)
@@ -115,10 +115,11 @@ Dúvidas editoriais: série com 3 volumes: Vol. 2 (paralela) e Vol. 3 (programa�
 2. **`Acadêmico` e `Boas Práticas` saem do vocabulário.** Em uso editorial resta `Prático`, e `Referência` segue como candidata a testar.
 3. **Escopo de Cálculo/Álgebra:** virou item de backlog próprio (link acima).
 4. **Limite de tags:** até 3 tags visíveis por livro. Não é obrigatório preencher 3; se 2 tags forem mais honestas, o livro fica com 2.
+5. **Tags de alto valor podem existir com baixa contagem.** Se a palavra é valiosa para o público, como `Kubernetes`, ela pode existir mesmo com 1 livro. A navegação por tags deve ser livre; página pública não depende de massa crítica mínima.
 
 **Propostas do agente, ainda sem decisão:**
 
-- **Tags de stack com poucos livros**: a tag existe a partir de **3 livros**. A página pública própria de cada tag fica como decisão separada (tarefa 4), para evitar vitrine quase vazia.
+Nenhuma no momento.
 
 ## Vitrines por tag (candidatas)
 
@@ -142,5 +143,4 @@ Dúvidas editoriais: série com 3 volumes: Vol. 2 (paralela) e Vol. 3 (programa�
 ## Pendências para fechar a Tarefa 1
 
 - [ ] Revisão editorial das tags de cada um dos 5 livros e das rejeições.
-- [ ] Decidir a regra de "3 livros" para tags de stack e separar existência da tag de página pública.
 - [ ] Só depois: Tarefa 2 (vocabulário v0 e governança).
