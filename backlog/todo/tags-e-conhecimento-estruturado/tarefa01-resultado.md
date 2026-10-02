@@ -32,7 +32,7 @@ Contagem de livros cujo título ou sinopse bate com as palavras-chave da tag. Ta
 
 Observações:
 - O acervo pende para fundamentos e material acadêmico (matemática, SO, teoria) mais do que para stack aplicada. Vale confirmar quem é o leitor-alvo dessa fatia.
-- **Cálculo/Álgebra (43 livros) virou item próprio no backlog:** [Revisão de escopo: matemática no corredor de Tecnologia](../revisao-escopo-matematica-corredor-tecnologia.md).
+- **Cálculo/Álgebra (43 livros) virou item próprio no backlog e foi decidido:** categoria raiz [Matemática & Lógica](../revisao-escopo-matematica-corredor-tecnologia.md), com 50 livros a mover (execução pendente no OpenClaw).
 
 ### Tags de stack com poucos livros (leitura dos títulos)
 
