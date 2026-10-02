@@ -7,8 +7,8 @@
 - **Valor:** médio-alto
 - **Esforço:** alto
 - **Próxima tarefa:** [Tarefa 1 — Ciclo manual de 5 livros técnicos](tarefa01-ciclo-manual-5-livros.md). Rascunho feito em [tarefa01-resultado.md](tarefa01-resultado.md); falta a revisão editorial das tags de cada livro.
-- **Bloqueio antes da Tarefa 2:** fechar a [categoria Matemática & Lógica](../revisao-escopo-matematica-corredor-tecnologia.md). O escopo do corredor de Tecnologia influencia o vocabulário.
-- **Critério de avanço:** ciclo manual produzir vocabulário v0, regras editoriais e decisão explícita sobre nível, uso editorial e automação.
+- **Bloqueio antes da Tarefa 2:** fechar as pendências da [categoria Matemática & Lógica](../revisao-escopo-matematica-corredor-tecnologia.md). A migração já foi executada e verificada na API, mas ainda há decisões abertas de cache, Home e subcategoria.
+- **Critério de avanço:** revisar o rascunho da Tarefa 1, fechar vocabulário v0, regras editoriais e decisão explícita sobre uso editorial e automação.
 
 ## Tese de produto
 

@@ -2,7 +2,7 @@
 
 ## Status
 
-Pendente.
+Rascunho feito em [tarefa01-resultado.md](tarefa01-resultado.md), aguardando revisão editorial.
 
 ## Objetivo
 
