@@ -48,7 +48,7 @@ RULES: tuple[Rule, ...] = (
     Rule("aws", (r"\baws\b", r"\bamazon web services\b", r"\bamazon s3\b"), "menciona AWS"),
     Rule("cloud", (r"\bcloud\b", r"\bcomputacao em nuvem\b", r"\bcloud computing\b"), "menciona cloud"),
     Rule("linux", (r"\blinux\b", r"\bunix\b", r"\bshell\b", r"\bcommand line\b"), "menciona Linux/Unix/shell"),
-    Rule("git", (r"\bgit\b", r"\bversion control\b", r"\bcontrole de versao\b"), "menciona Git/controle de versão"),
+    Rule("git", (r"\bgit\b", r"\bgithub\b"), "menciona Git/GitHub"),
     Rule("networking", (r"\bnetworking\b", r"\btcp ip\b", r"\bipv6\b", r"\bredes de computadores\b"), "menciona redes/protocolos"),
     Rule("observabilidade", (r"\bobservability\b", r"\bobservabilidade\b", r"\bmonitoring\b", r"\blogging\b", r"\bmetrics\b", r"\bdistributed tracing\b"), "menciona observabilidade"),
     Rule("seguranca", (r"\bsecurity\b", r"\bseguranca\b", r"\bhacking\b", r"\bhardening\b", r"\bappsec\b"), "menciona segurança aplicada"),

@@ -71,3 +71,42 @@ Próximo lote:
 
 - o dry-run posterior ao apply passou a pular 55 livros já tagueados e encontrou 82 sugestões restantes;
 - revisar/aplicar novo lote só depois de avaliar se tags de uma única evidência forte ainda estão boas para a próxima passada.
+
+## Execução 2026-10-02 — lotes 2 e 3
+
+Raffa delegou avanço sem microaprovação. Foram aplicados mais dois lotes após revisão de dry-run:
+
+- lote 2: 50 livros;
+- lote 3: 31 livros;
+- total aplicado pela Tarefa 6 até aqui: 131 livros, além dos 5 livros do ciclo manual.
+
+Correções de regra durante os lotes:
+
+- `Subversion Version Control` expôs falso positivo de `Git` por causa de `version control`. A regra foi ajustada para exigir `git` ou `github` explícito no backfill.
+
+Resultado final da rodada:
+
+- candidatos técnicos: 274 ebooks disponíveis;
+- livros técnicos já tagueados: 136;
+- sugestões restantes de alta confiança: 0;
+- tags públicas com pelo menos 1 livro: 42 de 57;
+- tags ainda sem livros: 15.
+
+Principais páginas fortalecidas:
+
+- `algoritmos`: 18 livros;
+- `machine-learning`: 17 livros;
+- `estruturas-de-dados`: 10 livros;
+- `python`: 10 livros;
+- `bancos-de-dados`: 7 livros;
+- `linux`: 7 livros;
+- `seguranca`: 6 livros;
+- `git`: 5 livros;
+- `java`: 5 livros;
+- `docker`: 3 livros;
+- `kubernetes`: 3 livros.
+
+Decisão operacional:
+
+- parar o backfill automático nesta rodada. O próximo avanço no acervo atual exigiria heurísticas mais fracas ou revisão editorial livro a livro;
+- seguir para Tarefa 5, sugestão assistida no importer, para novos livros já nascerem com tags sugeridas dentro do fluxo editorial.
