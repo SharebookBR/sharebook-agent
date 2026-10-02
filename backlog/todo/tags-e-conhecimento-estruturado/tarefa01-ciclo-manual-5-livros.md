@@ -2,7 +2,7 @@
 
 ## Status
 
-Rascunho feito em [tarefa01-resultado.md](tarefa01-resultado.md), aguardando revisão editorial.
+Fechada para avanço. Resultado consolidado em [tarefa01-resultado.md](tarefa01-resultado.md).
 
 ## Objetivo
 

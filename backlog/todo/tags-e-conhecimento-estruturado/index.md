@@ -6,9 +6,9 @@
 - **Prioridade:** 3 no backlog principal
 - **Valor:** médio-alto
 - **Esforço:** alto
-- **Próxima tarefa:** [Tarefa 1 — Ciclo manual de 5 livros técnicos](tarefa01-ciclo-manual-5-livros.md). Rascunho feito em [tarefa01-resultado.md](tarefa01-resultado.md); falta a revisão editorial das tags de cada livro.
-- **Bloqueio antes da Tarefa 2:** fechar as pendências da [categoria Matemática & Lógica](../revisao-escopo-matematica-corredor-tecnologia.md). A migração já foi executada e verificada na API, mas ainda há decisões abertas de cache, Home e subcategoria.
-- **Critério de avanço:** revisar o rascunho da Tarefa 1, fechar vocabulário v0, regras editoriais e decisão explícita sobre uso editorial e automação.
+- **Próxima tarefa:** revisar a [Tarefa 2 — Vocabulário técnico v0 e governança](tarefa02-vocabulario-tecnico-v0.md).
+- **Pendência paralela:** fechar as pendências da [categoria Matemática & Lógica](../revisao-escopo-matematica-corredor-tecnologia.md). A migração já foi executada e verificada na API, mas ainda há decisões abertas de cache, Home e subcategoria.
+- **Critério de avanço:** aprovar vocabulário v0, aliases, regras de criação/revisão e fronteiras entre tag, categoria e campo estruturado.
 
 ## Tese de produto
 
@@ -41,15 +41,15 @@ Nível não deve ser descartado por ser uma alegação editorial. Deve ser testa
 ## Decisões do Raffa (2026-10-02)
 
 - **Nível:** campo separado, fora das tags visíveis. Formato exato fica para as tarefas 3 e 7.
-- **Vocabulário:** `Acadêmico` e `Boas Práticas` saem. Docker, Kubernetes, Microsserviços e R entram na v0 mesmo com poucos livros (regra proposta: tag de stack vale a partir de 3 livros; página pública própria é decisão da tarefa 4).
+- **Vocabulário:** `Acadêmico` e `Boas Práticas` saem. Docker, Kubernetes, Microsserviços e R entram na v0 mesmo com poucos livros. Tags de alto valor podem existir e navegar publicamente mesmo com baixa contagem.
 - **Escopo:** matemática vira categoria própria, ver [item de backlog](../revisao-escopo-matematica-corredor-tecnologia.md).
 
 ## Tarefas
 
 | # | Tarefa | Status | Depende de | Resultado |
 |---|---|---|---|---|
-| 1 | [Ciclo manual de 5 livros técnicos](tarefa01-ciclo-manual-5-livros.md) | **Rascunho feito** ([resultado](tarefa01-resultado.md)) | — | Cinco ebooks avaliados com até três tags cada, alternativas rejeitadas e vocabulário v0. |
-| 2 | [Vocabulário técnico v0 e governança](tarefa02-vocabulario-tecnico-v0.md) | **Pendente** | 1 | Lista controlada inicial, aliases, critérios de criação e regras de revisão. |
+| 1 | [Ciclo manual de 5 livros técnicos](tarefa01-ciclo-manual-5-livros.md) | **Fechada para avanço** ([resultado](tarefa01-resultado.md)) | — | Cinco ebooks avaliados com até três tags cada, alternativas rejeitadas e vocabulário v0. |
+| 2 | [Vocabulário técnico v0 e governança](tarefa02-vocabulario-tecnico-v0.md) | **Em revisão editorial** | 1 | Lista controlada inicial, aliases, critérios de criação e regras de revisão. |
 | 3 | [Modelo de dados para tags](tarefa03-modelo-de-dados-tags.md) | **Pendente** | 1–2 | Schema persistente com identidade estável e limite de tags visíveis. |
 | 4 | [PDP e página pública por tag](tarefa04-pdp-e-pagina-publica-tag.md) | **Pendente** | 2–3 | Tags discretas na PDP e navegação pública por tag com SSR. |
 | 5 | [Sugestão assistida no importer](tarefa05-sugestao-assistida-no-importer.md) | **Pendente** | 2–3 | IA sugere tags do vocabulário controlado para revisão editorial. |

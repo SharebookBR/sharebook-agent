@@ -143,7 +143,7 @@ Nenhuma no momento.
 ## Fricções e regras aprendidas (insumo da futura skill de tagging)
 
 1. A categoria atual parece não ser evidência de conteúdo. Tagar pela sinopse, não pela categoria.
-2. Tag que só serve para 1 livro é tópico, não tag (ex.: Pygame, Helm). Tag de nome de stack vale a partir de 3 livros.
+2. Tag de baixa contagem pode existir se tiver alto valor de busca para o público (`Kubernetes`, `Docker`, `Python`). O que deve ser evitado é transformar detalhe fino de capítulo/biblioteca em tag pública quando uma intenção mais ampla serve melhor (ex.: `Pygame`, `Helm`).
 3. Nome da ferramenta (Docker, Kubernetes, Python) vence termo guarda-chuva (Cloud Native, Data Science) quando a busca real é pelo nome. Hipótese, sem dado de busca.
 4. Séries devem ter tags consistentes entre volumes; decidir se há exceção por volume.
 5. A API de listagem (`CategoryTree`) devolve `category` e `categoryInfo` nulos, só `categoryId`. Para o importer (tarefa 5) isso importa: resolver nome pelo ID da árvore.
@@ -152,5 +152,5 @@ Nenhuma no momento.
 
 ## Pendências para fechar a Tarefa 1
 
-- [ ] Revisão editorial das tags de cada um dos 5 livros e das rejeições.
-- [ ] Só depois: Tarefa 2 (vocabulário v0 e governança).
+- [x] Revisão editorial das tags de cada um dos 5 livros e das rejeições.
+- [x] Avançar para Tarefa 2 (vocabulário v0 e governança).
