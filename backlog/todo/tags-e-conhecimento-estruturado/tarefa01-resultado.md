@@ -87,7 +87,7 @@ Valor esperado: alto para tech lead; "Arquitetura" é exatamente a intenção ci
 Dúvidas editoriais: nenhuma pendente.
 ```
 
-### 5. Ambíguo — The Art of High Performance Computing, Vol. 1 (Victor Eijkhout)
+### 5. Ambíguo — The Art of High Performance Computing - Volume 1: The Science of Computing (Victor Eijkhout)
 ```text
 Categoria atual: Tecnologia > Geral
 Tags escolhidas: Computação de Alto Desempenho · Arquitetura de Computadores · Métodos Numéricos
@@ -96,6 +96,16 @@ Dimensões cobertas: área/problema (3), nenhuma de stack
 Valor esperado: alto para quem busca HPC; hoje invisível em "Geral"
 Dúvidas editoriais: série com 3 volumes: Vol. 2 (paralela) e Vol. 3 (programação científica). Tags idênticas nos 3 ou específicas?
 ```
+
+## Revisão acelerada 2026-10-02
+
+Parecer após releitura das sinopses completas dos 5 livros:
+
+1. **Making Games with Python & Pygame:** manter `Python · Desenvolvimento de Jogos · Prático`. As tags corrigem a categoria atual ruim (`Frontend`) e comunicam projeto prático em Python.
+2. **Kubernetes for Full-Stack Developers:** manter `Kubernetes · Docker · DevOps`. O livro é uma ponte operacional de Docker/Compose para Kubernetes, Helm, observabilidade, CI/CD, ingress, backup e logging.
+3. **An Introduction to Statistical Learning:** manter `Machine Learning · Estatística · R`. A promessa é modelagem estatística aplicada com laboratórios em R; `Data Science` seria mais genérico e menos acionável.
+4. **Microservices AntiPatterns and Pitfalls:** ajustar para `Microsserviços · Arquitetura · Prático`. A sinopse vende checklist de diagnóstico e revisão de design, então `Prático` é mais útil que deixar o livro com só duas tags.
+5. **The Art of High Performance Computing - Volume 1:** manter `Computação de Alto Desempenho · Arquitetura de Computadores · Métodos Numéricos`. O volume combina arquitetura/memória/topologias com métodos numéricos e gargalos de execução.
 
 ## Vocabulário v0 proposto
 
