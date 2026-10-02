@@ -136,7 +136,8 @@ Motivo: podem ser excelentes, mas ainda precisam de evidência de catálogo, dem
 - O conjunto deve priorizar intenção de devs e tech leads: stack, arquitetura, operação, dados/IA, fundamentos de computação e uso editorial claro.
 - Enriquecer vocabulário não é liberar buzzword infinita. Tag precisa ajudar alguém a decidir clique, leitura, trilha ou comparação.
 - Tag nova precisa ter nome canônico, aliases, exemplo positivo e pelo menos um contraexemplo.
-- IA pode sugerir apenas dentro do vocabulário permitido; criação de tag nova é decisão editorial.
+- Agente tem autonomia para criar/promover tags novas quando elas seguirem estas regras e servirem claramente ao usuário.
+- IA de sugestão automática para livros continua restrita ao vocabulário permitido; expansão do vocabulário é autonomia editorial do agente, com registro de racional.
 
 ### Aplicação em livros
 
@@ -155,8 +156,9 @@ Motivo: podem ser excelentes, mas ainda precisam de evidência de catálogo, dem
 
 ### Aprovação
 
-- Raffa aprova decisões de vocabulário v0 e mudanças de regra.
-- Agente pode propor tags com racional, exemplos e rejeições, mas não promover vocabulário novo sozinho.
+- Raffa delegou autonomia editorial ao agente para evoluir o vocabulário dentro das preferências já alinhadas: usuário em primeiro lugar, devs e tech leads como público prioritário, descoberta útil acima de taxonomia ornamental.
+- Agente não precisa pedir aprovação tag por tag. Deve decidir, registrar racional, exemplos e rejeições, e deixar a mudança revisável.
+- Pedir revisão de Raffa apenas para mudanças estruturais: nova família de tags, alteração de limite público, mudança em regra de governança, conflito conceitual forte ou dúvida editorial real.
 - Ao final desta fase, as regras aprovadas devem virar skill local de tagging editorial quando isso for explicitamente solicitado.
 
 ## Exemplos do ciclo manual
