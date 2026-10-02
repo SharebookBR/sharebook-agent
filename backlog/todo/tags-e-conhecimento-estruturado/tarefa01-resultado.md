@@ -2,13 +2,13 @@
 
 > **Status:** rascunho de agente, aguardando julgamento editorial humano (Raffa/Josué). Nada aqui foi publicado ou aplicado ao catálogo.
 > **Data:** 2026-10-02. **Fonte dos dados:** API pública (`Book/Slug/{slug}`, `Book/CategoryTree/...`). Sinopses e categorias lidas do catálogo em produção.
-> **Limite do método:** o julgamento foi feito pelo agente a partir de título, autor, categoria e sinopse (as sinopses lidas estavam truncadas em ~400 caracteres, exceto a do HPC Vol. 1). Nenhum livro foi aberto. É uma proposta, não um veredito.
+> **Limite do método:** o julgamento dos 5 livros foi feito pelo agente a partir de título, autor, categoria e sinopse (truncada em ~400 caracteres, exceto a do HPC Vol. 1). Nenhum livro foi aberto. A contagem por tag nos 324 livros é por **palavra-chave** em título e sinopse, não classificação curada. É uma proposta, não um veredito.
 
 ## Achado de contexto: a categoria técnica atual é ruidosa
 
-Catálogo de Tecnologia no momento da leitura: **324 ebooks**. Amostra dos 100 primeiros: Geral 25, IA 20, Backend 20, DevOps 14, Dados 10, Frontend 8, Cloud 3.
+Catálogo de Tecnologia no momento da leitura: **324 ebooks**. Distribuição por categoria: Geral 111 (34%), Backend 69, IA 53, DevOps 35, Dados 33, Cloud 12, Frontend 11.
 
-Exemplos de descompasso entre categoria e conteúdo (todos dentro dessa amostra de 100):
+Exemplos de descompasso entre categoria e conteúdo (vistos numa amostra dos 100 primeiros livros):
 
 | Categoria atual | Livros que moram nela | Problema |
 |---|---|---|
@@ -18,7 +18,32 @@ Exemplos de descompasso entre categoria e conteúdo (todos dentro dessa amostra 
 | **Geral** | Álgebra, Cálculo, Combinatória, CSP, Z, teoria da computação | Matemática e fundamentos acumulados num balde sem nome |
 | **IA** | 5 livros de computação quântica, 2 de prompts (texto e imagem) | Quântica não é IA |
 
-Leitura: a categoria parece funcionar como "onde coube", não como intenção de busca. Isso reforça a tese do épico (tag como eixo transversal) e sugere que parte do valor das tags é **compensar categorização histórica**, não só enriquecer descoberta. Hipótese a confirmar com os 324 livros.
+Leitura: a categoria parece funcionar como "onde coube", não como intenção de busca. Isso reforça a tese do épico (tag como eixo transversal) e sugere que parte do valor das tags é **compensar categorização histórica**, não só enriquecer descoberta.
+
+## Massa crítica por tag candidata (324 livros, busca por palavra-chave)
+
+Contagem de livros cujo título ou sinopse bate com as palavras-chave da tag. Tags se sobrepõem, então não somar. Menções passageiras inflam o número.
+
+| Faixa | Tags (livros) |
+|---|---|
+| **Sólidas (20+)** | Cálculo/Álgebra 43 · Estatística 39 · Sistemas Operacionais 38 · Machine Learning 37 · Python 30 · Estruturas de Dados 25 · Segurança/Criptografia 23 · Jogos 22 |
+| **Médias (10–19)** | Matemática Discreta 15 · Bancos de Dados 15 · Arquitetura de Computadores 12 · Computação Gráfica 11 · Git 11 · Teoria da Computação 10 |
+| **Menores (<10)** | Métodos Numéricos 9 · Arquitetura de software 8 · Computação Quântica 7 · Computação de Alto Desempenho 6 · Docker 6 · R 6 · Kubernetes 3 · Microsserviços 3 |
+
+Observações:
+- O acervo pende para fundamentos e material acadêmico (matemática, SO, teoria) mais do que para stack aplicada. Vale confirmar quem é o leitor-alvo dessa fatia.
+- **Cálculo/Álgebra (43 livros) é decisão de escopo:** estão em "Tecnologia › Geral", mas talvez não pertençam a esse corredor.
+
+### Tags de stack com poucos livros (leitura dos títulos)
+
+| Tag | Livros |
+|---|---|
+| **Docker** | Docker Jumpstart, Docker Tutorial, Kubernetes for Full-Stack Developers, Dotnet Microservices Architecture for Containerized .NET Applications. *Guia Definitivo para Yii 2.0* e *Sistemas Operacionais: Conceitos e Mecanismos* só mencionam. |
+| **Kubernetes** | Kubernetes for Full-Stack Developers, Kubernetes Deployment & Security Patterns, Kubernetes Hardening Guidance |
+| **Microsserviços** | Kubernetes for Full-Stack Developers, Microservices AntiPatterns and Pitfalls, Dotnet Microservices Architecture |
+| **R** | An Introduction to Statistical Learning, Probability and Statistics with Examples using R, Principles of Data Science, Introduction to Data Science, *R para cientistas sociais*, *Análise Exploratória de Dados usando o R* (2 em português) |
+
+Os três primeiros se sobrepõem em 5 a 6 livros de contêineres e arquitetura, o que permite uma vitrine "Contêineres e Cloud Native".
 
 ## Registro por livro
 
@@ -74,13 +99,13 @@ Dúvidas editoriais: série com 3 volumes: Vol. 2 (paralela) e Vol. 3 (programa�
 
 ## Vocabulário v0 proposto
 
-**15 tags usadas nos 5 livros:**
+**15 tags usadas nos 5 livros** (todas mantidas, inclusive Docker, Kubernetes, Microsserviços e R, por decisão do Raffa em 2026-10-02: nome de stack tem valor direto para o dev mesmo com poucos livros):
 
 - **Stack:** Python · R · Docker · Kubernetes
 - **Área/problema:** Machine Learning · Estatística · Microsserviços · Arquitetura · DevOps · Computação de Alto Desempenho · Arquitetura de Computadores · Métodos Numéricos · Desenvolvimento de Jogos
 - **Uso editorial:** Prático · Boas Práticas
 
-**+9 sugeridas pelos descompassos de categoria (não testadas em nenhum livro):** Sistemas Operacionais · Criptografia · Segurança · Computação Gráfica · Controle de Versão (Git) · Computação Quântica · Matemática Discreta · Teoria da Computação · Estruturas de Dados.
+**+9 sugeridas pelos descompassos de categoria** (com massa crítica na contagem, mas não testadas em nenhum dos 5 livros): Sistemas Operacionais · Criptografia/Segurança · Computação Gráfica · Controle de Versão (Git) · Computação Quântica · Matemática Discreta · Teoria da Computação · Estruturas de Dados · Bancos de Dados.
 
 ## Decisões propostas
 
@@ -91,25 +116,29 @@ Evidência fraca: em 2 dos 5 livros (Pygame, Microservices) considerei uma tag d
 
 **Limite de até 3 tags:** não há evidência suficiente para confirmar. O único sinal é que em um livro (Microservices) a terceira tag ficou duvidosa, o que sugere "até 3" em vez de "exatamente 3".
 
-## Vitrines por tag (candidatas, a validar com os 324 livros)
+**Tags de stack com poucos livros: manter.** Proposta de regra: a tag existe a partir de **3 livros**. A página pública própria da tag fica como decisão separada (tarefa 4), para evitar uma vitrine quase vazia.
 
-- **Computação de Alto Desempenho:** os 3 volumes da série Eijkhout (Vols. 2 e 3 aparecem como recomendados do Vol. 1), possivelmente mais livros de Geral/DevOps sobre arquitetura e SO.
-- **Machine Learning + Estatística:** ISLR, Think Stats, Bayesian Reasoning, Probabilistic Programming. Distingue ML clássico do deep learning.
-- **Sistemas Operacionais:** Think OS, Operating Systems From 0 to 1, Project Oberon, Dive into Systems, Be File System. Hoje espalhados em DevOps.
-- **Docker + Kubernetes:** poucos livros (3 em Cloud, nem todos sobre o tema), mas buscas de alta intenção.
-- **Computação Quântica:** 5 livros hoje em "IA".
+## Vitrines por tag (candidatas)
+
+- **Sistemas Operacionais (38):** Think OS, Operating Systems From 0 to 1, Project Oberon, Dive into Systems, Be File System. Hoje espalhados em DevOps.
+- **Machine Learning + Estatística (37 + 39):** ISLR, Think Stats, Bayesian Reasoning, Probabilistic Programming. Distingue ML clássico do deep learning.
+- **Python (30)** e **R (6, com 2 em português):** buscas por nome de linguagem.
+- **Contêineres e Cloud Native (Docker + Kubernetes + Microsserviços, 5 a 6 livros em conjunto).**
+- **Computação de Alto Desempenho (6):** série Eijkhout (Vols. 1 a 3 mais outros).
+- **Computação Quântica (7):** hoje em "IA".
 
 ## Fricções e regras aprendidas (insumo da futura skill de tagging)
 
 1. A categoria atual parece não ser evidência de conteúdo. Tagar pela sinopse, não pela categoria.
-2. Tag que só serve para 1 livro é tópico, não tag (ex.: Pygame, Helm).
+2. Tag que só serve para 1 livro é tópico, não tag (ex.: Pygame, Helm). Tag de nome de stack vale a partir de 3 livros.
 3. Nome da ferramenta (Docker, Kubernetes, Python) vence termo guarda-chuva (Cloud Native, Data Science) quando a busca real é pelo nome. Hipótese, sem dado de busca.
 4. Séries devem ter tags consistentes entre volumes; decidir se há exceção por volume.
 5. A API de listagem (`CategoryTree`) devolve `category` e `categoryInfo` nulos, só `categoryId`. Para o importer (tarefa 5) isso importa: resolver nome pelo ID da árvore.
+6. Contagem por palavra-chave exige revisão: uma regra com sensibilidade a maiúsculas errada zerou Docker e Kubernetes numa primeira passada, e outra regra de "R" gerou falsos positivos.
 
 ## Pendências para fechar a Tarefa 1
 
 - [ ] Revisão humana das 15 tags e das rejeições.
 - [ ] Decisão do Raffa/Josué sobre nível (campo separado) e sobre `Acadêmico`.
-- [ ] Ler as sinopses completas e validar vitrines contra a base completa (324 livros, só 100 lidos).
+- [ ] Decidir o escopo de Cálculo/Álgebra (43 livros) no corredor de Tecnologia.
 - [ ] Só depois: Tarefa 2 (vocabulário v0 e governança).
