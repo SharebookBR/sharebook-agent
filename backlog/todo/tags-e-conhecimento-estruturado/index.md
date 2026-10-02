@@ -6,7 +6,8 @@
 - **Prioridade:** 3 no backlog principal
 - **Valor:** médio-alto
 - **Esforço:** alto
-- **Próxima tarefa:** [Tarefa 1 — Ciclo manual de 5 livros técnicos](tarefa01-ciclo-manual-5-livros.md)
+- **Próxima tarefa:** [Tarefa 1 — Ciclo manual de 5 livros técnicos](tarefa01-ciclo-manual-5-livros.md). Rascunho feito em [tarefa01-resultado.md](tarefa01-resultado.md); falta a revisão editorial das tags de cada livro.
+- **Bloqueio antes da Tarefa 2:** fechar a [categoria Matemática & Lógica](../revisao-escopo-matematica-corredor-tecnologia.md). O escopo do corredor de Tecnologia influencia o vocabulário.
 - **Critério de avanço:** ciclo manual produzir vocabulário v0, regras editoriais e decisão explícita sobre nível, uso editorial e automação.
 
 ## Tese de produto
@@ -37,11 +38,17 @@ Em terror, bruxas e outros recortes editoriais amplos, categorias já resolvem m
 
 Nível não deve ser descartado por ser uma alegação editorial. Deve ser testado no ciclo manual: se ajudar devs e tech leads a decidir clique/download, pode virar tag, campo separado ou metadado interno.
 
+## Decisões do Raffa (2026-10-02)
+
+- **Nível:** campo separado, fora das tags visíveis. Formato exato fica para as tarefas 3 e 7.
+- **Vocabulário:** `Acadêmico` e `Boas Práticas` saem. Docker, Kubernetes, Microsserviços e R entram na v0 mesmo com poucos livros (regra proposta: tag de stack vale a partir de 3 livros; página pública própria é decisão da tarefa 4).
+- **Escopo:** matemática vira categoria própria, ver [item de backlog](../revisao-escopo-matematica-corredor-tecnologia.md).
+
 ## Tarefas
 
 | # | Tarefa | Status | Depende de | Resultado |
 |---|---|---|---|---|
-| 1 | [Ciclo manual de 5 livros técnicos](tarefa01-ciclo-manual-5-livros.md) | **Pendente** | — | Cinco ebooks avaliados com até três tags cada, alternativas rejeitadas e vocabulário v0. |
+| 1 | [Ciclo manual de 5 livros técnicos](tarefa01-ciclo-manual-5-livros.md) | **Rascunho feito** ([resultado](tarefa01-resultado.md)) | — | Cinco ebooks avaliados com até três tags cada, alternativas rejeitadas e vocabulário v0. |
 | 2 | [Vocabulário técnico v0 e governança](tarefa02-vocabulario-tecnico-v0.md) | **Pendente** | 1 | Lista controlada inicial, aliases, critérios de criação e regras de revisão. |
 | 3 | [Modelo de dados para tags](tarefa03-modelo-de-dados-tags.md) | **Pendente** | 1–2 | Schema persistente com identidade estável e limite de tags visíveis. |
 | 4 | [PDP e página pública por tag](tarefa04-pdp-e-pagina-publica-tag.md) | **Pendente** | 2–3 | Tags discretas na PDP e navegação pública por tag com SSR. |
