@@ -5,6 +5,7 @@ Conhecimento de frontend, backend, banco, analytics e performance técnica.
 ## Skills
 - `./frontend.md` — Angular, UI patterns, Mobile e SSR v2.
 - `./backend.md` — .NET, EF Core, migrations e arquitetura hexagonal.
+- `./tag-manager.md` — Tags do catálogo: modelo de dados, motor mecânico, vocabulário, scripts e endpoints.
 - `./postgres-ro/SKILL.md` — Consultas SQL seguras e exploração de dados.
 - `./postgres-slow-query-analysis/SKILL.md` — Diagnóstico e otimização de performance no banco.
 - `./analytics/SKILL.md` — GA4, GSC, SEO e Business Intelligence.
