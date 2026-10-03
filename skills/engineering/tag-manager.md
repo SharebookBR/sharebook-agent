@@ -24,6 +24,7 @@ Skill operacional para gerir as tags do catálogo do Sharebook: modelo de dados,
 - Tag pode existir e navegar publicamente mesmo com poucos livros.
 - Cobertura não é meta: não inflar tags para "fechar 100%".
 - Vocabulário fechado: nem usuário nem IA criam tag livre; só curadoria editorial.
+- Tag nova exige revisão inicial do catálogo: criar o slug sem revisar livros existentes deixa só vocabulário; revisar transforma a tag em descoberta real.
 
 ## Motor mecânico (`BookTagRuleEngine.cs`)
 
@@ -48,12 +49,16 @@ Skill operacional para gerir as tags do catálogo do Sharebook: modelo de dados,
 2. Escolher família coerente (ex: `linguagens-plataformas-frameworks`, `dados-ia`, `backend-arquitetura`, `fundamentos-computacao`).
 3. Criar via `POST /api/Tag` com `status: "Active"`, `isPublic: true`.
 4. Adicionar regra no `BookTagRuleEngine` + teste, para livros futuros nascerem com ela.
+5. **Revisar o catálogo inicial** antes de encerrar: buscar por id, aliases e termos relacionados; separar falso positivo de aderência real; aplicar a tag aos livros existentes preservando tags já aprovadas e respeitando o limite de 3.
+6. Validar a página/listagem da tag (`GET /api/Tag/{id}/Books/{page}/{items}` ou fluxo público equivalente). Tag nova só está completa quando o catálogo existente foi revisado, mesmo que o resultado honesto seja zero livro.
 
 ## Achar livros para uma tag (backfill manual)
 
 - Buscar via `GET /api/Book/FullSearch/{criteria}/{page}/{items}` (URL-encode do critério).
+- Buscar não só pelo slug: usar aliases, grafias alternativas, nomes históricos e termos próximos que uma pessoa usaria no título ou sinopse.
 - **Atenção a falso positivo**: a palavra pode ser homônima (ex: "vim" = verbo *vir* em "Pai, de Onde eu Vim?"; "vim" citado só na sinopse). Conferir título/autor antes de taggear.
 - Aplicar com `PUT /api/Tag/Book/{id}`, preservando tags existentes (máx 3).
+- Quando o livro já tem 3 tags, não substituir no automático: decidir editorialmente se a nova tag é mais relevante que uma existente ou deixar sem alteração.
 
 ## Scripts
 
