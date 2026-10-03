@@ -26,17 +26,16 @@ Em terror, bruxas e outros recortes editoriais amplos, categorias já resolvem m
 - começar por ebooks técnicos;
 - categoria é prateleira principal; tag é eixo transversal;
 - valor para o usuário decide prioridade; "alegação forte" aumenta custo de validação, mas não é argumento para descartar uma dimensão;
-- tags podem alimentar vitrines temáticas e páginas públicas quando houver vocabulário estável;
-- conhecimento estruturado só vira schema depois de julgamento editorial manual.
+- tags podem alimentar vitrines temáticas e páginas públicas quando houver vocabulário estável.
 
-## Dimensões candidatas
+## Dimensões avaliadas no ciclo manual
 
 1. **Stack/tecnologia:** `Python`, `.NET`, `Docker`, `Kubernetes`, `SQL`, `AWS`.
 2. **Área/problema:** `Backend`, `DevOps`, `Data Science`, `Arquitetura`, `Segurança`.
 3. **Uso editorial:** `Fundamentos`, `Referência`, `Prático`, `Acadêmico`, `Legado`.
-4. **Nível:** `Iniciante`, `Intermediário`, `Avançado`.
+4. **Nível:** `Iniciante`, `Intermediário`, `Avançado` — avaliado e mantido fora das tags visíveis.
 
-Nível não deve ser descartado por ser uma alegação editorial. Deve ser testado no ciclo manual: se ajudar devs e tech leads a decidir clique/download, pode virar tag, campo separado ou metadado interno.
+Nível foi avaliado como hipótese, mas a continuação em conhecimento estruturado foi cancelada em 2026-10-03 por falta de valor percebido para este épico.
 
 ## Decisões do Raffa (2026-10-02)
 
@@ -73,7 +72,7 @@ Ela existe para responder uma pergunta: quando um humano bom olha para um livro 
 - pode melhorar busca e recomendações com sinal estruturado simples;
 - não depende de embeddings;
 - deve seguir `skills/product-ux/catalog-strategy/SKILL.md` para critérios de qualidade e descoberta;
-- ao final do ciclo manual, criar uma skill local de tagging editorial com as regras aprendidas, usando o fluxo oficial de skill quando isso for explicitamente solicitado.
+- a skill local de tagging operacional foi criada em `skills/engineering/tag-manager.md`.
 
 ## Fora de escopo agora
 
