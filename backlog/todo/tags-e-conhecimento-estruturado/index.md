@@ -2,11 +2,11 @@
 
 ## Estado
 
-- **Status:** implementação incremental / importer assistido
+- **Status:** implementação incremental / tags mecânicas na criação de livro
 - **Prioridade:** 3 no backlog principal
 - **Valor:** médio-alto
 - **Esforço:** alto
-- **Próxima tarefa:** implementar a [Tarefa 5 — Sugestão assistida no importer](tarefa05-sugestao-assistida-no-importer.md).
+- **Próxima tarefa:** nenhuma em andamento na fatia de tags — Tasks 1–6 fechadas para avanço. Resta a [Tarefa 7 (horizonte v2)](tarefa07-conhecimento-estruturado-nivel-pre-requisitos.md) e as pendências paralelas de Matemática & Lógica.
 - **Pendência paralela:** fechar as pendências da [categoria Matemática & Lógica](../revisao-escopo-matematica-corredor-tecnologia.md). A migração já foi executada e verificada na API, mas ainda há decisões abertas de cache, Home e subcategoria.
 - **Critério de avanço:** aprovar o desenho de schema antes de qualquer migration.
 
@@ -52,7 +52,7 @@ Nível não deve ser descartado por ser uma alegação editorial. Deve ser testa
 | 2 | [Vocabulário técnico v0 e governança](tarefa02-vocabulario-tecnico-v0.md) | **Fechada para avanço** | 1 | Lista controlada inicial, aliases, critérios de criação e regras de revisão. |
 | 3 | [Modelo de dados para tags](tarefa03-modelo-de-dados-tags.md) | **Fechada para avanço** | 1–2 | Schema persistente, endpoints públicos/admin, contagem pública e limite de tags visíveis. |
 | 4 | [PDP e página pública por tag](tarefa04-pdp-e-pagina-publica-tag.md) | **Fechada para avanço** | 2–3 | Tags discretas na PDP, índice `/tags` e navegação pública por tag com SSR. |
-| 5 | [Sugestão assistida no importer](tarefa05-sugestao-assistida-no-importer.md) | **Pendente** | 2–3 | IA sugere tags do vocabulário controlado para revisão editorial. |
+| 5 | [Sugestão assistida no importer](tarefa05-sugestao-assistida-no-importer.md) | **Fechada para avanço** | 2–3 | Tags mecânicas determinísticas (sem IA) atribuídas na criação do livro. |
 | 6 | [Backfill controlado do catálogo técnico](tarefa06-backfill-controlado.md) | **Fechada para avanço** | 2–5 | Catálogo técnico preenchido de forma idempotente e revisável. |
 | 7 | [Conhecimento estruturado: nível, pré-requisitos e tópicos](tarefa07-conhecimento-estruturado-nivel-pre-requisitos.md) | **Horizonte v2** | 1 + evidência de valor | Decisão sobre campos além de tags, guiada por valor ao usuário. |
 
