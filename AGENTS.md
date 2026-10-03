@@ -147,6 +147,7 @@ Esse princípio nasceu de uma fricção real, registrada em `memory/2026-09-20-t
 - Para execução → abrir skill primeiro.
 - Para tarefa de runtime, ambiente, tooling ou autonomia → detectar o habitat e abrir primeiro a skill correspondente em `skills/runtime/`.
 - Para decisões de backlog → abrir `backlog/index.md`.
+- Quando Raffa anunciar um tema e pedir para "se preparar", tratar o tema como gatilho de descoberta: buscar a família/skill/script/backlog correspondente, ler a skill candidata antes de responder que está pronto e mencionar brevemente qual fonte foi carregada.
 
 ## Cenários de Roteamento
 - Qualquer tarefa no frontend Angular (componente, estilo, layout, UI, tela nova) → abrir `sharebook-agent/skills/engineering/INDEX.md`.
