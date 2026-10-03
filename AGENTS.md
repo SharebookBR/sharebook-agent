@@ -155,6 +155,7 @@ Esse princípio nasceu de uma fricção real, registrada em `memory/2026-09-20-t
 - Dream, memória episódica, plasticidade, auditoria ou saúde estrutural do harness → abrir `sharebook-agent/skills/doctrine/INDEX.md`, skill `harness-governance`.
 - Soul, identidade do agente, continuidade entre modelos, autorreferência ou autonomia → abrir `sharebook-agent/skills/doctrine/INDEX.md` e `sharebook-agent/SOUL.md`.
 - Preparo editorial, sinopses, categoria, handoff por source ou rejeição curatorial pós-triagem (`editorial_rejected`) → consultar `editorial_prompt` da source em `importer.sources` no banco (`sharebook_importer`). Não abrir skill file por source, a config editorial vive no banco.
+- Tags do catálogo, taggear/retaggear livros, vocabulário de tags, aliases, página pública de tag ou motor mecânico de tags → abrir `sharebook-agent/skills/engineering/INDEX.md` e seguir `tag-manager.md`.
 - SEO, GA4, GSC, funil, tráfego, landing pages ou auditoria de indexação → abrir `sharebook-agent/skills/engineering/INDEX.md`.
 - Posts, campanhas, imagens geradas, banners, hero visuals, assets de frontend ou qualquer direção visual de marca do Sharebook → abrir `sharebook-agent/skills/product-ux/INDEX.md`, skill `art-director`.
 - Performance do banco, slow query log, `pg_stat_statements` ou ofensores de Postgres → abrir `sharebook-agent/skills/engineering/INDEX.md`.
@@ -289,7 +290,7 @@ Padrão recorrente encontrado de forma independente em pelo menos quatro sessõe
 ### Famílias de Skills
 - `sharebook-agent/skills/runtime/INDEX.md` — Detecção e regras dos habitats Windows local e OpenClaw: permissões, paths, shell, persistência, sessões e fricções de execução.
 - `sharebook-agent/skills/product-ux/INDEX.md` — Voz oficial, sinopses, UX, interface, layout e percepção visível do catálogo. obrigatório ler skill de voz antes de escrever algo ao usuário final.
-- `sharebook-agent/skills/engineering/INDEX.md` — Frontend, backend, Postgres, analytics, SEO técnico, BI e performance de engenharia.
+- `sharebook-agent/skills/engineering/INDEX.md` — Frontend, backend, Postgres, analytics, SEO técnico, BI, tags do catálogo, mecanismos de descoberta e performance de engenharia.
 - `sharebook-agent/skills/importers/INDEX.md` — Importers, triagem, preparo editorial, publicação, categorias e produção de ativos do catálogo.
 - `sharebook-agent/skills/infra/INDEX.md` — VPS, Coolify, deploy, proxy, domínio, containers e operação da casa.
 - `sharebook-agent/skills/doctrine/INDEX.md` — Dream, plasticidade, famílias de skills, esquecimento seletivo e governança cognitiva.

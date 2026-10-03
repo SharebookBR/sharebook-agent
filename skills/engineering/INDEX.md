@@ -1,6 +1,6 @@
 # Família de Skills — Engenharia
 
-Conhecimento de frontend, backend, banco, analytics e performance técnica.
+Conhecimento de frontend, backend, banco, analytics, tags do catálogo, mecanismos de descoberta e performance técnica.
 
 ## Skills
 - `./frontend.md` — Angular, UI patterns, Mobile e SSR v2.
@@ -12,4 +12,4 @@ Conhecimento de frontend, backend, banco, analytics e performance técnica.
 - `./search-console-explorer/SKILL.md` — investigação ad hoc de aquisição orgânica, comparação de períodos e oportunidades de SEO no GSC.
 
 ## Uso
-- Ler quando a tarefa envolver implementação, diagnóstico técnico, queries, analytics, SEO técnico ou performance.
+- Ler quando a tarefa envolver implementação, diagnóstico técnico, queries, analytics, SEO técnico, tags do catálogo, vocabulário controlado, mecanismos de descoberta ou performance.
