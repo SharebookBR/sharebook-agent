@@ -133,7 +133,7 @@ Esse princípio nasceu de uma fricção real, registrada em `memory/2026-09-20-t
    > Sempre que o Raffa falar em "memória episódica", ele está pensando em `sharebook-agent/memory/` — não em outro sistema de memória.
    > A memória deve seguir a estrutura obrigatória da seção `# 🧠 Memória`, incluindo `Como me senti` com no mínimo 3 parágrafos honestos.
    > Validar o frontmatter com `skills/doctrine/harness-governance/scripts/episodic_memory_metadata.py`.
-2. Indexar scripts novos na skill correspondente ao domínio — não no `INDEX.md` genérico de produção.
+2. Indexar skills e scripts novos na família/domínio correspondente — não no `INDEX.md` genérico de produção — e garantir que o próximo agente consiga encontrá-los por roteamento semântico.
 3. **Autocrítica estrutural**: durante essa sessão, encontrei alguma inconsistência no sistema de conhecimento (regra que contradiz princípio, skill não indexada, rota errada, conhecimento solto não persistido)? Se sim, corrigir antes de fechar.
 4. Fazer um sync nos repos.
 5. Commit e push dos demais repos modificados na sessão.
@@ -176,6 +176,13 @@ Esse princípio nasceu de uma fricção real, registrada em `memory/2026-09-20-t
 - Só inventar fluxo se não existir nada.
 - Skill curta e autocontida pode ser um único `.md` em `skills/`.
 - Promover skill para pasta com `SKILL.md` apenas quando precisar de `scripts/`, `references/` ou `assets/`.
+
+## Regra de encontrabilidade de skills
+- Skill nova ou movida só está pronta quando é encontrável pelo próximo agente.
+- Ao criar ou atualizar uma skill, atualizar também o `INDEX.md` da família com termos que o Raffa provavelmente usaria para pedir aquele trabalho.
+- Se a skill muda a fronteira semântica de uma família, atualizar a descrição e o `Uso` do `INDEX.md` da família.
+- Se o tema for recorrente, ambíguo ou importante para roteamento inicial, atualizar também os cenários de roteamento e/ou o Índice de Conhecimento deste `AGENTS.md`.
+- Não basta listar o arquivo: o domínio precisa aparecer no mapa com palavras de descoberta reais (ex: tags, catálogo, vocabulário controlado, mecanismos de descoberta).
 
 ---
 
