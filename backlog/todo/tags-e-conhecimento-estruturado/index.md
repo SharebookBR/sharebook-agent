@@ -2,13 +2,13 @@
 
 ## Estado
 
-- **Status:** implementação incremental / tags mecânicas na criação de livro
+- **Status:** missão cumprida em 2026-10-03
 - **Prioridade:** 3 no backlog principal
 - **Valor:** médio-alto
 - **Esforço:** alto
-- **Próxima tarefa:** nenhuma em andamento na fatia de tags — Tasks 1–6 fechadas para avanço. Resta a [Tarefa 7 (horizonte v2)](tarefa07-conhecimento-estruturado-nivel-pre-requisitos.md) e as pendências paralelas de Matemática & Lógica.
-- **Pendência paralela:** fechar as pendências da [categoria Matemática & Lógica](../revisao-escopo-matematica-corredor-tecnologia.md). A migração já foi executada e verificada na API, mas ainda há decisões abertas de cache, Home e subcategoria.
-- **Critério de avanço:** aprovar o desenho de schema antes de qualquer migration.
+- **Próxima tarefa:** nenhuma. Tasks 1–6 fecharam a missão de tags; a [Tarefa 7](tarefa07-conhecimento-estruturado-nivel-pre-requisitos.md) foi cancelada por decisão do Raffa.
+- **Pendência relacionada, fora da missão de tags:** [categoria Matemática & Lógica](../revisao-escopo-matematica-corredor-tecnologia.md).
+- **Critério de avanço:** não há avanço planejado neste épico. Novas demandas de tags devem nascer como tarefa própria, com valor explícito.
 
 ## Tese de produto
 
@@ -40,9 +40,14 @@ Nível não deve ser descartado por ser uma alegação editorial. Deve ser testa
 
 ## Decisões do Raffa (2026-10-02)
 
-- **Nível:** campo separado, fora das tags visíveis. Formato exato fica para as tarefas 3 e 7.
+- **Nível:** campo separado, fora das tags visíveis. A continuação em conhecimento estruturado foi cancelada em 2026-10-03.
 - **Vocabulário:** `Acadêmico` e `Boas Práticas` saem. Docker, Kubernetes, Microsserviços e R entram na v0 mesmo com poucos livros. Tags de alto valor podem existir e navegar publicamente mesmo com baixa contagem.
 - **Escopo:** matemática vira categoria própria, ver [item de backlog](../revisao-escopo-matematica-corredor-tecnologia.md).
+
+## Decisões do Raffa (2026-10-03)
+
+- **Tarefa 7 cancelada:** Raffa não vê valor em seguir com nível, pré-requisitos e tópicos como conhecimento estruturado neste épico.
+- **Missão de tags cumprida:** o ciclo de tags entregou vocabulário, modelo, navegação pública, motor mecânico, backfill controlado e skill operacional.
 
 ## Tarefas
 
@@ -54,7 +59,7 @@ Nível não deve ser descartado por ser uma alegação editorial. Deve ser testa
 | 4 | [PDP e página pública por tag](tarefa04-pdp-e-pagina-publica-tag.md) | **Fechada para avanço** | 2–3 | Tags discretas na PDP, índice `/tags` e navegação pública por tag com SSR. |
 | 5 | [Sugestão assistida no importer](tarefa05-sugestao-assistida-no-importer.md) | **Fechada para avanço** | 2–3 | Tags mecânicas determinísticas (sem IA) atribuídas na criação do livro. |
 | 6 | [Backfill controlado do catálogo técnico](tarefa06-backfill-controlado.md) | **Fechada para avanço** | 2–5 | Catálogo técnico preenchido de forma idempotente e revisável. |
-| 7 | [Conhecimento estruturado: nível, pré-requisitos e tópicos](tarefa07-conhecimento-estruturado-nivel-pre-requisitos.md) | **Horizonte v2** | 1 + evidência de valor | Decisão sobre campos além de tags, guiada por valor ao usuário. |
+| 7 | [Conhecimento estruturado: nível, pré-requisitos e tópicos](tarefa07-conhecimento-estruturado-nivel-pre-requisitos.md) | **Cancelada** em 2026-10-03 | — | Raffa não vê valor; não seguir neste épico. |
 
 ## Fronteira da primeira fatia
 

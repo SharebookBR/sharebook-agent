@@ -1,6 +1,6 @@
 # Tarefa 1 — Resultado do ciclo manual (rascunho para revisão)
 
-> **Status:** rascunho de agente. Decisões de 2026-10-02 do Raffa já incorporadas (ver "Decisões"). Falta a revisão editorial das tags de cada livro. Nada aqui foi publicado ou aplicado ao catálogo.
+> **Status:** registro histórico do ciclo manual. Decisões de 2026-10-02 do Raffa já incorporadas (ver "Decisões"). O épico de tags foi considerado cumprido em 2026-10-03; este arquivo preserva o aprendizado inicial, não o estado operacional atual do catálogo.
 > **Data:** 2026-10-02. **Fonte dos dados:** API pública (`Book/Slug/{slug}`, `Book/CategoryTree/...`). Sinopses e categorias lidas do catálogo em produção.
 > **Limite do método:** o julgamento dos 5 livros foi feito pelo agente a partir de título, autor, categoria e sinopse (truncada em ~400 caracteres, exceto a do HPC Vol. 1). Nenhum livro foi aberto. A contagem por tag nos 324 livros é por **palavra-chave** em título e sinopse, não classificação curada. É uma proposta, não um veredito.
 

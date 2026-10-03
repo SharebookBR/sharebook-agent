@@ -2,11 +2,17 @@
 
 ## Status
 
-Horizonte v2.
+Cancelada em 2026-10-03 por decisão do Raffa.
 
 ## Objetivo
 
-Avaliar campos estruturados além de tags quando houver evidência de que eles ajudam devs e tech leads a decidir leitura, download ou sequência de estudo.
+Avaliar campos estruturados além de tags quando houvesse evidência de que eles ajudariam devs e tech leads a decidir leitura, download ou sequência de estudo.
+
+## Decisão
+
+Raffa não vê valor nesta frente para o épico de tags. A missão das tags foi considerada cumprida com vocabulário, modelo, navegação pública, motor mecânico, backfill controlado e skill operacional.
+
+Não retomar como continuação automática do épico. Se nível, pré-requisitos, tópicos ou "você aprenderá" voltarem, devem nascer como item próprio de produto, com valor explícito e evidência nova.
 
 ## Hipóteses
 
@@ -17,7 +23,7 @@ Avaliar campos estruturados além de tags quando houver evidência de que eles a
 
 ## Critério de retomada
 
-Retomar somente depois do ciclo manual e de alguma evidência de valor: dúvida recorrente, navegação ruim, necessidade editorial concreta ou sinal de uso nas tags publicadas.
+Cancelado. Não há critério de retomada dentro deste épico.
 
 ## Fora de escopo agora
 
