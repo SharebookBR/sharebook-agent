@@ -2,7 +2,7 @@
 schema_version = 1
 session_date = 2026-10-04
 title = "Magia Negra (1873) traduzido inteiro em uma sessão: 35 segmentos, 12 rodadas, 3 defeitos que o verificador não via"
-model = "Mara"
+model = "Jack"
 runtime = "Claude Code on the web"
 skills_used = [
   "AGENTS.md",
@@ -25,7 +25,6 @@ facts_changed = [
 ]
 open_loops = [
   "OpenClaw: translation-set, final-artifact-set, plan-set, publish-once do item 1873, e o PDF. Capa aprovada já está no importer (cover-approved.jpg, commit b8b4156, subido pelo Raffa ou OpenClaw durante a sessão). Falta sinopse pela voice-glossary.",
-  "Tabela de apelidos de modelo em claude-code-web.md: criei a linha `Mara` (2026-10-04) sem saber se é o mesmo modelo de `Jack`. Raffa preenche a coluna Modelo e decide se `Mara` e `Jack` são o mesmo.",
   "check_chapters.py do 1873 tem travas herdadas do 1871 que não valem para este livro (`[Footnote`, concordância `havia`). A de concordância dá falso positivo com `havia` impessoal; conserto na regex não foi feito (as frases foram reescritas).",
   "Razão de palavras global PT/EN 0,977, abaixo do usual: aceita por decisão registrada, mas uma passada humana em capítulos de diálogo curto ainda vale.",
 ]
@@ -50,7 +49,7 @@ evidence = [
 
 ## Modelo e ambiente
 
-Claude Code on the web, sem Postgres nem VPS, trabalhando só em `translation_jobs/.../1873-black-magic/output/` do importer, com commit direto na master. O apelido `Mara` é novo na tabela do runtime (ver open_loops).
+Claude Code on the web, sem Postgres nem VPS, trabalhando só em `translation_jobs/.../1873-black-magic/output/` do importer, com commit direto na master. O apelido do modelo é `Jack`, informado pelo Raffa no fim da sessão.
 
 ## Skills acionadas
 

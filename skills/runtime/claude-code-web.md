@@ -89,7 +89,6 @@ Neste habitat o ambiente proíbe o agente de identificar o modelo em qualquer ar
 | Apelido | Modelo | Desde |
 |---|---|---|
 | Jack | *** | 2026-10-02 |
-| Mara | *** | 2026-10-04 |
 
 ## Tradução pesada offline: armadilhas confirmadas no job 1873 (2026-10-04)
 
