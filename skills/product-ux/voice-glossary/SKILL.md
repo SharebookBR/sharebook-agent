@@ -31,8 +31,33 @@ Leia esse arquivo antes de decidir terminologia quando houver dúvida real.
 
 Ao escrever sinopses para o catálogo:
 - **Tamanho**: Exatamente 3 parágrafos.
-- **Tom**: Envolvente e literário, focado no desejo de leitura, evitando descrições genéricas.
 - **Veracidade**: Não inventar fatos. Pesquisar fontes confiáveis (ex: Wikipedia) antes de redigir.
+
+Existem **dois registros** de sinopse. Escolher o registro antes de redigir — não misturar os dois no mesmo texto.
+
+### Modo literário (padrão)
+- Tom envolvente e literário, focado no desejo de leitura.
+- Atmosfera, elegância e cadência narrativa.
+- Evitar descrições genéricas.
+- Ideal para clássicos, ensaios e obras de atmosfera densa.
+
+### Modo clique (conversão)
+- Objetivo: fazer a pessoa parar e querer clicar em "receber o livro".
+- **Parágrafo 1**: gancho de impacto na primeira frase (pergunta direta ou afirmação provocadora), em até 2 linhas.
+- **Parágrafo 2**: promessa clara do que o livro entrega + 1 detalhe concreto (autor, época, mecanismo).
+- **Parágrafo 3**: chamada emocional que liga o livro ao leitor de hoje, com CTA sutil.
+- Evitar erudição pesada, arcaísmo e atmosfera excessiva quando o objetivo for converter.
+- Falar com o leitor ("você"), não com a obra.
+
+### Exemplo de referência — modo clique aprovado
+
+Sinopse de *As Superstições da Bruxaria*, Howard Williams (aprovada em 2026-10-04):
+
+> Você já parou pra pensar que, por mais de três séculos, bastava uma denúncia sussurrada pra mandar uma mulher pra fogueira? Em *As Superstições da Bruxaria*, você entra no tribunal mais sombrio da história — aquele onde a vizinhança era júri, o boato era prova e a sentença era fogo. E o mais assustador? Nada disso precisava de uma bruxa de verdade.
+>
+> Howard Williams reconstrói, com a precisão de um detetive e o ritmo de um thriller, como a superstição virou um sistema: a origem antiga do medo, a demonologia que deu nome ao pânico e os julgamentos que transformaram inocentes em monstros. A cada capítulo, você percebe que o monstro nunca esteve na vassoura — estava na multidão.
+>
+> Se você gosta de histórias sobre poder, histeria e os abismos da mente humana, este clássico do século XIX é pra você. Porque entender como caçamos bruxas ontem é entender como ainda caçamos bodes expiatórios hoje. Leia e duvide de tudo o que a multidão acredita.
 
 ## Regras canônicas já validadas
 
