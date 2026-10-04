@@ -17,3 +17,4 @@ Fluxos de ingestão, triagem, preparo editorial e publicação no catálogo.
 - Quando a tarefa também decidir quais títulos, sources ou categorias merecem prioridade, ler antes `../product-ux/catalog-strategy/SKILL.md`.
 - Para qualquer coisa relacionada à fila de importação de ebooks: abrir `./ebook-importer/SKILL.md` — ela contém tudo.
 - Para preparo editorial de source Project Gutenberg com tradução/PDF final, abrir também `./sharebook-pdf-typesetting/SKILL.md` antes de validar ou gerar o PDF.
+- Para tradução pesada de livro (job offline em `translation_jobs/`, subagentes, glossário, `check_chapters.py`, montagem do `translated.md`): ler `../runtime/claude-code-web.md`, seções `Importer: sem Postgres, trabalho via job offline` e `Tradução pesada offline: armadilhas confirmadas no job 1873`. Termos de descoberta: traduzir livro, tradução, bruxa, subagentes, glossário, verificador, travessão, reticências, licença do Gutenberg.

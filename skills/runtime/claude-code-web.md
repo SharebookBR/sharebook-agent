@@ -89,3 +89,18 @@ Neste habitat o ambiente proíbe o agente de identificar o modelo em qualquer ar
 | Apelido | Modelo | Desde |
 |---|---|---|
 | Jack | *** | 2026-10-02 |
+| Mara | *** | 2026-10-04 |
+
+## Tradução pesada offline: armadilhas confirmadas no job 1873 (2026-10-04)
+
+Job *Black Magic* (35 segmentos, 3 subagentes por rodada, 12 rodadas). O verificador do job (`check_chapters.py`) fica verde com erros que o leitor percebe. O que ele não vê e o que fazer:
+
+- **Auditoria do orquestrador por amostra, em toda rodada.** Abertura, meio e fim de cada segmento, mais os trechos que o relatório do subagente aponta. Em quase toda rodada achei pelo menos um erro de sentido (`sat his horse` virou `montou`, `arc` virou `arco`, `Will she?` com sujeito trocado, `poor` omitido, acréscimo de adjetivo ou diminutivo). A releitura que o subagente relata costuma ser parcial: peça no briefing **passada separada, parágrafo a parágrafo, com a fonte aberta, e que relate quantos parágrafos releu de fato**. Quando ele confessa que pulou, reenvie por `SendMessage`: funcionou no segmento 16.
+- **Fixe a regra de pontuação no glossário antes da rodada 1.** Nos segmentos 01-13 o `--` da fonte virou reticências, o que troca interrupção por hesitação. Só apareceu quando um segmento usou travessão e as contagens não batiam. Convenção usada: `--` -> ` — ` (colado antes de aspas/fim de parágrafo), `…` só onde a fonte tem. Correção em massa: alinhar por parágrafo os tokens `--`/`…` da fonte com as reticências da tradução e só trocar quando as contagens batem; os divergentes vão à mão.
+- **Confira o corte da fonte no último segmento.** O `split_source.py` do job 1873 incluía a licença do Gutenberg no segmento 35 (2.970 palavras que não eram do livro). Verifique `THE END` e o que vem depois antes da rodada 1.
+- **Teste o montador antes de rodar em produção**, numa cópia com capítulos-stub. O `build_manuscript.py` do 1873 duplicaria cabeçalhos (corpo + `title_pt` do manifesto em ASCII sem acento) e repetiria o cabeçalho da Parte II no fim do capítulo 22. O verificador não olha cabeçalho.
+- **Regras de glossário que evitam divergência entre subagentes**: `devil` = diabo, `demon/fiend` = demônio; `little X` = `pequeno X` (nunca diminutivo); `crept` sem `furtivo`; nomes históricos em português (`Alcuíno`, `Constantino`), nomes de personagem como na fonte; ambiguidade de gênero da fonte se preserva (`Sem vida`, `seguir você`) em vez de escolher.
+- **Falso positivo recorrente da trava de concordância** (`havia` impessoal depois de preposição + plural): reescrever a frase, não alterar a ferramenta. A regex de `\s+` atravessa preposição.
+- **Mantenha 3 subagentes em voo, não em lotes fixos**: dispare o próximo assim que um voltar. Foi mais rápido que rodadas rígidas, sem perda de qualidade. Dispare só depois de gravar a regra nova no glossário que o briefing manda ler.
+- **Stop hook**: o hook de git reclama de arquivo não rastreado enquanto o subagente ainda escreve. Não commite capítulo em andamento; commite o que o subagente já entregou e foi auditado. Em caso de pressa, commit marcado como `checkpoint (pending audit)`.
+- Push na master do importer pode ser recusado porque o Raffa/OpenClaw subiu algo em paralelo (aconteceu com a capa): `git pull --rebase origin master` e repetir.
