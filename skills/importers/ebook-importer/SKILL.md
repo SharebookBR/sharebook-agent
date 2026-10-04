@@ -7,6 +7,26 @@ description: Opera e recupera o importer de ebooks públicos/gratuitos do Shareb
 
 Uma skill. Uma porta. Sem teatro.
 
+## Regra dura nº 1 — CLI sempre, nunca banco direto
+
+Toda operação do importer passa pelo **CLI** (`cli.py`), nunca por acesso direto ao PostgreSQL.
+
+- É **proibido** conectar no banco na mão (psql, inspecionar DSN, fuçar túnel, ler/editar `metadata_json` por SQL) para "descobrir estado". Isso gasta tokens, arrisca o schema e ignora as validações que o CLI já faz.
+- Se o CLI falhar com `Connection refused`, o problema é o DSN apontando para o host direto. O conserto canônico é apontar para o **túnel local** (127.0.0.1:15432), não investigar o banco.
+
+### Atalho à prova de erro (container OpenClaw)
+
+Use o wrapper, que reescreve o DSN para o túnel e chama o CLI:
+
+```bash
+bash /data/workspace/sharebook-ebook-importer/cli.sh <comando> [args...]
+# ex.:
+bash /data/workspace/sharebook-ebook-importer/cli.sh status
+bash /data/workspace/sharebook-ebook-importer/cli.sh publish-once --id 1872
+```
+
+O túnel (`pg_tunnel.py`) deve estar de pé; o wrapper não altera `.env` nem o banco.
+
 ## Documentos desta skill
 
 - **`SKILL.md`** (este arquivo) — operação canônica, workflow, guardrails, hardening
