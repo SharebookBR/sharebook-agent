@@ -185,6 +185,14 @@ Aprendido no item 1870 (≈295 mil palavras, 83 segmentos), referência em `tran
 - **Número declarado numa lista se confere contando a lista.** A política de imagem do 1870 foi apresentada como "11 entram" e a lista sempre teve 10; o erro se propagou para notas, progresso e comentários de três ferramentas antes de ser pego pela saída de um script. Quando o texto afirma uma contagem, contar.
 - **Relato de subagente não é prova, nos dois sentidos.** Houve relatório afirmando conserto que o arquivo não tinha, e relatório de falha cujo arquivo estava íntegro. Conferir sempre o texto, nunca o relato.
 
+Aprendido nos itens 1871 e 1873:
+
+- **Trava que dispara manda reler o segmento inteiro contra a fonte.** No item 1871 um subagente achou duas concordâncias inventadas onde a trava via uma; corrigir só a linha apontada teria produzido verde com erro dentro. O alerta é ponteiro para auditoria, não lista exaustiva de consertos.
+- **Verificador verde não substitui leitura por amostra do orquestrador.** No item 1873 o `check_chapters.py` ficou verde com erros que leitor percebe (`sat his horse` virou `montou`, sujeito trocado, acréscimo/omissão). Em toda rodada, o orquestrador lê abertura, meio e fim de cada segmento contra a fonte, mais trechos citados no relatório, e pede releitura separada do subagente com contagem de parágrafos realmente relidos.
+- **Pontuação e léxico de alto impacto entram no glossário antes da rodada 1.** No item 1873, `--` da fonte virou reticências em 13 segmentos antes de a divergência aparecer; `devil`, nomes próprios e tratamentos também divergiram entre agentes. Fixar essas regras no glossário antes de delegar custa pouco e evita correção em massa.
+- **Pré-teste do job antes de traduzir.** Conferir o corte do último segmento (`THE END` vs licença do Gutenberg) e rodar o montador numa cópia com capítulos-stub antes da produção. No item 1873, a licença entrou no segmento final e o montador duplicaria cabeçalho; nenhum dos dois defeitos era visível para o verificador de tradução.
+- **Ambiguidade deliberada da fonte se preserva.** Se o original deixa gênero, causa ou incoerência em aberto, a tradução não deve decidir por elegância local. Registrar a decisão em `qa.md`/`notes.md`, não resolver a obra no lugar do autor.
+
 ### 3. Publicação
 
 ```bash

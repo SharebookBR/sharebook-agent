@@ -3,6 +3,45 @@
 Checkpoint oficial da consolidação de memória do projeto.
 
 ## Último dream
+- Data: `2026-10-04`
+- Tipo: `dream semanal automatizado customizado via OpenClaw cron, sem Raffa presente`
+- Última memória absorvida: `memory/2026-10-04-traducao-magia-negra-1873.md`
+- Total de memórias lidas: `13 memórias episódicas novas desde o checkpoint real (2026-09-27)`.
+
+## Consolidação produzida em 2026-10-04
+
+### Processo: sincronização antes do checkpoint
+- O ciclo cumpriu o passo 0 do `DREAM.md`: `git fetch`/`pull --rebase` antes de confiar em `_dream-state.md`.
+- O repo local começou divergente (`ahead 2, behind 3`); os dois commits locais foram preservados por rebase sobre `origin/master`.
+
+### Doctor: baseline limpo preservado
+- `python3 skills/doctrine/harness-governance/scripts/harness_doctor.py --root .` abriu limpo.
+- Não havia achados do Doctor para classificar como regressão, dívida histórica, artefato deliberado ou falso positivo.
+- O Doctor fechou limpo depois da consolidação.
+
+### Skill atualizada
+- `skills/importers/ebook-importer/SKILL.md`: seção de tradução pesada em job offline ganhou lições dos itens 1871 e 1873.
+- Consolidação aplicada: trava que dispara exige reler o segmento inteiro contra a fonte; verificador verde não substitui auditoria por amostra do orquestrador; pontuação/léxico de alto impacto entram no glossário antes da rodada 1; corte final e montador devem ser pré-testados; ambiguidade deliberada da fonte deve ser preservada e registrada.
+
+### Decisões conscientes de não agir
+- Não houve nova Skill: os aprendizados recorrentes tinham destino claro em skills existentes, e várias promoções já tinham sido feitas nas próprias sessões (`frontend`, `tag-manager`, `claude-code-web`, `voice-glossary`).
+- Não houve alteração em `SOUL.md`: a safra teve material constitutivo, mas não decisão deliberada nova que justificasse reescrita autônoma.
+- Loops fora do mandato autônomo ficaram preservados: commit possivelmente órfão no backend (`dc10ed4`), branches salvage, falso positivo do checker pós-`apply_images.py` do 1870, classificação adulta em produto, pendências de Matemática & Lógica, hipótese de CORS da S3 e pipeline de publicação/PDF/sinopse do job 1873.
+
+### Validação
+- `python3 skills/doctrine/harness-governance/scripts/harness_doctor.py --root .` terminou limpo.
+- `python3 -m unittest discover -s skills/doctrine/harness-governance/scripts -p 'test_*.py' -v` terminou com a suíte da governança aprovada.
+- A memória do ciclo é `memory/2026-10-04-dream-semanal-governanca.md`.
+
+## Próximo dream
+- O checkpoint agora parte de `memory/2026-10-04-traducao-magia-negra-1873.md`.
+- Continuar observando se os jobs de tradução pesada posteriores realmente usam a auditoria por amostra e o pré-teste do job antes da rodada 1.
+- Se o checker pós-`apply_images.py` do 1870 voltar a causar ruído prático, tratar no importer/job com evidência; não apagar alerta sem provar a etapa em que ele deve rodar.
+- Reavaliar loops de produto/infra apenas em sonho manual ou sessão operacional própria quando exigirem decisão de uso real do Raffa.
+
+## Histórico — 2026-09-27
+
+## Último dream
 - Data: `2026-09-27`
 - Tipo: `dream semanal automatizado customizado via OpenClaw cron, sem Raffa presente`
 - Última memória absorvida: `memory/2026-09-27-traducao-offline-lancashire-witches.md`
