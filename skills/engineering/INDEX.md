@@ -3,7 +3,7 @@
 Conhecimento de frontend, backend, banco, analytics, tags do catálogo, mecanismos de descoberta e performance técnica.
 
 ## Skills
-- `./frontend.md` — Angular, UI patterns, Mobile e SSR v2.
+- `./frontend.md` — Angular, UI patterns, Mobile, SSR v2, JWT interceptor e download de ebook (URL assinada, rate limit, clique repetido).
 - `./backend.md` — .NET, EF Core, migrations e arquitetura hexagonal.
 - `./tag-manager.md` — Tags do catálogo: modelo de dados, motor mecânico, vocabulário, scripts e endpoints.
 - `./postgres-ro/SKILL.md` — Consultas SQL seguras e exploração de dados.

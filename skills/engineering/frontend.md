@@ -254,6 +254,16 @@ https://api.sharebook.com.br/api
 Chamadas de serviço devem ser: `${this.config.apiEndpoint}/Controller/Action`  
 **Nunca** adicionar `/api` ou `/v1/` na URL — resulta em `apiController` concatenado errado.
 
+### JWT só vai para o `apiEndpoint`
+O `jwtInterceptor` anexa o Bearer apenas a URLs sob `${config.apiEndpoint}/`. Até 04/10/2026 ele mandava o token para qualquer host chamado pelo HttpClient, e isso vazou JWT para a S3 sem ninguém notar. Chamada autenticada nova precisa passar pelo `apiEndpoint`. Host externo (S3, ViaCEP) nunca recebe o token.
+
+### Download de ebook: reusar a URL assinada, não o arquivo
+Cada POST em `/book/DownloadEBookUrl/{slug}` conta download e consome o rate limit diário por IP. O `EbookDownloadUrlService` guarda a URL pré-assinada da S3 em `sessionStorage` por slug, com a validade lida da própria URL (`X-Amz-Date` + `X-Amz-Expires`) e 30s de folga. Cliques que chegam enquanto a requisição está em andamento usam a mesma resposta. Assim, clique repetido e toque duplo viram um único download contado.
+
+Cache do PDF em blob/IndexedDB foi tentado (Codex, 27/09) e removido em 04/10. Dependia de CORS no bucket, caía em silêncio no fallback e é frágil no mobile, onde está a maior parte do público. Não reintroduzir sem resolver esses três pontos. Histórico em `memory/2026-10-04-download-ebook-url-assinada.md`.
+
+**Teste com Playwright:** `route.fulfill` entrega a resposta sem a checagem de CORS do navegador, então não serve para provar que um `fetch` cross-origin funciona em produção.
+
 ### TypeScript — limitações do lib target
 O projeto tem `lib` configurado em ES2018 ou anterior. Evitar:
 - `Object.fromEntries()` — usar `reduce` como alternativa:

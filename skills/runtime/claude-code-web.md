@@ -74,7 +74,7 @@ O `AGENTS.md` manda ler todas as memórias do dia ordenando pela data de modific
 
 - O Angular CLI do frontend exige Node ≥ 22.22.3, e o container vem com 22.22.2. O `nodejs.org` é bloqueado, mas o binário sai pelo registry do npm: `npm i node-linux-x64@24` num diretório do scratchpad e colocar `node_modules/node-linux-x64/bin` na frente do `PATH`.
 - Build: `npm run build-prod`, não `ng build` direto. O hook gera `src/environments/version`, sem o qual o build falha.
-- Testes: `CHROME_BIN=/opt/pw-browsers/chromium-1194/chrome-linux/chrome npm test`.
+- Testes: `CHROME_BIN=/opt/pw-browsers/chromium-1194/chrome-linux/chrome npm test`. Para rodar só alguns specs, `npx ng test --no-watch --no-progress --browsers=ChromeHeadlessCI --include <spec>`. Sem `--browsers=ChromeHeadlessCI` o Chrome não sobe como root (falta `--no-sandbox`).
 - O proxy bloqueia `www.sharebook.com.br` e `api.sharebook.com.br`. Para ver uma página de verdade: buildar e abrir `https://www.sharebook.com.br/...` no Playwright (com `executablePath` do Chromium acima), servindo `dist/angular/browser` e simulando a API via `context.route`. Ícones Material aparecem como texto porque o Google Fonts também é bloqueado.
 
 ## Modelo nas memórias: apelido e tabela (2026-10-02)
@@ -89,6 +89,7 @@ Neste habitat o ambiente proíbe o agente de identificar o modelo em qualquer ar
 | Apelido | Modelo | Desde |
 |---|---|---|
 | Jack | *** | 2026-10-02 |
+| Faro | *** | 2026-10-04 |
 
 ## Tradução pesada offline: armadilhas confirmadas no job 1873 (2026-10-04)
 
