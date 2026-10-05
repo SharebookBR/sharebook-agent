@@ -70,8 +70,8 @@ Lista exata em [matematica-lista-movimentacao.csv](matematica-lista-movimentacao
 ## Decisões curatoriais fechadas em 2026-10-05
 
 1. **Probabilidade e Estatística permanece como subcategoria própria.** Decisão do Raffa: manter, porque a intenção é clara e a folha deve crescer com novos livros.
-2. ***Computação: Matemática Discreta* permanece em Matemática & Lógica > Matemática Discreta e Grafos.** O conteúdo dominante é matemática discreta; "Computação" é curso/público, não a prateleira principal. Em 2026-10-05, a API mostrou `tags: []` para esse livro.
-3. ***Non-Uniform Random Variate Generation* saiu do escopo desta migração.** Em 2026-10-05, o PDF publicado foi confirmado como errata/corrigenda de 7 páginas (`Title: errors.dvi`, texto inicial "Corrigenda and addenda for 'Non-Uniform Random Variate Generation'"). Virou item próprio de qualidade de catálogo: [corrigir Devroye cadastrado como errata](fix-devroye-errata-cadastrada-como-livro.md).
+2. ***Computação: Matemática Discreta* permanece em Matemática & Lógica > Matemática Discreta e Grafos.** O conteúdo dominante é matemática discreta; "Computação" é curso/público, não a prateleira principal. Em 2026-10-05, recebeu tags manuais `fundamentos-da-computacao` e `matematica-discreta` para fazer a ponte transversal com computação.
+3. ***Non-Uniform Random Variate Generation* saiu do escopo desta migração e foi removido do catálogo público.** Em 2026-10-05, o PDF publicado foi confirmado como errata/corrigenda de 7 páginas (`Title: errors.dvi`, texto inicial "Corrigenda and addenda for 'Non-Uniform Random Variate Generation'"). O livro foi deletado via API, e a correção ficou registrada como done em [Devroye cadastrado como errata](../done/fix-devroye-errata-cadastrada-como-livro.md).
 
 ## Riscos
 

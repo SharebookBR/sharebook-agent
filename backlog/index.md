@@ -26,12 +26,12 @@ Revisada em **2026-10-05**, após decisão do Raffa de tratar **Bruxas & Magia**
 15. **[Footer de build-info mostra "dev-local"](todo/footer-build-info-dev-local.md)** — valor baixo, esforço baixo depois de ter o log de build real do Coolify. Bug conhecido, deliberadamente adiado pelo Raffa em 2026-09-19; movido da memória episódica pro backlog em 2026-09-20 só pra não ficar esquecido.
 16. **[Update de ebook não troca o PDF](todo/fix-update-ebook-nao-troca-pdf.md)** — valor médio, esforço baixo. `BookService.UpdateAsync` ignora `PdfBytes` e responde sucesso; hoje trocar PDF exige sobrescrever no S3. Achado pelo OpenClaw em 2026-09-27, causa confirmada no código.
 17. **[Categoria "Matemática & Lógica"](todo/revisao-escopo-matematica-corredor-tecnologia.md)** — valor médio, esforço baixo a médio. **Executada no banco em 2026-10-02 e verificação pública fechada em 2026-10-05**: raiz com 50 livros, 6 subcategorias com contagens corretas, Home e páginas públicas OK; decisões curatoriais fechadas.
-18. **[Devroye cadastrado como errata](todo/fix-devroye-errata-cadastrada-como-livro.md)** — bug de qualidade de catálogo: `Non-Uniform Random Variate Generation` promete o livro completo, mas o PDF público confirmado tem 7 páginas e é uma corrigenda/errata. Pode frustrar fortemente o usuário; corrigir por substituição do asset, remoção/cancelamento ou representação honesta do objeto.
-19. **[Busca e recomendação](todo/busca-e-recomendacao-sharebook/index.md)** — valor baixo na leitura atual do Raffa. A v1 útil já está publicada com busca lexical e recomendações pragmáticas; tolerância a erro, embeddings, re-ranking e personalização ficam no fim da fila até dados reais provarem dor relevante.
+18. **[Busca e recomendação](todo/busca-e-recomendacao-sharebook/index.md)** — valor baixo na leitura atual do Raffa. A v1 útil já está publicada com busca lexical e recomendações pragmáticas; tolerância a erro, embeddings, re-ranking e personalização ficam no fim da fila até dados reais provarem dor relevante.
 
 ### ✅ Done relevante
 
 - **[Tags e conhecimento estruturado](done/tags-e-conhecimento-estruturado/index.md)** — missão cumprida em 2026-10-03. Entregou vocabulário controlado, modelo, navegação pública, motor mecânico na criação de livros, backfill técnico controlado e skill operacional; a antiga Tarefa 7 foi cancelada por falta de valor percebido.
+- **[Devroye cadastrado como errata](done/fix-devroye-errata-cadastrada-como-livro.md)** — removido do catálogo público em 2026-10-05. `Non-Uniform Random Variate Generation` prometia o livro completo, mas o PDF publicado era uma corrigenda/errata de 7 páginas.
 
 
 ---

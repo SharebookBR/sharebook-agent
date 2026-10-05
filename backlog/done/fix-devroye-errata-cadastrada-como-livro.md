@@ -2,7 +2,7 @@
 
 ## Estado
 
-Aberto em 2026-10-05, durante o fechamento curatorial de Matemática & Lógica.
+Concluído em 2026-10-05. O livro foi removido do catálogo público via `DELETE /api/Book/{id}`.
 
 O livro público **Non-Uniform Random Variate Generation**, de Luc Devroye, slug `non-uniform-random-variate-generation`, parece frustrar a promessa da PDP: o PDF publicado não é o livro completo, mas uma errata/corrigenda de 7 páginas.
 
@@ -34,6 +34,9 @@ Isso não é problema de categoria. É qualidade de acervo e asset errado.
 
 ## Validação
 
-- Download público entrega o objeto correto.
-- Título, sinopse, categoria e tags descrevem o objeto publicado.
-- Se o livro for removido/cancelado, a busca e a PDP não prometem o livro completo.
+- `GET /api/book/Slug/non-uniform-random-variate-generation` retorna 404.
+- `GET /api/Book/{id}` autenticado retorna 404.
+- `GET /api/Book/FullSearch/Non-Uniform%20Random%20Variate%20Generation/1/10` retorna `totalItems: 0`.
+- PDP pública `/livros/non-uniform-random-variate-generation` retorna 404.
+- `GET /api/book/CategoryTree/1dc0f9e3-70d9-4bc8-a76c-90d7144e318c/1/100` voltou a Tecnologia = 274.
+- `GET /api/book/CategoryTree/019dcbfc-0a09-702e-a0ab-090acb5597b6/1/100` voltou a Tecnologia > Geral = 63.
