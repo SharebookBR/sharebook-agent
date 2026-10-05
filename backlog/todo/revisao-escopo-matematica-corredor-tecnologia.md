@@ -65,13 +65,13 @@ Lista exata em [matematica-lista-movimentacao.csv](matematica-lista-movimentacao
 
 - Barrados pela regra do Raffa: *Algorithmic Graph Theory*, *Online Statistics Education*, *Probability and Statistics with Examples using R*, *Mathematics for Computer Science*, *Foundations of Computer Science*.
 - Apontados pelo subagente como dúvida, deixados em Tecnologia por ora: *Category Theory for Programmers*, *Mathematics for Machine Learning*, *The Functional Analysis of Quantum Information Theory*, *Otimização Combinatória*, *Computational Mathematics with SageMath*. Revisitar quando as tags existirem.
-- *Non-Uniform Random Variate Generation*: ver pendência 3.
+- *Non-Uniform Random Variate Generation*: saiu do escopo da migração e virou item próprio de qualidade de catálogo.
 
-## Pendências e decisões abertas
+## Decisões curatoriais fechadas em 2026-10-05
 
-1. **Probabilidade e Estatística ficou com só 3 livros.** Manter ou fundir em "Fundamentos e Lógica"? Como a mudança já está em produção, fundir agora exige um novo UPDATE no banco (e remover a subcategoria) via OpenClaw. Decisão do Raffa ainda não tomada.
-2. ***Computação: Matemática Discreta* foi movido** porque o título diz "Computação" e não "computer science". Se o Raffa quiser aplicar a regra a ele, é preciso devolver o livro a Tecnologia › Geral no banco (Discreta cai para 9, total 49).
-3. **Folha de errata cadastrada como livro:** *Non-Uniform Random Variate Generation* (slug `non-uniform-random-variate-generation`). A sinopse descreve uma "corrigenda sheet" do livro do Devroye, não o livro. É problema de qualidade do catálogo. Abrir item próprio (substituir pelo livro real ou remover). Aguardando ok do Raffa.
+1. **Probabilidade e Estatística permanece como subcategoria própria.** Decisão do Raffa: manter, porque a intenção é clara e a folha deve crescer com novos livros.
+2. ***Computação: Matemática Discreta* permanece em Matemática & Lógica > Matemática Discreta e Grafos.** O conteúdo dominante é matemática discreta; "Computação" é curso/público, não a prateleira principal. Em 2026-10-05, a API mostrou `tags: []` para esse livro.
+3. ***Non-Uniform Random Variate Generation* saiu do escopo desta migração.** Em 2026-10-05, o PDF publicado foi confirmado como errata/corrigenda de 7 páginas (`Title: errors.dvi`, texto inicial "Corrigenda and addenda for 'Non-Uniform Random Variate Generation'"). Virou item próprio de qualidade de catálogo: [corrigir Devroye cadastrado como errata](fix-devroye-errata-cadastrada-como-livro.md).
 
 ## Riscos
 
