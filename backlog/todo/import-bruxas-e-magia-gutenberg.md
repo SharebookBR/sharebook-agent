@@ -19,19 +19,19 @@ Esta missão não publica automaticamente a vitrine. Ela alimenta a fila para o 
 
 - [done] The Witch of Salem; or, Credulity Run Mad | https://www.gutenberg.org/ebooks/26282 | John R. Musick; publicado como **A Bruxa de Salem** em 2026-09-26; livro `01a0de6a-6f62-718a-a07a-83ee2d7400e7`.
 - [done] The Lancashire Witches: A Romance of Pendle Forest | https://www.gutenberg.org/ebooks/15493 | W. H. Ainsworth; publicado como **As Bruxas de Lancashire** em 2026-09-27; livro `01a0e081-4d38-7e11-a8ae-45c08dca4eb2`.
-- [waiting_triage] Salem Witchcraft, Volumes I and II | https://www.gutenberg.org/ebooks/17845 | Charles W. Upham; Salem/documental; elegível BR provável.
-- [waiting_triage] Letters on Demonology and Witchcraft | https://www.gutenberg.org/ebooks/14461 | Walter Scott; demonologia/bruxaria; elegível BR provável.
-- [waiting_triage] The Superstitions of Witchcraft | https://www.gutenberg.org/ebooks/22822 | Howard Williams; bruxaria/superstição; elegível BR provável.
-- [waiting_triage] Black Magic | https://www.gutenberg.org/ebooks/77782 | Marjorie Bowen; magia negra/ficção; elegível BR provável.
-- [waiting_triage] Living Alone | https://www.gutenberg.org/ebooks/14907 | Stella Benson; fantasia/bruxa; elegível BR provável.
-- [waiting_triage] Dulcibel: A Tale of Old Salem | https://www.gutenberg.org/ebooks/20569 | Henry Peterson; Salem/ficção histórica; elegível BR provável.
-- [waiting_triage] The Discovery of Witches | https://www.gutenberg.org/ebooks/14015 | Matthew Hopkins; caça às bruxas; elegível BR provável.
-- [waiting_triage] Mary Schweidler, the Amber Witch | https://www.gutenberg.org/ebooks/8743 | Wilhelm Meinhold; bruxa/ficção gótica; elegível BR provável.
+- [done] Salem Witchcraft, Volumes I and II | https://www.gutenberg.org/ebooks/17845 | Charles W. Upham; publicado como **A Bruxaria em Salem, Volumes I e II** em 2026-09-29; livro `01a0edb0-e9ff-7f98-b9cd-303c3ed1dfa4`.
+- [done] Letters on Demonology and Witchcraft | https://www.gutenberg.org/ebooks/14461 | Walter Scott; publicado como **Cartas sobre Demonologia e Bruxaria** em 2026-09-30; livro `01a0f261-87b9-7501-9a94-a59ac80ec50e`.
+- [done] The Superstitions of Witchcraft | https://www.gutenberg.org/ebooks/22822 | Howard Williams; publicado como **As Superstições da Bruxaria** em 2026-10-04; livro `01a1045b-0eac-7705-9cab-8692cd9a28ad`.
+- [done] Black Magic | https://www.gutenberg.org/ebooks/77782 | Marjorie Bowen; publicado em 2026-10-04; livro `01a10775-a17e-7bef-8ee2-8506d45957bb`.
+- [done] Living Alone | https://www.gutenberg.org/ebooks/14907 | Stella Benson; publicado em 2026-10-04; livro `01a10907-9ea9-7e3f-a872-c6aa560f7bf0`.
+- [translating] Dulcibel: A Tale of Old Salem | https://www.gutenberg.org/ebooks/20569 | Henry Peterson; item `1875` claimado em 2026-10-05 e job offline materializado em `translation_jobs/project_gutenberg_witches_magic/1875-dulcibel/` no importer.
+- [waiting_translation] The Discovery of Witches | https://www.gutenberg.org/ebooks/14015 | Matthew Hopkins; caça às bruxas; elegível BR provável.
+- [waiting_translation] Mary Schweidler, the Amber Witch | https://www.gutenberg.org/ebooks/8743 | Wilhelm Meinhold; bruxa/ficção gótica; elegível BR provável.
 - [done] The Witch of Prague: A Fantastic Tale | https://www.gutenberg.org/ebooks/3816 | F. Marion Crawford; publicado como **A Bruxa de Praga** em 2026-09-12; livro `01a096a7-5686-766e-8d12-29728e7f291f`.
-- [waiting_triage] The Great God Pan | https://www.gutenberg.org/ebooks/389 | Arthur Machen; paganismo/ocultismo/horror; elegível BR provável.
-- [waiting_triage] The Necromancers | https://www.gutenberg.org/ebooks/14275 | Robert Hugh Benson; necromancia/espiritualismo; elegível BR provável.
-- [waiting_triage] Zanoni | https://www.gutenberg.org/ebooks/2664 | Edward Bulwer-Lytton; rosacrucianismo/iniciação/ocultismo; elegível BR provável.
-- [waiting_triage] The Book of Were-Wolves | https://www.gutenberg.org/ebooks/5324 | Sabine Baring-Gould; folclore sombrio/licantropia; encaixe adjacente em folclore e horror mágico.
+- [waiting_translation] The Great God Pan | https://www.gutenberg.org/ebooks/389 | Arthur Machen; paganismo/ocultismo/horror; elegível BR provável.
+- [waiting_translation] The Necromancers | https://www.gutenberg.org/ebooks/14275 | Robert Hugh Benson; necromancia/espiritualismo; elegível BR provável.
+- [waiting_translation] Zanoni | https://www.gutenberg.org/ebooks/2664 | Edward Bulwer-Lytton; rosacrucianismo/iniciação/ocultismo; elegível BR provável.
+- [waiting_translation] The Book of Were-Wolves | https://www.gutenberg.org/ebooks/5324 | Sabine Baring-Gould; folclore sombrio/licantropia; encaixe adjacente em folclore e horror mágico.
 
 ## Substituição Curatorial
 
