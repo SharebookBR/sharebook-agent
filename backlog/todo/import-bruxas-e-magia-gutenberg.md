@@ -24,7 +24,7 @@ Esta missão não publica automaticamente a vitrine. Ela alimenta a fila para o 
 - [done] The Superstitions of Witchcraft | https://www.gutenberg.org/ebooks/22822 | Howard Williams; publicado como **As Superstições da Bruxaria** em 2026-10-04; livro `01a1045b-0eac-7705-9cab-8692cd9a28ad`.
 - [done] Black Magic | https://www.gutenberg.org/ebooks/77782 | Marjorie Bowen; publicado em 2026-10-04; livro `01a10775-a17e-7bef-8ee2-8506d45957bb`.
 - [done] Living Alone | https://www.gutenberg.org/ebooks/14907 | Stella Benson; publicado em 2026-10-04; livro `01a10907-9ea9-7e3f-a872-c6aa560f7bf0`.
-- [translating] Dulcibel: A Tale of Old Salem | https://www.gutenberg.org/ebooks/20569 | Henry Peterson; item `1875` claimado em 2026-10-05 e job offline materializado em `translation_jobs/project_gutenberg_witches_magic/1875-dulcibel/` no importer.
+- [done] Dulcibel: A Tale of Old Salem | https://www.gutenberg.org/ebooks/20569 | Henry Peterson; publicado como **Dulcibel** em 2026-10-05; livro `01a10cd5-7487-7389-acc0-4202327873dd`.
 - [waiting_translation] The Discovery of Witches | https://www.gutenberg.org/ebooks/14015 | Matthew Hopkins; caça às bruxas; elegível BR provável.
 - [waiting_translation] Mary Schweidler, the Amber Witch | https://www.gutenberg.org/ebooks/8743 | Wilhelm Meinhold; bruxa/ficção gótica; elegível BR provável.
 - [done] The Witch of Prague: A Fantastic Tale | https://www.gutenberg.org/ebooks/3816 | F. Marion Crawford; publicado como **A Bruxa de Praga** em 2026-09-12; livro `01a096a7-5686-766e-8d12-29728e7f291f`.
