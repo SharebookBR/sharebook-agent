@@ -2,11 +2,11 @@
 
 ## Estado
 
-- **Status:** em andamento, com núcleo e recomendação pragmática publicados
-- **Prioridade:** fatiada no backlog; tarefa 3 em 4º e tarefa 5 em 8º
-- **Valor:** altíssimo
+- **Status:** v1 útil publicada; evoluções restantes rebaixadas para fim do backlog
+- **Prioridade:** baixa na leitura atual do Raffa, revisada em 2026-10-05
+- **Valor:** baixo para novas fatias enquanto não houver evidência real de dor
 - **Marco atual:** busca lexical e recomendações pragmáticas na PDP publicadas e validadas
-- **Próxima tarefa:** [Tarefa 3 — Tolerância a erro](tarefa03-tolerancia-a-erro.md) ou [Tarefa 5 — Recomendações semânticas com embeddings](tarefa05-recomendacoes-semanticas-embeddings.md), conforme evidência
+- **Próxima tarefa:** nenhuma ativa; [Tarefa 3 — Tolerância a erro](tarefa03-tolerancia-a-erro.md) ou [Tarefa 5 — Recomendações semânticas com embeddings](tarefa05-recomendacoes-semanticas-embeddings.md) só retornam com evidência
 - **Critério de retomada:** buscas sem resultado mostrarem custo real de typos ou recomendações lexicais mostrarem limite editorial recorrente
 
 ## Objetivo

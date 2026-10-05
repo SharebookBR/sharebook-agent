@@ -89,7 +89,7 @@ Lista exata em [matematica-lista-movimentacao.csv](matematica-lista-movimentacao
 
 ## Evidência
 
-- [tarefa01-resultado.md](tags-e-conhecimento-estruturado/tarefa01-resultado.md): contagens por tag e exemplos.
+- [tarefa01-resultado.md](../done/tags-e-conhecimento-estruturado/tarefa01-resultado.md): contagens por tag e exemplos.
 - [matematica-lista-movimentacao.csv](matematica-lista-movimentacao.csv): lista final.
 - API pública: `GET /api/Book/CategoryTree/{categoryId}/{page}/{items}` (Tecnologia: `1dc0f9e3-70d9-4bc8-a76c-90d7144e318c`) e `GET /api/Category`.
 - `memory/2026-10-02-tags-e-categoria-matematica.md`: relato da sessão.

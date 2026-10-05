@@ -3,11 +3,11 @@
 ## Estado
 
 - **Status:** missão cumprida em 2026-10-03
-- **Prioridade:** 3 no backlog principal
+- **Prioridade:** done; removido do backlog ativo em 2026-10-05
 - **Valor:** médio-alto
 - **Esforço:** alto
 - **Próxima tarefa:** nenhuma. Tasks 1–6 fecharam a missão de tags; a [Tarefa 7](tarefa07-conhecimento-estruturado-nivel-pre-requisitos.md) foi cancelada por decisão do Raffa.
-- **Pendência relacionada, fora da missão de tags:** [categoria Matemática & Lógica](../revisao-escopo-matematica-corredor-tecnologia.md).
+- **Pendência relacionada, fora da missão de tags:** [categoria Matemática & Lógica](../../todo/revisao-escopo-matematica-corredor-tecnologia.md).
 - **Critério de avanço:** não há avanço planejado neste épico. Novas demandas de tags devem nascer como tarefa própria, com valor explícito.
 
 ## Tese de produto
@@ -41,7 +41,7 @@ Nível foi avaliado como hipótese, mas a continuação em conhecimento estrutur
 
 - **Nível:** campo separado, fora das tags visíveis. A continuação em conhecimento estruturado foi cancelada em 2026-10-03.
 - **Vocabulário:** `Acadêmico` e `Boas Práticas` saem. Docker, Kubernetes, Microsserviços e R entram na v0 mesmo com poucos livros. Tags de alto valor podem existir e navegar publicamente mesmo com baixa contagem.
-- **Escopo:** matemática vira categoria própria, ver [item de backlog](../revisao-escopo-matematica-corredor-tecnologia.md).
+- **Escopo:** matemática vira categoria própria, ver [item de backlog](../../todo/revisao-escopo-matematica-corredor-tecnologia.md).
 
 ## Decisões do Raffa (2026-10-03)
 
