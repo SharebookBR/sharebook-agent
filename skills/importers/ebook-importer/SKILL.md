@@ -397,6 +397,23 @@ Exemplos não aceitáveis:
 - simular `plan-set`;
 - mascarar falha técnica ou bloqueio de source como decisão humana.
 
+### `source-url-set` — correção de fonte recuperável
+
+Quando um item em `source_blocked` tiver alternativa pública validada para o mesmo livro, usar o CLI em vez de editar o banco:
+
+```bash
+bash /data/workspace/sharebook-ebook-importer/cli.sh source-url-set \
+  --id <ID> \
+  --url "<URL_PDF_OU_FONTE>" \
+  --note "<por que esta fonte foi escolhida>"
+
+bash /data/workspace/sharebook-ebook-importer/cli.sh triage-once --id <ID>
+```
+
+O comando troca `source_url`, zera `triage_attempts`, limpa `retry_after`, move para `waiting_triage`, preserva nota em `last_error` até a triagem seguinte e grava histórico como `admin`.
+
+Se a fonte descartada tiver vedação explícita de republicação/hospedagem, registrar isso na nota. Não usar PDF tecnicamente válido que traga proibição aplicável ao Sharebook.
+
 ### Runtime OpenClaw/mini
 
 Usar somente depois de confirmar checkout, dependências e ferramenta efetiva no container:
