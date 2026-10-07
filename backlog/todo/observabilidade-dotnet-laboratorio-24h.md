@@ -10,7 +10,27 @@ Escopo deliberadamente temporario: montar um laboratorio de aproximadamente 24 h
 
 Nada de otimizacao antes dos dados.
 
-## Stack inicial
+## Arquitetura preferida
+
+Usar Grafana Cloud Free como backend inicial, mantendo apenas um coletor pequeno na VPS:
+
+```text
+Sharebook API (.NET)
+  -> OpenTelemetry / OTLP
+  -> OpenTelemetry Collector local
+  -> Grafana Cloud
+       -> Metrics
+       -> Dashboards
+       -> Logs, traces e profiles futuramente, se houver motivo
+```
+
+Motivo: para um laboratorio de 24h, isso reduz muito o risco de a propria observabilidade consumir CPU, RAM, I/O e disco na mesma VPS que esta sendo medida.
+
+O Free atual do Grafana Cloud e suficiente como ponto de partida para esse laboratorio se as cotas forem respeitadas: 14 dias de retencao, sem cartao, limite de 10k active series para metricas e cotas gratuitas tambem para logs/traces/profiles. Antes de executar, conferir de novo a pagina oficial de pricing, porque plano SaaS muda.
+
+## Fallback local
+
+Se Grafana Cloud nao for viavel por conta, rede, credencial, cota, privacidade ou preferencia operacional, usar a stack local enxuta:
 
 Subir somente:
 
@@ -27,6 +47,10 @@ Containers novos esperados:
 - Grafana: visualizacao;
 - Prometheus: armazenamento temporario das metricas;
 - OpenTelemetry Collector: coleta e encaminhamento.
+
+Na arquitetura preferida com Grafana Cloud, os containers novos na VPS devem cair para apenas:
+
+- OpenTelemetry Collector.
 
 Fora do escopo inicial:
 
@@ -184,6 +208,9 @@ Nesse caso, `ArrayPool`, pooling, `Span`, evitar boxing e tecnicas semelhantes d
 - Limitar containers da stack quando possivel, especialmente memoria.
 - Nao expor Grafana/Prometheus publicamente sem protecao.
 - Registrar comandos e configuracoes aplicadas para desmontagem limpa.
+- Se usar Grafana Cloud, tratar token/API key como segredo operacional: somente `.env`/secret store, nunca Git, backlog, log ou memoria.
+- Se usar Grafana Cloud, monitorar active series e data points per minute para nao estourar cotas por cardinalidade acidental.
+- Se usar Grafana Cloud, aceitar explicitamente a dependencia de internet/SaaS durante a janela.
 
 ## Criterios de sucesso
 
@@ -209,10 +236,14 @@ Nesse caso, `ArrayPool`, pooling, `Span`, evitar boxing e tecnicas semelhantes d
 - Prometheus crescer em disco se retencao ficar solta.
 - Loki/Tempo entrarem cedo demais e ampliarem ruido operacional.
 - Dashboard bonito induzir otimizacao prematura sem hipotese clara.
+- Grafana Cloud introduzir dependencia externa, credencial nova e possivel preocupacao de privacidade/metadados.
+- Metric cardinality passar de laboratorio inocente para conta/ruido operacional se labels forem mal escolhidos.
 
 ## Recomendacao inicial
 
-Comecar com Grafana + Prometheus + OpenTelemetry Collector.
+Comecar com Sharebook API + OpenTelemetry + OpenTelemetry Collector local + Grafana Cloud Free.
+
+Prometheus + Grafana locais ficam como fallback, nao como primeira escolha.
 
 Nao iniciar com Loki e Tempo. Para o primeiro laboratorio, a pergunta e runtime .NET, memoria, GC e latencia. Logs e traces entram depois, se os dados mostrarem necessidade.
 
