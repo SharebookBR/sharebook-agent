@@ -4,6 +4,8 @@
 
 Aberto em 2026-10-07, apos diagnostico read-only da VPS confirmar folga de CPU/disco e atencao moderada em RAM/swap.
 
+Implementacao inicial publicada em 2026-10-07: `sharebook-backend@183f4ca`, com metricas OpenTelemetry habilitadas por variaveis `OTEL_*` e envio OTLP direto para Grafana Cloud Free. A instrumentacao fica inativa quando `OTEL_EXPORTER_OTLP_ENDPOINT` e `OTEL_EXPORTER_OTLP_HEADERS` nao estao configuradas.
+
 Escopo deliberadamente temporario: montar um laboratorio de aproximadamente 24 horas para medir o comportamento real do runtime .NET do Sharebook em producao. A pergunta inicial nao e "o que otimizar?", e sim:
 
 > Como o runtime .NET do Sharebook realmente se comporta durante um dia normal?
@@ -12,27 +14,22 @@ Nada de otimizacao antes dos dados.
 
 ## Arquitetura da POC
 
-Usar Grafana Cloud Free como backend da POC, mantendo apenas um coletor pequeno na VPS:
+Usar Grafana Cloud Free como backend da POC, com envio OTLP direto pela API:
 
 ```text
 Sharebook API (.NET)
   -> OpenTelemetry / OTLP
-  -> OpenTelemetry Collector local
   -> Grafana Cloud
        -> Metrics
        -> Dashboards
        -> Logs, traces e profiles futuramente, se houver motivo
 ```
 
-Motivo: para um laboratorio de 24h, isso reduz muito o risco de a propria observabilidade consumir CPU, RAM, I/O e disco na mesma VPS que esta sendo medida.
+Motivo: para um laboratorio de 24h, isso reduz ao minimo as pecas operacionais e remove ate o container do Collector da VPS. Se a POC virar observabilidade permanente, o Collector volta a ser uma opcao para centralizar filtro, batch, retry, fan-out e controle de cardinalidade.
 
 O Free atual do Grafana Cloud e suficiente como ponto de partida para esse laboratorio se as cotas forem respeitadas: 14 dias de retencao, sem cartao, limite de 10k active series para metricas e cotas gratuitas tambem para logs/traces/profiles. Antes de executar, conferir de novo a pagina oficial de pricing, porque plano SaaS muda.
 
-Container novo esperado na VPS:
-
-- OpenTelemetry Collector.
-
-Sem fallback local nesta POC. Se Grafana Cloud nao for viavel por conta, rede, credencial, cota, privacidade ou preferencia operacional, a POC deve parar e ser reavaliada em vez de virar uma stack local paralela.
+Sem container novo esperado na VPS nesta POC. Sem fallback local. Se Grafana Cloud nao for viavel por conta, rede, credencial, cota, privacidade ou preferencia operacional, a POC deve parar e ser reavaliada em vez de virar uma stack local paralela.
 
 Fora do escopo inicial:
 
@@ -187,7 +184,7 @@ Nesse caso, `ArrayPool`, pooling, `Span`, evitar boxing e tecnicas semelhantes d
 - Retencao curta, idealmente apenas o suficiente para a janela de 24h.
 - Scrape interval conservador.
 - Evitar metricas de alta cardinalidade.
-- Limitar o OpenTelemetry Collector quando possivel, especialmente memoria.
+- Envio OTLP direto pela API apenas para metricas; logs e traces permanecem fora do escopo inicial.
 - Nao expor endpoints internos publicamente sem protecao.
 - Registrar comandos e configuracoes aplicadas para desmontagem limpa.
 - Tratar token/API key do Grafana Cloud como segredo operacional: somente `.env`/secret store, nunca Git, backlog, log ou memoria.
@@ -196,7 +193,7 @@ Nesse caso, `ArrayPool`, pooling, `Span`, evitar boxing e tecnicas semelhantes d
 
 ## Criterios de sucesso
 
-- Stack sobe sem derrubar ou degradar perceptivelmente o Sharebook.
+- Instrumentacao sobe sem derrubar ou degradar perceptivelmente o Sharebook.
 - Dashboard mostra metricas de host, containers, API e runtime .NET.
 - Depois de 24h, existe leitura objetiva de:
   - baseline real de CPU/memoria da API;
@@ -222,14 +219,14 @@ Nesse caso, `ArrayPool`, pooling, `Span`, evitar boxing e tecnicas semelhantes d
 
 ## Recomendacao inicial
 
-Comecar com Sharebook API + OpenTelemetry + OpenTelemetry Collector local + Grafana Cloud Free.
+Comecar com Sharebook API + OpenTelemetry + Grafana Cloud Free via OTLP direto.
 
 Nao iniciar com Loki e Tempo. Para o primeiro laboratorio, a pergunta e runtime .NET, memoria, GC e latencia. Logs e traces entram depois, se os dados mostrarem necessidade.
 
 ## Validacao
 
 1. Registrar baseline pre-instalacao.
-2. Subir a stack em escopo temporario.
+2. Ativar instrumentacao OpenTelemetry em escopo temporario.
 3. Confirmar que Sharebook API continua saudavel.
 4. Confirmar que a stack mostra metricas de runtime .NET.
 5. Acompanhar impacto da propria stack por 24h.
