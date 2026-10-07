@@ -10,9 +10,9 @@ Escopo deliberadamente temporario: montar um laboratorio de aproximadamente 24 h
 
 Nada de otimizacao antes dos dados.
 
-## Arquitetura preferida
+## Arquitetura da POC
 
-Usar Grafana Cloud Free como backend inicial, mantendo apenas um coletor pequeno na VPS:
+Usar Grafana Cloud Free como backend da POC, mantendo apenas um coletor pequeno na VPS:
 
 ```text
 Sharebook API (.NET)
@@ -28,29 +28,11 @@ Motivo: para um laboratorio de 24h, isso reduz muito o risco de a propria observ
 
 O Free atual do Grafana Cloud e suficiente como ponto de partida para esse laboratorio se as cotas forem respeitadas: 14 dias de retencao, sem cartao, limite de 10k active series para metricas e cotas gratuitas tambem para logs/traces/profiles. Antes de executar, conferir de novo a pagina oficial de pricing, porque plano SaaS muda.
 
-## Fallback local
-
-Se Grafana Cloud nao for viavel por conta, rede, credencial, cota, privacidade ou preferencia operacional, usar a stack local enxuta:
-
-Subir somente:
-
-```text
-Sharebook API (.NET)
-  -> OpenTelemetry
-  -> OpenTelemetry Collector
-  -> Prometheus
-  -> Grafana
-```
-
-Containers novos esperados:
-
-- Grafana: visualizacao;
-- Prometheus: armazenamento temporario das metricas;
-- OpenTelemetry Collector: coleta e encaminhamento.
-
-Na arquitetura preferida com Grafana Cloud, os containers novos na VPS devem cair para apenas:
+Container novo esperado na VPS:
 
 - OpenTelemetry Collector.
+
+Sem fallback local nesta POC. Se Grafana Cloud nao for viavel por conta, rede, credencial, cota, privacidade ou preferencia operacional, a POC deve parar e ser reavaliada em vez de virar uma stack local paralela.
 
 Fora do escopo inicial:
 
@@ -142,7 +124,7 @@ Correlacao nao prova causalidade, mas aponta onde investigar.
 
 ## Dashboard
 
-Primeiro procurar um dashboard Grafana pronto e decente para .NET/OpenTelemetry/Prometheus.
+Primeiro procurar um dashboard Grafana pronto e decente para .NET/OpenTelemetry/Grafana Cloud.
 
 Se a experiencia for boa, criar um dashboard proprio:
 
@@ -205,12 +187,12 @@ Nesse caso, `ArrayPool`, pooling, `Span`, evitar boxing e tecnicas semelhantes d
 - Retencao curta, idealmente apenas o suficiente para a janela de 24h.
 - Scrape interval conservador.
 - Evitar metricas de alta cardinalidade.
-- Limitar containers da stack quando possivel, especialmente memoria.
-- Nao expor Grafana/Prometheus publicamente sem protecao.
+- Limitar o OpenTelemetry Collector quando possivel, especialmente memoria.
+- Nao expor endpoints internos publicamente sem protecao.
 - Registrar comandos e configuracoes aplicadas para desmontagem limpa.
-- Se usar Grafana Cloud, tratar token/API key como segredo operacional: somente `.env`/secret store, nunca Git, backlog, log ou memoria.
-- Se usar Grafana Cloud, monitorar active series e data points per minute para nao estourar cotas por cardinalidade acidental.
-- Se usar Grafana Cloud, aceitar explicitamente a dependencia de internet/SaaS durante a janela.
+- Tratar token/API key do Grafana Cloud como segredo operacional: somente `.env`/secret store, nunca Git, backlog, log ou memoria.
+- Monitorar active series e data points per minute para nao estourar cotas por cardinalidade acidental.
+- Aceitar explicitamente a dependencia de internet/SaaS durante a janela.
 
 ## Criterios de sucesso
 
@@ -233,7 +215,6 @@ Nesse caso, `ArrayPool`, pooling, `Span`, evitar boxing e tecnicas semelhantes d
 ## Riscos
 
 - A observabilidade interferir nas medicoes, principalmente por RAM, swap, I/O ou scrape agressivo.
-- Prometheus crescer em disco se retencao ficar solta.
 - Loki/Tempo entrarem cedo demais e ampliarem ruido operacional.
 - Dashboard bonito induzir otimizacao prematura sem hipotese clara.
 - Grafana Cloud introduzir dependencia externa, credencial nova e possivel preocupacao de privacidade/metadados.
@@ -242,8 +223,6 @@ Nesse caso, `ArrayPool`, pooling, `Span`, evitar boxing e tecnicas semelhantes d
 ## Recomendacao inicial
 
 Comecar com Sharebook API + OpenTelemetry + OpenTelemetry Collector local + Grafana Cloud Free.
-
-Prometheus + Grafana locais ficam como fallback, nao como primeira escolha.
 
 Nao iniciar com Loki e Tempo. Para o primeiro laboratorio, a pergunta e runtime .NET, memoria, GC e latencia. Logs e traces entram depois, se os dados mostrarem necessidade.
 
