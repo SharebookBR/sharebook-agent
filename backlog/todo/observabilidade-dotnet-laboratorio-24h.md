@@ -138,6 +138,44 @@ Sharebook - .NET Bike Management Dashboard
    CPU, RAM, swap, disco, I/O, consumo da propria observabilidade
 ```
 
+Esse dashboard deve permitir ver literalmente os conceitos estudados no Pro .NET Bike Management: heap, allocation rate, GC, pausas, latencia e custo operacional no mesmo painel.
+
+## Janela do experimento
+
+Rodar durante 24 horas reais de producao.
+
+Durante a janela:
+
+- nao fazer otimizacoes;
+- nao alterar pooling;
+- nao mexer em `Span`;
+- nao sair cacando boxing;
+- nao mudar configuracoes de GC;
+- nao ajustar query, cache ou infraestrutura por intuicao;
+- observar primeiro.
+
+O objetivo da janela e formar uma linha de base confiavel. Qualquer mudanca durante o periodo contamina a leitura.
+
+## Perguntas depois das 24 horas
+
+Ao final do laboratorio, sentar com os graficos e responder:
+
+- Qual e o allocation rate normal do Sharebook?
+- Com que frequencia acontecem Gen0, Gen1 e Gen2?
+- Quanto tempo o processo passa fazendo GC?
+- Existe pressao relevante sobre o LOH?
+- O heap retorna para um patamar estavel depois das collections?
+- Existe correlacao entre GC e p95/p99?
+- Quanto a stack de observabilidade custou de CPU/RAM/I/O?
+- A swap mudou significativamente?
+- Existe algum indicio concreto de que vale otimizar memoria?
+
+Resultado excelente tambem pode ser:
+
+> O Sharebook esta saudavel. Nao vamos otimizar nada agora.
+
+Nesse caso, `ArrayPool`, pooling, `Span`, evitar boxing e tecnicas semelhantes deixam de ser receitas procurando onde serem aplicadas e continuam como ferramentas para quando houver dor real.
+
 ## Guardrails
 
 - Retencao curta, idealmente apenas o suficiente para a janela de 24h.
@@ -163,6 +201,7 @@ Sharebook - .NET Bike Management Dashboard
   - manter stack minima;
   - evoluir para logs/traces com Loki/Tempo;
   - abrir tarefas especificas de otimizacao.
+  - nao otimizar nada porque o sistema esta saudavel.
 
 ## Riscos
 
