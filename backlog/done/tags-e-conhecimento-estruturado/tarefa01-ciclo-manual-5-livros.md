@@ -6,7 +6,7 @@ Fechada para avanço. Resultado consolidado em [tarefa01-resultado.md](tarefa01-
 
 ## Objetivo
 
-Validar manualmente quais tags realmente ajudam devs e tech leads antes de criar schema, automação, backfill ou skill local.
+Validar manualmente quais tags realmente ajudam devs e tech leads antes de criar schema, automação, backfill ou playbook local.
 
 ## Método
 
@@ -16,7 +16,7 @@ Validar manualmente quais tags realmente ajudam devs e tech leads antes de criar
 4. Testar as dimensões candidatas: stack, área/problema, uso editorial e nível.
 5. Decidir se nível deve virar tag visível, campo separado, metadado interno ou ficar fora da v1.
 6. Observar se as tags escolhidas poderiam alimentar vitrines transversais na home.
-7. Registrar fricções, dúvidas e regras aprendidas para uma futura skill local de tagging editorial.
+7. Registrar fricções, dúvidas e regras aprendidas para uma futura playbook local de tagging editorial.
 
 ## Livros
 
@@ -47,7 +47,7 @@ Dúvidas editoriais:
 - vocabulário v0 proposto;
 - decisão documentada sobre nível e uso editorial;
 - possíveis vitrines por tag anotadas;
-- regras e fricções prontas para virar skill local em etapa posterior.
+- regras e fricções prontas para virar playbook local em etapa posterior.
 
 ## Fora de escopo
 
@@ -55,4 +55,4 @@ Dúvidas editoriais:
 - automatizar sugestão por IA;
 - publicar tags na PDP;
 - fazer backfill;
-- criar a skill local antes de fechar o ciclo manual.
+- criar o playbook local antes de fechar o ciclo manual.

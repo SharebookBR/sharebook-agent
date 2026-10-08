@@ -16,9 +16,9 @@ Não é documentação completa do Sharebook.
 
 O Sharebook-agent tem três habitats desde 2026-09-17:
 
-- Windows local (`skills/runtime/windows-local.md`)
-- OpenClaw na VPS, agente hospedado pelo Gateway (`skills/runtime/openclaw.md`)
-- Claude Code dentro do mesmo container OpenClaw, fora do loop de tools do Gateway (`skills/runtime/claude-code-openclaw.md`)
+- Windows local (`playbooks/runtime/windows-local.md`)
+- OpenClaw na VPS, agente hospedado pelo Gateway (`playbooks/runtime/openclaw.md`)
+- Claude Code dentro do mesmo container OpenClaw, fora do loop de tools do Gateway (`playbooks/runtime/claude-code-openclaw.md`)
 
 O bloco **Ferramentas obrigatórias** vale para qualquer habitat que execute aquele tipo de trabalho. As seções OpenClaw são checklist de provisionamento; nenhum item é presumido só porque o container iniciou.
 

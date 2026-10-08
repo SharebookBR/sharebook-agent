@@ -220,7 +220,7 @@ Na v1, não criar tabela específica de histórico editorial. O rastro mínimo f
 - `CreationDate`/`UpdateDate` de `Tag` e `CreationDate` de `BookTag`;
 - `EFLog` existente;
 - `Aliases`;
-- backlog/skill para decisões editoriais.
+- backlog/playbook para decisões editoriais.
 
 Criar tabela de histórico só se aparecer necessidade real de auditoria fina.
 

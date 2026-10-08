@@ -1,0 +1,404 @@
+# Frontend Sharebook
+
+Playbook operacional para desenvolvimento, manutenção e evolução do `sharebook-frontend` (Angular).
+
+## Quando usar
+
+- Criação ou modificação de componentes, serviços ou pipes no Angular.
+- Ajustes de layout, temas (SCSS) ou responsividade.
+- Mudança em fluxos de navegação ou integração com a API.
+- Diagnóstico de falhas de build ou inconsistências entre ambiente local e produção.
+
+## Design System — Paleta Oficial
+
+**Obrigatório consultar antes de criar ou modificar qualquer elemento visual.**
+
+| Papel | Cor | Uso |
+|---|---|---|
+| **Primary** | `#29abe2` (azul Sharebook) | Botões padrão, inputs focados, links de ação |
+| **Accent** | `#ff4081` (rosa) | Destaque máximo — usar com parcimônia (ex: botão "Receber livro digital") |
+| **Warn** | vermelho Material | Erros de formulário, ações destrutivas |
+
+**Regras:**
+- Nunca hardcode uma cor sem antes verificar se o papel `primary` ou `accent` já resolve.
+- Nunca usar `mat.$indigo-palette` — foi substituído pela paleta `$sharebook-blue`.
+- O botão "Doe um Livro" no header usa `#29abe2` via CSS direto — é a referência visual da primary.
+- Accent é raro por design. Se tudo grita, nada grita.
+
+**Fonte:** `src/custom-theme.scss` — paleta `$sharebook-blue`, tom 500.
+
+---
+
+## Princípios de UI/UX (Doutrina Sharebook)
+
+- **Cartão > Tabela**: Para listas operacionais (ex: painel do importador), prefira cartões compactos e responsivos. Tabelas são hostis em dispositivos móveis.
+- **Smart Sorting**: Automatize a ordenação baseada no status selecionado (ex: fila de espera -> id ASC; concluídos -> data DESC).
+- **Busca por ID/Título**: No dashboard, digitar números deve buscar por `id` exato; texto busca por `title` (ILIKE).
+- **Feedback de Sucesso**: Em fluxos de publicação ou criação, exibir a miniatura do ativo gerado (ex: capa do livro) no card de conclusão é o melhor feedback visual.
+- **Toast de Ação**: Toda ação mutante bem-sucedida (salvar, publicar, atualizar) deve exibir um toast de confirmação via `ToastrService.success('...')`. Nunca fechar silenciosamente um modal ou formulário sem feedback. Para erros, usar `ToastrService.error()` ou exibir inline se o contexto for um formulário com campos. `ToastrService` já está configurado no `AppModule` — apenas injetar no construtor.
+- **Inspetor de Metadados**: Nunca exiba JSON bruto para o usuário. Use flattening recursivo e listas zebradas para inspeção humana.
+
+## Reutilização e responsabilidade de componentes
+
+Antes de criar markup, CSS ou comportamento de interface, procurar o que já existe com `rg` por seletor, classe visual e conceito de produto. Reutilizar o card interno enquanto se duplica a prateleira, o modal ou a navegação resolve apenas parte do problema.
+
+### Quando extrair um componente compartilhado
+
+Extrair quando duas ou mais telas compartilham uma estrutura que também carrega pelo menos uma responsabilidade relevante:
+
+- comportamento ou estado;
+- responsividade e overflow;
+- acessibilidade;
+- regras visuais que devem evoluir juntas;
+- eventos de interação que os consumidores precisam observar.
+
+Não extrair só porque dois trechos têm poucas tags parecidas. Se a semelhança for acidental, o comportamento estiver divergindo ou a API do componente exigir muitos flags sem relação entre si, manter local pode ser mais claro.
+
+### Fronteira de responsabilidade
+
+- o componente compartilhado possui DOM, CSS, responsividade, acessibilidade e comportamento visual;
+- a página consumidora possui carregamento de dados, regra de negócio, copy contextual e decisão analítica;
+- dados e variações entram por `@Input()`; interações relevantes saem por `@Output()`;
+- o componente compartilhado não deve conhecer a PDP, a Home ou nomes de eventos GA4 específicos;
+- diferenças legítimas devem virar variantes explícitas e pequenas, não forks de markup nem cascatas de booleanos.
+
+### Regra para estilos
+
+- uma página pode controlar espaçamento e posicionamento do host compartilhado;
+- não atravessar o encapsulamento de um componente próprio com `::ng-deep`;
+- se um componente próprio precisa de outra apresentação, criar uma API explícita de variante ou corrigir seu contrato;
+- `::ng-deep` fica restrito a DOM de bibliotecas externas que não oferece outra superfície de customização.
+
+### Validação de uma extração
+
+- validar todos os consumidores existentes, não apenas a tela que motivou a mudança;
+- testar os viewports em que o componente muda de comportamento;
+- proteger regras relevantes com testes no componente compartilhado;
+- confirmar que analytics não duplicou por existir no componente e na página ao mesmo tempo.
+
+Heurística de bolso: se uma correção futura precisaria ser aplicada nas mesmas duas telas, provavelmente existe uma responsabilidade compartilhada. Se as telas mudariam por razões diferentes, provavelmente não existe.
+
+## SSR v2 (Angular Universal)
+
+O Sharebook utiliza `@angular/ssr` (Angular 22, `CommonEngine`) para SSR de SEO e performance — migrado de Angular 13/`ngExpressEngine` em 2026-09-17/18 (ver seção "Migração de major do Angular" abaixo). Siga estes padrões para evitar quebras no ambiente Node:
+
+- **`allowedHosts` obrigatório em `server.ts`** desde o `@angular/ssr` 19: sem essa lista explícita (hoje: `sharebook.com.br`, `www.sharebook.com.br`, `dev.sharebook.com.br`, `localhost`), o `CommonEngine` degrada silenciosamente para client-side-rendering puro — sem erro visível, sem status HTTP diferente. Uma rota 200 (home cacheada) continua parecendo certa nesse fallback quebrado; só uma rota que deveria devolver status != 200 (404 real, redirect) expõe o problema. Validação funcional de SSR depois de qualquer bump de `@angular/ssr` precisa testar isso, não só a home.
+- **Bomba-relógio de `.subscribe()` sem `catchError` em chamadas HTTP** — a partir do Angular 21 (mudança de scheduler/zone), um erro HTTP não tratado dentro de um `.subscribe()` deixou de ser só um log do `ErrorHandler` global e passou a escapar como unhandled rejection, derrubando o processo Node inteiro no SSR. Corrigido em `home.component.ts` e `footer.component.ts` (renderizados em toda página) em 2026-09-18. **Ainda existem ~16 componentes com o mesmo padrão** (search-results, categories-list, myaccount, book/form, book/list, book/donations, book/requesteds, book/details, mais-sheet, account, header parcial, unsubscribe, parent-aproval, bottom-nav, importer-dashboard) — risco menor por não serem globais, mas real se a página específica for visitada durante falha de API. Todo `.subscribe()` novo ou tocado numa chamada HTTP deve levar `catchError()` com fallback, sem exceção — um teste passando não prova ausência desse bug, porque o RxJS relança o erro de forma assíncrona (`setTimeout 0`) e a suíte pode terminar antes do timer disparar.
+
+### Princípios gerais
+
+- **Zero `if (isBrowser)` espalhado**: Use o `TransferStateInterceptor` para automatizar o compartilhamento de dados entre servidor e browser.
+- **Abstração de Browser APIs**: Nunca use `window`, `localStorage` ou `document` diretamente. Use os serviços:
+    - `PlatformService`: Para checar `isBrowser` de forma centralizada.
+    - `BrowserStorageService`: Wrapper seguro para storage que não quebra no servidor.
+- **Meta Tags**: Garanta que as meta tags de redes sociais (OpenGraph) sejam renderizadas no servidor para correta indexação.
+- **Moment-timezone**: Cuidado com importações de `moment-timezone` no ambiente Node; prefira importações ES nativas quando possível.
+
+### Cache integral da home — contrato de 30 minutos
+
+A rota exata `/` usa microcache do HTML SSR completo em `server.ts`, com TTL de 30 minutos e armazenamento em escopo de módulo Node.js.
+
+- `MISS`: uma única renderização Angular consulta as APIs e armazena o HTML final.
+- `COALESCED`: acessos simultâneos durante o `MISS` aguardam a mesma Promise; nunca iniciar renders concorrentes para preencher o mesmo cache.
+- `HIT`: enviar o HTML armazenado sem inicializar o Angular SSR. Isso precisa produzir zero chamadas a `/api/*` no servidor.
+- O HTML cacheado deve preservar o `TransferState` da primeira renderização. Assim, um carregamento direto no navegador também hidrata sem repetir chamadas a `/api/*`.
+- Capas em `/Images/*` continuam sendo assets carregados pelo navegador; não confundir esses GETs estáticos com chamadas de dados ou conexões ao Postgres.
+- Não ampliar o cache para outras rotas sem decisão explícita. Páginas privadas, personalizadas e respostas diferentes de HTTP 200 não podem entrar no cache público. (Decisão explícita já tomada para PDP — ver seção abaixo.)
+- Deploy ou restart naturalmente esvazia o cache. Na expiração, o single-flight garante uma única atualização.
+
+Validação mínima após mudança no fluxo: build SSR, rajada concorrente comprovando `1 MISS + N COALESCED`, acesso posterior `HIT` e navegador headless comprovando zero requests para `https://api.sharebook.com.br/api/*` durante a hidratação do `HIT`.
+
+### Cache SSR da PDP — mesmo contrato de 30 minutos, chave por path
+
+**Incidente real em 2026-09-21**: PDP pública (`/livros/:slug`) é superfície de crawler — alto valor SEO/social, muito visitada por bots (confirmado via access log: SemrushBot, `meta-externalagent` da Meta/Facebook) — e antes disso era renderizada 100% on-demand a cada request, disparando `book/Slug`, `book/freightOptions`, `book/Recommendations` e o `category/Counts` do footer global a cada visita. Sob crawler ou pico, isso acopla tráfego público diretamente ao Postgres (ver `playbooks/engineering/backend.md`, seção de pool do Npgsql, para o incidente de conexão que essa mesma investigação destravou).
+
+- Cache SSR de 30 minutos para `/livros/:slug` em `server.ts`, mesma mecânica de módulo Node.js da home, chave por `req.path` **ignorando query string** (não multiplicar cache por UTM), com coalescing por slug e limite de entradas em memória (1000).
+- Cache SSR reduz o acoplamento imediatamente; não substitui pré-renderização/SSG completa, que segue como passo estrutural em aberto se o tráfego de crawler continuar crescendo.
+- Dados globais e pouco voláteis renderizados em toda página (ex: contagem de categorias do footer, via `CategoryService.getAllWithCounts()`) merecem cache próprio no backend além do cache de página — um footer compartilhado por todas as rotas não deveria bater API a cada render que não seja HIT de página inteira.
+
+### Access log SSR — `ssr_access`
+
+Log de uma linha em JSON no Express SSR (`server.ts`), por página renderizada: método, path **sem query string** (só um booleano `hasQuery`, para não vazar parâmetros nem virar ruído de UTM), status, duração, cache SSR (`MISS`/`HIT`/`COALESCED`), rota de cache, IP via proxy e user-agent truncado. Filtrar healthcheck local (`Wget` batendo a home) para não virar ruído. Foi o que transformou "suspeita de crawler" em evidência operacional real (bots identificados por nome batendo PDPs específicas) — sem esse log, a única fonte de tráfego real do SSR era `docker logs` efêmero.
+
+### SsrCacheService — escopo de módulo, não de classe
+
+**Bug crítico corrigido em 2026-06-11**: O `SsrCacheService` original declarava `private store = new Map()` como propriedade de instância. Angular Universal cria novo contexto de injeção por request → o Map morria a cada requisição → o cache nunca funcionava.
+
+**Fix**: Mover o `_store` para escopo de módulo (fora da classe):
+```typescript
+// FORA da classe — persiste enquanto o processo Node.js estiver vivo
+const _store = new Map<string, { data: any; timestamp: number }>();
+
+@Injectable({ providedIn: 'root' })
+export class SsrCacheService {
+  get(key: string) { return _store.get(key); }
+  set(key: string, data: any) { _store.set(key, { data, timestamp: Date.now() }); }
+  // ...
+}
+```
+
+`providedIn: 'root'` **não é singleton entre requests no SSR** — a injeção de dependências do Angular é recriada por request. A única forma de persistir estado entre requests no mesmo processo Node.js é usar variável de módulo JavaScript.
+
+### TransferState manual em cache hit
+
+Quando um serviço retorna dados cacheados via `of(cached)`, ele **desvia do `HttpClient`** → o `TransferStateInterceptor` nunca roda → o `TransferState` fica vazio → o browser re-fetcha e re-renderiza (perdendo o benefício do SSR).
+
+**Sintoma**: conteúdo aparece igual no HTML SSR, mas o browser faz requests duplicados e pode sobrescrever dados sorteados (ex: categorias do showcase trocando a cada F5).
+
+**Fix**: no cache hit em ambiente servidor, popular o `TransferState` manualmente:
+```typescript
+import { isPlatformServer } from '@angular/common';
+import { TransferState, makeStateKey } from '@angular/platform-browser';
+
+// No método que retorna cache hit:
+if (isPlatformServer(this.platformId)) {
+  const key = makeStateKey('categories-showcase');
+  this.transferState.set(key, cached);
+}
+return of(cached);
+```
+
+A chave deve ser a mesma que o `TransferStateInterceptor` usaria se o `HttpClient` tivesse sido acionado. Validar inspecionando o bloco `<script id="angular-state">` no HTML SSR de produção.
+
+### RESPONSE injection — server.ts
+
+O token `@Inject(RESPONSE)` (usado para setar HTTP status code no SSR) só funciona se `server.ts` passar `RESPONSE` nos providers do `res.render()`:
+
+```typescript
+// server.ts — dentro do res.render()
+providers: [
+  { provide: RESPONSE, useValue: res },
+  // ... outros providers
+]
+```
+
+Sem isso, **todos** os `@Optional() @Inject(RESPONSE)` do app são `null` — HTTP 404 nunca chega ao Googlebot (soft 404). O fix é mínimo e resolve para todos os componentes de uma vez.
+
+### NotFoundPageComponent — 404 real, não redirect
+
+**Não redirecionar para `/404`**. Isso causa soft 404 para crawlers (o URL original retorna 200 com redirect, não 404).
+
+Padrão correto:
+- Criar `NotFoundPageComponent`: fonte da verdade visual + `this.response?.status(404)` + SEO meta tags
+- `NotFoundComponent` (rota `**`) vira wrapper de 1 linha que renderiza `<app-not-found-page>`
+- `BookDetailComponent` e outros componentes que detectam recurso inexistente renderizam `<app-not-found-page>` **no URL original**, sem redirect
+- O componente deve ser declarado no `AppModule`
+
+### HomeService showcase — Union para subcategorias
+
+A query de seleção de categorias para o showcase da home filtrava apenas `b.Category.ParentCategoryId == null` (categorias raiz). Categorias como Drama tinham quase todos os ebooks em subcategorias filhas → mostrava 1 livro.
+
+**Fix**: Union entre ebooks com categoria raiz direta e ebooks com categoria filha de categoria raiz:
+```typescript
+// books query:
+.where('b.Category.ParentCategoryId = :categoryId OR b.Category.Id = :categoryId', { categoryId })
+```
+
+## Chart.js atrás de `*ngIf`
+
+Quando o `<canvas>` do gráfico vive atrás de `*ngIf="!loading && !error"`, montar o `Chart` em `ngAfterViewInit` corre uma corrida real contra a resposta HTTP: o elemento pode não existir ainda no DOM na primeira tentativa, e o gráfico simplesmente não aparece. Padrão que já se repetiu duas vezes (`analytics-dashboard`, depois `download-logs-dashboard`, 2026-07-24):
+
+- Montar o gráfico em `ngAfterViewChecked` (não `ngAfterViewInit`), guardado por uma flag para não recriar a cada change detection.
+- Toda troca de filtro que force o Angular a destruir/recriar o `<canvas>` (mesmo `*ngIf`) também destrói a instância anterior do `Chart.js` — chamar `chart.destroy()` antes de montar de novo dentro do método que recarrega os dados, senão sobra uma instância órfã presa a um canvas que não existe mais.
+
+## Karma/Puppeteer — Chrome ausente no cache
+
+`ChromeHeadless` via Puppeteer pode ter `executablePath()` apontando para um binário que existe só às vezes (baixado, mas some do cache temporário do Windows antes da execução) — o teste falha sem mensagem útil. Fix aplicado em `karma.conf.js`: verificar se o candidato do Puppeteer existe de fato no disco antes de usá-lo; se não existir, usar o Chrome/Edge já instalado no Windows como fallback automático, sem exigir configuração manual por máquina.
+
+## Padrões de Layout
+
+### Container
+- Usar `class="container"` para páginas admin — cria margens laterais automáticas e dá respiro em monitores grandes.
+- **Nunca** usar `container-fluid` em páginas admin — estica até a borda e fica ilegível em telas largas.
+- Referência: importer dashboard usa `class="importer-dashboard container"`.
+
+### Breadcrumb
+Padrão obrigatório em todas as páginas admin:
+```html
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink="/panel">Painel</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Nome da Página</li>
+  </ol>
+</nav>
+```
+CSS obrigatório para remover o fundo cinza padrão do Bootstrap:
+```css
+.breadcrumb {
+  background: none;
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
+}
+```
+Sem esse CSS o breadcrumb fica com uma caixa cinza/azul que destoa do restante do app.
+
+### Proteção de rota admin
+```typescript
+// app-routing.module.ts
+{
+  path: 'admin/minha-pagina',
+  component: MinhaPaginaComponent,
+  canActivate: [AuthGuardAdmin],
+}
+```
+`AuthGuardAdmin` verifica `user.profile === 'Administrator'` via localStorage.
+
+## Integração com o Backend
+
+### apiEndpoint
+O `environment.apiEndpoint` já inclui `/api`:
+```
+https://api.sharebook.com.br/api
+```
+Chamadas de serviço devem ser: `${this.config.apiEndpoint}/Controller/Action`  
+**Nunca** adicionar `/api` ou `/v1/` na URL — resulta em `apiController` concatenado errado.
+
+### JWT só vai para o `apiEndpoint`
+O `jwtInterceptor` anexa o Bearer apenas a URLs sob `${config.apiEndpoint}/`. Até 04/10/2026 ele mandava o token para qualquer host chamado pelo HttpClient, e isso vazou JWT para a S3 sem ninguém notar. Chamada autenticada nova precisa passar pelo `apiEndpoint`. Host externo (S3, ViaCEP) nunca recebe o token.
+
+### Download de ebook: reusar a URL assinada, não o arquivo
+Cada POST em `/book/DownloadEBookUrl/{slug}` conta download e consome o rate limit diário por IP. O `EbookDownloadUrlService` guarda a URL pré-assinada da S3 em `sessionStorage` por slug, com a validade lida da própria URL (`X-Amz-Date` + `X-Amz-Expires`) e 30s de folga. Cliques que chegam enquanto a requisição está em andamento usam a mesma resposta. Assim, clique repetido e toque duplo viram um único download contado.
+
+Cache do PDF em blob/IndexedDB foi tentado (Codex, 27/09) e removido em 04/10. Dependia de CORS no bucket, caía em silêncio no fallback e é frágil no mobile, onde está a maior parte do público. Não reintroduzir sem resolver esses três pontos. Histórico em `memory/2026-10-04-download-ebook-url-assinada.md`.
+
+**Teste com Playwright:** `route.fulfill` entrega a resposta sem a checagem de CORS do navegador, então não serve para provar que um `fetch` cross-origin funciona em produção.
+
+### TypeScript — limitações do lib target
+O projeto tem `lib` configurado em ES2018 ou anterior. Evitar:
+- `Object.fromEntries()` — usar `reduce` como alternativa:
+  ```typescript
+  array.reduce((acc, x) => { acc[x.key] = x.value; return acc; }, {} as Record<string, T>)
+  ```
+
+## Angular Material / CDK — Integração e Sobreposições
+
+### z-index hierárquico
+
+| Camada | z-index | Origem |
+|---|---|---|
+| Header Sharebook | 1040 | CSS hardcoded |
+| CDK overlay (default) | 1000 | Angular Material |
+| **Override correto** | **1100** | `custom-theme.scss` |
+
+Fix global obrigatório em `src/custom-theme.scss`:
+```scss
+.cdk-overlay-container { z-index: 1100; }
+```
+Sem isso, modais, selects e tooltips ficam atrás do header.
+
+### `::ng-deep` somente para componentes de terceiros
+
+Usar `::ng-deep` quando o componente gera DOM dinamicamente sem atributo `_ngcontent` (ex: CodeMirror/EasyMDE, Chart.js overlays).
+
+Nunca usar `::ng-deep` para estilizar um componente criado pelo próprio Sharebook. Nesse caso, evoluir o componente com variante explícita, classe no host ou layout controlado pelo consumidor.
+
+Caso real — CodeMirror no modal editorial:
+```scss
+::ng-deep .CodeMirror {
+  overflow-x: hidden;
+  word-wrap: break-word;
+}
+::ng-deep .CodeMirror-scroll { overflow-x: hidden !important; }
+::ng-deep .CodeMirror pre.CodeMirror-line {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+```
+`::ng-deep` está deprecated mas é o único caminho correto para content gerado dinamicamente. Isolar com um seletor pai (ex: `.editorial-prompt-dialog__body`) para não vazar para outros componentes.
+
+## Regras Técnicas e Armadilhas
+
+### Design de Modais (Mobile)
+- Problema de modal cortado no mobile quase nunca é bug isolado do componente. Suspeitar primeiro de duas causas sistêmicas: `dialog.open(...)` com `minWidth`/larguras fixas incoerentes e override global agressivo em `src/custom-theme.scss` forçando Material dialog para `100vw` sem respeitar internals.
+- **Não usar hacks de CSS local**: para consistência, preferir correção estrutural na camada global do Material dialog e depois alinhar a configuração de `dialog.open(...)` nos componentes.
+- **Padrão Mobile**: todo modal no celular deve ter largura mobile-safe de forma consistente, sem mistura caótica de `minWidth` fixo por modal. Se precisar ocupar a tela, fazer isso com critério, sem quebrar título, body rolável e footer.
+- **Modal com conteúdo expansivo**: usar `max-height: 80vh` + `flex: 1; min-height: 0; overflow-y: auto` no body + `flex-shrink: 0` no footer para garantir que o footer sempre apareça.
+- Em legado de modais, endurecer também a estrutura interna: título, ações e scroll precisam ser mobile-safe antes de sair remendando CSS pontual de um componente por vez.
+
+### Sincronia e Build
+- **Build Real > Ambiente Local**: O comportamento no ambiente de produção (CI/CD) é a única verdade. Sempre valide se o build passa antes de considerar a tarefa concluída.
+- **Branch Desatualizada**: Se encontrar um erro "misterioso" onde o código local não parece refletir a realidade da CI, a suspeita primária deve ser branch local defasada em relação à `master`.
+- **Validar Sintaxe**: Em alterações de HTML/JS/SCSS, uma verificação rápida de sintaxe ou build local economiza rodadas de CI falhas.
+- **"Testes passando" e "build verde" não são prova de comportamento funcional** — só provam que o código compila e que o caminho testado não quebrou. Validar o comportamento real (SSR servindo HTML de verdade via `curl`, rota 404 real, cache HIT com corpo idêntico) é o que efetivamente prova algo, especialmente depois de bump de versão de framework.
+
+### Migração de major do Angular
+
+Metodologia validada na migração 13→22 (2026-09-17/18, seis sessões, três habitats):
+
+- **Hop a hop, nunca pular versão**: `ng update` com pacotes demais de uma vez confunde a resolução de peer deps do npm e pode tentar pular versão sozinho. Migrar em fatias (core+cli primeiro, satélites como `@nguniversal`/`@angular/ssr` e Material/CDK depois), um commit isolado por hop, pra manter bisect/rollback possível.
+- **Validar cada hop com build + teste + teste funcional específico**, não só `npm test` verde: cache SSR (MISS→HIT, corpo idêntico), uma rota 404 real (ver `allowedHosts` acima), e — depois de qualquer bump de `package.json`/`.nvmrc` — conferir se `devops/Dockerfile` (as duas stages) ainda bate com a engine declarada. Build local roda no Node do PATH da sessão, não no da imagem Docker; um Dockerfile desatualizado pode passar batido no build local e só quebrar dentro da imagem.
+- **`ng update --force` é sinal de alerta, não atalho**: geralmente esconde uma dependência morta ou peer dependency incompatível que precisa ser substituída de qualquer jeito (ex.: `ng-recaptcha`, travado em Angular 16, resolvido escrevendo integração própria fina com o script oficial do Google). Resolver a causa raiz evita empurrar a mesma dívida pros próximos hops.
+- **Schematics automáticos podem ter bugs reais**: a migração MDC do Material (`ng generate @angular/material:mdc-migration`) já corrompeu um seletor CSS e um comentário de sourcemap numa migração real. Revisar o diff inteiro linha a linha antes de confiar no build verde, nunca aceitar schematic como caixa-preta.
+- **Antes de remover uma dependência por parecer "não usada"**, buscar também nos arquivos de configuração de build/test na raiz (`karma.conf.js`, `webpack.config`, etc.), não só em `src/`/`e2e/`/`scripts/`. `puppeteer` foi removido por engano numa sessão real porque a busca só cobriu `src/`, quebrando o Karma — o `karma.conf.js` tinha um comentário explícito avisando do fallback, não lido antes de remover.
+- Migração completa (13→22) removeu `tslint`/`codelyzer` (→ `eslint` manual, schematic oficial de conversão foi descontinuado), `Protractor` (→ Playwright, era boilerplate nunca customizado), `core-js@2`/`rxjs-compat` (peso morto de era ES5/rxjs5) e fixou Node em `.nvmrc`/`engines` — reduziu vulnerabilidades de produção de 105 para 4.
+
+
+### Modernização incremental sem reescrita (lazy loading, OnPush, strict mode)
+Lições de uma migração real (épico de simplificação do `sharebook-frontend`, 2026-09-19) que economizam uma rodada de medo antes da próxima vez.
+
+- **Antes de fatiar por medo, medir o impacto real.** Ligar `strictNullChecks` numa base sem ele há anos parece pedir uma migração por feature — mas TypeScript não suporta strictness parcial por pasta num tsconfig só. Rodar o compilador com a flag ligada e contar os erros de verdade primeiro; pode ser uma fração do que a intuição sugere (64 erros concentrados em 16 arquivos, não uma enxurrada).
+- **`strict: true` completo não é o mesmo pedido que `strictNullChecks`.** `strictPropertyInitialization` sozinho pode gerar centenas de erros em campos de componente Angular sem inicializador no construtor — padrão legítimo do framework (valor chega no ciclo de vida, não no construtor), não bug. "Corrigir" isso em massa vira `!` espalhado por todo canto: pior que não ligar. Ligar as flags uma de cada vez e avaliar o custo real de cada uma antes de decidir.
+- **`loadComponent` não exige migrar o bootstrap da app.** Um componente standalone com `loadComponent` na rota funciona dentro de uma app ainda bootstrada via `NgModule` desde o Angular 14+. Não é preciso arriscar `bootstrapApplication` + `provideRouter` só para ganhar code-splitting real.
+- **OnPush via `ChangeDetectorRef.markForCheck()` é a via de menor risco em página de negócio crítico.** Colocar `markForCheck()` explícito em cada callback assíncrono que muda estado (subscribe HTTP, `afterClosed()` de dialog) dá o ganho de performance do OnPush sem tocar em uma linha de template. Signals é mais idiomático, mas exige reescrever toda leitura no template — vale a pena quando o risco de regressão é aceitável, não em home/PDP de um app em produção.
+- **Quando uma correção de tipo quebra um teste que antes passava, o teste raramente é o culpado.** Ao alinhar um fixture pra bater com uma flag nova do compilador, se uma asserção real quebrar, a pergunta é "qual dos dois lados mente sobre a realidade" — o teste ou o modelo de dados. Um campo de API que a classe declara como não-nulável, mas a implementação real deixa `null`/`undefined`, é o modelo mentindo — corrigir o modelo, não o fixture.
+## Comandos Úteis
+
+```bash
+# Rodar lint para garantir padrão de código
+npm run lint
+
+# Rodar testes unitários
+npm test
+
+# Build de produção local (para validar se não quebra na CI)
+npm run build-prod
+```
+
+## Amazon Affiliate Button
+
+Tag: `sharebook09-20`. Link dinâmico: `https://www.amazon.com.br/s?k=TITULO+AUTOR&tag=sharebook09-20`
+
+Regras de hierarquia na PDP:
+- Livro físico já doado → `mat-flat-button accent` (primário — único CTA da página)
+- Ebook disponível ou físico disponível → `mat-stroked-button` (secundário, abaixo do CTA principal)
+
+Sempre: `rel="noopener noreferrer sponsored"` (SEO correto para afiliado). GA event: `amazon_click` com `book_title` + `book_slug`.
+
+Máximo um `mat-flat-button accent` por página — Amazon nunca compete com "Receber livro digital".
+
+## Shelf arrows — visibilidade e estado inteligente
+
+Para controles de scroll horizontal (carrosséis, prateleiras):
+
+- antes de copiar a estrutura de uma prateleira existente para outra tela, aplicar a seção **Reutilização e responsabilidade de componentes**;
+- quando uma prateleira compartilhada existir, ela deve possuir track, overflow, setas, estados disabled e acessibilidade; a página fornece conteúdo e reage à seleção;
+
+- **Usar SVG em vez de Unicode**: caracteres `‹` `›` variam entre fontes e plataformas. Substituir por `<polyline>` SVG com `stroke-width="2.5"`.
+- **Estado disabled via HTML**: inicializar a seta esquerda com classe `.shelf-arrow--disabled` direto no HTML (sem `AfterViewInit`). Método `updateArrows(wrapper)` toggle a classe com base em `scrollLeft` vs `scrollWidth`.
+- **Eventos**: chamar `updateArrows()` no evento `(scroll)` do track + `setTimeout(400)` após `scrollBy` programático.
+- **CSS disabled**: `opacity: 0.22` no hover, `pointer-events: none`.
+
+```html
+<button class="shelf-arrow shelf-arrow--left shelf-arrow--disabled">
+  <svg><!-- polyline chevron --></svg>
+</button>
+```
+
+## Hover padrão em botões
+
+```scss
+&:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+```
+
+Aplicar a CTAs em PDPs e cards de ação. Não aplicar em botões inline de formulários ou links de texto.
+
+---
+
+## Referências
+- [`sharebook-agent/playbooks/product-ux/ux-reviewer/PLAYBOOK.md`](../product-ux/ux-reviewer/PLAYBOOK.md) - Para auditoria crítica de fluxos.
+- [`sharebook-agent/playbooks/product-ux/web-design-reviewer/PLAYBOOK.md`](../product-ux/web-design-reviewer/PLAYBOOK.md) - Para correção visual e layout.

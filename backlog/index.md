@@ -1,7 +1,7 @@
 ## BACKLOG
 
 ### 🌟 Visão Geral
-- **North star do produto**: tornar o Sharebook o melhor hub de livros gratuitos do Brasil. Critérios duráveis em `skills/product-ux/catalog-strategy/SKILL.md`.
+- **North star do produto**: tornar o Sharebook o melhor hub de livros gratuitos do Brasil. Critérios duráveis em `playbooks/product-ux/catalog-strategy/PLAYBOOK.md`.
 
 ### 🎯 Ordem de prioridade
 
@@ -32,7 +32,7 @@ Revisada em **2026-10-05**, após decisão do Raffa de tratar **Bruxas & Magia**
 
 ### ✅ Done relevante
 
-- **[Tags e conhecimento estruturado](done/tags-e-conhecimento-estruturado/index.md)** — missão cumprida em 2026-10-03. Entregou vocabulário controlado, modelo, navegação pública, motor mecânico na criação de livros, backfill técnico controlado e skill operacional; a antiga Tarefa 7 foi cancelada por falta de valor percebido.
+- **[Tags e conhecimento estruturado](done/tags-e-conhecimento-estruturado/index.md)** — missão cumprida em 2026-10-03. Entregou vocabulário controlado, modelo, navegação pública, motor mecânico na criação de livros, backfill técnico controlado e playbook operacional; a antiga Tarefa 7 foi cancelada por falta de valor percebido.
 - **[Devroye cadastrado como errata](done/fix-devroye-errata-cadastrada-como-livro.md)** — removido do catálogo público em 2026-10-05. `Non-Uniform Random Variate Generation` prometia o livro completo, mas o PDF publicado era uma corrigenda/errata de 7 páginas.
 
 

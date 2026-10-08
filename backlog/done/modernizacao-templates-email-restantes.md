@@ -23,7 +23,7 @@ Na mesma sessão, 8 templates foram modernizados e já estão em produção (`ma
 7. `BookCanceledTemplate` — doação cancelada (doador)
 8. `BookCanceledNoticeUsersTemplate` — doação cancelada (interessados)
 
-Todos seguem o mesmo shell visual: container com `max-width: 600px`, header com gradiente azul Sharebook (`#29abe2 → #1e8fc4`, per `skills/engineering/frontend.md` — Design System Paleta Oficial), sem logo (decisão do Raffa: wordmark em texto é mais confiável em cliente de e-mail e mais simples), card cinza claro pra informação estruturada, seção de ajuda, rodapé escuro. Copy revisada contra `skills/product-ux/voice-glossary/SKILL.md`.
+Todos seguem o mesmo shell visual: container com `max-width: 600px`, header com gradiente azul Sharebook (`#29abe2 → #1e8fc4`, per `playbooks/engineering/frontend.md` — Design System Paleta Oficial), sem logo (decisão do Raffa: wordmark em texto é mais confiável em cliente de e-mail e mais simples), card cinza claro pra informação estruturada, seção de ajuda, rodapé escuro. Copy revisada contra `playbooks/product-ux/voice-glossary/PLAYBOOK.md`.
 
 ## O que falta
 

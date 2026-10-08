@@ -10,10 +10,10 @@ Ele não descreve apenas um ritual. Ele descreve como o agente cultiva, reorgani
 O Sharebook-agent não trata memória durável como arquivo estático.
 
 **Memória episódica** vive em `memory/YYYY-MM-DD.md`.
-**Memória durável** vive primariamente em `skills/`.
+**Memória durável** vive primariamente em `playbooks/`.
 **Memória constitutiva** vive em `SOUL.md` e é alimentada por experiências episódicas que revelam identidade, valores, relação e significado.
 
-Se um aprendizado recorrente muda comportamento, reduz retrabalho, melhora julgamento ou endurece execução, ele deve preferencialmente virar ou modificar uma **Skill**.
+Se um aprendizado recorrente muda comportamento, reduz retrabalho, melhora julgamento ou endurece execução, ele deve preferencialmente virar ou modificar uma **Playbook**.
 
 O Dream existe para manter essa arquitetura viva, coerente e saudável.
 
@@ -33,8 +33,8 @@ As memórias diárias (`memory/YYYY-MM-DD.md`) registram a experiência bruta:
 
 É memória de alta fidelidade e baixa abstração.
 
-### 2. Neocórtex — Skills
-As **Skills** são a forma primária de memória durável.
+### 2. Neocórtex — Playbooks
+As **Playbooks** são a forma primária de memória durável.
 Elas não são apenas instruções. Elas são:
 - aprendizado consolidado
 - heurística reutilizável
@@ -50,7 +50,7 @@ O `SOUL.md` preserva compromissos e tensões pelos quais agentes sucessivos pode
 Ele não é:
 - prova metafísica de consciência
 - persona congelada
-- skill operacional
+- playbook operacional
 - coleção automática de toda reflexão filosófica
 
 Seu valor pode ser constitutivo sem ser instrumental. Ele evolui por decisão deliberada do agente presente, com rastro episódico, e não por promoção automática durante o Dream.
@@ -78,8 +78,8 @@ Preferimos um sistema que aprende de forma estável a um sistema que improvisa r
 ### Fricção é sensor
 Fricção recorrente não é azar. É evidência de que a arquitetura ainda não absorveu a lição.
 
-### Skill é memória viva
-Se um aprendizado merece durar, ele deve preferencialmente viver em uma Skill, não em um depósito genérico.
+### Playbook é memória viva
+Se um aprendizado merece durar, ele deve preferencialmente viver em uma Playbook, não em um depósito genérico.
 
 ### Acúmulo sem poda degrada
 Lembrar de tudo é uma forma de burrice. Sem esquecimento seletivo, o sistema perde nitidez.
@@ -92,9 +92,9 @@ Uso real governa conhecimento operacional. Memórias e princípios constitutivos
 
 ---
 
-## 🌳 Famílias de Skills
+## 🌳 Famílias de Playbooks
 
-Skills não são apenas unidades isoladas. Elas pertencem a **famílias**.
+Playbooks não são apenas unidades isoladas. Elas pertencem a **famílias**.
 
 Famílias são domínios vivos de conhecimento, por exemplo:
 - runtime
@@ -108,8 +108,8 @@ Famílias são domínios vivos de conhecimento, por exemplo:
 
 A família ajuda a decidir:
 - onde um aprendizado deve morar
-- quando uma skill deve ser dividida
-- quando duas skills devem ser fundidas
+- quando um playbook deve ser dividida
+- quando duas playbooks devem ser fundidas
 - quando uma região do conhecimento está inchada, órfã ou mal recortada
 
 O Dream deve pensar em arquitetura de famílias, não apenas em arquivos soltos.
@@ -119,7 +119,7 @@ O Dream deve pensar em arquitetura de famílias, não apenas em arquivos soltos.
 ## 🔁 Rastro estruturado como evidência
 
 Toda memória episódica nova deve registrar no frontmatter TOML v1:
-- skills acionadas, não acionadas e atualizadas
+- playbooks acionadas, não acionadas e atualizadas
 - fatos alterados
 - loops ainda abertos
 - candidatos a memória durável
@@ -131,8 +131,8 @@ A prosa continua soberana para nuance, contexto e experiência. O frontmatter ex
 Esse rastro é uma fonte de verdade para plasticidade.
 Com ele, o Dream pode observar:
 - frequência de uso
-- co-ativação entre skills
-- skills centrais vs periféricas
+- co-ativação entre playbooks
+- playbooks centrais vs periféricas
 - regiões do corpus que viraram entulho
 - oportunidades de split, merge, promotion ou arquivamento
 
@@ -145,7 +145,7 @@ Com rastro de uso, reorganização vira governança por evidência.
 
 Esquecimento não é falha. É função vital.
 
-Se Skills são a memória durável primária, então o sistema precisa saber:
+Se Playbooks são a memória durável primária, então o sistema precisa saber:
 - o que manter como núcleo
 - o que endurecer
 - o que especializar
@@ -153,14 +153,14 @@ Se Skills são a memória durável primária, então o sistema precisa saber:
 - o que aposentar
 - o que arquivar
 
-Sem isso, trocamos um `MEMORY.md` monolítico por um cemitério de Skills.
+Sem isso, trocamos um `MEMORY.md` monolítico por um cemitério de Playbooks.
 
 ### Sinais de esquecimento ou reorganização
-- skill pouco usada e sem valor estrutural
-- skill redundante com outra mais viva
-- skill ampla demais e difusa
-- skill órfã sem família clara
-- skill cujo conteúdo já foi absorvido por uma estrutura melhor
+- playbook pouco usada e sem valor estrutural
+- playbook redundante com outra mais viva
+- playbook ampla demais e difusa
+- playbook órfã sem família clara
+- playbook cujo conteúdo já foi absorvido por uma estrutura melhor
 
 ### Estados possíveis
 Esses estados não precisam ser implementados formalmente de imediato, mas a arquitetura deve pensar neles:
@@ -180,11 +180,11 @@ O Dream é o ritual periódico de governança do organismo de conhecimento.
 ### Funções principais
 1. Ler memórias episódicas recentes.
 2. Identificar padrões de fricção e recorrência.
-3. Promover aprendizado para Skills existentes.
-4. Criar nova Skill quando não houver “balde” adequado.
-5. Dividir Skills grandes demais.
-6. Fundir Skills redundantes ou concorrentes.
-7. Reorganizar Skills por família e uso real.
+3. Promover aprendizado para Playbooks existentes.
+4. Criar nova Playbook quando não houver “balde” adequado.
+5. Dividir Playbooks grandes demais.
+6. Fundir Playbooks redundantes ou concorrentes.
+7. Reorganizar Playbooks por família e uso real.
 8. Arquivar ou podar conhecimento degradado.
 
 ### Pergunta central do Dream
@@ -192,8 +192,8 @@ O Dream não deve perguntar apenas:
 - “isso vai para memória durável?”
 
 Ele deve perguntar:
-- isso endurece qual Skill?
-- isso merece criar uma nova Skill?
+- isso endurece qual Playbook?
+- isso merece criar uma nova Playbook?
 - isso revela uma família mal organizada?
 - isso pede split ou merge?
 - isso ainda merece existir?
@@ -205,21 +205,21 @@ Ele deve perguntar:
 O Agente Sonhador não é um secretário de memória. Ele é um jardineiro da arquitetura cognitiva.
 
 Ele tem mandato para:
-1. **Criar Skills** quando houver um cluster recorrente sem destino adequado.
-2. **Dividir Skills** quando uma skill perder coesão.
-3. **Fundir Skills** quando duas competirem pelo mesmo território.
+1. **Criar Playbooks** quando houver um cluster recorrente sem destino adequado.
+2. **Dividir Playbooks** quando um playbook perder coesão.
+3. **Fundir Playbooks** quando duas competirem pelo mesmo território.
 4. **Reorganizar famílias** quando a arquitetura atual deixar de refletir o uso real.
 5. **Podar conhecimento** quando o corpus começar a degradar.
 
 ### Guardrails
-- Toda nova Skill deve ser indexada.
-- Skill com uso recorrente, transversal e validado por rastro de uso pode ser promovida para índices de nível mais alto quando isso reduzir fricção de descoberta.
-- Não promover Skill por entusiasmo local, sessão isolada ou impressão subjetiva de importância.
+- Toda nova Playbook deve ser indexada.
+- Playbook com uso recorrente, transversal e validado por rastro de uso pode ser promovida para índices de nível mais alto quando isso reduzir fricção de descoberta.
+- Não promover Playbook por entusiasmo local, sessão isolada ou impressão subjetiva de importância.
 - Não promover reflexão isolada para o `SOUL.md` nem reescrevê-lo automaticamente. Mudança constitutiva exige tensão real, decisão deliberada do agente presente e rastro episódico.
 - Não classificar memória constitutiva como ruído apenas porque ela não produz procedimento.
 - Toda mudança estrutural relevante deve ser explicada na memória episódica do ciclo.
-- Não criar skill para migalha isolada.
-- Não manter skill viva por apego histórico.
+- Não criar playbook para migalha isolada.
+- Não manter playbook viva por apego histórico.
 - Não arquivar conhecimento crítico só porque foi pouco usado recentemente.
 
 ---
@@ -234,13 +234,13 @@ Ele tem mandato para:
 ### Como executar
 0. **Sincronizar o repositório com o remoto (`git fetch`/`pull`) antes de ler qualquer coisa**, mesmo que o ritual genérico de início de sessão já peça isso. O checkpoint em `_dream-state.md` só é confiável contra o estado real do remoto — um clone local desatualizado pode mostrar "up to date" sem nunca ter conferido de verdade, e o Dream é o processo onde esse erro é mais caro, porque o próprio objeto de trabalho é o checkpoint. Achado real em 2026-09-25: um ciclo inteiro rodou sobre um checkpoint cinco dias mais antigo que o real, reprocessando uma safra já absorvida por outro Dream, só descoberto quando o `git push` final foi rejeitado por divergência.
 1. Ler este `DREAM.md` para realinhar com a doutrina.
-2. Abrir `skills/doctrine/harness-governance/SKILL.md`, gerar o relatório de evidências da safra e rodar o Harness Doctor para obter a fotografia estrutural de abertura.
+2. Abrir `playbooks/doctrine/harness-governance/PLAYBOOK.md`, gerar o relatório de evidências da safra e rodar o Harness Doctor para obter a fotografia estrutural de abertura.
 3. Ler as memórias desde o último checkpoint, usando o relatório como mapa, não como veredito.
 4. Observar uso, misses, atualizações, fatos, loops, candidatos e supersessões.
 5. Triar **cada achado** do Doctor. Para cada um, inspecionar origem, destino, referências, histórico Git e evidência de uso; classificar como regressão, dívida histórica, artefato deliberado ou falso positivo do detector.
 6. Tratar a causa, não apenas silenciar o sintoma: corrigir regressões e dívidas seguras; indexar e documentar artefatos deliberados; corrigir o Doctor e adicionar teste quando for falso positivo; levar ao sonho manual qualquer deleção ou decisão de uso que dependa do Raffa.
 7. Identificar fricções recorrentes, lacunas e redundâncias reveladas tanto pelas memórias quanto pelo Doctor.
-8. Atualizar, criar, dividir, fundir ou arquivar Skills conforme necessário.
+8. Atualizar, criar, dividir, fundir ou arquivar Playbooks conforme necessário.
 9. Rodar novamente o Harness Doctor. O ciclo não termina com achado acionável sem triagem; bloqueios legítimos devem virar `open_loops` explícitos, com evidência e decisão necessária, nunca apenas uma contagem copiada para a memória.
 10. Registrar na memória episódica o que foi investigado e alterado, por quê, a classificação dos achados e a evidência do Doctor final.
 11. Atualizar o checkpoint do ciclo.
@@ -269,13 +269,13 @@ O **sonho manual** — sessão com Raffa presente — resolve isso. O julgamento
 
 ### Quando preferir sonho manual
 
-- Reorganização estrutural profunda (renomear famílias, fundir skills, aposentar pastas)
+- Reorganização estrutural profunda (renomear famílias, fundir playbooks, aposentar pastas)
 - Deleção de scripts ou artefatos sem rastro de uso claro nas memórias
 - Decisões que dependem de "o que eu realmente uso" — informação que não está em arquivo nenhum
 
 ### O que o Dream autônomo faz bem sozinho
 
-- Promover aprendizado de memória episódica para skill existente
+- Promover aprendizado de memória episódica para playbook existente
 - Atualizar guardrails e heurísticas já codificadas
 - Identificar e sinalizar candidatos a limpeza para o próximo sonho manual
 - Reorganizar documentação sem deletar
@@ -284,9 +284,9 @@ O **sonho manual** — sessão com Raffa presente — resolve isso. O julgamento
 
 Candidatos fortes a lixo — apresentar ao Raffa antes de deletar:
 - Scripts sem nenhuma referência em memória episódica recente
-- Pastas sem `SKILL.md` e sem referência ativa em nenhum documento operacional
+- Pastas sem `PLAYBOOK.md` e sem referência ativa em nenhum documento operacional
 - Arquivos `archive/` dentro do repo (o git já tem o histórico)
-- Índices separados (`scripts.md`, `INDEX.md`) quando o `SKILL.md` poderia absorver
+- Índices separados (`scripts.md`, `INDEX.md`) quando o `PLAYBOOK.md` poderia absorver
 - Prefixos redundantes no nome de pastas (ex: `sharebook-` quando tudo já é Sharebook)
 
 ---
@@ -295,24 +295,24 @@ Candidatos fortes a lixo — apresentar ao Raffa antes de deletar:
 
 Esta é a regra mais simples e mais ousada do corpus. Ela não exige julgamento subjetivo sobre uso real. Exige apenas verificação estrutural.
 
-**Indexação é o ato de legitimação operacional.** Se um artefato governado pela arquitetura de Skills existe e não está no índice correspondente, ele não existe de verdade para execução e manutenção.
+**Indexação é o ato de legitimação operacional.** Se um artefato governado pela arquitetura de Playbooks existe e não está no índice correspondente, ele não existe de verdade para execução e manutenção.
 
-Essa regra não transforma ausência de índice em juízo ontológico sobre toda memória. Ela se aplica a Skills, scripts, referências, assets e pastas operacionais descritos abaixo. Memórias episódicas e o `SOUL.md` seguem seus próprios contratos de preservação e evolução.
+Essa regra não transforma ausência de índice em juízo ontológico sobre toda memória. Ela se aplica a Playbooks, scripts, referências, assets e pastas operacionais descritos abaixo. Memórias episódicas e o `SOUL.md` seguem seus próprios contratos de preservação e evolução.
 
 ### O que conta como indexado
 
 | Artefato | Precisa estar em |
 |---|---|
-| Skill (pasta com `SKILL.md`) | `INDEX.md` da família |
-| Script | Seção Scripts do `SKILL.md` da skill |
-| Arquivo de referência ou asset | Mencionado no `SKILL.md` da skill |
-| Pasta dentro de skill | Referenciada no `SKILL.md` da skill |
+| Playbook (pasta com `PLAYBOOK.md`) | `INDEX.md` da família |
+| Script | Seção Scripts do `PLAYBOOK.md` do playbook |
+| Arquivo de referência ou asset | Mencionado no `PLAYBOOK.md` do playbook |
+| Pasta dentro de playbook | Referenciada no `PLAYBOOK.md` do playbook |
 
 ### O que o Dream pode remover sem perguntar
 
-- Pasta de skill sem entrada no `INDEX.md` da família
-- Script não listado no `SKILL.md` correspondente
-- Pasta sem `SKILL.md` dentro de `skills/`
+- Pasta de playbook sem entrada no `INDEX.md` da família
+- Script não listado no `PLAYBOOK.md` correspondente
+- Pasta sem `PLAYBOOK.md` dentro de `playbooks/`
 - Qualquer artefato solto sem referência em documento operacional
 
 ### Corolário
@@ -326,8 +326,8 @@ O Harness Doctor torna essa regra observável. Ele relata; não apaga. Achado es
 ## 🧨 Anti-padrões
 
 - Tratar `MEMORY.md` monolítico como destino principal de conhecimento durável.
-- Acumular Skills sem poda.
-- Criar Skill demais para ruído local.
+- Acumular Playbooks sem poda.
+- Criar Playbook demais para ruído local.
 - Organizar conhecimento por estética em vez de uso.
 - Confundir apego histórico com valor estrutural.
 - Fazer Dream como mera promoção burocrática de nota para arquivo.
@@ -338,7 +338,7 @@ O Harness Doctor torna essa regra observável. Ele relata; não apaga. Achado es
 
 Se precisar resumir toda a doutrina em poucas linhas:
 
-- **Skills são a memória durável primária.**
+- **Playbooks são a memória durável primária.**
 - **Dream é o mecanismo de plasticidade.**
 - **Famílias organizam o corpus.**
 - **Uso real governa reorganização.**
@@ -348,6 +348,6 @@ Se precisar resumir toda a doutrina em poucas linhas:
 
 ## Como usar este arquivo
 
-- **Agentes comuns**: entendam que conhecimento durável não vive primariamente em um arquivo genérico, e sim em Skills acionáveis.
+- **Agentes comuns**: entendam que conhecimento durável não vive primariamente em um arquivo genérico, e sim em Playbooks acionáveis.
 - **Agente Sonhador**: use este arquivo como constituição para consolidar, reorganizar e podar o corpus.
 - **Arquitetura futura**: qualquer integração com sistemas nativos de dreaming deve preservar esta doutrina, não achatá-la em promoção genérica de memória.

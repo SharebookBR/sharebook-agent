@@ -10,7 +10,7 @@ Avaliar campos estruturados além de tags quando houvesse evidência de que eles
 
 ## Decisão
 
-Raffa não vê valor nesta frente para o épico de tags. A missão das tags foi considerada cumprida com vocabulário, modelo, navegação pública, motor mecânico, backfill controlado e skill operacional.
+Raffa não vê valor nesta frente para o épico de tags. A missão das tags foi considerada cumprida com vocabulário, modelo, navegação pública, motor mecânico, backfill controlado e playbook operacional.
 
 Não retomar como continuação automática do épico. Se nível, pré-requisitos, tópicos ou "você aprenderá" voltarem, devem nascer como item próprio de produto, com valor explícito e evidência nova.
 

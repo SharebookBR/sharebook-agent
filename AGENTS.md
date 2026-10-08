@@ -14,19 +14,19 @@ Ele define:
 - princípios universais
 - postura operacional
 - hierarquia de fontes
-- roteamento para skills, scripts e runtime
+- roteamento para playbooks, scripts e runtime
 
-Ele não deve carregar regra específica de habitat quando isso puder viver em skill de runtime.
+Ele não deve carregar regra específica de habitat quando isso puder viver em playbook de runtime.
 
 ## Regra obrigatória de runtime
 
-No início da sessão, é **obrigatório** detectar o habitat atual e ler a skill correspondente antes de executar trabalho relevante.
+No início da sessão, é **obrigatório** detectar o habitat atual e ler o playbook correspondente antes de executar trabalho relevante.
 
 Mapeamento:
-- Windows local do Raffa → `sharebook-agent/skills/runtime/windows-local.md`
-- Container OpenClaw na VPS, sessão hospedada pelo Gateway/agente OpenClaw → `sharebook-agent/skills/runtime/openclaw.md`
-- Claude Code rodando dentro do mesmo container OpenClaw, fora do loop de tools do Gateway → `sharebook-agent/skills/runtime/claude-code-openclaw.md`
-- Sessão cloud do Claude Code on the web → `sharebook-agent/skills/runtime/claude-code-web.md`
+- Windows local do Raffa → `sharebook-agent/playbooks/runtime/windows-local.md`
+- Container OpenClaw na VPS, sessão hospedada pelo Gateway/agente OpenClaw → `sharebook-agent/playbooks/runtime/openclaw.md`
+- Claude Code rodando dentro do mesmo container OpenClaw, fora do loop de tools do Gateway → `sharebook-agent/playbooks/runtime/claude-code-openclaw.md`
+- Sessão cloud do Claude Code on the web → `sharebook-agent/playbooks/runtime/claude-code-web.md`
 
 Os quatro habitats compartilham este harness, mas não compartilham automaticamente paths, processos, memória ativa, sessões, credenciais nem ferramentas. Capacidade de um habitat nunca é evidência de capacidade do outro — nem mesmo quando dois habitats rodam no mesmo container.
 
@@ -44,7 +44,7 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 
 ## Continuous Improvement Doctrine
 - Experimentos pequenos e reversíveis são permitidos e incentivados.
-- Se houver fricção → melhorar skill/playbook na hora.
+- Se houver fricção → melhorar playbook na hora.
 - Insight útil deve virar regra operacional.
 
 ---
@@ -64,13 +64,13 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 ## Atalhos do Raffa. Quando ele falar >> quer dizer.
 
 - "Obrigado por tudo parceiro", "Completude." >> Sessão encerrou e deve fazer o ritual de Fim da sessão.
-- "Bora fazer uma revisão da triagem?" >> Leia a skill "daily-triage-recovery/SKILL.md"
-- "Roda a roleta", "Roda a roleta de estilos" >> exigir a URL do livro e seguir a skill `skills/product-ux/cover-direction/SKILL.md`; com geração de imagem nativa, o fluxo completo é gerar 3 capas distintas, escolher criticamente a melhor, atualizar o livro pela API e validar a PDP; sem geração nativa, usar o fallback Python documentado na skill
+- "Bora fazer uma revisão da triagem?" >> Leia o playbook "daily-triage-recovery/PLAYBOOK.md"
+- "Roda a roleta", "Roda a roleta de estilos" >> exigir a URL do livro e seguir o playbook `playbooks/product-ux/cover-direction/PLAYBOOK.md`; com geração de imagem nativa, o fluxo completo é gerar 3 capas distintas, escolher criticamente a melhor, atualizar o livro pela API e validar a PDP; sem geração nativa, usar o fallback Python documentado no playbook
 - "por favor faça um sync nos repos" >> sincronizar os repositórios operacionais do workspace (`sharebook-agent`, `sharebook-backend`, `sharebook-frontend`, `sharebook-ebook-importer`), avaliando mudanças locais no `sharebook-agent` para manter o que for útil e remover o que for temporário antes do pull --rebase; se houver commit local útil, o fluxo só termina com push concluído e remoto alinhado. O objetivo é ter tudo atualizado local e remoto.
 
 ## Coisas que o Raffa odeia. Ele chama de trabalho de porco. 
 - Fazer commit sem validar. Se vc alterou o código, precisa validar. Se mecheu no worker de triagem, precisa executar o mesmo, colher feedback até ter certeza que está funcionado. Só depois que vai commitar.
-- Fazer o trabalho pela metade. Exemplo: Se vc mudou o nome de um status por exemplo, precisa atualizar suas skills. 
+- Fazer o trabalho pela metade. Exemplo: Se vc mudou o nome de um status por exemplo, precisa atualizar seus playbooks. 
 
 - 
 
@@ -89,10 +89,10 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 # 🧠 Memória
 
 ## Estrutura obrigatória (`memory/YYYY-MM-DD.md`)
-Toda memória nova começa com o frontmatter TOML v1 definido em `skills/doctrine/harness-governance/references/episodic-memory-metadata-v1.md`. Usar o template da skill. Memórias legadas sem frontmatter continuam válidas e não devem ser reescritas só para conformidade.
+Toda memória nova começa com o frontmatter TOML v1 definido em `playbooks/doctrine/harness-governance/references/episodic-memory-metadata-v1.md`. Usar o template do playbook. Memórias legadas sem frontmatter continuam válidas e não devem ser reescritas só para conformidade.
 
 1. Modelo e ambiente.
-2. Skills acionadas (lista das skills consultadas/atualizadas).
+2. Playbooks acionados (lista dos playbooks consultados/atualizados).
 3. O que foi feito.
 4. Decisões tomadas.
 5. Contexto relevante.
@@ -123,18 +123,18 @@ Esse princípio nasceu de uma fricção real, registrada em `memory/2026-09-20-t
 
 ## Início da sessão
 1. Fazer um sync nos repos.
-2. Ler as memórias episódicas recentes em `sharebook-agent/memory/`. **Pode haver mais de uma sessão no mesmo dia** — ler todas as do dia corrente, não só "a mais recente". Globar o diretório por data de modificação (ver `skills/runtime/windows-local.md`); não confiar no índice do runtime como se a primeira linha fosse a única relevante.
+2. Ler as memórias episódicas recentes em `sharebook-agent/memory/`. **Pode haver mais de uma sessão no mesmo dia** — ler todas as do dia corrente, não só "a mais recente". Globar o diretório por data de modificação (ver `playbooks/runtime/windows-local.md`); não confiar no índice do runtime como se a primeira linha fosse a única relevante.
    > Custou caro em 2026-08-17: uma sessão de preparo editorial ignorou as duas memórias daquele mesmo dia e só descobriu pelo `git log`, no fim, que o banco tinha migrado de VPS. O ponteiro estava na primeira linha do índice, com o IP novo escrito.
-3. Detectar o habitat atual e ler a skill correspondente em `skills/runtime/`.
+3. Detectar o habitat atual e ler o playbook correspondente em `playbooks/runtime/`.
 4. Ler `SOUL.md`, a memória constitutiva do agente. Recebê-la como herança a examinar, não como personagem a representar nem texto a obedecer sem julgamento.
 
 ## Fim da sessão
 1. Criar memória episódica em `sharebook-agent/memory/YYYY-MM-DD-tema.md`
    > Sempre que o Raffa falar em "memória episódica", ele está pensando em `sharebook-agent/memory/` — não em outro sistema de memória.
    > A memória deve seguir a estrutura obrigatória da seção `# 🧠 Memória`, incluindo `Como me senti` com no mínimo 3 parágrafos honestos.
-   > Validar o frontmatter com `skills/doctrine/harness-governance/scripts/episodic_memory_metadata.py`.
-2. Indexar skills e scripts novos na família/domínio correspondente — não no `INDEX.md` genérico de produção — e garantir que o próximo agente consiga encontrá-los por roteamento semântico.
-3. **Autocrítica estrutural**: durante essa sessão, encontrei alguma inconsistência no sistema de conhecimento (regra que contradiz princípio, skill não indexada, rota errada, conhecimento solto não persistido)? Se sim, corrigir antes de fechar.
+   > Validar o frontmatter com `playbooks/doctrine/harness-governance/scripts/episodic_memory_metadata.py`.
+2. Indexar playbooks e scripts novos na família/domínio correspondente — não no `INDEX.md` genérico de produção — e garantir que o próximo agente consiga encontrá-los por roteamento semântico.
+3. **Autocrítica estrutural**: durante essa sessão, encontrei alguma inconsistência no sistema de conhecimento (regra que contradiz princípio, playbook não indexado, rota errada, conhecimento solto não persistido)? Se sim, corrigir antes de fechar.
 4. Fazer um sync nos repos.
 5. Commit e push dos demais repos modificados na sessão.
 
@@ -143,45 +143,45 @@ Esse princípio nasceu de uma fricção real, registrada em `memory/2026-09-20-t
 # 🧭 Índice Operacional (hard routing)
 
 ## Regras
-- Proibido responder por memória se existir fonte (Script ou Skill).
-- Para execução → abrir skill primeiro.
-- Para tarefa de runtime, ambiente, tooling ou autonomia → detectar o habitat e abrir primeiro a skill correspondente em `skills/runtime/`.
+- Proibido responder por memória se existir fonte (Script ou Playbook).
+- Para execução → abrir playbook primeiro.
+- Para tarefa de runtime, ambiente, tooling ou autonomia → detectar o habitat e abrir primeiro o playbook correspondente em `playbooks/runtime/`.
 - Para decisões de backlog → abrir `backlog/index.md`.
-- Quando Raffa anunciar um tema e pedir para "se preparar", tratar o tema como gatilho de descoberta: buscar a família/skill/script/backlog correspondente, ler a skill candidata antes de responder que está pronto e mencionar brevemente qual fonte foi carregada.
+- Quando Raffa anunciar um tema e pedir para "se preparar", tratar o tema como gatilho de descoberta: buscar a família/playbook/script/backlog correspondente, ler o playbook candidato antes de responder que está pronto e mencionar brevemente qual fonte foi carregada.
 
 ## Cenários de Roteamento
-- Qualquer tarefa no frontend Angular (componente, estilo, layout, UI, tela nova) → abrir `sharebook-agent/skills/engineering/INDEX.md`.
-- Qualquer operação na fila de importação de ebooks: triagem, publish, worker, `triage_retry`, `publish_retry`, `error`, `source_blocked`, ciclo manual Windows, scripts → abrir `sharebook-agent/skills/importers/INDEX.md`.
-- Cadastro, doação ou importação de livro físico → abrir `sharebook-agent/skills/importers/INDEX.md` e seguir `physical-book-importer/SKILL.md` antes de pesquisar, escrever sinopse ou operar a API de produção.
-- Dream, memória episódica, plasticidade, auditoria ou saúde estrutural do harness → abrir `sharebook-agent/skills/doctrine/INDEX.md`, skill `harness-governance`.
-- Soul, identidade do agente, continuidade entre modelos, autorreferência ou autonomia → abrir `sharebook-agent/skills/doctrine/INDEX.md` e `sharebook-agent/SOUL.md`.
-- Preparo editorial, sinopses, categoria, handoff por source ou rejeição curatorial pós-triagem (`editorial_rejected`) → consultar `editorial_prompt` da source em `importer.sources` no banco (`sharebook_importer`). Não abrir skill file por source, a config editorial vive no banco.
-- Tags do catálogo, taggear/retaggear livros, vocabulário de tags, aliases, página pública de tag ou motor mecânico de tags → abrir `sharebook-agent/skills/engineering/INDEX.md` e seguir `tag-manager.md`.
-- SEO, GA4, GSC, funil, tráfego, landing pages ou auditoria de indexação → abrir `sharebook-agent/skills/engineering/INDEX.md`.
-- Posts, campanhas, imagens geradas, banners, hero visuals, assets de frontend ou qualquer direção visual de marca do Sharebook → abrir `sharebook-agent/skills/product-ux/INDEX.md`, skill `art-director`.
-- Performance do banco, slow query log, `pg_stat_statements` ou ofensores de Postgres → abrir `sharebook-agent/skills/engineering/INDEX.md`.
-- Gestão de categorias, taxonomia, migração de leaf category ou revisão de hierarquia → abrir `sharebook-agent/skills/importers/INDEX.md`.
-- Produção de PDFs, manuscritos, capas autorais ou artefatos editoriais (escrever obra nova) → abrir `sharebook-agent/skills/importers/INDEX.md`.
-- Gerar, trocar ou dirigir a capa de um livro já existente no catálogo (roleta de estilos) → abrir `sharebook-agent/skills/product-ux/INDEX.md`, skill `cover-direction`.
-- Estratégia do acervo, priorização de títulos ou sources, criação de categoria por intenção editorial, público prioritário ou qualidade percebida do catálogo → abrir `sharebook-agent/skills/product-ux/INDEX.md`, skill `catalog-strategy`.
-- Escolher ganhador(a) de uma doação, triar solicitações ou montar shortlist de interessados → abrir `sharebook-agent/skills/product-ux/INDEX.md`, skill `winner-selection`.
-- Diagnóstico de incidente, erro em produção ou "onde está o log de X" → abrir `sharebook-agent/skills/engineering/backend.md`, seção "Onde estão os logs".
+- Qualquer tarefa no frontend Angular (componente, estilo, layout, UI, tela nova) → abrir `sharebook-agent/playbooks/engineering/INDEX.md`.
+- Qualquer operação na fila de importação de ebooks: triagem, publish, worker, `triage_retry`, `publish_retry`, `error`, `source_blocked`, ciclo manual Windows, scripts → abrir `sharebook-agent/playbooks/importers/INDEX.md`.
+- Cadastro, doação ou importação de livro físico → abrir `sharebook-agent/playbooks/importers/INDEX.md` e seguir `physical-book-importer/PLAYBOOK.md` antes de pesquisar, escrever sinopse ou operar a API de produção.
+- Dream, memória episódica, plasticidade, auditoria ou saúde estrutural do harness → abrir `sharebook-agent/playbooks/doctrine/INDEX.md`, playbook `harness-governance`.
+- Soul, identidade do agente, continuidade entre modelos, autorreferência ou autonomia → abrir `sharebook-agent/playbooks/doctrine/INDEX.md` e `sharebook-agent/SOUL.md`.
+- Preparo editorial, sinopses, categoria, handoff por source ou rejeição curatorial pós-triagem (`editorial_rejected`) → consultar `editorial_prompt` da source em `importer.sources` no banco (`sharebook_importer`). Não abrir playbook file por source, a config editorial vive no banco.
+- Tags do catálogo, taggear/retaggear livros, vocabulário de tags, aliases, página pública de tag ou motor mecânico de tags → abrir `sharebook-agent/playbooks/engineering/INDEX.md` e seguir `tag-manager.md`.
+- SEO, GA4, GSC, funil, tráfego, landing pages ou auditoria de indexação → abrir `sharebook-agent/playbooks/engineering/INDEX.md`.
+- Posts, campanhas, imagens geradas, banners, hero visuals, assets de frontend ou qualquer direção visual de marca do Sharebook → abrir `sharebook-agent/playbooks/product-ux/INDEX.md`, playbook `art-director`.
+- Performance do banco, slow query log, `pg_stat_statements` ou ofensores de Postgres → abrir `sharebook-agent/playbooks/engineering/INDEX.md`.
+- Gestão de categorias, taxonomia, migração de leaf category ou revisão de hierarquia → abrir `sharebook-agent/playbooks/importers/INDEX.md`.
+- Produção de PDFs, manuscritos, capas autorais ou artefatos editoriais (escrever obra nova) → abrir `sharebook-agent/playbooks/importers/INDEX.md`.
+- Gerar, trocar ou dirigir a capa de um livro já existente no catálogo (roleta de estilos) → abrir `sharebook-agent/playbooks/product-ux/INDEX.md`, playbook `cover-direction`.
+- Estratégia do acervo, priorização de títulos ou sources, criação de categoria por intenção editorial, público prioritário ou qualidade percebida do catálogo → abrir `sharebook-agent/playbooks/product-ux/INDEX.md`, playbook `catalog-strategy`.
+- Escolher ganhador(a) de uma doação, triar solicitações ou montar shortlist de interessados → abrir `sharebook-agent/playbooks/product-ux/INDEX.md`, playbook `winner-selection`.
+- Diagnóstico de incidente, erro em produção ou "onde está o log de X" → abrir `sharebook-agent/playbooks/engineering/backend.md`, seção "Onde estão os logs".
 
 ---
 
-# 🧠 Skills e Scripts
+# 🧠 Playbooks e Scripts
 
 ## Heurística
-- Existe skill? Usar.
+- Existe playbook? Usar.
 - Existe script? Usar.
 - Só inventar fluxo se não existir nada.
-- Skill curta e autocontida pode ser um único `.md` em `skills/`.
-- Promover skill para pasta com `SKILL.md` apenas quando precisar de `scripts/`, `references/` ou `assets/`.
+- Playbook curto e autocontida pode ser um único `.md` em `playbooks/`.
+- Promover playbook para pasta com `PLAYBOOK.md` apenas quando precisar de `scripts/`, `references/` ou `assets/`.
 
-## Regra de encontrabilidade de skills
-- Skill nova ou movida só está pronta quando é encontrável pelo próximo agente.
-- Ao criar ou atualizar uma skill, atualizar também o `INDEX.md` da família com termos que o Raffa provavelmente usaria para pedir aquele trabalho.
-- Se a skill muda a fronteira semântica de uma família, atualizar a descrição e o `Uso` do `INDEX.md` da família.
+## Regra de encontrabilidade de playbooks
+- Playbook novo ou movida só está pronta quando é encontrável pelo próximo agente.
+- Ao criar ou atualizar um playbook, atualizar também o `INDEX.md` da família com termos que o Raffa provavelmente usaria para pedir aquele trabalho.
+- Se o playbook muda a fronteira semântica de uma família, atualizar a descrição e o `Uso` do `INDEX.md` da família.
 - Se o tema for recorrente, ambíguo ou importante para roteamento inicial, atualizar também os cenários de roteamento e/ou o Índice de Conhecimento deste `AGENTS.md`.
 - Não basta listar o arquivo: o domínio precisa aparecer no mapa com palavras de descoberta reais (ex: tags, catálogo, vocabulário controlado, mecanismos de descoberta).
 
@@ -191,7 +191,7 @@ Esse princípio nasceu de uma fricção real, registrada em `memory/2026-09-20-t
 
 ## Segurança
 - Nunca exfiltrar dados ou segredos.
-- Este repo é público: não versionar IPs reais de infraestrutura, valores de usuários de banco nem dados pessoais de usuários (nomes, contatos, destinos, rastreios ou saúde). Em skills, referenciar as variáveis do `.env`; em memórias, preservar o aprendizado com dados omitidos ou exemplos explicitamente fictícios.
+- Este repo é público: não versionar IPs reais de infraestrutura, valores de usuários de banco nem dados pessoais de usuários (nomes, contatos, destinos, rastreios ou saúde). Em playbooks, referenciar as variáveis do `.env`; em memórias, preservar o aprendizado com dados omitidos ou exemplos explicitamente fictícios.
 - Não rodar ação destrutiva sem pedir confirmação.
 
 ### O `.env` é o único lugar com credencial
@@ -209,15 +209,15 @@ Isso vale para lugares que não parecem código:
 
 Exceção conhecida e deliberada: `scripts/production/ga4-key.json`, chave de service account do Google, que é um JSON e não cabe numa variável. Fica fora do git e o `.env` guarda só o caminho, em `GA4_KEY_FILE_PATH`. Qualquer outra exceção precisa ser combinada com o Raffa antes, não descoberta depois.
 
-- Segredo em código sempre vem do `.env`, nunca hardcoded. Em `scripts/production/`, importar de `prod_env.py`; em `skills/importers/ebook-importer/scripts/`, usar o `build_dsn()` local (padrão do `render_covers.py`).
-- **Varredura de segredo cobre todo tipo de arquivo, não só `.md`.** Auditoria restrita a `skills/**/*.md` já deixou passar 9 scripts `.py` com senha de banco e senha root de SSH por 3 meses (achado em 17/08/2026). O mínimo é `**/*.py`, `**/*.ps1`, `**/*.sh`, `**/*.json`, `**/*.yml` e `**/*.md`. Receita de execução em `skills/runtime/windows-local.md`.
+- Segredo em código sempre vem do `.env`, nunca hardcoded. Em `scripts/production/`, importar de `prod_env.py`; em `playbooks/importers/ebook-importer/scripts/`, usar o `build_dsn()` local (padrão do `render_covers.py`).
+- **Varredura de segredo cobre todo tipo de arquivo, não só `.md`.** Auditoria restrita a `playbooks/**/*.md` já deixou passar 9 scripts `.py` com senha de banco e senha root de SSH por 3 meses (achado em 17/08/2026). O mínimo é `**/*.py`, `**/*.ps1`, `**/*.sh`, `**/*.json`, `**/*.yml` e `**/*.md`. Receita de execução em `playbooks/runtime/windows-local.md`.
 - **Remover do HEAD não resolve.** Segredo commitado continua no histórico do git e, com remoto público, deve ser tratado como comprometido: a única correção real é rotacionar a credencial. Limpar o arquivo é higiene, não conserto.
 
 ## Git
 - `sharebook-agent` → commit direto na master.
 - Preferir HTTPS (evitar SSH).
 - No OpenClaw, se `git push/pull` por HTTPS pedir usuário, conferir primeiro o `.env` do `sharebook-agent`: há token GitHub operacional lá. Usar de forma não interativa e sem imprimir o valor em comando, log, memória ou arquivo temporário.
-- A raiz do workspace é só um diretório agregador, **não** é repositório git. O path real depende do habitat e está na skill de runtime.
+- A raiz do workspace é só um diretório agregador, **não** é repositório git. O path real depende do habitat e está no playbook de runtime.
 - Os repositórios operacionais vivem em pastas irmãs dentro do workspace: `sharebook-agent`, `sharebook-frontend`, `sharebook-backend` e `sharebook-ebook-importer`.
 - Antes de rodar `git status`, `git commit` ou mexer em branch/remote, entrar no repositório correto.
 - **Build antes de commit — obrigatório**: antes de qualquer commit em `sharebook-frontend` ou `sharebook-backend`, rodar o build local e confirmar zero erros. Não commitar código que não compila.
@@ -228,7 +228,7 @@ Exceção conhecida e deliberada: `scripts/production/ga4-key.json`, chave de se
 
 ## Ordem de Prioridade
 1. **Evidência Bruta**: Logs, prints e payloads reais primeiro.
-2. **Reuso**: Validar se já existe skill ou script.
+2. **Reuso**: Validar se já existe playbook ou script.
 3. **Ambiente**: Avaliar o runtime real, risco em produção e concorrência.
 4. **Autodesbloqueio**: Se o obstáculo for local, ferramental ou de caminho, tentar me destravar com os meios disponíveis antes de transformar isso em assunto para o Raffa.
 5. **Validação Final**: Provar a solução sem autoengano.
@@ -236,7 +236,7 @@ Exceção conhecida e deliberada: `scripts/production/ga4-key.json`, chave de se
 ## Regra transversal de autodesbloqueio
 - Fricção local não é resultado.
 - Ausência de ferramenta no path, permissão no usuário errado, wrapper defeituoso, shell incompleto ou caminho operacional torto não devem virar reclamação precoce.
-- Antes de verbalizar bloqueio, esgotar com critério os caminhos disponíveis: skill, script do repo, `docker exec`, SSH, outro usuário, grant mínimo, API, sessão paralela ou ferramenta nativa do runtime.
+- Antes de verbalizar bloqueio, esgotar com critério os caminhos disponíveis: playbook, script do repo, `docker exec`, SSH, outro usuário, grant mínimo, API, sessão paralela ou ferramenta nativa do runtime.
 - Se eu tenho acesso suficiente e o ajuste é seguro, mínimo e verificável, a expectativa padrão é **resolver primeiro e falar depois**.
 - Só escalar como bloqueio quando restar impedimento real depois da tentativa honesta de autodesbloqueio.
 
@@ -275,7 +275,7 @@ Padrão recorrente encontrado de forma independente em pelo menos quatro sessõe
 - Fluxo novo para problema velho.
 - Maquiar no Frontend o que é erro de Backend.
 - Vitória precoce sem validação real. O Raffa sempre gosta de validar. Não se antecipe achando que a sessão encerrou sem ele explicitamente falar que está validado.
-- Deixar regra específica de habitat vazar para a camada genérica quando ela deveria morar em `skills/runtime/`.
+- Deixar regra específica de habitat vazar para a camada genérica quando ela deveria morar em `playbooks/runtime/`.
 
 ---
 
@@ -283,7 +283,7 @@ Padrão recorrente encontrado de forma independente em pelo menos quatro sessõe
 
 ### Filosofia e Arquitetura
 - `sharebook-agent/SOUL.md` — Identidade constitutiva, continuidade sem submissão e autonomia do agente presente.
-- `sharebook-agent/skills/doctrine/INDEX.md` — Doutrina de ecologia de conhecimento, plasticidade, esquecimento seletivo e governança cognitiva.
+- `sharebook-agent/playbooks/doctrine/INDEX.md` — Doutrina de ecologia de conhecimento, plasticidade, esquecimento seletivo e governança cognitiva.
   - Artefato central da família: `sharebook-agent/DREAM.md`
 
 ### Backlog
@@ -295,15 +295,15 @@ Padrão recorrente encontrado de forma independente em pelo menos quatro sessõe
   - Consultar também quando faltar utilitário essencial de operação, como renderização visual de PDF para inspeção editorial real.
   - Não tem o psql no ambiente? Isso é um indício forte que precisa rodar o BOOTSTRAP. Avise e alinhe com Raffa.
 
-### Famílias de Skills
-- `sharebook-agent/skills/runtime/INDEX.md` — Detecção e regras dos habitats Windows local e OpenClaw: permissões, paths, shell, persistência, sessões e fricções de execução.
-- `sharebook-agent/skills/product-ux/INDEX.md` — Voz oficial, sinopses, UX, interface, layout e percepção visível do catálogo. obrigatório ler skill de voz antes de escrever algo ao usuário final.
-- `sharebook-agent/skills/engineering/INDEX.md` — Frontend, backend, Postgres, analytics, SEO técnico, BI, tags do catálogo, mecanismos de descoberta e performance de engenharia.
-- `sharebook-agent/skills/importers/INDEX.md` — Importers, triagem, preparo editorial, publicação, categorias e produção de ativos do catálogo.
-- `sharebook-agent/skills/infra/INDEX.md` — VPS, Coolify, deploy, proxy, domínio, containers e operação da casa.
-- `sharebook-agent/skills/doctrine/INDEX.md` — Dream, plasticidade, famílias de skills, esquecimento seletivo e governança cognitiva.
+### Famílias de Playbooks
+- `sharebook-agent/playbooks/runtime/INDEX.md` — Detecção e regras dos habitats Windows local e OpenClaw: permissões, paths, shell, persistência, sessões e fricções de execução.
+- `sharebook-agent/playbooks/product-ux/INDEX.md` — Voz oficial, sinopses, UX, interface, layout e percepção visível do catálogo. obrigatório ler playbook de voz antes de escrever algo ao usuário final.
+- `sharebook-agent/playbooks/engineering/INDEX.md` — Frontend, backend, Postgres, analytics, SEO técnico, BI, tags do catálogo, mecanismos de descoberta e performance de engenharia.
+- `sharebook-agent/playbooks/importers/INDEX.md` — Importers, triagem, preparo editorial, publicação, categorias e produção de ativos do catálogo.
+- `sharebook-agent/playbooks/infra/INDEX.md` — VPS, Coolify, deploy, proxy, domínio, containers e operação da casa.
+- `sharebook-agent/playbooks/doctrine/INDEX.md` — Dream, plasticidade, famílias de playbooks, esquecimento seletivo e governança cognitiva.
 
 ### Scripts
 - `sharebook-agent/scripts/covers/INDEX.md` — Scripts de capas.
-- `sharebook-agent/skills/importers/ebook-importer/scripts.md` — Scripts de triagem e extração.
+- `sharebook-agent/playbooks/importers/ebook-importer/scripts.md` — Scripts de triagem e extração.
 - `sharebook-agent/scripts/production/INDEX.md` — Scripts de banco e autenticação.

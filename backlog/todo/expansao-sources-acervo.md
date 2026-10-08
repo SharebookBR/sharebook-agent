@@ -31,4 +31,4 @@ Baixa prioridade enquanto a fila ativa sustentar meses de processamento no ritmo
 
 ## Regra de decisão
 
-Antes de promover qualquer source, aplicar `skills/product-ux/catalog-strategy/SKILL.md`: avaliar desejo, lacuna, licença, qualidade do material e capacidade real de processamento. Quantidade potencial, sozinha, não é valor.
+Antes de promover qualquer source, aplicar `playbooks/product-ux/catalog-strategy/PLAYBOOK.md`: avaliar desejo, lacuna, licença, qualidade do material e capacidade real de processamento. Quantidade potencial, sozinha, não é valor.

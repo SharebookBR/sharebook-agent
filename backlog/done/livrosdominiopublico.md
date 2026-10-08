@@ -8,7 +8,7 @@
 6. Escrever uma sinopse final de vitrine com 3 parágrafos e tom envolvente.
 7. Cadastrar com `codex-scripts/sharebook_prod_book.py create --approve`, preferindo `--synopsis-file` em UTF-8.
 8. Se a capa mudar ou o cadastro ficar ruim, preferir `delete` + `create` em vez de `update`.
-9. Ler os logs ou memória da execução, validar o item publicado e converter o tropeço em melhoria permanente da skill.
+9. Ler os logs ou memória da execução, validar o item publicado e converter o tropeço em melhoria permanente do playbook.
 
 ## Regras operacionais
 
@@ -18,7 +18,7 @@
 - Reutilizar capa de terceiros é permitido quando a imagem for boa e o uso for considerado seguro no contexto; gerar capa autoral quando faltar qualidade ou houver dúvida de uso.
 - Não confiar só no slug ou no texto da página: validar se o PDF baixado realmente corresponde ao título escolhido. A fonte às vezes aponta para o arquivo de outro livro; se isso acontecer, abortar o candidato sem drama.
 - Se PDF, texto ou licença estiverem chatos demais, desistir do título e pular para o próximo.
-- Regra anti-bloqueio: se a categoria-alvo ficar travada sem fonte premium viável na rodada, acionar fallback com `skills/create-book.md` e publicar 1 mini livro premium da própria categoria em vez de encerrar sem cadastro.
+- Regra anti-bloqueio: se a categoria-alvo ficar travada sem fonte premium viável na rodada, acionar fallback com `playbooks/create-book.md` e publicar 1 mini livro premium da própria categoria em vez de encerrar sem cadastro.
 - Minimizar logins repetidos em produção para evitar bloqueio temporário de 30 segundos; `find-many` existe exatamente para isso.
 - Quando fizer sentido em sessão manual, reaproveitar `SHAREBOOK_PROD_ACCESS_TOKEN` via `sharebook_prod_login.ps1` em vez de relogar a cada comando.
 - O único lugar permitido para cachear o token do Sharebook é o `.env`. Não copiar o valor para memória operacional, logs, documentação ou arquivos temporários.
@@ -27,7 +27,7 @@
 - A sinopse final precisa vender a leitura: 3 parágrafos, ritmo editorial e nada de resumo burocrático.
 - Se o prompt da capa ficar longo, não insistir em inline CLI no PowerShell; usar arquivo UTF-8.
 - Em Windows, não passar sinopse longa com acentos direto na CLI se puder evitar; usar arquivo UTF-8.
-- Tratar cada execução como treino: se uma dor apareceu de verdade, ajustar skill, scripts ou referências antes da próxima automação.
+- Tratar cada execução como treino: se uma dor apareceu de verdade, ajustar playbook, scripts ou referências antes da próxima automação.
 
 ## Detalhes de produção
 

@@ -24,7 +24,7 @@ A regra determinística que já tínhamos validado no backfill (título + sinops
 - "IA só sugere tags existentes" → o motor resolve contra o vocabulário fechado no banco (tags ativas + públicas), nunca cria tag.
 - "sugestões ficam revisáveis" → **reconsiderado**: tags mecânicas entram `Approved` direto; correções manuais continuam possíveis via curadoria (`SetBookTagsAsync`).
 - "rejeições são possíveis e registráveis" → coberto pela curadoria manual existente (a tag mecânica é um `BookTag` normal, removível/ajustável).
-- "prompts seguem a skill local de tagging editorial" → **não se aplica** (sem prompt, sem IA).
+- "prompts seguem o playbook local de tagging editorial" → **não se aplica** (sem prompt, sem IA).
 - "falha de sugestão não bloqueia importação" → atendido por try/catch no hook.
 
 ## Nota

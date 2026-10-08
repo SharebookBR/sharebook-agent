@@ -24,7 +24,7 @@ Em 22/08/2026 foi decidido aposentar o conceito de facilitador. A primeira etapa
 - [ ] Remover dependências em jobs, relatórios administrativos, notificações e testes.
 - [ ] Definir e executar a migração das colunas e relacionamentos persistidos.
 - [ ] Verificar dados existentes antes de remover a estrutura do banco.
-- [ ] Atualizar documentação, skills e glossário que ainda descrevam o facilitador.
+- [ ] Atualizar documentação, playbooks e glossário que ainda descrevam o facilitador.
 - [ ] Validar os fluxos completos de solicitação, escolha, envio, rastreio, recebimento, atraso e cancelamento sem intermediário.
 
 ## Critérios de aceite

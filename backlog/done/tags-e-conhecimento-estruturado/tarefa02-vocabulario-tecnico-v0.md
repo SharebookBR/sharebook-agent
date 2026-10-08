@@ -14,7 +14,7 @@ Transformar o aprendizado do ciclo manual em um vocabulário técnico controlado
 - mapear aliases e grafias equivalentes, como `JS`, `JavaScript` e `Node.js`;
 - decidir critérios para criar, fundir, renomear e aposentar tags;
 - definir quem pode aprovar tag nova;
-- documentar regras para a futura skill local de tagging editorial.
+- documentar regras para a futura playbook local de tagging editorial.
 
 ## Critérios de pronto
 
@@ -159,7 +159,7 @@ Motivo: podem ser excelentes, mas ainda precisam de evidência de catálogo, dem
 - Raffa delegou autonomia editorial ao agente para evoluir o vocabulário dentro das preferências já alinhadas: usuário em primeiro lugar, devs e tech leads como público prioritário, descoberta útil acima de taxonomia ornamental.
 - Agente não precisa pedir aprovação tag por tag. Deve decidir, registrar racional, exemplos e rejeições, e deixar a mudança revisável.
 - Pedir revisão de Raffa apenas para mudanças estruturais: nova família de tags, alteração de limite público, mudança em regra de governança, conflito conceitual forte ou dúvida editorial real.
-- Ao final desta fase, as regras aprovadas devem virar skill local de tagging editorial quando isso for explicitamente solicitado.
+- Ao final desta fase, as regras aprovadas devem virar playbook local de tagging editorial quando isso for explicitamente solicitado.
 
 ## Exemplos do ciclo manual
 

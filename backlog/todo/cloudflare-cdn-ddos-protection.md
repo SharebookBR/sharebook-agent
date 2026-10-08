@@ -19,7 +19,7 @@
 - [ ] Criar rate-based rule para `/book/DownloadEBook/*` (ex: 100 req/min por IP)
 - [ ] Ativar cache automático para resposta 302 do endpoint (não cachea o PDF em si, só o redirect)
 - [ ] Testar: simular flood local, validar que Cloudflare bloqueia no edge
-- [ ] Documentar em `skills/infra/INDEX.md` como adicionar/remover regras Cloudflare
+- [ ] Documentar em `playbooks/infra/INDEX.md` como adicionar/remover regras Cloudflare
 
 ## Dependências
 

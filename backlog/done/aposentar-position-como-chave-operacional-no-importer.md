@@ -32,12 +32,12 @@ Na prática:
 - Expor `id` onde fizer sentido para auditoria, debug e comandos operacionais
 - Evitar que telas ou automações incentivem uso cego de `position` sem source
 
-### Skills / playbooks / agentes
-- Atualizar skills do importer e de preparer editorial para deixar explícito:
+### Playbooks / agentes
+- Atualizar playbooks do importer e de preparer editorial para deixar explícito:
   - `id` é a referência operacional confiável
   - `position` é local à source
   - ações de escrita não devem usar `position` solto
-- Revisar prompts/skills que possam induzir agentes a operar como se `position` fosse identidade global
+- Revisar prompts/playbooks que possam induzir agentes a operar como se `position` fosse identidade global
 
 ## Critérios de aceite
 - `plan-set` e `status-set` não fazem mais write por `position` global
@@ -50,7 +50,7 @@ Na prática:
 1. Mapear todos os pontos de escrita e seus chamadores
 2. Mudar backend/camada de acesso para `id`
 3. Ajustar CLI e automações
-4. Atualizar skills/playbooks
+4. Atualizar playbooks
 5. Validar com caso real/sintético de colisão entre sources
 
 ## Leitura curta

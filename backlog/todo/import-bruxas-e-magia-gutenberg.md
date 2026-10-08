@@ -78,7 +78,7 @@ Substituição aplicada em 2026-09-11:
 - Transformar a geração do PDF em CLI reprodutível; hoje o primeiro PDF foi montado por fluxo manual com Chromium, Ghostscript e Pillow.
 - Decidir se a v1 da vitrine aceita PDF como formato final ou se também exige EPUB.
 - Trocar o selo Sharebook Brasil pelo PNG original transparente exportado do ChatGPT web quando disponível; o asset atual foi recuperado do JPG enviado pelo Telegram.
-- Aplicar ou revisar as propostas pendentes do Skill Workshop sobre o selo de capa e a página 2 institucional.
+- Aplicar ou revisar as propostas pendentes do Playbook Workshop sobre o selo de capa e a página 2 institucional.
 - Atualizar o pipeline para registrar o PDF final de tradução em `metadata_json.manifest.downloaded_pdf_path` sem intervenção SQL manual.
 - Definir QA mínimo antes de escalar para os outros 14 itens: hoje houve validação estrutural e publicação, mas não revisão literária linha a linha.
 

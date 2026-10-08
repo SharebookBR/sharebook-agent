@@ -15,7 +15,7 @@ Achado adicional na sessão: `sharebook-frontend-dev` (app de preview de `develo
 
 **Não testado individualmente nesta sessão**: push real em `master` de `sharebook-api`/`sharebook-frontend` (produção). As duas já estavam com `source_id` apontando para `sharebook-github-app3` antes desta sessão começar — presume-se corrigidas numa rodada anterior (17/09, mesma sessão que criou `sharebook-frontend-dev`), mas sem prova de webhook automático específica para elas. Se o próximo push em produção não enfileirar sozinho, começar por aqui.
 
-**Lição para o corpus**: "Connected" na tela de sources do Coolify não prova que o webhook funciona — mesmo padrão de falso-verde já visto em backup (`skills/infra/coolify-vps.md`). A prova real é sempre a mesma receita: push pequeno → `application_deployment_queues` → status `finished` → `docker ps` com o SHA certo.
+**Lição para o corpus**: "Connected" na tela de sources do Coolify não prova que o webhook funciona — mesmo padrão de falso-verde já visto em backup (`playbooks/infra/coolify-vps.md`). A prova real é sempre a mesma receita: push pequeno → `application_deployment_queues` → status `finished` → `docker ps` com o SHA certo.
 
 ## Problema
 
@@ -49,7 +49,7 @@ Investigar se a migração Hostinger -> HostGator quebrou alguma ponta do caminh
 - Conferir logs do Coolify para chamadas de webhook no horário do push.
 - Confirmar se o app está configurado para deploy automático ou apenas webhook manual.
 - Repetir com um commit pequeno e observar se a fila recebe deployment sem intervenção manual.
-- Documentar o caminho correto de deploy no `AGENTS.md` do frontend e/ou na skill `skills/infra/coolify-vps.md`.
+- Documentar o caminho correto de deploy no `AGENTS.md` do frontend e/ou no playbook `playbooks/infra/coolify-vps.md`.
 
 ## Fora de escopo
 

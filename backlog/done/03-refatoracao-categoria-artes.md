@@ -196,7 +196,7 @@ Essa mudança transforma:
 
 ## 🗂️ Referências
 
-- Skill `sharebook-category-organizer`
+- Playbook `sharebook-category-organizer`
 - Script `sharebook_prod_pg_rw_exec.py` (para execução controlada)
 - API `CategoryTree` (GET `/api/Category/tree`)
 

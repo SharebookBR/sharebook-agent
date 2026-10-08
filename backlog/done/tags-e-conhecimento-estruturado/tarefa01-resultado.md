@@ -140,7 +140,7 @@ Nenhuma no momento.
 - **Computação de Alto Desempenho (6):** série Eijkhout (Vols. 1 a 3 mais outros).
 - **Computação Quântica (7):** hoje em "IA".
 
-## Fricções e regras aprendidas (insumo da futura skill de tagging)
+## Fricções e regras aprendidas (insumo da futura playbook de tagging)
 
 1. A categoria atual parece não ser evidência de conteúdo. Tagar pela sinopse, não pela categoria.
 2. Tag de baixa contagem pode existir se tiver alto valor de busca para o público (`Kubernetes`, `Docker`, `Python`). O que deve ser evitado é transformar detalhe fino de capítulo/biblioteca em tag pública quando uma intenção mais ampla serve melhor (ex.: `Pygame`, `Helm`).

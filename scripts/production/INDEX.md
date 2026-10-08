@@ -12,7 +12,7 @@ Operações em produção, autenticação, banco e storage.
   **Nunca hardcode host, usuário ou senha em script.**
 
 ## Scripts de Analytics GA4
-→ Indexados em `skills/engineering/analytics/SKILL.md`
+→ Indexados em `playbooks/engineering/analytics/PLAYBOOK.md`
 
 ## Scripts de exploração e diagnóstico
 - `explore_db.py` — lista todas as tabelas e row counts dos dois bancos (`sharebook` e `sharebook_importer`). Ponto de entrada rápido para qualquer sessão nova.

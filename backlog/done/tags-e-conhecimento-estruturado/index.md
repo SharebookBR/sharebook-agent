@@ -46,7 +46,7 @@ Nível foi avaliado como hipótese, mas a continuação em conhecimento estrutur
 ## Decisões do Raffa (2026-10-03)
 
 - **Tarefa 7 cancelada:** Raffa não vê valor em seguir com nível, pré-requisitos e tópicos como conhecimento estruturado neste épico.
-- **Missão de tags cumprida:** o ciclo de tags entregou vocabulário, modelo, navegação pública, motor mecânico, backfill controlado e skill operacional.
+- **Missão de tags cumprida:** o ciclo de tags entregou vocabulário, modelo, navegação pública, motor mecânico, backfill controlado e playbook operacional.
 
 ## Tarefas
 
@@ -71,8 +71,8 @@ Ela existe para responder uma pergunta: quando um humano bom olha para um livro 
 - pode alimentar vitrines temáticas na home quando tags forem estáveis;
 - pode melhorar busca e recomendações com sinal estruturado simples;
 - não depende de embeddings;
-- deve seguir `skills/product-ux/catalog-strategy/SKILL.md` para critérios de qualidade e descoberta;
-- a skill local de tagging operacional foi criada em `skills/engineering/tag-manager.md`.
+- deve seguir `playbooks/product-ux/catalog-strategy/PLAYBOOK.md` para critérios de qualidade e descoberta;
+- o playbook local de tagging operacional foi criada em `playbooks/engineering/tag-manager.md`.
 
 ## Fora de escopo agora
 

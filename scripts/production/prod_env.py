@@ -8,7 +8,7 @@
 #     user, host, port, password = ssh_credentials()
 #
 # O .env fica na raiz do sharebook-agent e está no .gitignore.
-# Mesmo padrão de build_dsn() em skills/importers/ebook-importer/scripts/render_covers.py.
+# Mesmo padrão de build_dsn() em playbooks/importers/ebook-importer/scripts/render_covers.py.
 
 from __future__ import annotations
 

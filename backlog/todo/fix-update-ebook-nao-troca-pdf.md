@@ -22,7 +22,7 @@ Aberto desde 2026-09-27. Achado pelo OpenClaw ao trocar o PDF de *Bruxa por Acas
 
 ## Contorno enquanto não corrige
 
-Sobrescrever direto no S3 a chave `ebooks/<slug>.pdf` e validar pelo download público (tamanho e páginas). Registrado também em `skills/importers/escrever-livros/SKILL.md`, seção "Armadilhas de publicação".
+Sobrescrever direto no S3 a chave `ebooks/<slug>.pdf` e validar pelo download público (tamanho e páginas). Registrado também em `playbooks/importers/escrever-livros/PLAYBOOK.md`, seção "Armadilhas de publicação".
 
 ## Valor, esforço e risco
 

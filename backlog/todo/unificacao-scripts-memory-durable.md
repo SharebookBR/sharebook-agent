@@ -2,13 +2,13 @@
 
 ## Problema
 
-O `sharebook-agent` tem conhecimento operacional espalhado em dois lugares com lógicas diferentes: `skills/` (markdown) e `scripts/` (executáveis). A separação cria custo cognitivo sem benefício real — dois lugares para procurar a mesma coisa, nomes que não comunicam o que cada coisa é.
+O `sharebook-agent` tem conhecimento operacional espalhado em dois lugares com lógicas diferentes: `playbooks/` (markdown) e `scripts/` (executáveis). A separação cria custo cognitivo sem benefício real — dois lugares para procurar a mesma coisa, nomes que não comunicam o que cada coisa é.
 
 ## Proposta
 
 ### 1. Renomear para explicitar a simetria
 
-- `skills/` → `memory-durable/`
+- `playbooks/` → `memory-durable/`
 - `memory/` → `memory-episodic/`
 
 A nomenclatura torna explícito que são dois tipos de memória do mesmo organismo, alinhado com a doutrina do DREAM.
@@ -32,4 +32,4 @@ Uma única pergunta: "qual memory-durable resolve X?"
 
 ## Decisão pendente
 
-A renomeação de `memory/` para `memory-episodic/` vale o custo de migração, ou mantemos `memory/` como está e só renomeamos `skills/`?
+A renomeação de `memory/` para `memory-episodic/` vale o custo de migração, ou mantemos `memory/` como está e só renomeamos `playbooks/`?

@@ -19,4 +19,4 @@ Em 26/08/2026, o Sharebook superou o marco de 1.000 livros digitais disponíveis
 
 ## Decisão de encerramento — 2026-08-27
 
-A tese editorial que nasceu nesta fase foi promovida para `skills/product-ux/catalog-strategy/SKILL.md`. Tags e expansão de sources passaram a ter itens próprios. Este arquivo preserva apenas o marco entregue.
+A tese editorial que nasceu nesta fase foi promovida para `playbooks/product-ux/catalog-strategy/PLAYBOOK.md`. Tags e expansão de sources passaram a ter itens próprios. Este arquivo preserva apenas o marco entregue.

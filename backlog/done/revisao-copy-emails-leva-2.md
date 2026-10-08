@@ -12,7 +12,7 @@ O problema do nome já foi resolvido de forma transversal no mesmo dia: `ToFirst
 
 ## Critérios da revisão
 
-- Ler `skills/product-ux/voice-glossary/SKILL.md` antes de escrever.
+- Ler `playbooks/product-ux/voice-glossary/PLAYBOOK.md` antes de escrever.
 - Nada de "sua obra" para quem doa (doador raramente é autor).
 - Cortar card "Detalhes do livro" quando título e autor já estão na frase.
 - Evitar "não é preciso fazer (mais) nada": fecha a conversa em vez de gerar expectativa.

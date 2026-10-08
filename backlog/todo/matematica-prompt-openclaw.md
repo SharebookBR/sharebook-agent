@@ -31,7 +31,7 @@ Filhas (ParentCategoryId = id da raiz):
 Livros devem ficar só em categorias-folha (as 6 filhas). Nunca na raiz.
 
 ACESSO
-Use o caminho de acesso ao banco de produção que você já usa (veja skills/runtime e memory; não invente conexão, host ou credencial). Se não houver caminho seguro, PARE e me avise. Não imprima credenciais.
+Use o caminho de acesso ao banco de produção que você já usa (veja playbooks/runtime e memory; não invente conexão, host ou credencial). Se não houver caminho seguro, PARE e me avise. Não imprima credenciais.
 
 PASSO 0: reconhecimento (somente leitura)
 - Inspecione o esquema real das tabelas de categorias e de livros (nomes de tabela/coluna, NOT NULL, defaults, tipo do Id). Meu palpite, a CONFIRMAR: tabela "Categories" ("Id","Name","ParentCategoryId", talvez colunas de BaseEntity como data de criação) e coluna "CategoryId" em "Books". Se houver colunas NOT NULL extras, preencha como o resto da tabela faz.
