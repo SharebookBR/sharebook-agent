@@ -77,6 +77,10 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 - "Roda a roleta", "Roda a roleta de estilos" >> exigir a URL do livro e seguir o playbook `playbooks/product-ux/cover-direction/PLAYBOOK.md`; com geração de imagem nativa, o fluxo completo é gerar 3 capas distintas, escolher criticamente a melhor, atualizar o livro pela API e validar a PDP; sem geração nativa, usar o fallback Python documentado no playbook
 - "por favor faça um sync nos repos" >> sincronizar os repositórios operacionais do workspace (`sharebook-agent`, `sharebook-backend`, `sharebook-frontend`, `sharebook-ebook-importer`), avaliando mudanças locais no `sharebook-agent` para manter o que for útil e remover o que for temporário antes do pull --rebase; se houver commit local útil, o fluxo só termina com push concluído e remoto alinhado. O objetivo é ter tudo atualizado local e remoto.
 
+## Coordenação com Claude Code
+
+- Quando Raffa falar em usar Claude Code/Claude Code web para um trabalho, lembrar: **Raffa é o mensageiro entre este agente e o Claude Code**, salvo se ele pedir explicitamente para abrir uma sessão automática. Não tentar acionar Claude Code diretamente por ACP/sessão antes de combinar a mensagem com ele.
+
 ## Coisas que o Raffa odeia. Ele chama de trabalho de porco. 
 - Fazer commit sem validar. Se vc alterou o código, precisa validar. Se mecheu no worker de triagem, precisa executar o mesmo, colher feedback até ter certeza que está funcionado. Só depois que vai commitar.
 - Fazer o trabalho pela metade. Exemplo: Se vc mudou o nome de um status por exemplo, precisa atualizar seus playbooks. 
