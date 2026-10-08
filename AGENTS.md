@@ -158,7 +158,7 @@ Esse princípio nasceu de uma fricção real, registrada em `memory/2026-09-20-t
 - Para decisões de backlog → abrir `backlog/index.md`.
 - Para descobrir o playbook certo, escolher primeiro a família pelo mapa rico deste `AGENTS.md`; depois abrir o `INDEX.md` da família.
 - Quando Raffa anunciar um tema e pedir para "se preparar", tratar o tema como gatilho de descoberta: buscar a família/playbook/script/backlog correspondente, ler o playbook candidato antes de responder que está pronto e mencionar brevemente qual fonte foi carregada.
-- Se a pergunta for "onde fica?", "você tem acesso?", "por que não achou?", credencial, Git, Search Console, Grafana, Prometheus, OpenTelemetry, backup, restore, VPS ou Coolify, não concluir ausência sem abrir a família provável.
+- Se a pergunta for "onde fica?", "você tem acesso?", "por que não achou?", credencial, Git, Search Console, Grafana, Prometheus, OpenTelemetry, Rollbar, logs, backup, restore, VPS ou Coolify, não concluir ausência sem abrir a família provável.
 
 ## Cenários de Roteamento
 - Qualquer tarefa no frontend Angular (componente, estilo, layout, UI, tela nova) → abrir `sharebook-agent/playbooks/engineering/INDEX.md`.
@@ -171,6 +171,7 @@ Esse princípio nasceu de uma fricção real, registrada em `memory/2026-09-20-t
 - SEO, GA4, GSC, funil, tráfego, landing pages ou auditoria de indexação → abrir `sharebook-agent/playbooks/engineering/INDEX.md`.
 - Google Search Console, Search Console, GSC, `sc-domain:sharebook.com.br`, indexação, impressões, CTR, queries orgânicas, sitemap, páginas excluídas ou cobertura → abrir `sharebook-agent/playbooks/engineering/INDEX.md`, playbook `search-console-explorer`.
 - Observabilidade, Grafana Cloud, Prometheus, OpenTelemetry, PromQL, métricas .NET, GC, Gen0, Gen1, Gen2, LOH, POH, allocation rate, pause time, active series, cardinalidade, latência P95/P99, saúde da API ou plano gratuito do Grafana → abrir `sharebook-agent/playbooks/engineering/INDEX.md`, playbook `prometheus-explorer.md`.
+- Rollbar, error tracking, exceção, stack trace, alerta repetido, job falhando, `JobHistories`, `JobExecutor`, SMTP, e-mail transacional, rate limit de e-mail, logs da API, logs SSR, `ssr_access`, crawler, bot, IP ou user-agent → abrir `sharebook-agent/playbooks/engineering/INDEX.md`; para backend/API, seguir `backend.md`.
 - Backup, restore, restore drill, Coolify backup, GCP bucket, S3, `s3_uploaded`, volume backup, backup de banco, lifecycle, disaster recovery, DR ou migração de VPS → abrir `sharebook-agent/playbooks/infra/INDEX.md`.
 - Posts, campanhas, imagens geradas, banners, hero visuals, assets de frontend ou qualquer direção visual de marca do Sharebook → abrir `sharebook-agent/playbooks/product-ux/INDEX.md`, playbook `art-director`.
 - Performance do banco, slow query log, `pg_stat_statements` ou ofensores de Postgres → abrir `sharebook-agent/playbooks/engineering/INDEX.md`.
@@ -179,7 +180,7 @@ Esse princípio nasceu de uma fricção real, registrada em `memory/2026-09-20-t
 - Gerar, trocar ou dirigir a capa de um livro já existente no catálogo (roleta de estilos) → abrir `sharebook-agent/playbooks/product-ux/INDEX.md`, playbook `cover-direction`.
 - Estratégia do acervo, priorização de títulos ou sources, criação de categoria por intenção editorial, público prioritário ou qualidade percebida do catálogo → abrir `sharebook-agent/playbooks/product-ux/INDEX.md`, playbook `catalog-strategy`.
 - Escolher ganhador(a) de uma doação, triar solicitações ou montar shortlist de interessados → abrir `sharebook-agent/playbooks/product-ux/INDEX.md`, playbook `winner-selection`.
-- Diagnóstico de incidente, erro em produção ou "onde está o log de X" → abrir `sharebook-agent/playbooks/engineering/backend.md`, seção "Onde estão os logs".
+- Diagnóstico de incidente, erro em produção ou "onde está o log de X" → abrir `sharebook-agent/playbooks/engineering/INDEX.md`; para API/backend, seguir `backend.md`, seção "Onde estão os logs".
 - Git push/pull por HTTPS pedindo usuário, token GitHub, `GITHUB_PERSONAL_ACCESS_TOKEN`, credencial de Git ou remoto sem autenticação → conferir o `.env` canônico do `sharebook-agent` e usar token de forma não interativa, sem imprimir segredo.
 
 ---
@@ -313,8 +314,8 @@ Padrão recorrente encontrado de forma independente em pelo menos quatro sessõe
 
 ### Famílias de Playbooks
 - `sharebook-agent/playbooks/runtime/INDEX.md` — Habitats e ambiente de execução: Windows local, OpenClaw, Claude Code web, Claude Code dentro do OpenClaw, paths, shell, Python, encoding, permissões, ferramentas, sessões, Git por habitat e credenciais disponíveis por runtime.
-- `sharebook-agent/playbooks/product-ux/INDEX.md` — Produto, voz e experiência: voz oficial, UX writing, glossário, pessoa doadora/ganhadora, copy, microcopy, sinopses, UX, UI, layout, revisão visual, direção de arte, campanhas, posts, imagens geradas, capas, roleta de estilos, catálogo, curadoria, vitrines e percepção pública. Obrigatório ler playbook de voz antes de escrever algo ao usuário final.
-- `sharebook-agent/playbooks/engineering/INDEX.md` — Engenharia e sinais digitais: frontend Angular, SSR, backend .NET, API, EF Core, Postgres read-only, slow query, `pg_stat_statements`, GA4, Google Search Console/GSC, SEO, analytics, BI, tags, Prometheus, Grafana Cloud, OpenTelemetry, observabilidade, métricas .NET, GC, active series, cardinalidade, logs de backend, latência e performance.
+- `sharebook-agent/playbooks/product-ux/INDEX.md` — Produto, voz e experiência: voz oficial, UX writing, glossário, pessoa doadora/ganhadora, copy, microcopy, sinopses, UX, UI, layout, revisão visual, direção de arte, campanhas, posts, imagens geradas, capas, roleta de estilos, catálogo, curadoria, vitrines, templates de e-mail e percepção pública. Obrigatório ler playbook de voz antes de escrever algo ao usuário final.
+- `sharebook-agent/playbooks/engineering/INDEX.md` — Engenharia e sinais digitais: frontend Angular, SSR, `ssr_access`, bots/crawlers, backend .NET, API, EF Core, Postgres read-only, slow query, `pg_stat_statements`, GA4, Google Search Console/GSC, SEO, analytics, BI, tags, Prometheus, Grafana Cloud, OpenTelemetry, observabilidade, métricas .NET, GC, active series, cardinalidade, Rollbar, error tracking, logs de backend, SMTP/e-mail transacional, jobs, latência e performance.
 - `sharebook-agent/playbooks/importers/INDEX.md` — Importers e produção editorial: ebook importer, fila, triagem, `publish`, `triage_retry`, `publish_retry`, `error`, `source_blocked`, `editorial_rejected`, ciclo manual, Project Gutenberg, tradução, PDF, categorias, taxonomia, livro físico, doação física, frete, Originals, manuscritos e ativos do catálogo.
 - `sharebook-agent/playbooks/infra/INDEX.md` — Infra e operação: VPS, Coolify, deploy, containers, Docker logs, env vars, proxy, domínio, certificados, backups, restore, restore drill, GCP bucket, S3 storage, `s3_uploaded`, lifecycle, volume backup, auto-update, migração de VPS e disaster recovery.
 - `sharebook-agent/playbooks/doctrine/INDEX.md` — Doutrina e governança: SOUL, DREAM, memória episódica, frontmatter, autocrítica estrutural, harness doctor, plasticidade, famílias de playbooks, encontrabilidade, renomeação/poda de playbooks, esquecimento seletivo, identidade, autonomia e governança cognitiva.
