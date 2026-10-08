@@ -150,7 +150,7 @@ def extract_legacy_skills(body: str) -> list[str]:
         heading = re.match(r"^(#{1,6})\s+(.+?)\s*$", line)
         if heading:
             title = heading.group(2).strip().casefold()
-            inside_section = bool(re.search(r"\bskills?\s+acionad", title))
+            inside_section = bool(re.search(r"\b(?:skills?|playbooks?)\s+acionad", title))
             continue
         if inside_section and re.match(r"^\s*[-*+]\s+", line):
             playbook = _clean_legacy_skill(line)

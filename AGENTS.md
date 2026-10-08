@@ -18,6 +18,15 @@ Ele define:
 
 Ele não deve carregar regra específica de habitat quando isso puder viver em playbook de runtime.
 
+## Vocabulário do harness
+
+- **OpenClaw skill**: mecanismo/plataforma do OpenClaw.
+- **Sharebook-agent playbook**: conhecimento operacional local versionado em `.md` neste repo.
+- **Família**: agrupamento de playbooks por domínio, sempre com um `INDEX.md` próprio.
+- **Capacidade**: acesso, credencial, integração ou superfície operacional disponível (GitHub, VPS, GA4/GSC, Grafana, Postgres, Rollbar etc.).
+
+Dentro deste repo, a palavra canônica é **playbook**. O diretório canônico é `sharebook-agent/playbooks/`.
+
 ## Regra obrigatória de runtime
 
 No início da sessão, é **obrigatório** detectar o habitat atual e ler o playbook correspondente antes de executar trabalho relevante.
@@ -147,7 +156,9 @@ Esse princípio nasceu de uma fricção real, registrada em `memory/2026-09-20-t
 - Para execução → abrir playbook primeiro.
 - Para tarefa de runtime, ambiente, tooling ou autonomia → detectar o habitat e abrir primeiro o playbook correspondente em `playbooks/runtime/`.
 - Para decisões de backlog → abrir `backlog/index.md`.
+- Para descobrir o playbook certo, escolher primeiro a família pelo mapa rico deste `AGENTS.md`; depois abrir o `INDEX.md` da família.
 - Quando Raffa anunciar um tema e pedir para "se preparar", tratar o tema como gatilho de descoberta: buscar a família/playbook/script/backlog correspondente, ler o playbook candidato antes de responder que está pronto e mencionar brevemente qual fonte foi carregada.
+- Se a pergunta for "onde fica?", "você tem acesso?", "por que não achou?", credencial, Git, Search Console, Grafana, Prometheus, OpenTelemetry, backup, restore, VPS ou Coolify, não concluir ausência sem abrir a família provável.
 
 ## Cenários de Roteamento
 - Qualquer tarefa no frontend Angular (componente, estilo, layout, UI, tela nova) → abrir `sharebook-agent/playbooks/engineering/INDEX.md`.
@@ -158,6 +169,9 @@ Esse princípio nasceu de uma fricção real, registrada em `memory/2026-09-20-t
 - Preparo editorial, sinopses, categoria, handoff por source ou rejeição curatorial pós-triagem (`editorial_rejected`) → consultar `editorial_prompt` da source em `importer.sources` no banco (`sharebook_importer`). Não abrir playbook file por source, a config editorial vive no banco.
 - Tags do catálogo, taggear/retaggear livros, vocabulário de tags, aliases, página pública de tag ou motor mecânico de tags → abrir `sharebook-agent/playbooks/engineering/INDEX.md` e seguir `tag-manager.md`.
 - SEO, GA4, GSC, funil, tráfego, landing pages ou auditoria de indexação → abrir `sharebook-agent/playbooks/engineering/INDEX.md`.
+- Google Search Console, Search Console, GSC, `sc-domain:sharebook.com.br`, indexação, impressões, CTR, queries orgânicas, sitemap, páginas excluídas ou cobertura → abrir `sharebook-agent/playbooks/engineering/INDEX.md`, playbook `search-console-explorer`.
+- Observabilidade, Grafana Cloud, Prometheus, OpenTelemetry, PromQL, métricas .NET, GC, Gen0, Gen1, Gen2, LOH, POH, allocation rate, pause time, active series, cardinalidade, latência P95/P99, saúde da API ou plano gratuito do Grafana → abrir `sharebook-agent/playbooks/engineering/INDEX.md`, playbook `prometheus-explorer.md`.
+- Backup, restore, restore drill, Coolify backup, GCP bucket, S3, `s3_uploaded`, volume backup, backup de banco, lifecycle, disaster recovery, DR ou migração de VPS → abrir `sharebook-agent/playbooks/infra/INDEX.md`.
 - Posts, campanhas, imagens geradas, banners, hero visuals, assets de frontend ou qualquer direção visual de marca do Sharebook → abrir `sharebook-agent/playbooks/product-ux/INDEX.md`, playbook `art-director`.
 - Performance do banco, slow query log, `pg_stat_statements` ou ofensores de Postgres → abrir `sharebook-agent/playbooks/engineering/INDEX.md`.
 - Gestão de categorias, taxonomia, migração de leaf category ou revisão de hierarquia → abrir `sharebook-agent/playbooks/importers/INDEX.md`.
@@ -166,6 +180,7 @@ Esse princípio nasceu de uma fricção real, registrada em `memory/2026-09-20-t
 - Estratégia do acervo, priorização de títulos ou sources, criação de categoria por intenção editorial, público prioritário ou qualidade percebida do catálogo → abrir `sharebook-agent/playbooks/product-ux/INDEX.md`, playbook `catalog-strategy`.
 - Escolher ganhador(a) de uma doação, triar solicitações ou montar shortlist de interessados → abrir `sharebook-agent/playbooks/product-ux/INDEX.md`, playbook `winner-selection`.
 - Diagnóstico de incidente, erro em produção ou "onde está o log de X" → abrir `sharebook-agent/playbooks/engineering/backend.md`, seção "Onde estão os logs".
+- Git push/pull por HTTPS pedindo usuário, token GitHub, `GITHUB_PERSONAL_ACCESS_TOKEN`, credencial de Git ou remoto sem autenticação → conferir o `.env` canônico do `sharebook-agent` e usar token de forma não interativa, sem imprimir segredo.
 
 ---
 
@@ -175,15 +190,16 @@ Esse princípio nasceu de uma fricção real, registrada em `memory/2026-09-20-t
 - Existe playbook? Usar.
 - Existe script? Usar.
 - Só inventar fluxo se não existir nada.
-- Playbook curto e autocontida pode ser um único `.md` em `playbooks/`.
+- Playbook curto e autocontido pode ser um único `.md` em `playbooks/`.
 - Promover playbook para pasta com `PLAYBOOK.md` apenas quando precisar de `scripts/`, `references/` ou `assets/`.
 
 ## Regra de encontrabilidade de playbooks
-- Playbook novo ou movida só está pronta quando é encontrável pelo próximo agente.
+- Playbook novo ou movido só está pronto quando é encontrável pelo próximo agente.
 - Ao criar ou atualizar um playbook, atualizar também o `INDEX.md` da família com termos que o Raffa provavelmente usaria para pedir aquele trabalho.
 - Se o playbook muda a fronteira semântica de uma família, atualizar a descrição e o `Uso` do `INDEX.md` da família.
 - Se o tema for recorrente, ambíguo ou importante para roteamento inicial, atualizar também os cenários de roteamento e/ou o Índice de Conhecimento deste `AGENTS.md`.
 - Não basta listar o arquivo: o domínio precisa aparecer no mapa com palavras de descoberta reais (ex: tags, catálogo, vocabulário controlado, mecanismos de descoberta).
+- Não criar índice raiz para todos os playbooks. O `AGENTS.md` roteia famílias; cada família detalha seus playbooks no próprio `INDEX.md`.
 
 ---
 
@@ -296,12 +312,12 @@ Padrão recorrente encontrado de forma independente em pelo menos quatro sessõe
   - Não tem o psql no ambiente? Isso é um indício forte que precisa rodar o BOOTSTRAP. Avise e alinhe com Raffa.
 
 ### Famílias de Playbooks
-- `sharebook-agent/playbooks/runtime/INDEX.md` — Detecção e regras dos habitats Windows local e OpenClaw: permissões, paths, shell, persistência, sessões e fricções de execução.
-- `sharebook-agent/playbooks/product-ux/INDEX.md` — Voz oficial, sinopses, UX, interface, layout e percepção visível do catálogo. obrigatório ler playbook de voz antes de escrever algo ao usuário final.
-- `sharebook-agent/playbooks/engineering/INDEX.md` — Frontend, backend, Postgres, analytics, SEO técnico, BI, tags do catálogo, mecanismos de descoberta e performance de engenharia.
-- `sharebook-agent/playbooks/importers/INDEX.md` — Importers, triagem, preparo editorial, publicação, categorias e produção de ativos do catálogo.
-- `sharebook-agent/playbooks/infra/INDEX.md` — VPS, Coolify, deploy, proxy, domínio, containers e operação da casa.
-- `sharebook-agent/playbooks/doctrine/INDEX.md` — Dream, plasticidade, famílias de playbooks, esquecimento seletivo e governança cognitiva.
+- `sharebook-agent/playbooks/runtime/INDEX.md` — Habitats e ambiente de execução: Windows local, OpenClaw, Claude Code web, Claude Code dentro do OpenClaw, paths, shell, Python, encoding, permissões, ferramentas, sessões, Git por habitat e credenciais disponíveis por runtime.
+- `sharebook-agent/playbooks/product-ux/INDEX.md` — Produto, voz e experiência: voz oficial, UX writing, glossário, pessoa doadora/ganhadora, copy, microcopy, sinopses, UX, UI, layout, revisão visual, direção de arte, campanhas, posts, imagens geradas, capas, roleta de estilos, catálogo, curadoria, vitrines e percepção pública. Obrigatório ler playbook de voz antes de escrever algo ao usuário final.
+- `sharebook-agent/playbooks/engineering/INDEX.md` — Engenharia e sinais digitais: frontend Angular, SSR, backend .NET, API, EF Core, Postgres read-only, slow query, `pg_stat_statements`, GA4, Google Search Console/GSC, SEO, analytics, BI, tags, Prometheus, Grafana Cloud, OpenTelemetry, observabilidade, métricas .NET, GC, active series, cardinalidade, logs de backend, latência e performance.
+- `sharebook-agent/playbooks/importers/INDEX.md` — Importers e produção editorial: ebook importer, fila, triagem, `publish`, `triage_retry`, `publish_retry`, `error`, `source_blocked`, `editorial_rejected`, ciclo manual, Project Gutenberg, tradução, PDF, categorias, taxonomia, livro físico, doação física, frete, Originals, manuscritos e ativos do catálogo.
+- `sharebook-agent/playbooks/infra/INDEX.md` — Infra e operação: VPS, Coolify, deploy, containers, Docker logs, env vars, proxy, domínio, certificados, backups, restore, restore drill, GCP bucket, S3 storage, `s3_uploaded`, lifecycle, volume backup, auto-update, migração de VPS e disaster recovery.
+- `sharebook-agent/playbooks/doctrine/INDEX.md` — Doutrina e governança: SOUL, DREAM, memória episódica, frontmatter, autocrítica estrutural, harness doctor, plasticidade, famílias de playbooks, encontrabilidade, renomeação/poda de playbooks, esquecimento seletivo, identidade, autonomia e governança cognitiva.
 
 ### Scripts
 - `sharebook-agent/scripts/covers/INDEX.md` — Scripts de capas.
