@@ -48,6 +48,7 @@ Nenhum achado acionável pode atravessar o checkpoint sem resolução ou `open_l
 - Não apagar achados do Doctor sem verificar uso real e aplicar o mandato do `DREAM.md`.
 - Dívida preexistente não é sinônimo de achado tolerável; investigar sua causa e seu uso antes de decidir.
 - Depois de mudança estrutural, rodar Doctor e testes; comparar a saída final com a fotografia de abertura.
+- Indexação estrutural não basta: revisar termos de descoberta no `AGENTS.md` e no `INDEX.md` da família para todo playbook criado, movido, corrigido ou revelado por fricção.
 
 ## Testes
 

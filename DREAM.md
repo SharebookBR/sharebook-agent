@@ -114,6 +114,14 @@ A família ajuda a decidir:
 
 O Dream deve pensar em arquitetura de famílias, não apenas em arquivos soltos.
 
+### Encontrabilidade semântica
+
+Indexar um playbook no `INDEX.md` da família é o piso, não o fim do trabalho.
+
+O Dream também deve perguntar se um agente recém-acordado conseguiria chegar ao playbook certo com as palavras reais que Raffa usaria no pedido. Isso inclui nomes de ferramentas, sintomas, integrações, tabelas, scripts, capacidades e apelidos operacionais que não aparecem necessariamente no nome do arquivo.
+
+Se uma capacidade existir apenas dentro de um playbook, mas não aparecer no mapa de família ou nos cenários de roteamento do `AGENTS.md` quando for recorrente, ambígua ou crítica, ela continua pouco encontrável. O Dream deve corrigir essa lacuna quando a evidência vier de memória, Doctor, incidente, miss de playbook ou revisão manual.
+
 ---
 
 ## 🔁 Rastro estruturado como evidência
@@ -240,10 +248,11 @@ Ele tem mandato para:
 5. Triar **cada achado** do Doctor. Para cada um, inspecionar origem, destino, referências, histórico Git e evidência de uso; classificar como regressão, dívida histórica, artefato deliberado ou falso positivo do detector.
 6. Tratar a causa, não apenas silenciar o sintoma: corrigir regressões e dívidas seguras; indexar e documentar artefatos deliberados; corrigir o Doctor e adicionar teste quando for falso positivo; levar ao sonho manual qualquer deleção ou decisão de uso que dependa do Raffa.
 7. Identificar fricções recorrentes, lacunas e redundâncias reveladas tanto pelas memórias quanto pelo Doctor.
-8. Atualizar, criar, dividir, fundir ou arquivar Playbooks conforme necessário.
-9. Rodar novamente o Harness Doctor. O ciclo não termina com achado acionável sem triagem; bloqueios legítimos devem virar `open_loops` explícitos, com evidência e decisão necessária, nunca apenas uma contagem copiada para a memória.
-10. Registrar na memória episódica o que foi investigado e alterado, por quê, a classificação dos achados e a evidência do Doctor final.
-11. Atualizar o checkpoint do ciclo.
+8. Revisar a encontrabilidade semântica dos playbooks afetados: `AGENTS.md` roteia a família com palavras reais; o `INDEX.md` da família detalha o próximo salto; não criar índice raiz de playbooks.
+9. Atualizar, criar, dividir, fundir ou arquivar Playbooks conforme necessário.
+10. Rodar novamente o Harness Doctor. O ciclo não termina com achado acionável sem triagem; bloqueios legítimos devem virar `open_loops` explícitos, com evidência e decisão necessária, nunca apenas uma contagem copiada para a memória.
+11. Registrar na memória episódica o que foi investigado e alterado, por quê, a classificação dos achados e a evidência do Doctor final.
+12. Atualizar o checkpoint do ciclo.
 
 ### Profundidade obrigatória sobre o Doctor
 
