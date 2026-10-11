@@ -113,6 +113,8 @@ Loki entra quando depender de `docker logs` virar gargalo real:
 
 Antes disso, nao adicionar Loki apenas por completude arquitetural.
 
+Atualizacao 2026-10-11: o gatilho aconteceu (restart do container apagou os logs da janela de um incidente do Rollbar). Primeira fatia entregue so para a API, sem infra nova: sink OTLP do Serilog direto para Grafana Cloud Logs, com `ClientIp` e `UserAgent` em todo log da requisicao. Ver `playbooks/engineering/backend.md`, secao "Onde estao os logs". Pendente: `ssr_access` do frontend, e access log do Traefik (hoje desligado).
+
 ### 7. Crawlers, SEO e trafego nao humano
 
 Usar metricas, logs SSR e Search Console para separar:

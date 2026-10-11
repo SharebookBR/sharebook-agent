@@ -90,6 +90,7 @@ Neste habitat o ambiente proíbe o agente de identificar o modelo em qualquer ar
 |---|---|---|
 | Jack | *** | 2026-10-02 |
 | Faro | *** | 2026-10-04 |
+| Sereno | *** | 2026-10-11 |
 
 ## Tradução pesada offline: armadilhas confirmadas no job 1873 (2026-10-04)
 
