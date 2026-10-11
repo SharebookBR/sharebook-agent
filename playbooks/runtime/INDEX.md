@@ -6,7 +6,7 @@ Regras específicas de habitat, ambiente de execução, ferramentas disponíveis
 - `./windows-local.md` — Ambiente local Windows: paths, PowerShell, shell, encoding, Python, banco, Git e armadilhas.
 - `./openclaw.md` — Container OpenClaw na VPS, sessão hospedada pelo Gateway/agente OpenClaw: volume persistente, memória, sessões, automações, ferramentas, `.env`, GitHub token e operação remota.
 - `./claude-code-openclaw.md` — Claude Code rodando dentro do mesmo container OpenClaw, mas fora do harness/loop de tools do Gateway: paths compartilhados, limitações, ferramentas e diferenças de permissão. Terceiro habitat, nascido em 2026-09-17.
-- `./claude-code-web.md` — Sessão cloud do Claude Code on the web: sandbox, classificador de auto mode, bloqueios de SSH remoto e permissão, GitHub via App, allowlist de rede.
+- `./claude-code-web.md` — Sessão cloud do Claude Code on the web: sandbox, classificador de auto mode, bloqueios de SSH remoto e permissão, GitHub via App, nível de rede do ambiente (hoje Full) e como o Raffa o altera, variáveis de ambiente e network secrets.
 
 ## Uso
 - Detectar o habitat antes de executar trabalho relevante.

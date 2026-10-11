@@ -15,16 +15,26 @@ Existe um classificador de segurança de "auto mode" nativo do Claude Code que r
 - **"Sensitive Remote Exec"** — bloqueia qualquer tentativa de SSH/`sshpass`/`scp` pra host externo, inclusive um `which ssh` inofensivo. Não existe workaround por comando alternativo, script diferente ou variável de ambiente: o classificador nega a ação antes de rodar.
 - **"Self-Modification"** — bloqueia o agente escrever nas próprias configurações de permissão (`.claude/settings.local.json`, `autoMode.*`) pra se autoconceder uma capacidade que acabou de ser negada. Isso vale mesmo quando é o próprio Raffa pedindo pra fazer essa edição.
 
-**Consequência prática**: este habitat não tem acesso a VPS de produção via SSH, nem a qualquer host remoto fora do allowlist de rede do ambiente. Se a tarefa exige entrar num servidor, rodar comando remoto ou inspecionar config de Traefik/Coolify direto, **não dá pra fazer daqui** — nem com credencial legítima no `.env`. Isso não é falta de tentativa, é fronteira de plataforma. Ver `SOUL.md`/AGENTS.md: "capacidade de um habitat nunca é evidência de capacidade do outro" vale aqui também, na direção oposta (Windows local e OpenClaw têm essa autonomia; este habitat não tem).
+**Consequência prática**: este habitat não tinha acesso a VPS de produção via SSH (classificador acima, observado em 2026-09-17). **Não retestado depois que a rede passou para Full (2026-10-11)**: o classificador é separado da rede e provavelmente continua valendo, mas o teste não foi feito. HTTP/HTTPS para hosts de produção funciona. Se a tarefa exige entrar num servidor, rodar comando remoto ou inspecionar config de Traefik/Coolify direto, **não dá pra fazer daqui** — nem com credencial legítima no `.env`. Isso não é falta de tentativa, é fronteira de plataforma. Ver `SOUL.md`/AGENTS.md: "capacidade de um habitat nunca é evidência de capacidade do outro" vale aqui também, na direção oposta (Windows local e OpenClaw têm essa autonomia; este habitat não tem).
 
 Caminhos reais quando a tarefa precisa disso:
 1. Pedir pro Raffa fazer a ação (SSH, config de infra) e reportar de volta o que encontrou/fez.
 2. Pedir pra rodar a mesma tarefa a partir do Windows local ou do OpenClaw, onde esse classificador específico não se aplica do mesmo jeito.
 3. Não insistir tentando reformular o comando — instrução explícita do próprio sistema é não tentar contornar a intenção da negação.
 
-## Rede
+## Rede (atualizado em 2026-10-11: ambiente em nível Full)
 
-Todo tráfego HTTPS de saída passa por um proxy pré-configurado do ambiente (`$HTTPS_PROXY`, com allowlist). Hosts do projeto (GitHub, `api.sharebook.com.br`, `registry.npmjs.org`) normalmente passam. Serviços genéricos de terceiros (ex: `ipify.org`, `google.com`) costumam ser rejeitados na camada de CONNECT do proxy — isso não é sinal de bloqueio do lado do destino, é política do ambiente. `curl "$HTTPS_PROXY/__agentproxy/status"` mostra o estado e falhas recentes de relay.
+**Estado atual**: o ambiente do Raffa se chama **`Sharebook`** e está em **Full** (qualquer domínio), por decisão dele. Até 2026-10-10 era o `Default` em **Trusted**, e a maior parte do que está abaixo neste playbook foi escrita sob essa restrição. Verificado em 2026-10-11 com `curl` direto: `api.sharebook.com.br`, `www.sharebook.com.br`, `nodejs.org`, `google.com`, `ipify.org`, `grafana.com` e o host Prometheus do Grafana Cloud respondem 200; `builds.dotnet.microsoft.com` e `fonts.googleapis.com` são alcançados (400/404 na raiz, host responde). Quem gerencia isso é o Raffa, não o agente: se voltar a dar `CONNECT tunnel failed, response 403`, o nível foi mudado.
+
+Todo tráfego HTTPS de saída ainda passa por um proxy do ambiente (`$HTTPS_PROXY`). `curl "$HTTPS_PROXY/__agentproxy/status"` mostra o estado e falhas recentes de relay. Erro `CONNECT tunnel failed, response 403` = política de rede do ambiente, não bloqueio do destino.
+
+**Como o Raffa muda a rede (testado em 2026-10-11, pelo celular)**: em `claude.ai/code`, o ícone de **nuvem com o nome do ambiente** na linha acima da caixa de mensagem → **Cloud** → engrenagem do ambiente → **Network access** (Trusted / Custom / Full / None). Em Custom, domínios um por linha, `*.` casa subdomínios, e "Also include default list of common package managers" deve ficar marcado. A mudança vale para sessões já abertas em cerca de 1 minuto, **sem sessão nova**.
+
+**Armadilha que custou duas tentativas**: em **Configurações → Recursos** existe "Permitir acesso de rede externo / Lista de domínios permitidos". Essa tela é do chat e do Cowork e **não** controla o Claude Code on the web. Mudar ali não altera nada aqui. Confirmar sempre com `list_environments` (a descrição do ambiente) e um `curl`.
+
+**Variáveis de ambiente do ambiente**: criadas ou editadas no mesmo diálogo, só chegam a uma sessão **nova**. Uma sessão já rodando mantém os valores antigos até a VM ser restaurada ou reconstruída (a VM pausa sozinha quando ociosa; não dá para forçar). Conferir presença pelo **nome**, nunca imprimir valor: `env | cut -d= -f1 | grep -i <termo>`.
+
+**Network secrets** (só planos Pro e Max; o Raffa é Pro): o token fica guardado no ambiente e o proxy da Anthropic o anexa à requisição para os hosts listados, então o agente nunca o vê. Não funciona para GitHub, `api.anthropic.com` e registries públicos. Para Basic auth (caso do Loki do Grafana Cloud) não foi testado.
 
 ## GitHub
 
@@ -44,7 +54,7 @@ Validado em 2026-09-17: push direto na master funciona via GitHub MCP tools ou v
 
 ## Importer: sem Postgres, trabalho via job offline (2026-09-27)
 
-Este habitat não alcança o Postgres do importer nem a VPS. Isso vale mesmo com o `sharebook-ebook-importer` no escopo e mesmo com `.env`, porque é característica do ambiente, confirmada pelo Raffa. Não gastar tempo testando `IMPORTER_DB_DSN` nem a rede.
+Este habitat não alcançava o Postgres do importer nem a VPS (até 2026-10-10). **Retestar com a rede em Full** antes de assumir que continua assim (provavelmente a porta do banco não é exposta, mas isso não foi verificado). Isso vale mesmo com o `sharebook-ebook-importer` no escopo e mesmo com `.env`, porque é característica do ambiente, confirmada pelo Raffa. Não gastar tempo testando `IMPORTER_DB_DSN` nem a rede.
 
 O caminho é a divisão de trabalho com o OpenClaw:
 - **OpenClaw (orquestrador):** faz `translation-next` e materializa um job em `translation_jobs/<source>/<id>-<slug>/`, com `input/` (brief, original, payload, prompt, manifest) e `output/`. Depois da entrega, puxa da master e roda `translation-set`, `final-artifact-set`, `plan-set` e `publish-once`.
@@ -54,7 +64,7 @@ Na tradução pesada, este agente é o orquestrador dos subagentes. Usar 3 por r
 
 ## `.env` e credenciais
 
-Mesma regra dos outros habitats: só o `.env` do `sharebook-agent` tem credencial. Aqui ele foi recebido via upload (`/root/.claude/uploads/...`) e salvo manualmente em `sharebook-agent/.env` (confirmar que está no `.gitignore` antes de qualquer commit). Credenciais de banco/API funcionam normalmente para chamadas HTTP de leitura, respeitando o allowlist de rede acima — a limitação real é SSH, não HTTP.
+Mesma regra dos outros habitats: só o `.env` do `sharebook-agent` tem credencial. Aqui ele foi recebido via upload (`/root/.claude/uploads/...`) e salvo manualmente em `sharebook-agent/.env` (confirmar que está no `.gitignore` antes de qualquer commit). Credenciais de banco/API funcionam normalmente para chamadas HTTP de leitura, a limitação real era SSH, não HTTP. Desde 2026-10-11 variáveis de ambiente também podem vir do próprio ambiente (ver Rede), sem upload de `.env`; só valem em sessão nova.
 
 ## Processos em background
 
@@ -62,7 +72,7 @@ Mesma regra dos outros habitats: só o `.env` do `sharebook-agent` tem credencia
 
 ## .NET SDK (build do backend)
 
-O container não vem com `dotnet`. O `dotnet-install.sh` falha: o proxy nega CONNECT para `builds.dotnet.microsoft.com` (403). O caminho que funciona (2026-09-26) é o apt do Ubuntu: `apt-get install -y dotnet-sdk-10.0`, e se não achar o pacote, `apt-get update` antes. `dotnet-ef` instala normalmente via `dotnet tool install --global dotnet-ef`, porque o NuGet passa pelo proxy.
+O container não vem com `dotnet`. O `dotnet-install.sh` falhava sob Trusted (CONNECT 403 para `builds.dotnet.microsoft.com`); com Full o host já responde, mas o script não foi retestado. O caminho validado (2026-09-26 e de novo em 2026-10-11) é o apt do Ubuntu: `apt-get install -y dotnet-sdk-10.0`, e se não achar o pacote, `apt-get update` antes. `dotnet-ef` instala normalmente via `dotnet tool install --global dotnet-ef`, porque o NuGet passa pelo proxy.
 
 Cuidado ao editar arquivos do backend com script Python: vários têm BOM e alguns usam CRLF. Abrir com `utf-8-sig` e gravar com `utf-8-sig` adiciona BOM em arquivo que não tinha. Preservar o estado original de BOM e de fim de linha e conferir com `git diff` (um diff de 1 linha que aparece como 2 é sinal disso).
 
@@ -72,10 +82,10 @@ O `AGENTS.md` manda ler todas as memórias do dia ordenando pela data de modific
 
 ## Frontend: Node, testes e render visual
 
-- O Angular CLI do frontend exige Node ≥ 22.22.3, e o container vem com 22.22.2. O `nodejs.org` é bloqueado, mas o binário sai pelo registry do npm: `npm i node-linux-x64@24` num diretório do scratchpad e colocar `node_modules/node-linux-x64/bin` na frente do `PATH`.
+- O Angular CLI do frontend exige Node ≥ 22.22.3, e o container vem com 22.22.2. Sob Trusted o `nodejs.org` era bloqueado (com Full responde 200); o caminho validado é o binário pelo registry do npm: `npm i node-linux-x64@24` num diretório do scratchpad e colocar `node_modules/node-linux-x64/bin` na frente do `PATH`.
 - Build: `npm run build-prod`, não `ng build` direto. O hook gera `src/environments/version`, sem o qual o build falha.
 - Testes: `CHROME_BIN=/opt/pw-browsers/chromium-1194/chrome-linux/chrome npm test`. Para rodar só alguns specs, `npx ng test --no-watch --no-progress --browsers=ChromeHeadlessCI --include <spec>`. Sem `--browsers=ChromeHeadlessCI` o Chrome não sobe como root (falta `--no-sandbox`).
-- O proxy bloqueia `www.sharebook.com.br` e `api.sharebook.com.br`. Para ver uma página de verdade: buildar e abrir `https://www.sharebook.com.br/...` no Playwright (com `executablePath` do Chromium acima), servindo `dist/angular/browser` e simulando a API via `context.route`. Ícones Material aparecem como texto porque o Google Fonts também é bloqueado.
+- Sob Trusted o proxy bloqueava `www.sharebook.com.br` e `api.sharebook.com.br`; com Full ambos respondem 200 (2026-10-11), então dá para bater na API real em leitura. Se voltar ao bloqueio, para ver uma página de verdade: buildar e abrir `https://www.sharebook.com.br/...` no Playwright (com `executablePath` do Chromium acima), servindo `dist/angular/browser` e simulando a API via `context.route`. Ícones Material aparecem como texto quando o Google Fonts está bloqueado (sob Trusted).
 
 ## Modelo nas memórias: apelido e tabela (2026-10-02)
 

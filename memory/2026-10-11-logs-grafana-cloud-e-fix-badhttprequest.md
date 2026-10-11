@@ -11,10 +11,13 @@ facts_changed = [
   "A API agora envia logs ao Grafana Cloud (Loki) por OTLP, com ClientIp e UserAgent em todo log da requisicao. Antes, docker logs era a unica fonte, sem IP e perdido a cada restart.",
   "Health checks bem-sucedidos (/api/Operations/Ping, /hc, /health) sao suprimidos do request log (Verbose). O Docker bate no Ping a cada 30s.",
   "BadHttpRequestException (cliente cai ou envia corpo devagar) agora responde 400/408 com Warning, nao 500 com Error no Rollbar.",
+  "Rede do Claude Code web: o ambiente do Raffa passou de Default/Trusted para Sharebook/Full (decisao dele, 2026-10-11). Hosts de producao, Grafana, nodejs.org e outros respondem 200 agora; o playbook do runtime foi atualizado.",
 ]
 open_loops = [
   "ssr_access do frontend ainda nao vai para o Grafana (decisao: comecar so pela API).",
   "Traefik (coolify-proxy) continua sem access log.",
+  "Consulta ao Loki/Prometheus daqui: rede liberada, falta as variaveis de ambiente do Grafana aparecerem (so valem em sessao nova) e validar {service_name=\"sharebook-api\"} com ClientIp. Depois registrar no backend.md e no prometheus-explorer.md.",
+  "Retestar SSH e Postgres/VPS com a rede em Full: o classificador de auto mode pode continuar bloqueando SSH.",
   "Se o ClientIp em producao vier como IP interno, ajustar ForwardedHeaders:KnownIPNetworks (o OpenClaw validou; Raffa confirmou que deu tudo certo).",
   "Politica de privacidade: logs com IP ficam 14 dias no Grafana; conferir se o texto cobre isso.",
   "Stack trace ainda vai no corpo da resposta 500 de erros nao tratados (ExceptionHandlerMiddleware, ex.ToString()); fora do escopo, nao mexi.",
