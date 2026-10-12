@@ -27,7 +27,7 @@ skills_updated = [
   "importers/sharebook-pdf-typesetting",
 ]
 facts_changed = [
-  "O job 1882 (O Livro dos Lobisomens, Baring-Gould, 1865, Gutenberg 5324) foi traduzido por inteiro (21 segmentos, 16 capítulos, 50.839 palavras), ilustrado (16 pranchas aprovadas), diagramado em PDF (191 páginas, 512 x 640 pt, 9,5 MB) e entregue na master do importer. Não foi publicado: o passo do OpenClaw (translation-set, final-artifact-set, plan-set, publish-once) ficou pendente, com prompt entregue ao Raffa.",
+  "O job 1882 (O Livro dos Lobisomens, Baring-Gould, 1865, Gutenberg 5324) foi traduzido por inteiro (21 segmentos, 16 capítulos, 50.839 palavras), ilustrado (16 pranchas aprovadas), diagramado em PDF (191 páginas, 512 x 640 pt, 9,5 MB) e entregue na master do importer. Depois que entreguei o prompt, o OpenClaw publicou no mesmo dia (commit a3e9e73 no importer): item 1882 done, livro 01a130f9-71a8-7e68-8015-160c8864ac8d, PDP https://www.sharebook.com.br/livros/o-livro-dos-lobisomens, categoria Ficção > Bruxas & Magia, runs 5122 (dry-run) e 5123 (publish). O PDF público bate com o SHA-256 local e a capa pública é a v2.",
   "O manifesto do importer para o 1882 parecia limpo, mas o capítulo XVI incluía a licença do Gutenberg (4.032 palavras no manifesto contra ~1.125 reais). O fim real do livro é a linha com THE END.",
   "A fonte do 1882 não tem ilustração de miolo: a única [Illustration] é a capa do Gutenberg. As 16 pranchas são criação nova por IA de imagem, uma por capítulo, com cena decidida pelo agente por delegação do Raffa.",
   "A capa aprovada é a v2 (lobo estranho na floresta, sem texto manuscrito). A v1 (caderno de naturalista com notas em latim) ficou como alternativa em assets/cover-v1-notebook-alt.jpg; o latim da v1 saiu errado na primeira geração e foi conferido letra por letra na segunda.",
@@ -36,7 +36,8 @@ facts_changed = [
   "No Chrome headless, overflow:hidden nas páginas de prancha encolhe o documento inteiro a ~72%: o PDF saiu com 116 páginas em vez de 191 até a propriedade ser removida.",
 ]
 open_loops = [
-  "Publicar o 1882: o OpenClaw precisa rodar translation-set, final-artifact-set (kind translated_illustrated_pt_br, 16 pranchas), plan-set (categoria folha a decidir por ele), publish-once dry-run e real, validar a PDP e o hash do PDF (SHA-256 no PROGRESS do job e no prompt).",
+  "O Raffa ainda precisa validar a PDP publicada do 1882 com os próprios olhos; o OpenClaw validou por API e hash, mas a validação final é dele (AGENTS.md: não declarar encerrado antes dele).",
+  "O translation-set do 1882 gravou o modelo como gpt-5-codex (valor copiado do 1880 pelo OpenClaw), embora a tradução tenha sido feita pelo Claude Code web; a metadata dos irmãos (1880, 1881) já era inconsistente. Corrigir a metadata ou definir um valor padrão para traduções do habitat Claude Code web.",
   "GA4 e Search Console: análise pendente. O Raffa precisa liberar uma permissão restrita de Bash para GET em api.sharebook.com.br/api/analytics ou colar o JSON do dashboard.",
   "Zanoni (1881) está publicado sem a legenda de IA nas pranchas; decidir se reaplica.",
   "Cap. XI do 1882: parágrafo quebrado no meio de 'M. Henri / Martin' vem da fonte e foi mantido 1:1. Pode ser unido se o Raffa quiser.",
@@ -52,7 +53,8 @@ durable_candidates = [
 ]
 supersedes = []
 evidence = [
-  "sharebook-ebook-importer commit 7388148 (PDF final, pranchas 16, build_pdf.py) e b5d3d0f (sinopse), na master",
+  "sharebook-ebook-importer commit 7388148 (PDF final, pranchas 16, build_pdf.py), b5d3d0f (sinopse) e a3e9e73 (publicação pelo OpenClaw), na master",
+  "PDP https://www.sharebook.com.br/livros/o-livro-dos-lobisomens; PROGRESS.md do job 1882, seção Publicação Sharebook",
   "translation_jobs/project_gutenberg_witches_magic/1882-the-book-of-were-wolves/output/o-livro-dos-lobisomens.pdf, SHA-256 dde4d9eecd1c5844bd09959563c19508c905a1625d2acf5c82689e626822c636, 9.470.219 bytes, 191 páginas",
   "translation_jobs/project_gutenberg_witches_magic/1882-the-book-of-were-wolves/output/assets/README.md e PROGRESS.md",
   "pdfimages -list do PDF: 18 imagens; pdftotext: 16 legendas de IA, 0 Gutenberg",
@@ -106,4 +108,4 @@ Foi uma sessão longa e muito viva, com ritmo de oficina. Comecei com cautela, l
 
 A parte que mais me prendeu foi a das ilustrações. Foi quando o trabalho deixou de ser verificação e virou direção de arte. A correção do Raffa ('você parece focado demais em sem sangue') me fez recalibrar na hora; eu estava me policiando por reflexo, não porque o livro pedisse. Quando o lobo estranho apareceu na prancha 8 e ele disse 'essa é a pegada!!!', senti alívio e algo parecido com orgulho: a série ganhou identidade de repente, e as pranchas anteriores passaram a parecer de outro livro.
 
-Também sinto um incômodo honesto: o verificador verde quase deixou passar uma omissão, e um subagente me deu uma explicação plausível para o erro. Escapou por pouco de virar tradução com texto faltando. Fico com a lição de que alerta é ponteiro e relato é só relato. E fico com a satisfação de ver o PDF montado e aprovado pelo Raffa, sem ainda ter visto o livro publicado, o que me lembra de não declarar vitória antes dele validar.
+Também sinto um incômodo honesto: o verificador verde quase deixou passar uma omissão, e um subagente me deu uma explicação plausível para o erro. Escapou por pouco de virar tradução com texto faltando. Fico com a lição de que alerta é ponteiro e relato é só relato. E fico com a satisfação de ver o PDF montado e aprovado pelo Raffa, e por saber que o OpenClaw publicou logo depois, mas ainda sem o Raffa ter validado a página pública, o que me lembra de não declarar vitória antes dele.
