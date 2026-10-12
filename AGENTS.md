@@ -182,6 +182,7 @@ Esse princípio nasceu de uma fricção real, registrada em `memory/2026-09-20-t
 - Gestão de categorias, taxonomia, migração de leaf category ou revisão de hierarquia → abrir `sharebook-agent/playbooks/importers/INDEX.md`.
 - Produção de PDFs, manuscritos, capas autorais ou artefatos editoriais (escrever obra nova) → abrir `sharebook-agent/playbooks/importers/INDEX.md`.
 - Gerar, trocar ou dirigir a capa de um livro já existente no catálogo (roleta de estilos) → abrir `sharebook-agent/playbooks/product-ux/INDEX.md`, playbook `cover-direction`.
+- Ilustrar um livro traduzido (uma ilustração por capítulo, pranchas, prompt para IA de imagem, edição ilustrada, legenda "criado com IA") → abrir `sharebook-agent/playbooks/importers/INDEX.md`, playbook `illustrated-edition`.
 - Estratégia do acervo, priorização de títulos ou sources, criação de categoria por intenção editorial, público prioritário ou qualidade percebida do catálogo → abrir `sharebook-agent/playbooks/product-ux/INDEX.md`, playbook `catalog-strategy`.
 - Escolher ganhador(a) de uma doação, triar solicitações ou montar shortlist de interessados → abrir `sharebook-agent/playbooks/product-ux/INDEX.md`, playbook `winner-selection`.
 - Diagnóstico de incidente, erro em produção ou "onde está o log de X" → abrir `sharebook-agent/playbooks/engineering/INDEX.md`; para API/backend, seguir `backend.md`, seção "Onde estão os logs".

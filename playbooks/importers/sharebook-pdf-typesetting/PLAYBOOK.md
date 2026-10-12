@@ -106,3 +106,14 @@ Para edições ilustradas do Gutenberg, conferir também:
 - zero placeholders standalone `[Ilustração: ...]` / `[Illustration: ...]` no manuscrito final;
 - `pdfimages -list` com total esperado, considerando capa, página institucional e plates incluídas;
 - renderização visual da primeira, de uma intermediária e da última plate incluída, validando ausência de página em branco, corte, asset errado, centralização ruim ou página só com legenda.
+
+## Edição ilustrada por IA (pranchas por capítulo)
+
+Referência viva: `translation_jobs/project_gutenberg_witches_magic/1882-the-book-of-were-wolves/output/tools/build_pdf.py` (191 páginas, 16 pranchas). Fluxo de produção das imagens em `../illustrated-edition/PLAYBOOK.md`.
+
+- Uma prancha em página inteira (512 x 640 pt, fundo creme `#f1e8d6`, imagem 618 pt de altura, `object-fit: contain`) **antes de cada capítulo**; a página do capítulo começa em seguida, no preset normal.
+- **Exceção à regra de "sem legendas soltas"**: cada prancha leva uma única linha de legenda discreta ("Ilustração criada com inteligência artificial", 7 pt, itálico, cinza-escuro), pedido explícito do Raffa. A folha de rosto leva o crédito de capa e ilustrações por IA.
+- Sumário com os "argumentos" de capítulo em itálico pequeno; argumento de capítulo centralizado sob o título; notas `[N]` em corpo 9,5 pt; versos com `<br>`; colunas nórdicas/glosa como tabela de 2 colunas (fonte proporcional não alinha colunas por espaço).
+- **Armadilha que encolhe o documento inteiro**: `overflow: hidden` nas páginas de prancha faz o Chrome reduzir TODO o conteúdo a ~72% (116 páginas em vez de 191, texto minúsculo). Não usar. Sintoma: `pdftotext -bbox` mostra caixas de palavra com ~9,5 pt de altura em corpo 12.
+- Imagens do PDF são cópias reduzidas (1000 px, JPEG q80) feitas no build; os originais em `assets/` ficam intactos. 17 MB virou 9,5 MB.
+- Validação: `pdfinfo` (páginas, 512 x 640), `pdfimages -list` (capa + institucional + N pranchas), `pdftotext` (0 "Gutenberg", 0 "Illustration", N legendas), capítulos em página nova, sem página em branco.

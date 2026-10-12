@@ -101,6 +101,7 @@ Neste habitat o ambiente proíbe o agente de identificar o modelo em qualquer ar
 | Jack | *** | 2026-10-02 |
 | Faro | *** | 2026-10-04 |
 | Sereno | *** | 2026-10-11 |
+| Brasa | *** | 2026-10-12 |
 
 ## Tradução pesada offline: armadilhas confirmadas no job 1873 (2026-10-04)
 
@@ -120,3 +121,19 @@ Job *Black Magic* (35 segmentos, 3 subagentes por rodada, 12 rodadas). O verific
 - **Quando o verificador ou o briefing herdado trazem regras de outro livro** (`[Footnote`, concordância `havia`), leia a ferramenta antes de confiar. E o que o 1873 ensinou entra no glossário do job seguinte **antes** da rodada 1: pontuação (`--` = ` — `, `…` só da fonte, diálogo entre aspas), léxico (`little X` = `pequeno X`, `devil`/`demon`), tratamento, nomes iguais em todos os capítulos.
 - **Releitura pedida a subagente**: exigir que relate quantos parágrafos releu de fato. Metade admite que não releu; reenviar por `SendMessage` funciona, mas um erro de API (sinalização de segurança do modelo, falso positivo) pode matar o subagente no meio; nesse caso disparar revisor novo sobre o arquivo gravado.
 - **Decisões editoriais delegadas pelo Raffa** (`decida por mim`): decidir pelo critério de fidelidade ao original, registrar em `qa.md` com a alternativa descartada e o que muda se ele discordar, e **não** dar como validado antes da palavra dele. Trechos de preconceito de época (1919) ficam literais; a saída mínima é nota na folha de créditos, nunca emenda no corpo.
+
+## Observabilidade, produção e analytics daqui (testado em 2026-10-12)
+
+- **Grafana Cloud funciona deste habitat.** As variáveis `GRAFANA_CLOUD_*` (OTLP, `PROM_*`, `LOGS_*`) chegam por variável de ambiente (checar só os NOMES: `env | cut -d= -f1 | grep -i grafana`). `curl -u "$USER:$TOKEN"` contra Prometheus (`/api/prom/api/v1/query`) e contra o Loki (`/loki/api/v1/...`) respondeu. Playbook de uso: `../engineering/grafana-cloud-explorer.md`. No Loki só existem os labels `service_name` e `deployment_environment`; não há logs de SSR/frontend lá.
+- **Leitura autenticada em produção é BLOQUEADA** pelo classificador de auto mode (categoria "Production Reads"): um `curl` com `SHAREBOOK_PROD_ACCESS_TOKEN` contra `api.sharebook.com.br/api/analytics/dashboard` foi negado, mesmo sendo `GET`. Não contornar. Caminhos: o Raffa adiciona uma permissão restrita de `Bash` para esse host nas settings do Claude Code, ou roda o endpoint no Windows/OpenClaw e cola o JSON. O token de prod é de usuário (autoridade de escrita), por isso a leitura cai na regra; os tokens do Grafana são de leitura por construção e passam.
+- **GA4/GSC direto não existem aqui**: `GA4_KEY_FILE_PATH` aponta para um caminho de Windows e o `ga4-key.json` não está no container. O Search Console reaproveita a mesma credencial.
+- Para detalhes do Grafana (latência, 5xx, GC, volume de logs) a consulta é suficiente. Sem a chave, análise de GA4/GSC depende do dashboard consolidado.
+
+## Edição ilustrada e PDF daqui (2026-10-12)
+
+- Fluxo de ilustrações por IA de imagem (prompts um de cada vez): `../importers/illustrated-edition/PLAYBOOK.md`.
+- Montagem do PDF: o Chromium vem em `/opt/pw-browsers/chromium-1194/chrome-linux/chrome` (`build_pdf.py --chromium <esse caminho>`); `pdfinfo`, `pdfimages` e `pdftoppm` existem; Liberation Serif está instalada; `PIL` está disponível. Não precisa instalar nada. `overflow: hidden` nas páginas de prancha encolhe o documento (ver `sharebook-pdf-typesetting`).
+- **Subagentes de tradução (job 1882)**: o `check_chapters.py` verde NÃO pegou uma omissão (`in his mind`, parágrafo curto com razão 0,72 que o subagente chamou de "concisão"): o alerta era ponteiro, e a causa real era perda de texto. Todo alerta de parágrafo destoante se confere contra a fonte, não se aceita a explicação do subagente. Subagentes pularam a releitura separada em metade das rodadas até o briefing passar a exigir "relate quantos releu"; funcionou do cap. VI em diante. Travessão `—` da fonte virou reticências na rodada 1 (corrigido); a regra entrou no glossário ANTES da rodada 2.
+- **Falso positivo da trava de concordância** (`seus criados havia`): reescrever a frase (`Havia, entre seus criados, um…`), não mexer na ferramenta. Já documentado no job 1873; repetiu no 1882.
+- Ferramenta nova `tools/audit_names_numbers.py` (job 1882): compara NÚMEROS por parágrafo entre fonte e tradução (normaliza `4,000`/`4.000` e ordinais `14th`). Comparar nomes próprios foi testado e descartado (ruído: nomes ganham forma portuguesa).
+- O manifesto do importer (`translation-next.json`) pareceu limpo, mas o último capítulo vinha até o fim do arquivo e **incluía a licença do Gutenberg** (4.032 palavras contra ~1.125 reais). Sempre conferir o corte final.

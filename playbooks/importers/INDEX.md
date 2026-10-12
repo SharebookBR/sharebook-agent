@@ -6,6 +6,7 @@ Fluxos de ingestão, triagem, preparo editorial, tradução, PDFs, categorias e 
 
 - `./ebook-importer/PLAYBOOK.md` — **Porta única da fila de importação**: workflow, statuses, CLI, hardening, ciclo manual Windows, `triage_retry`, `publish_retry`, `error`, `source_blocked`, handoff editorial e doutrina de `editorial_rejected`.
 - `./sharebook-pdf-typesetting/PLAYBOOK.md` — Baseline editorial de miolo PDF Sharebook em 4:5; leitura obrigatória para preparo editorial de sources Project Gutenberg com tradução e PDF final.
+- `./illustrated-edition/PLAYBOOK.md` — Edição ilustrada de livro traduzido: uma prancha por capítulo gerada por IA de imagem, escolha de cenas delegada ao agente, prompts um de cada vez, lobo de referência, legenda "criado com IA", assets no job e PDF com pranchas.
 - `./daily-triage-recovery/PLAYBOOK.md` — Recorte diário da triagem: analisar itens processados hoje, recuperar `source_blocked`, decidir rejeição limpa, rejeição editorial posterior ou hardening.
 - `./physical-book-importer/PLAYBOOK.md` — Cadastro, doação, importação e validação de livros físicos em produção.
 - `./category-organizer/PLAYBOOK.md` — Gestão, taxonomia e hierarquia de categorias.
@@ -18,3 +19,4 @@ Fluxos de ingestão, triagem, preparo editorial, tradução, PDFs, categorias e 
 - Para qualquer coisa relacionada à fila de importação de ebooks: abrir `./ebook-importer/PLAYBOOK.md` — ela contém tudo.
 - Para preparo editorial de source Project Gutenberg com tradução/PDF final, abrir também `./sharebook-pdf-typesetting/PLAYBOOK.md` antes de validar ou gerar o PDF.
 - Para tradução pesada de livro (job offline em `translation_jobs/`, subagentes, glossário, `check_chapters.py`, montagem do `translated.md`): ler `../runtime/claude-code-web.md`, seções `Importer: sem Postgres, trabalho via job offline` e `Tradução pesada offline: armadilhas confirmadas no job 1873`. Termos de descoberta: traduzir livro, tradução, bruxa, subagentes, glossário, verificador, travessão, reticências, licença do Gutenberg.
+- Para ilustrar um livro (prancha por capítulo, prompt para IA de imagem, edição ilustrada, gravura, xilogravura, legenda de IA): `./illustrated-edition/PLAYBOOK.md`. Termos de descoberta: ilustração por capítulo, prancha, plate, IA de imagem, lobo estranho, edição ilustrada.
