@@ -4,6 +4,27 @@
 
 Aberto em 2026-10-08 apos a POC de metricas .NET mostrar valor real em producao: conseguimos observar GC, latencia, cardinalidade, crawlers, SSR e impacto operacional sem depender de intuicao.
 
+Atualizado em 2026-10-12: o epico esta em cerca de **45%**. A fase de prova de valor foi vencida; agora o trabalho e manter e amadurecer a observabilidade minima.
+
+Concluido desde a abertura:
+
+- metricas .NET via OpenTelemetry/OTLP no Grafana Cloud;
+- Prometheus/Mimir consultavel por API;
+- Grafana Cloud Logs/Loki recebendo request logs da API via Serilog OTLP;
+- leitura programatica de Loki com `scripts/observability/grafana_logs.py`;
+- playbook unico `playbooks/engineering/grafana-cloud-explorer.md`;
+- `ClientIp` validado como publico para trafego real direto na API, downloads e imagens;
+- decisao: chamadas internas SSR Node -> API podem permanecer `private/internal`; o `ssr_access` do frontend e a fonte certa para IP real de SSR.
+
+Aberto:
+
+- dashboard minimo formal/versionado;
+- correlacao operacional Rollbar + Grafana;
+- restore drill;
+- traces/Tempo, apenas quando houver pergunta operacional clara.
+
+Resolvido em 2026-10-12: `memory_search` voltou apos restart controlado do Gateway/OpenClaw. O indice e a CLI estavam saudaveis; o problema era estado velho na tool dinamica.
+
 Este epico substitui a ideia de uma POC isolada por uma frente permanente e leve de observabilidade do Sharebook.
 
 O objetivo nao e recriar Datadog/Dynatrace inteiro. O objetivo e ter visibilidade suficiente para responder rapido:
@@ -15,8 +36,9 @@ O objetivo nao e recriar Datadog/Dynatrace inteiro. O objetivo e ter visibilidad
 Hoje ja temos algumas pecas importantes:
 
 - **Grafana Cloud / Prometheus / OpenTelemetry**: metricas da API .NET publicadas por OTLP direto, sem Collector local.
+- **Grafana Cloud Logs / Loki**: request logs da API publicados via OTLP e consultaveis por Loki API. Usar `playbooks/engineering/grafana-cloud-explorer.md` e `scripts/observability/grafana_logs.py`.
 - **Rollbar**: error tracking da aplicacao, stack traces e agrupamento de erros.
-- **Logs locais na VPS**: `docker logs`, incluindo `ssr_access` do frontend, uteis para investigar crawler, IP, rota e user-agent.
+- **Logs locais na VPS**: `docker logs`, incluindo `ssr_access` do frontend, ainda uteis para investigar crawler, IP, rota e user-agent do SSR.
 - **GA4 e Search Console**: sinais de produto, SEO e comportamento organico. Search Console usa a mesma credencial de service account do GA4.
 - **Coolify + GCP bucket**: backups de bancos e volume `sharebook-wwwroot` configurados e enviados para GCS.
 - **Git/backlog/harness**: capacidade de transformar achados em tarefa, patch, deploy e validacao.
@@ -29,7 +51,7 @@ Hoje ja temos algumas pecas importantes:
 - Preferir acesso read-only quando possivel.
 - Guardar segredos somente em `.env`, Coolify ou secret store; nunca em Git, backlog, memoria ou logs.
 - Observar primeiro, formular hipotese depois, otimizar por ultimo.
-- Traces, Loki e logs centralizados entram apenas quando houver pergunta operacional clara.
+- Traces entram apenas quando houver pergunta operacional clara. Loki/logs centralizados ja entraram porque a lacuna de observabilidade da API ficou concreta.
 - Backup bom e backup que sabemos restaurar; sucesso de job nao substitui teste de restore.
 
 ## Workstreams
@@ -50,7 +72,7 @@ Manter e evoluir a POC atual:
 - pause time de GC;
 - active series e cardinalidade.
 
-Primeira fatia: `observabilidade-dotnet-laboratorio-24h.md`.
+Primeira fatia concluida: `backlog/done/observabilidade-dotnet-laboratorio-24h.md`.
 
 ### 2. Dashboards Grafana
 
@@ -74,9 +96,16 @@ Integrar o uso do Rollbar ao fluxo de investigacao:
 
 Desejo operacional: acesso Rollbar API read-only.
 
-### 4. Logs locais e enriquecimento minimo
+### 4. Logs centralizados e logs locais
 
-Enquanto Loki nao existir, usar logs da VPS de forma disciplinada:
+Loki/Grafana Cloud Logs agora e a fonte principal para request logs persistentes da API:
+
+- `service_name="sharebook-api"`;
+- `UserAgent` e `ClientIp` como labels/metadata;
+- health checks bem-sucedidos suprimidos por design;
+- helper compacto: `scripts/observability/grafana_logs.py`.
+
+Logs locais continuam uteis como fallback e para SSR:
 
 - `docker logs` da API;
 - `docker logs` do frontend;
@@ -104,14 +133,20 @@ Quando chegar a hora:
 
 ### 6. Loki / logs centralizados
 
-Loki entra quando depender de `docker logs` virar gargalo real:
+Status: operacional desde 2026-10-11/12.
 
-- necessidade de busca historica;
-- investigacao sem SSH;
+O que ja funciona:
+
+- escrita OTLP logs para Grafana Cloud;
+- leitura Loki por API;
+- CLI compacto para reduzir custo de tokens;
+- validacao de `UserAgent`, `ClientIp` e ausencia de health checks bem-sucedidos.
+
+Ainda falta amadurecer:
+
+- painel/queries padrao para operacao diaria;
 - correlacao metricas -> logs na UI;
-- multiplos containers/hosts tornando logs locais insuficientes.
-
-Antes disso, nao adicionar Loki apenas por completude arquitetural.
+- alertas ou saved queries somente quando houver uso recorrente.
 
 Atualizacao 2026-10-11: o gatilho aconteceu (restart do container apagou os logs da janela de um incidente do Rollbar). Primeira fatia entregue so para a API, sem infra nova: sink OTLP do Serilog direto para Grafana Cloud Logs, com `ClientIp` e `UserAgent` em todo log da requisicao. Ver `playbooks/engineering/backend.md`, secao "Onde estao os logs". Pendente: `ssr_access` do frontend, e access log do Traefik (hoje desligado).
 
@@ -161,12 +196,22 @@ Gap importante:
 
 ### M0 - POC de metricas .NET
 
-Status: em andamento.
+Status: concluido. Movido para `backlog/done/observabilidade-dotnet-laboratorio-24h.md`.
 
 - API instrumentada com OpenTelemetry metrics.
 - Grafana Cloud Free recebendo metricas via OTLP direto.
 - Prometheus read-only consultavel via API.
 - GC, heap, allocation rate, latencia e cardinalidade observaveis.
+
+### M0.5 - Logs da API no Grafana Cloud
+
+Status: concluido em nivel operacional minimo.
+
+- Serilog OTLP logs ativo no `sharebook-api`.
+- Loki read validado.
+- Helper `grafana_logs.py` criado para consultas compactas.
+- Playbook `grafana-cloud-explorer.md` criado.
+- `ClientIp` publico validado para trafego direto relevante.
 
 ### M1 - Dashboard minimo de saude
 
@@ -187,7 +232,9 @@ Permitir investigacao do tipo:
 
 ### M3 - Logs mais investigaveis
 
-Adicionar request id / trace id / duracao / status de forma consistente nos logs da API e, quando fizer sentido, do SSR.
+Status: parcialmente concluido.
+
+Request logs da API ja estao persistentes em Loki com duracao/status/rota, `UserAgent` e `ClientIp`. Ainda falta request id / trace id consistente e convencoes de correlacao com Rollbar.
 
 ### M4 - Traces amostrados
 
@@ -202,7 +249,7 @@ Criar rotina simples para verificar backups e executar restore drill periodico s
 - Um agente consegue responder "a API esta saudavel?" em ate 5 minutos.
 - Um pico de latencia pode ser explicado por rota, volume, erro, crawler ou pressao de runtime.
 - Rollbar e Prometheus sao usados juntos durante incidentes.
-- Logs locais continuam uteis enquanto Loki nao existir.
+- Logs centralizados via Loki respondem investigacoes basicas sem SSH; logs locais continuam uteis como fallback e para SSR.
 - Active series ficam dentro do plano gratuito com margem clara.
 - Backups nao sao apenas "jobs verdes": ha evidencia de objeto remoto, tamanho coerente e plano de restore.
 - Achados viram tarefas pequenas, nao reescritas prematuras.
@@ -218,6 +265,6 @@ Criar rotina simples para verificar backups e executar restore drill periodico s
 
 ## Referencias internas
 
-- `observabilidade-dotnet-laboratorio-24h.md`
+- `backlog/done/observabilidade-dotnet-laboratorio-24h.md`
 - `manutencao-autonoma-producao-rollbar-openclaw.md`
 - `migracao-backups-gcp-aws.md`

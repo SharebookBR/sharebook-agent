@@ -2,6 +2,10 @@
 
 ## Estado
 
+Concluido em 2026-10-12. A POC deixou de ser laboratorio temporario e virou capacidade minima permanente: metricas .NET via OTLP/Grafana Cloud continuam ativas, logs da API entraram via Grafana Cloud Logs/Loki, e o conhecimento operacional foi consolidado em `playbooks/engineering/grafana-cloud-explorer.md`.
+
+Decisao final: manter a stack minima de observabilidade (metricas + logs + playbook + CLI compacto) e evoluir dentro do epico maior `observabilidade-sharebook-epico.md`.
+
 Aberto em 2026-10-07, apos diagnostico read-only da VPS confirmar folga de CPU/disco e atencao moderada em RAM/swap.
 
 Implementacao inicial publicada em 2026-10-07: `sharebook-backend@183f4ca`, com metricas OpenTelemetry habilitadas por variaveis `OTEL_*` e envio OTLP direto para Grafana Cloud Free. A instrumentacao fica inativa quando `OTEL_EXPORTER_OTLP_ENDPOINT` e `OTEL_EXPORTER_OTLP_HEADERS` nao estao configuradas.

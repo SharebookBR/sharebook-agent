@@ -100,6 +100,14 @@ Validar em três camadas:
 
 Enfileirar backend e frontend em sequência quando ambos mudarem, para não disputar CPU de build no mesmo servidor.
 
+## Variáveis de ambiente de aplicações
+
+Valores em `environment_variables.value` no banco do Coolify são criptografados pelo model Laravel do Coolify. Não fazer `insert`/`update` cru nessa tabela para configurar env vars de aplicação: o deploy tenta descriptografar, falha com `DecryptException` e pode abortar antes de gerar o container novo.
+
+Preferir UI/API do Coolify. Se precisar automatizar pelo VPS, executar código Laravel dentro do container `coolify` usando o model `App\Models\EnvironmentVariable`, de modo que o mutator de criptografia grave o valor corretamente. Validar depois no container da aplicação imprimindo apenas nomes das env vars, nunca valores.
+
+Incidente real em 2026-10-11: ao configurar `GrafanaLogs__Endpoint` e `GrafanaLogs__Headers` para `sharebook-api`, uma tentativa com gravação crua no banco quebrou o deploy. A correção foi remover as linhas ruins, recriar as variáveis pelo model do Coolify, limpar duplicatas e redeployar.
+
 ### Acompanhar a fila a partir do container OpenClaw (habitat 3)
 
 Validado em 2026-09-17 (promoção do Angular 19, dev e prod). Duas armadilhas do `vps_ssh.py` que custam um ciclo cada:
