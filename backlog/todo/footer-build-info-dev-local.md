@@ -22,5 +22,5 @@ Faltou evidência bruta: a linha `[build-info] .git detectado como: ...` do log 
 
 ## Evidência
 
-- `memory/2026-09-19-epico-simplificacao-frontend-concluido.md` — relato completo da sessão que introduziu a feature e tentou (sem sucesso) as duas correções.
+- `sessions/2026-09-19-epico-simplificacao-frontend-concluido.md` — relato completo da sessão que introduziu a feature e tentou (sem sucesso) as duas correções.
 - `sharebook-frontend` branch `develop` — commits do footer build-info dentro do range `fc7476c..b76eb61`.

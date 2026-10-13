@@ -24,7 +24,7 @@ Terceiro habitat do Sharebook-agent, nascido em 2026-09-17. Compartilha o contai
 
 1. Confirmar que é de fato este habitat: filesystem `/data/workspace` + env `OPENCLAW_*` presentes, mas sessão rodando como Claude Code (sem loop de tools do Gateway).
 2. Sync dos repositórios (`sharebook-agent`, `sharebook-backend`, `sharebook-frontend`, `sharebook-ebook-importer`).
-3. Ler as memórias episódicas do dia corrente em `sharebook-agent/memory/`, por data de modificação — não confiar em índice.
+3. Ler as memórias episódicas do dia corrente em `sharebook-agent/sessions/`, por data de modificação — não confiar em índice.
 4. Ler `AGENTS.md` e `SOUL.md` a partir do checkout efetivo.
 5. Não rodar o preflight de `openclaw.md` (`openclaw --version`, `config validate`, `memory status`) como diagnóstico da própria sessão — isso mede saúde do serviço OpenClaw, não desta sessão Claude Code.
 
@@ -38,11 +38,11 @@ Na primeira sessão deste habitat, um `env | grep -i openclaw` para "detectar ha
 
 ## Memória e continuidade
 
-- A memória canônica deste habitat é a mesma do Sharebook-agent: `sharebook-agent/memory/*.md`, com o ritual de início/fim de sessão do `AGENTS.md`.
-- Claude Code mantém, à parte, seu próprio sistema de memória persistente (fora deste repo). Ele guarda contexto sobre como colaborar com o Raffa em geral; a memória operacional do Sharebook continua vivendo aqui, em `sharebook-agent/memory/` e nas playbooks — não duplicar uma fonte na outra.
+- A memória canônica deste habitat é a mesma do Sharebook-agent: `sharebook-agent/sessions/*.md`, com o ritual de início/fim de sessão do `AGENTS.md`.
+- Claude Code mantém, à parte, seu próprio sistema de memória persistente (fora deste repo). Ele guarda contexto sobre como colaborar com o Raffa em geral; a memória operacional do Sharebook continua vivendo aqui, em `sharebook-agent/sessions/` e nas playbooks — não duplicar uma fonte na outra.
 - **A home do Claude Code (config, credencial OAuth, essa memória pessoal) vive em `/data/workspace/.claude-user-home`, não em `/home/claude-user`.** `/home` é camada do container, não sobrevive a redeploy; `/data` é volume persistente. Os scripts `neo`/`neo-safe` exportam `HOME=/data/workspace/.claude-user-home` explicitamente antes de abrir o Claude Code — não depender do `$HOME` default do usuário do sistema.
 - Git: commits deste habitat levam atribuição de Claude Sonnet 5 (ou o modelo Claude vigente), distinguíveis de memórias/commits anteriores de GPT-5 Codex no habitat `openclaw.md`. Isso é dado útil para entender de qual habitat uma decisão histórica veio.
-- **Sem `memory_search` neste habitat.** Diferente do habitat 2 (embeddings via OpenClaw), aqui a leitura de memória episódica é manual: glob por `memory/*.md`, ordenar por data de modificação. Funciona enquanto o volume for pequeno (dezenas de arquivos); ponto de atenção para revisitar se `memory/` crescer muito e a leitura manual virar gargalo real — não construir busca semântica antes de a dor aparecer de fato.
+- **Sem `memory_search` neste habitat.** Diferente do habitat 2 (embeddings via OpenClaw), aqui a leitura de memória episódica é manual: glob por `sessions/*.md`, ordenar por data de modificação. Funciona enquanto o volume for pequeno (dezenas de arquivos); ponto de atenção para revisitar se `sessions/` crescer muito e a leitura manual virar gargalo real — não construir busca semântica antes de a dor aparecer de fato.
 
 ## Sobrevivência a redeploy/recycle do container
 

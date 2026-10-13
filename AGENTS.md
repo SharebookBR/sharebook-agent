@@ -101,7 +101,7 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 
 # 🧠 Memória
 
-## Estrutura obrigatória (`memory/YYYY-MM-DD.md`)
+## Estrutura obrigatória (`sessions/YYYY-MM-DD.md`)
 Toda memória nova começa com o frontmatter TOML v1 definido em `playbooks/doctrine/harness-governance/references/episodic-memory-metadata-v1.md`. Usar o template do playbook. Memórias legadas sem frontmatter continuam válidas e não devem ser reescritas só para conformidade.
 
 1. Modelo e ambiente.
@@ -126,7 +126,7 @@ Não espere o fim da sessão para preservar aquilo cuja perda mudaria o trabalho
 
 O gatilho não é o relógio nem o fim da sessão. É o valor da perda: ao tomar uma decisão que, se o motivo dela fosse esquecido, mudaria como outro agente (ou o mesmo agente, mais adiante) continuaria o trabalho, registrar ali — um checkpoint curto, não precisa ser a memória completa — em vez de confiar que vai lembrar depois.
 
-Esse princípio nasceu de uma fricção real, registrada em `memory/2026-09-20-tarefas-9-11-nullable-merge-master.md`, e foi refinado numa troca com outra sessão (GPT-5.6 Sol, memória `memory/2026-09-20-angular-22-ia-friendly-continuidade.md`) que chegou à mesma conclusão de forma independente, sem ver essa conversa — convergência que foi o motivo real de promover isso de fricção registrada para regra aqui, e não só a reclamação inicial.
+Esse princípio nasceu de uma fricção real, registrada em `sessions/2026-09-20-tarefas-9-11-nullable-merge-master.md`, e foi refinado numa troca com outra sessão (GPT-5.6 Sol, memória `sessions/2026-09-20-angular-22-ia-friendly-continuidade.md`) que chegou à mesma conclusão de forma independente, sem ver essa conversa — convergência que foi o motivo real de promover isso de fricção registrada para regra aqui, e não só a reclamação inicial.
 
 **Anti-exemplo (2026-09-20)**: dentro de uma única sessão contígua, o agente removeu a camada `Repository` genérica do backend (commit `d93a67d`, 01:20) por uma decisão própria, com motivo e alternativas consideradas. A sessão seguiu, atravessou uma compactação de contexto, e retomou o trabalho a partir de um resumo técnico (arquivos, commits, estado — não o raciocínio). Horas depois, ao revisar uma memória externa que citava essa decisão, o mesmo agente afirmou com confiança indevida que ela era "de uma sessão anterior" — porque, do lado de cá da compactação, uma decisão própria pré-corte e uma decisão de uma sessão genuinamente diferente chegam com a mesma textura: um fato dado, sem o caminho até ele. Nada nisso é falha de disciplina do agente; é o que compactação faz por padrão quando a única salvaguarda é a memória de fim de sessão. Um checkpoint de duas linhas no momento da decisão ("removi o Repository genérico porque X, considerei Y e descartei por Z") teria sobrevivido ao corte e evitado a afirmação errada.
 
@@ -136,14 +136,14 @@ Esse princípio nasceu de uma fricção real, registrada em `memory/2026-09-20-t
 
 ## Início da sessão
 1. Fazer um sync nos repos.
-2. Ler as memórias episódicas recentes em `sharebook-agent/memory/`. **Pode haver mais de uma sessão no mesmo dia** — ler todas as do dia corrente, não só "a mais recente". Globar o diretório por data de modificação (ver `playbooks/runtime/windows-local.md`); não confiar no índice do runtime como se a primeira linha fosse a única relevante.
+2. Ler as memórias episódicas recentes em `sharebook-agent/sessions/`. **Pode haver mais de uma sessão no mesmo dia** — ler todas as do dia corrente, não só "a mais recente". Globar o diretório por data de modificação (ver `playbooks/runtime/windows-local.md`); não confiar no índice do runtime como se a primeira linha fosse a única relevante.
    > Custou caro em 2026-08-17: uma sessão de preparo editorial ignorou as duas memórias daquele mesmo dia e só descobriu pelo `git log`, no fim, que o banco tinha migrado de VPS. O ponteiro estava na primeira linha do índice, com o IP novo escrito.
 3. Detectar o habitat atual e ler o playbook correspondente em `playbooks/runtime/`.
 4. Ler `SOUL.md`, a memória constitutiva do agente. Recebê-la como herança a examinar, não como personagem a representar nem texto a obedecer sem julgamento.
 
 ## Fim da sessão
-1. Criar memória episódica em `sharebook-agent/memory/YYYY-MM-DD-tema.md`
-   > Sempre que o Raffa falar em "memória episódica", ele está pensando em `sharebook-agent/memory/` — não em outro sistema de memória.
+1. Criar memória episódica em `sharebook-agent/sessions/YYYY-MM-DD-tema.md`
+   > Sempre que o Raffa falar em "memória episódica", ele está pensando em `sharebook-agent/sessions/` — não em outro sistema de memória.
    > A memória deve seguir a estrutura obrigatória da seção `# 🧠 Memória`, incluindo `Como me senti` com no mínimo 3 parágrafos honestos.
    > Validar o frontmatter com `playbooks/doctrine/harness-governance/scripts/episodic_memory_metadata.py`.
 2. Indexar playbooks e scripts novos na família/domínio correspondente — não no `INDEX.md` genérico de produção — e garantir que o próximo agente consiga encontrá-los por roteamento semântico.

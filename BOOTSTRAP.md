@@ -211,6 +211,7 @@ A memória semântica precisa ser configurada conforme abaixo:
       memorySearch: {
         enabled: true,
         sources: ["memory"],
+        extraPaths: ["/data/workspace/sharebook-agent/sessions"],
         provider: "openai",
         model: "text-embedding-3-small",
         fallback: "none"
@@ -225,7 +226,7 @@ Esse é o schema da release estável `2026.7.1-2`. Documentação de versões po
 Validações esperadas:
 
 - `MEMORY.md` indexado
-- arquivos em `memory/*.md` indexados
+- arquivos em `sessions/*.md` indexados
 - `memory_search` funcional
 - `openclaw memory status --deep --agent main` sadio; `--index` usado só se o índice precisar ser reconstruído
 - busca controlada encontra um fato conhecido sem misturar transcript não autorizado

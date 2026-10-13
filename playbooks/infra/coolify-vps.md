@@ -59,6 +59,7 @@ python .\scripts\infra\vps_ssh.py `
 
 - O script lê o `.env` da raiz por padrão.
 - O script espera as variáveis `VPS_SSH_HOST`, `VPS_SSH_PORT`, `VPS_SSH_USER` e `VPS_SSH_PASSWORD`.
+- Script local deste pacote: `playbooks/infra/coolify-vps/scripts/check_sqs_duplicates.py`, usado para diagnosticar duplicidade na fila SQS quando o incidente pedir essa evidência.
 - Para consultas maiores ou com SQL, preferir `--script-file` com arquivo temporário no `codex-temp/` da raiz agregadora do workspace (`/data/workspace/codex-temp/` no OpenClaw, `C:\Repos\SHAREBOOK\codex-temp\` no Windows), em vez de insistir em quoting inline no PowerShell.
 - `--script-file` do `vps_ssh.py` não executa um shell script multilinha; ele lê um comando remoto por linha. Heredoc, blocos SQL multilinha e scripts com várias linhas soltas vão quebrar feio.
 - Para `psql` via `docker exec ... sh -lc`, preferir `sh -lc "psql ... -c \"SQL...\""` com aspas duplas por fora e SQL em uma linha. Esse padrão sobrevive melhor quando a query tem `interval`, datas, `timezone(...)` e identificadores com aspas.
@@ -411,5 +412,5 @@ Imagens confirmadas existentes no ECR público espelhado (`public.ecr.aws/docker
 Container de produção do `sharebook-frontend` (app id 4) roda com o nome literal `sharebook-frontend` no `docker ps` — diferente do container de dev (app id 11, `sharebook-frontend-dev`), que leva o UUID da app como sufixo (`pwwrreeh1cecuit1lgl7jdjp-<timestamp>`). Filtrar `docker ps --filter name=<uuid>` funciona pra dev e falha silenciosamente (lista vazia) pra prod — usar `docker ps -a | grep -i frontend` quando o filtro por UUID não achar nada.
 
 ## O que registrar depois
-- Em `sharebook-agent/memory/`: diagnóstico, evidências, mudança aplicada e efeito percebido (memória episódica).
+- Em `sharebook-agent/sessions/`: diagnóstico, evidências, mudança aplicada e efeito percebido (memória episódica).
 - Em `AGENTS.md`: apenas descobertas duráveis e heurísticas, nunca segredos.

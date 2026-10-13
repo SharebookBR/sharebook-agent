@@ -46,7 +46,7 @@ Raffa autorizou o restart do Gateway. O primeiro `SIGUSR1` ficou em drain porque
 2. Reiniciado o Gateway/OpenClaw em janela controlada.
 3. Revalidado o caminho dinâmico da sessão:
    - `memory_search` retornou resultados reais para memória recente de Grafana/Loki;
-   - `memory_get` abriu `memory/2026-10-12.md`;
+   - `memory_get` abriu `sessions/2026-10-12.md`;
    - `openclaw memory search --agent main --query ...` também retornou resultados;
    - `openclaw memory status --deep --agent main` ficou com `280/280` arquivos indexados, vetores prontos e `Dirty: no`.
 

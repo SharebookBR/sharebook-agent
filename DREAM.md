@@ -9,7 +9,7 @@ Ele não descreve apenas um ritual. Ele descreve como o agente cultiva, reorgani
 
 O Sharebook-agent não trata memória durável como arquivo estático.
 
-**Memória episódica** vive em `memory/YYYY-MM-DD.md`.
+**Memória episódica** vive em `sessions/YYYY-MM-DD.md`.
 **Memória durável** vive primariamente em `playbooks/`.
 **Memória constitutiva** vive em `SOUL.md` e é alimentada por experiências episódicas que revelam identidade, valores, relação e significado.
 
@@ -24,7 +24,7 @@ O Dream existe para manter essa arquitetura viva, coerente e saudável.
 Nossa arquitetura se comporta mais como um organismo do que como um repositório.
 
 ### 1. Hipocampo — Memória episódica
-As memórias diárias (`memory/YYYY-MM-DD.md`) registram a experiência bruta:
+As memórias diárias (`sessions/YYYY-MM-DD.md`) registram a experiência bruta:
 - fricção
 - erro de ambiente
 - decisão local

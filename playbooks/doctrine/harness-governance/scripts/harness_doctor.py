@@ -33,6 +33,7 @@ IGNORED_DIRECTORIES = {
 }
 
 IGNORED_DIRECTORY_PREFIXES = (".venv",)
+ARTIFACT_DIRECTORIES = {"assets", "examples", "references", "scripts", "secrets", "templates"}
 
 
 def _is_ignored_directory_name(name: str) -> bool:
@@ -154,6 +155,14 @@ class HarnessDoctor:
             for path in skills_root.rglob("PLAYBOOK.md")
             if not self._is_ignored(path)
         }
+        companion_skill_directories = {
+            markdown.with_suffix("").resolve(): markdown.resolve()
+            for markdown in skills_root.glob("*/*.md")
+            if markdown.name != "INDEX.md"
+            and (markdown.with_suffix("")).is_dir()
+            and not self._is_ignored(markdown)
+        }
+        skill_directories.update(companion_skill_directories)
 
         # Immediate family children are either standalone Markdown playbooks or playbook folders.
         for family in sorted(path for path in skills_root.iterdir() if path.is_dir()):
@@ -161,6 +170,8 @@ class HarnessDoctor:
                 continue
             for child in sorted(path for path in family.iterdir() if path.is_dir()):
                 if _is_ignored_directory_name(child.name):
+                    continue
+                if child.name in ARTIFACT_DIRECTORIES and (family / "PLAYBOOK.md").is_file():
                     continue
                 if child.resolve() not in skill_directories:
                     findings.append(
@@ -172,7 +183,9 @@ class HarnessDoctor:
                     )
 
         for skill_directory in sorted(skill_directories):
-            skill_file = skill_directory / "PLAYBOOK.md"
+            skill_file = companion_skill_directories.get(
+                skill_directory.resolve(), skill_directory / "PLAYBOOK.md"
+            )
             skill_text = self._read_text(skill_file).replace("\\", "/").casefold()
             nested_skill_directories = {
                 candidate.parent.resolve()
@@ -191,6 +204,8 @@ class HarnessDoctor:
 
                 for directory_name in directory_names:
                     directory = current / directory_name
+                    if directory.resolve() == skill_directory and directory.name in ARTIFACT_DIRECTORIES:
+                        continue
                     relative = directory.relative_to(skill_directory).as_posix()
                     if not artifact_is_mentioned(relative, skill_text, is_directory=True):
                         findings.append(
@@ -205,8 +220,13 @@ class HarnessDoctor:
                     artifact = current / file_name
                     if artifact == skill_file or self._is_ignored(artifact):
                         continue
+                    if artifact == skill_directory / "INDEX.md":
+                        continue
                     relative = artifact.relative_to(skill_directory).as_posix()
-                    if not artifact_is_mentioned(relative, skill_text, is_directory=False):
+                    if file_name == "INDEX.md" and "scripts" in relative.split("/"):
+                        continue
+                    artifact_text = skill_text + "\n" + self._artifact_index_text(artifact, skill_directory)
+                    if not artifact_is_mentioned(relative, artifact_text, is_directory=False):
                         findings.append(
                             Finding(
                                 code="orphan_skill_artifact",
@@ -216,13 +236,27 @@ class HarnessDoctor:
                         )
         return findings
 
+    def _artifact_index_text(self, artifact: Path, skill_directory: Path) -> str:
+        try:
+            relative = artifact.resolve().relative_to(skill_directory.resolve())
+        except ValueError:
+            return ""
+        if not relative.parts or relative.parts[0] != "scripts":
+            return ""
+        candidates = [artifact.parent / "INDEX.md", skill_directory / "scripts" / "INDEX.md"]
+        chunks: list[str] = []
+        for candidate in candidates:
+            if candidate.is_file():
+                chunks.append(self._read_text(candidate))
+        return "\n".join(chunks).replace("\\", "/").casefold()
+
     def audit_dream_state(self) -> list[Finding]:
-        state_file = self.root / "memory" / "_dream-state.md"
+        state_file = self.root / "sessions" / "_dream-state.md"
         if not state_file.is_file():
             return [
                 Finding(
                     code="missing_dream_state",
-                    path="memory/_dream-state.md",
+                    path="sessions/_dream-state.md",
                     message="Checkpoint oficial do Dream não existe.",
                 )
             ]
@@ -291,23 +325,26 @@ class HarnessDoctor:
 
         memory_reference = memory_match.group(1).strip()
         normalized_reference = memory_reference.replace("\\", "/")
-        marker = "/memory/"
-        if normalized_reference.startswith("memory/"):
+        if normalized_reference.startswith("sessions/"):
+            memory_relative = normalized_reference[len("sessions/") :]
+        elif normalized_reference.startswith("memory/"):
             memory_relative = normalized_reference[len("memory/") :]
-        elif marker in normalized_reference:
-            memory_relative = normalized_reference.split(marker, 1)[1]
+        elif "/sessions/" in normalized_reference:
+            memory_relative = normalized_reference.split("/sessions/", 1)[1]
+        elif "/memory/" in normalized_reference:
+            memory_relative = normalized_reference.split("/memory/", 1)[1]
         else:
             memory_relative = Path(normalized_reference).name
 
         memory_name = Path(memory_relative).name
-        referenced_memory = self.root / "memory" / memory_relative
+        referenced_memory = self.root / "sessions" / memory_relative
         if not referenced_memory.is_file():
             findings.append(
                 Finding(
                     code="incoherent_dream_state",
                     path=self._display_path(state_file),
                     target=memory_reference,
-                    message="Última memória absorvida não existe em memory/.",
+                    message="Última memória absorvida não existe em sessions/.",
                 )
             )
         name_match = MEMORY_NAME_RE.match(memory_name)
@@ -337,7 +374,7 @@ class HarnessDoctor:
         return findings
 
     def audit_memory_frontmatter(self) -> list[Finding]:
-        memory_root = self.root / "memory"
+        memory_root = self.root / "sessions"
         if not memory_root.is_dir():
             return []
 
@@ -388,7 +425,7 @@ class HarnessDoctor:
 
     def _is_memory_file(self, path: Path) -> bool:
         try:
-            path.resolve().relative_to((self.root / "memory").resolve())
+            path.resolve().relative_to((self.root / "sessions").resolve())
             return True
         except ValueError:
             return False

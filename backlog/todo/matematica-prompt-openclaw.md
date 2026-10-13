@@ -59,7 +59,7 @@ PASSO 3: verificação (pela API pública, poucas chamadas)
 REGRAS
 - Idempotente: se rodar de novo, deve detectar que já foi feito e não duplicar categorias.
 - Em caso de dúvida, pare e pergunte. Não improvise correção em produção.
-- Não crie PR. Registre o resultado em memory/ seguindo o padrão do repo, curto, e atualize o estado em backlog/todo/revisao-escopo-matematica-corredor-tecnologia.md.
+- Não crie PR. Registre o resultado em sessions/ seguindo o padrão do repo, curto, e atualize o estado em backlog/todo/revisao-escopo-matematica-corredor-tecnologia.md.
 
 RELATÓRIO FINAL (máx. 15 linhas)
 IDs das 7 categorias criadas; contagem por subcategoria; caminho do rollback; resultado da verificação (ok/divergência); o que viu na Home; o que ficou pendente.

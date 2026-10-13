@@ -3,7 +3,7 @@
 > **Status: hipótese histórica; não presumir recorrência no runtime reativado em 2026-08-30.**
 > O volume, os perfis OAuth, o agente `mini` e os jobs investigados em junho foram removidos em 16/08. O diagnóstico (`usage: {}` vazio, 0 tool calls, perfis independentes) continua útil, mas este item só reabre com a mesma assinatura observada em logs atuais.
 
-**Origem**: Investigação de 12/Jun/2026 (achados resumidos abaixo). O arquivo `memory/2026-06-12-openai-drain-investigation.md` citado nas versões anteriores deste documento nunca existiu no repo — link morto de origem, não arquivo perdido depois. Não recriar por suposição.
+**Origem**: Investigação de 12/Jun/2026 (achados resumidos abaixo). O arquivo `sessions/2026-06-12-openai-drain-investigation.md` citado nas versões anteriores deste documento nunca existiu no repo — link morto de origem, não arquivo perdido depois. Não recriar por suposição.
 **Data**: 12/Jun/2026  
 **Prioridade**: Suspensa até existir evidência atual (era Alta enquanto os cron jobs antigos do mini existiam)
 

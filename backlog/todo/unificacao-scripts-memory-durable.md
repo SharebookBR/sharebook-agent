@@ -9,7 +9,7 @@ O `sharebook-agent` tem conhecimento operacional espalhado em dois lugares com l
 ### 1. Renomear para explicitar a simetria
 
 - `playbooks/` → `memory-durable/`
-- `memory/` → `memory-episodic/`
+- `sessions/` → `memory-episodic/`
 
 A nomenclatura torna explícito que são dois tipos de memória do mesmo organismo, alinhado com a doutrina do DREAM.
 
@@ -27,9 +27,9 @@ Uma única pergunta: "qual memory-durable resolve X?"
 
 ## Custo real
 
-- Renomear `memory/` para `memory-episodic/` exige atualizar todas as referências em `AGENTS.md`, `DREAM.md` e rituais.
+- Renomear `sessions/` para `memory-episodic/` exige atualizar todas as referências em `AGENTS.md`, `DREAM.md` e rituais.
 - Cada script atual precisa ser avaliado: qual knowledge o absorve, ou precisa de knowledge nova?
 
 ## Decisão pendente
 
-A renomeação de `memory/` para `memory-episodic/` vale o custo de migração, ou mantemos `memory/` como está e só renomeamos `playbooks/`?
+A renomeação de `sessions/` para `memory-episodic/` vale o custo de migração, ou mantemos `sessions/` como está e só renomeamos `playbooks/`?

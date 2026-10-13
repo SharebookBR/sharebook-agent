@@ -604,6 +604,8 @@ Scripts em `playbooks/importers/ebook-importer/scripts/`. Regra: se não está a
 | `materialize_assets.py` | `python ... --ids <ids> [--dsn-host H --dsn-port P] [--tmp-dir D] [--max-cover-bytes N]` | Multiplataforma: baixa o PDF de `manifest.source_url`, valida magic `%PDF-`, renderiza e comprime a capa e reaponta `manifest`/`triage` no banco. Resolve paths por habitat via `sharebook_env.resolve_runtime_path`; `--dsn-host/--dsn-port` apontam para o túnel Postgres (ex.: 127.0.0.1:15432). Não sobrescreve `metadata_json` cegamente — faz merge |
 | `render_covers.py` | `python ... --ids <ids>` | Renderiza página 1 como PNG, atualiza `triage.preview_pages`. Procura o PDF em `triage-<id>\source.pdf` e depois em `Downloads\<id>.pdf` |
 | `publish_fake_pdf.py` | `python ... --id <id> [--pdf-path <pdf>] [--cover-path <capa>]` | **Exceção**, não rota de PDF grande: cria com fake.pdf, envia o PDF real ao S3, aprova e marca `done`; usa `IMPORTER_DB_DSN` e renova token expirado |
+| `inspect_sources.py` | `python ...` | Inventaria sources configuradas no importer |
+| `migrate_editorial_prompt.py` | `python ...` | Migra prompts editoriais de source quando explicitamente necessário |
 
 > Plano editorial via `cli.py plan-set` — não por script.
 

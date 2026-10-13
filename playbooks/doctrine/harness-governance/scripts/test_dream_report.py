@@ -20,8 +20,8 @@ class DreamReportTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temp_dir = tempfile.TemporaryDirectory()
         self.repo = Path(self.temp_dir.name)
-        self.memory = self.repo / "memory"
-        self.memory.mkdir()
+        self.sessions = self.repo / "sessions"
+        self.sessions.mkdir()
 
     def tearDown(self) -> None:
         self.temp_dir.cleanup()
@@ -34,17 +34,17 @@ class DreamReportTests(unittest.TestCase):
 
     def state(self, last_absorbed: Path, dream_date: str = "2026-08-17") -> None:
         self.write(
-            "memory/_dream-state.md",
+            "sessions/_dream-state.md",
             "# Dream State\n\n## Último dream\n"
             f"- Data: `{dream_date}`\n"
             f"- Última memória absorvida: `{last_absorbed}`\n",
         )
 
     def test_frontmatter_v1_is_aggregated_and_checkpoint_is_incremental(self) -> None:
-        absorbed = self.write("memory/2026-08-16-absorvida.md", "# Já absorvida\n")
+        absorbed = self.write("sessions/2026-08-16-absorvida.md", "# Já absorvida\n")
         self.state(absorbed)
         self.write(
-            "memory/2026-08-18-nova.md",
+            "sessions/2026-08-18-nova.md",
             """+++
 schema_version = 1
 session_date = 2026-08-18
@@ -57,7 +57,7 @@ skills_updated = ["playbooks/runtime/windows-local.md"]
 facts_changed = ["A porta mudou"]
 open_loops = ["Validar o relay"]
 durable_candidates = ["Registrar retomada"]
-supersedes = ["memory/fato-antigo.md"]
+supersedes = ["sessions/fato-antigo.md"]
 evidence = ["log 42"]
 +++
 # Corpo
@@ -73,15 +73,15 @@ evidence = ["log 42"]
         self.assertEqual("A porta mudou", report["facts_changed"][0]["value"])
         self.assertEqual("Validar o relay", report["open_loops"][0]["value"])
         self.assertEqual("Registrar retomada", report["durable_candidates"][0]["value"])
-        self.assertEqual("memory/fato-antigo.md", report["supersessions"][0]["value"])
+        self.assertEqual("sessions/fato-antigo.md", report["supersessions"][0]["value"])
         self.assertEqual("log 42", report["evidence"][0]["value"])
         self.assertEqual([], report["memories_without_metadata"])
 
     def test_legacy_fallback_extracts_skills_and_marks_missing_metadata(self) -> None:
-        absorbed = self.write("memory/2026-08-16-absorvida.md", "# Já absorvida\n")
+        absorbed = self.write("sessions/2026-08-16-absorvida.md", "# Já absorvida\n")
         self.state(absorbed)
         self.write(
-            "memory/2026-08-19-legada.md",
+            "sessions/2026-08-19-legada.md",
             """# Sessão legada
 
 ## 2. Playbooks acionados
@@ -106,10 +106,10 @@ Consultadas:
         self.assertEqual(["2026-08-19-legada.md"], report["memories_without_metadata"])
 
     def test_missing_checkpoint_file_falls_back_after_its_filename_date(self) -> None:
-        missing = self.memory / "2026-08-16-ausente.md"
+        missing = self.sessions / "2026-08-16-ausente.md"
         self.state(missing)
-        self.write("memory/2026-08-15-antiga.md", "# Antiga\n")
-        self.write("memory/2026-08-17-nova.md", "# Nova\n")
+        self.write("sessions/2026-08-15-antiga.md", "# Antiga\n")
+        self.write("sessions/2026-08-17-nova.md", "# Nova\n")
 
         report = dream_report.build_report(self.repo)
 
@@ -117,14 +117,29 @@ Consultadas:
         self.assertTrue(any("arquivo ausente" in warning for warning in report["warnings"]))
 
     def test_windows_absolute_checkpoint_is_resolved_relative_to_memory_root(self) -> None:
-        self.write("memory/2026-08-16-absorvida.md", "# Já absorvida\n")
+        self.write("sessions/2026-08-16-absorvida.md", "# Já absorvida\n")
         self.write(
-            "memory/_dream-state.md",
+            "sessions/_dream-state.md",
             "# Dream State\n\n## Último dream\n"
             "- Data: `2026-08-17`\n"
-            "- Última memória absorvida: `C:\\Repos\\SHAREBOOK\\sharebook-agent\\memory\\2026-08-16-absorvida.md`\n",
+            "- Última memória absorvida: `C:\\Repos\\SHAREBOOK\\sharebook-agent\\sessions\\2026-08-16-absorvida.md`\n",
         )
-        self.write("memory/2026-08-17-nova.md", "# Nova\n")
+        self.write("sessions/2026-08-17-nova.md", "# Nova\n")
+
+        report = dream_report.build_report(self.repo)
+
+        self.assertEqual(["2026-08-17-nova.md"], [item["path"] for item in report["harvest"]["memories"]])
+        self.assertEqual([], report["warnings"])
+
+    def test_legacy_memory_checkpoint_path_resolves_to_sessions_root(self) -> None:
+        self.write("sessions/2026-08-16-absorvida.md", "# Já absorvida\n")
+        self.write(
+            "sessions/_dream-state.md",
+            "# Dream State\n\n## Último dream\n"
+            "- Data: `2026-08-17`\n"
+            "- Última memória absorvida: `memory/2026-08-16-absorvida.md`\n",
+        )
+        self.write("sessions/2026-08-17-nova.md", "# Nova\n")
 
         report = dream_report.build_report(self.repo)
 
@@ -132,10 +147,10 @@ Consultadas:
         self.assertEqual([], report["warnings"])
 
     def test_invalid_metadata_is_reported_without_inventing_entries(self) -> None:
-        absorbed = self.write("memory/2026-08-16-absorvida.md", "# Já absorvida\n")
+        absorbed = self.write("sessions/2026-08-16-absorvida.md", "# Já absorvida\n")
         self.state(absorbed)
         self.write(
-            "memory/2026-08-18-invalida.md",
+            "sessions/2026-08-18-invalida.md",
             """+++
 schema_version = 2
 session_date = "ontem"
@@ -153,9 +168,9 @@ skills_used = "backend"
         self.assertEqual(["2026-08-18-invalida.md"], report["memories_without_metadata"])
 
     def test_markdown_and_optional_json_are_emitted(self) -> None:
-        absorbed = self.write("memory/2026-08-16-absorvida.md", "# Já absorvida\n")
+        absorbed = self.write("sessions/2026-08-16-absorvida.md", "# Já absorvida\n")
         self.state(absorbed)
-        self.write("memory/2026-08-18-legada.md", "# Nova\n\n## Playbooks acionados\n- `playbook-a`\n")
+        self.write("sessions/2026-08-18-legada.md", "# Nova\n\n## Playbooks acionados\n- `playbook-a`\n")
         markdown_path = self.repo / "out" / "report.md"
         json_path = self.repo / "out" / "report.json"
 

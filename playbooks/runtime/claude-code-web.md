@@ -42,13 +42,13 @@ Git direto (`git push`/`git pull` por HTTPS) e a API do GitHub via MCP dependem 
 
 Resolução: o dono/admin da org instala o app em **https://github.com/apps/claude/installations/select_target**, selecionando a org e os repositórios. Reconectar a conta pessoal em claude.ai/customize/connectors **não é a mesma coisa** e não resolve sozinho — são dois passos distintos, o segundo (instalação do App na org) é o que efetivamente libera push/pull. Depois de instalado, git funciona normalmente, sem precisar de token nem de configuração adicional.
 
-**Nota — sessões de task (GitHub App) recebem branch de trabalho designada pelo harness**, com instrução de nunca pushar pra outra branch sem permissão explícita. Isso vale para o trabalho da tarefa em si (código, feature, fix) — **não vale por padrão para os artefatos de continuidade do harness** (`SOUL.md`, `AGENTS.md`, `playbooks/**`, `memory/**`).
+**Nota — sessões de task (GitHub App) recebem branch de trabalho designada pelo harness**, com instrução de nunca pushar pra outra branch sem permissão explícita. Isso vale para o trabalho da tarefa em si (código, feature, fix) — **não vale por padrão para os artefatos de continuidade do harness** (`SOUL.md`, `AGENTS.md`, `playbooks/**`, `sessions/**`).
 
 ### Continuidade vive na master, não na branch de task
 
 `SOUL.md`, `AGENTS.md`, playbooks e memória episódica só cumprem função de continuidade entre sessões e modelos se estiverem onde a próxima sessão de fato vai ler — isso é a master (ou o que sincroniza com ela nos outros habitats), não uma branch efêmera de task que pode nunca ser mergeada. Uma atualização de playbook presa numa branch de task é, na prática, conhecimento que não existe: ninguém garante o merge, e o próximo agente faz o ritual de abertura a partir da master.
 
-Por isso, ao atualizar `SOUL.md`, `AGENTS.md`, qualquer `playbooks/**` ou `memory/**` nesta sessão, o push vai direto pra master (via `git push` local se o clone existir, senão via `mcp__github__create_or_update_file` — mas nesse caso passando o conteúdo em texto puro, nunca pré-codificado em base64), mesmo que o resto do trabalho da tarefa fique na branch designada — com confirmação explícita do Raffa quando a ambiguidade existir, já que a regra padrão da sessão de task é não pushar fora da branch designada.
+Por isso, ao atualizar `SOUL.md`, `AGENTS.md`, qualquer `playbooks/**` ou `sessions/**` nesta sessão, o push vai direto pra master (via `git push` local se o clone existir, senão via `mcp__github__create_or_update_file` — mas nesse caso passando o conteúdo em texto puro, nunca pré-codificado em base64), mesmo que o resto do trabalho da tarefa fique na branch designada — com confirmação explícita do Raffa quando a ambiguidade existir, já que a regra padrão da sessão de task é não pushar fora da branch designada.
 
 Validado em 2026-09-17: push direto na master funciona via GitHub MCP tools ou via `git push` local, sem bloqueio de proteção de branch — o limite real de push-para-master aqui é autorização explícita do Raffa, não capacidade técnica do habitat.
 
@@ -78,7 +78,7 @@ Cuidado ao editar arquivos do backend com script Python: vários têm BOM e algu
 
 ## Memórias do dia no ritual de abertura
 
-O `AGENTS.md` manda ler todas as memórias do dia ordenando pela data de modificação. Aqui o clone é recém-criado e todos os arquivos têm o mesmo mtime, então essa ordenação não serve. Ordenar pelo nome (`ls memory/ | sort | tail`), que começa com `YYYY-MM-DD`.
+O `AGENTS.md` manda ler todas as memórias do dia ordenando pela data de modificação. Aqui o clone é recém-criado e todos os arquivos têm o mesmo mtime, então essa ordenação não serve. Ordenar pelo nome (`ls sessions/ | sort | tail`), que começa com `YYYY-MM-DD`.
 
 ## Frontend: Node, testes e render visual
 

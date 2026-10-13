@@ -49,15 +49,15 @@ class HarnessFixture:
         )
         self.write("playbooks/family/sample/scripts/tool.py", "")
         self.write("playbooks/family/sample/references/guide.md", "# Guia\n")
-        self.write("memory/2026-08-19-before-dream.md", "# Legada\n")
-        self.write("memory/2026-08-20-session.md", VALID_METADATA + "\n# Memória\n")
+        self.write("sessions/2026-08-19-before-dream.md", "# Legada\n")
+        self.write("sessions/2026-08-20-session.md", VALID_METADATA + "\n# Memória\n")
         self.write(
-            "memory/_dream-state.md",
+            "sessions/_dream-state.md",
             """# Dream State
 
 ## Último dream
 - Data: `2026-08-20`
-- Última memória absorvida: `memory/2026-08-19-before-dream.md`
+- Última memória absorvida: `sessions/2026-08-19-before-dream.md`
 """,
         )
 
@@ -109,7 +109,7 @@ class HarnessDoctorTests(unittest.TestCase):
 
     def test_broken_links_inside_episodic_memory_are_not_structural_findings(self) -> None:
         self.fixture.make_clean()
-        self.fixture.write("memory/2026-08-20-with-dead-link.md", "[histórico](old/path.md)\n")
+        self.fixture.write("sessions/2026-08-20-with-dead-link.md", "[histórico](old/path.md)\n")
 
         self.assertNotIn("broken_markdown_link", self.codes())
 
@@ -141,11 +141,11 @@ class HarnessDoctorTests(unittest.TestCase):
     def test_missing_and_incoherent_dream_state_are_reported(self) -> None:
         self.fixture.make_clean()
         self.fixture.write(
-            "memory/_dream-state.md",
+            "sessions/_dream-state.md",
             """# Dream State
 ## Último dream
 - Data: `2026-08-18`
-- Última memória absorvida: `memory/2026-08-19-before-dream.md`
+- Última memória absorvida: `sessions/2026-08-19-before-dream.md`
 """,
         )
         findings = HarnessDoctor(self.root, today=dt.date(2026, 8, 20)).run()
@@ -156,12 +156,26 @@ class HarnessDoctorTests(unittest.TestCase):
     def test_windows_absolute_dream_checkpoint_is_resolved_under_memory_root(self) -> None:
         self.fixture.make_clean()
         self.fixture.write(
-            "memory/_dream-state.md",
+            "sessions/_dream-state.md",
             """# Dream State
 
 ## Último dream
 - Data: `2026-08-20`
-- Última memória absorvida: `C:\\Repos\\SHAREBOOK\\sharebook-agent\\memory\\2026-08-19-before-dream.md`
+- Última memória absorvida: `C:\\Repos\\SHAREBOOK\\sharebook-agent\\sessions\\2026-08-19-before-dream.md`
+""",
+        )
+
+        self.assertNotIn("incoherent_dream_state", self.codes())
+
+    def test_legacy_memory_dream_checkpoint_is_resolved_under_sessions_root(self) -> None:
+        self.fixture.make_clean()
+        self.fixture.write(
+            "sessions/_dream-state.md",
+            """# Dream State
+
+## Último dream
+- Data: `2026-08-20`
+- Última memória absorvida: `memory/2026-08-19-before-dream.md`
 """,
         )
 
@@ -170,7 +184,7 @@ class HarnessDoctorTests(unittest.TestCase):
     def test_legacy_memory_is_allowed_and_invalid_toml_metadata_is_reported(self) -> None:
         self.fixture.make_clean()
         self.fixture.write(
-            "memory/2026-08-20-invalid.md",
+            "sessions/2026-08-20-invalid.md",
             VALID_METADATA.replace("skills_used = [\"runtime/windows-local\"]", "skills_used = \"runtime/windows-local\""),
         )
         findings = HarnessDoctor(self.root, today=dt.date(2026, 8, 20)).run()
@@ -183,7 +197,7 @@ class HarnessDoctorTests(unittest.TestCase):
     def test_frontmatter_date_must_match_filename(self) -> None:
         self.fixture.make_clean()
         self.fixture.write(
-            "memory/2026-08-19-wrong-date.md",
+            "sessions/2026-08-19-wrong-date.md",
             VALID_METADATA + "\n# Memória\n",
         )
         self.assertIn("incoherent_memory_frontmatter", self.codes())
@@ -191,7 +205,7 @@ class HarnessDoctorTests(unittest.TestCase):
     def test_frontmatter_in_archived_memory_is_validated(self) -> None:
         self.fixture.make_clean()
         self.fixture.write(
-            "memory/2026-07/2026-07-31-invalid.md",
+            "sessions/2026-07/2026-07-31-invalid.md",
             VALID_METADATA.replace("session_date = 2026-08-20", 'session_date = "2026-07-31"'),
         )
 
@@ -200,7 +214,7 @@ class HarnessDoctorTests(unittest.TestCase):
         self.assertTrue(
             any(
                 finding.code == "invalid_memory_frontmatter"
-                and finding.path == "memory/2026-07/2026-07-31-invalid.md"
+                and finding.path == "sessions/2026-07/2026-07-31-invalid.md"
                 for finding in findings
             )
         )
@@ -208,7 +222,7 @@ class HarnessDoctorTests(unittest.TestCase):
     def test_frontmatter_v1_rejects_unknown_fields(self) -> None:
         self.fixture.make_clean()
         self.fixture.write(
-            "memory/2026-08-20-unknown.md",
+            "sessions/2026-08-20-unknown.md",
             VALID_METADATA.replace("evidence =", "unexpected = []\nevidence ="),
         )
         findings = HarnessDoctor(self.root, today=dt.date(2026, 8, 20)).run()

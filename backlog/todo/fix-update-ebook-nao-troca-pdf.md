@@ -38,5 +38,5 @@ Sobrescrever direto no S3 a chave `ebooks/<slug>.pdf` e validar pelo download p�
 
 ## Evidência
 
-- `memory/2026-09-27-sharebook-originals-bruxa-e-lumi.md`, com o relato do OpenClaw e a leitura do código.
+- `sessions/2026-09-27-sharebook-originals-bruxa-e-lumi.md`, com o relato do OpenClaw e a leitura do código.
 - Bruxa por Acaso: ID `01a0e34d-294d-75f1-b8b1-7952bd01650d`, PDF trocado manualmente no S3 para 5.116.691 bytes.

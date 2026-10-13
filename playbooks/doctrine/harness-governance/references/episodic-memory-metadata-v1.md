@@ -35,7 +35,7 @@ interpretada nem reescrita pelo parser.
 ```powershell
 C:\Users\raffa\AppData\Local\Programs\Python\Python312\python.exe `
   playbooks\doctrine\harness-governance\scripts\episodic_memory_metadata.py `
-  memory\2026-08-20-minha-sessao.md
+  sessions\2026-08-20-minha-sessao.md
 ```
 
 Saídas possíveis: `LEGACY`, `V1` ou `INVALID`. O processo retorna `1` se ao

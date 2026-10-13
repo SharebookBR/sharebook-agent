@@ -253,19 +253,21 @@ def _checkpoint_info(state_path: Path) -> tuple[str | None, str | None]:
     )
 
 
-def _resolve_checkpoint(raw_path: str | None, repo_root: Path, memory_root: Path) -> Path | None:
+def _resolve_checkpoint(raw_path: str | None, repo_root: Path, sessions_root: Path) -> Path | None:
     if not raw_path:
         return None
     normalized = raw_path.replace("\\", "/")
-    if normalized.startswith("memory/"):
+    if normalized.startswith("sessions/"):
         return (repo_root / normalized).resolve()
-    marker = "/memory/"
-    if marker in normalized:
-        return (memory_root / normalized.split(marker, 1)[1]).resolve()
+    if normalized.startswith("memory/"):
+        return (sessions_root / normalized.removeprefix("memory/")).resolve()
+    for marker in ("/sessions/", "/memory/"):
+        if marker in normalized:
+            return (sessions_root / normalized.split(marker, 1)[1]).resolve()
     candidate = Path(normalized)
     if candidate.is_absolute():
         return candidate.resolve()
-    return (memory_root / normalized).resolve()
+    return (sessions_root / normalized).resolve()
 
 
 def _record_sort_key(record: MemoryRecord) -> tuple[str, str]:
@@ -335,7 +337,7 @@ def _collect_entries(records: Iterable[MemoryRecord], field_name: str) -> list[d
 
 def build_report(repo_root: Path) -> dict[str, Any]:
     repo_root = repo_root.resolve()
-    memory_root = repo_root / "memory"
+    memory_root = repo_root / "sessions"
     state_path = memory_root / "_dream-state.md"
     if not state_path.is_file():
         raise FileNotFoundError(f"checkpoint do Dream não encontrado: {state_path}")

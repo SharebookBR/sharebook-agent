@@ -23,7 +23,7 @@ IDs observados: raiz Matemática & Lógica `d18ba112-a3bd-46ec-83d0-e7fef50ac4ec
 3. `GET /api/book/CategoryTree/{id}/1/100` confirmou as mesmas contagens por folha, todas ebooks.
 4. Páginas públicas HTTP 200: `/categorias`, `/categorias/matematica-logica`, `/categorias/matematica-logica/calculo-e-analise`, `/livros/calculus-volume-1`, `/livros/the-open-logic-text`, `/livros/computacao-matematica-discreta`.
 5. Home pública e `GET /api/home/categories-showcase` já mostram Matemática & Lógica com livros.
-6. Rollback localizado na memória `memory/2026-10-02-matematica-categorias-migracao.md`: `/tmp/sharebook_matematica_20261002-012005/{rollback_books.csv,categories_backup.csv}`.
+6. Rollback localizado na memória `sessions/2026-10-02-matematica-categorias-migracao.md`: `/tmp/sharebook_matematica_20261002-012005/{rollback_books.csv,categories_backup.csv}`.
 
 ## O que é
 
@@ -91,6 +91,6 @@ Lista exata em [matematica-lista-movimentacao.csv](matematica-lista-movimentacao
 - [tarefa01-resultado.md](../done/tags-e-conhecimento-estruturado/tarefa01-resultado.md): contagens por tag e exemplos.
 - [matematica-lista-movimentacao.csv](matematica-lista-movimentacao.csv): lista final.
 - API pública: `GET /api/Book/CategoryTree/{categoryId}/{page}/{items}` (Tecnologia: `1dc0f9e3-70d9-4bc8-a76c-90d7144e318c`) e `GET /api/Category`.
-- `memory/2026-10-02-tags-e-categoria-matematica.md`: relato da sessão.
-- `memory/2026-10-02-matematica-categorias-migracao.md`: execução OpenClaw, IDs, contagens, correção de `CategoryService.LoadCategoriesWithCountsAsync` e caminho do rollback.
+- `sessions/2026-10-02-tags-e-categoria-matematica.md`: relato da sessão.
+- `sessions/2026-10-02-matematica-categorias-migracao.md`: execução OpenClaw, IDs, contagens, correção de `CategoryService.LoadCategoriesWithCountsAsync` e caminho do rollback.
 - Verificação 2026-10-05: `GET /api/Category`, `GET /api/category/Counts`, `GET /api/book/CategoryTree/{id}/1/100`, `GET /api/home/categories-showcase` e páginas públicas `/categorias/matematica-logica` e `/categorias/matematica-logica/calculo-e-analise`.

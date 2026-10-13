@@ -25,7 +25,7 @@ No início da sessão:
 3. Se a continuidade depender de registro durável, favorecer arquivos canônicos do projeto em vez de confiar no fio da sessão.
 4. **Ler memórias episódicas usando o caminho absoluto completo no Glob** — não usar `path` + padrão relativo (armadilha documentada):
    ```
-   Glob pattern: C:\Repos\SHAREBOOK\sharebook-agent\memory\*.md
+   Glob pattern: C:\Repos\SHAREBOOK\sharebook-agent\sessions\*.md
    ```
    Ordenar por data de modificação e ler as mais recentes (pós último dream).
 
@@ -59,7 +59,7 @@ Use o mecanismo mais simples e mais fiel ao habitat real.
 - Se o arquivo temporário precisar ser consumido por script, preferir UTF-8 sem BOM quando houver histórico de atrito.
 - Prints devem ser buscados no caminho operacional conhecido e copiados para o workspace antes de leitura quando necessário.
 - **Glob no Windows — armadilha conhecida**: O parâmetro `path` do Glob com caminho absoluto não é confiável neste habitat. Sempre usar o caminho completo diretamente no `pattern`. Exemplos corretos:
-  - Memórias episódicas: `C:\Repos\SHAREBOOK\sharebook-agent\memory\*.md`
+  - Memórias episódicas: `C:\Repos\SHAREBOOK\sharebook-agent\sessions\*.md`
   - Playbooks: `C:\Repos\SHAREBOOK\sharebook-agent\playbooks\**\*.md`
 - **git add case-insensitive — armadilha confirmada em produção**: No Windows, o sistema de arquivos é case-insensitive. `git add AWSSQS/Foo.cs` não dá erro mesmo que o arquivo rastreado esteja em `AwsSqs/Foo.cs` — ele simplesmente não faz nada. O arquivo fica como `modified` e não entra no commit. **Regra obrigatória**: sempre rodar `git status` após o `git add` e antes do `git commit` para confirmar que todos os arquivos esperados estão em `Changes to be committed`. Se algum arquivo ainda aparecer em `Changes not staged`, o path está errado — usar o caminho exato que o `git status` mostra.
 

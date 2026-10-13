@@ -19,7 +19,7 @@ Use este playbook para observar e reparar a arquitetura cognitiva. As ferramenta
 Na raiz de `sharebook-agent`:
 
 ```powershell
-C:\Users\raffa\AppData\Local\Programs\Python\Python312\python.exe playbooks/doctrine/harness-governance/scripts/episodic_memory_metadata.py memory/2026-08-20-exemplo.md
+C:\Users\raffa\AppData\Local\Programs\Python\Python312\python.exe playbooks/doctrine/harness-governance/scripts/episodic_memory_metadata.py sessions/2026-08-20-exemplo.md
 C:\Users\raffa\AppData\Local\Programs\Python\Python312\python.exe playbooks/doctrine/harness-governance/scripts/dream_report.py --repo-root .
 C:\Users\raffa\AppData\Local\Programs\Python\Python312\python.exe playbooks/doctrine/harness-governance/scripts/harness_doctor.py --root .
 ```
