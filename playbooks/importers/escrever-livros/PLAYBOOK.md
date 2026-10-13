@@ -150,7 +150,7 @@ Regra:
 Rota operacional recomendada no `sharebook-agent`:
 
 ```powershell
-node scripts/web/print_pdf_devtools.mjs `
+node playbooks/importers/escrever-livros/scripts/print_pdf_devtools.mjs `
   C:\Repos\SHAREBOOK\sharebook-agent\playbooks\importers\escrever-livros\<livro>-book.html `
   C:\Repos\SHAREBOOK\sharebook-agent\playbooks\importers\escrever-livros\<livro>-book-vX.pdf
 ```
@@ -212,7 +212,7 @@ Projeto de referência: **`sharebook-ebook-importer/originals/bruxa-por-acaso/`*
 - **Capa e ilustrações não passam pelo Chromium.** Página sem margem (`@page` nomeada) no meio do fluxo faz o Chromium encolher o documento inteiro (bug visto: 87 → 53 páginas com letra minúscula). O build imprime só o texto e insere as imagens com PyMuPDF depois: capa na página 1, cada ilustração antes da abertura do capítulo (localizada pelo rótulo `CAPÍTULO N`). As imagens entram recomprimidas em JPEG q85: PNG de IA tem ~4 MB por página e já levou um livro a 42,8 MB (limite de envio no chat é 30 MB; com JPEG, 7,7 MB).
 - **Selo:** folha de rosto usa `product-ux/cover-direction/assets/sharebook-originals-seal.png` (tem fundo preto quadrado; recortar com `clip-path: circle(47%)`).
 - **Capa e ilustrações:** o Raffa gera numa IA de imagem com referência visual das artes anteriores. O agente entrega prompts de cena curtos com "mesmo estilo, mesma paleta e mesmos personagens das ilustrações anteriores". Ele prefere liberdade artística: ilustração não precisa ser fiel ao texto em figurino e detalhes, então não propor ajustar texto nem refazer arte por isso.
-- **Publicação:** quem publica é o OpenClaw, via `scripts/production/sharebook_prod_book.py create --type Eletronic`. A sinopse segue a `voice-glossary` (exatamente 3 parágrafos). Ler o playbook antes de redigir, não depois do puxão de orelha.
+- **Publicação:** quem publica é o OpenClaw, via `playbooks/_shared/scripts/production/sharebook_prod_book.py create --type Eletronic`. A sinopse segue a `voice-glossary` (exatamente 3 parágrafos). Ler o playbook antes de redigir, não depois do puxão de orelha.
 - **Armadilhas de publicação (relatadas pelo OpenClaw, 27/09):**
   - `update --pdf-path` responde "Livro alterado com sucesso!" mas **não troca o PDF**: `BookService.UpdateAsync` ignora `PdfBytes` (o upload só existe no `InsertAsync`). Até o backend ser corrigido, trocar PDF é sobrescrever a chave `ebooks/<slug>.pdf` no S3. Sempre validar pelo download público, nunca pelo retorno do script.
   - `--synopsis-file` com process substitution (`<(...)`) grava sinopse vazia. Usar arquivo real.

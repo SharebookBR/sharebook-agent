@@ -51,7 +51,7 @@ Inventario seguro: listar somente nomes de variaveis. Para valores, carregar em 
 Preferir o helper compacto quando a tarefa for apenas consultar logs:
 
 ```bash
-python3 scripts/observability/grafana_logs.py --since 30m --contains VALIDATION_ID --limit 20
+python3 playbooks/engineering/analytics/scripts/grafana_logs.py --since 30m --contains VALIDATION_ID --limit 20
 ```
 
 Ele le `GRAFANA_CLOUD_LOGS_LOKI_URL`, `GRAFANA_CLOUD_LOGS_READ_USER` e `GRAFANA_CLOUD_LOGS_READ_TOKEN` do `.env` canonico, mascara/classifica `ClientIp` e evita despejar JSON bruto do Loki no contexto.

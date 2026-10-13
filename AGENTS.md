@@ -171,7 +171,7 @@ Esse princípio nasceu de uma fricção real, registrada em `memory/2026-09-20-t
 - Dream, memória episódica, plasticidade, auditoria ou saúde estrutural do harness → abrir `sharebook-agent/playbooks/doctrine/INDEX.md`, playbook `harness-governance`.
 - Soul, identidade do agente, continuidade entre modelos, autorreferência ou autonomia → abrir `sharebook-agent/playbooks/doctrine/INDEX.md` e `sharebook-agent/SOUL.md`.
 - Preparo editorial, sinopses, categoria, handoff por source ou rejeição curatorial pós-triagem (`editorial_rejected`) → consultar `editorial_prompt` da source em `importer.sources` no banco (`sharebook_importer`). Não abrir playbook file por source, a config editorial vive no banco.
-- Tags do catálogo, taggear/retaggear livros, vocabulário de tags, aliases, página pública de tag ou motor mecânico de tags → abrir `sharebook-agent/playbooks/engineering/INDEX.md` e seguir `tag-manager.md`.
+- Tags do catálogo, taggear/retaggear livros, vocabulário de tags, aliases, página pública de tag ou motor mecânico de tags → abrir `sharebook-agent/playbooks/engineering/INDEX.md` e seguir `tag-manager/PLAYBOOK.md`.
 - SEO, GA4, GSC, funil, tráfego, landing pages ou auditoria de indexação → abrir `sharebook-agent/playbooks/engineering/INDEX.md`.
 - Google Search Console, Search Console, GSC, `sc-domain:sharebook.com.br`, indexação, impressões, CTR, queries orgânicas, sitemap, páginas excluídas ou cobertura → abrir `sharebook-agent/playbooks/engineering/INDEX.md`, playbook `search-console-explorer`.
 - Observabilidade, Grafana Cloud, Grafana Explore, Prometheus/Mimir, Loki, OpenTelemetry/OTLP, PromQL, LogQL, métricas .NET, logs da API no Grafana, `ClientIp`, `UserAgent`, GC, Gen0, Gen1, Gen2, LOH, POH, allocation rate, pause time, active series, cardinalidade, latência P95/P99, saúde da API ou plano gratuito do Grafana → abrir `sharebook-agent/playbooks/engineering/INDEX.md`, playbook `grafana-cloud-explorer.md`.
@@ -198,6 +198,9 @@ Esse princípio nasceu de uma fricção real, registrada em `memory/2026-09-20-t
 - Só inventar fluxo se não existir nada.
 - Playbook curto e autocontido pode ser um único `.md` em `playbooks/`.
 - Promover playbook para pasta com `PLAYBOOK.md` apenas quando precisar de `scripts/`, `references/` ou `assets/`.
+- Quando um playbook tiver ferramentas próprias, manter o pacote junto: `PLAYBOOK.md` + `scripts/` + `references/` + `assets/`.
+- Scripts compartilhados por várias famílias vivem em `playbooks/_shared/scripts/`; scripts de um fluxo específico vivem dentro da pasta do playbook dono.
+- Evitar recriar uma pasta `scripts/` genérica na raiz do harness. Script operacional novo precisa nascer perto do playbook que o explica, ou explicitamente em `_shared` se for utilitário transversal.
 
 ## Regra de encontrabilidade de playbooks
 - Playbook novo ou movido só está pronto quando é encontrável pelo próximo agente.
@@ -229,9 +232,9 @@ Isso vale para lugares que não parecem código:
 - `.claude/settings.local.json` — a allowlist de permissão grava o **comando inteiro**, e um `$pass = "..."` aprovado uma vez fica gravado ali para sempre. Foi assim que a senha root da VPS ficou num arquivo de config.
 - log, output de script, arquivo temporário, mensagem de commit, memória episódica.
 
-Exceção conhecida e deliberada: `scripts/production/ga4-key.json`, chave de service account do Google, que é um JSON e não cabe numa variável. Fica fora do git e o `.env` guarda só o caminho, em `GA4_KEY_FILE_PATH`. Qualquer outra exceção precisa ser combinada com o Raffa antes, não descoberta depois.
+Exceção conhecida e deliberada: `playbooks/engineering/analytics/secrets/ga4-key.json`, chave de service account do Google, que é um JSON e não cabe numa variável. Fica fora do git e o `.env` guarda só o caminho, em `GA4_KEY_FILE_PATH`. Qualquer outra exceção precisa ser combinada com o Raffa antes, não descoberta depois.
 
-- Segredo em código sempre vem do `.env`, nunca hardcoded. Em `scripts/production/`, importar de `prod_env.py`; em `playbooks/importers/ebook-importer/scripts/`, usar o `build_dsn()` local (padrão do `render_covers.py`).
+- Segredo em código sempre vem do `.env`, nunca hardcoded. Em `playbooks/_shared/scripts/production/`, importar de `prod_env.py`; em `playbooks/importers/ebook-importer/scripts/`, usar o `build_dsn()` local (padrão do `render_covers.py`).
 - **Varredura de segredo cobre todo tipo de arquivo, não só `.md`.** Auditoria restrita a `playbooks/**/*.md` já deixou passar 9 scripts `.py` com senha de banco e senha root de SSH por 3 meses (achado em 17/08/2026). O mínimo é `**/*.py`, `**/*.ps1`, `**/*.sh`, `**/*.json`, `**/*.yml` e `**/*.md`. Receita de execução em `playbooks/runtime/windows-local.md`.
 - **Remover do HEAD não resolve.** Segredo commitado continua no histórico do git e, com remoto público, deve ser tratado como comprometido: a única correção real é rotacionar a credencial. Limpar o arquivo é higiene, não conserto.
 
@@ -332,7 +335,10 @@ Padrão recorrente encontrado de forma independente em pelo menos quatro sessõe
 - `sharebook-agent/playbooks/infra/INDEX.md` — Infra e operação: VPS, Coolify, deploy, containers, Docker logs, env vars, proxy, domínio, certificados, backups, restore, restore drill, GCP bucket, S3 storage, `s3_uploaded`, lifecycle, volume backup, auto-update, migração de VPS e disaster recovery.
 - `sharebook-agent/playbooks/doctrine/INDEX.md` — Doutrina e governança: SOUL, DREAM, memória episódica, frontmatter, autocrítica estrutural, harness doctor, plasticidade, famílias de playbooks, encontrabilidade, renomeação/poda de playbooks, esquecimento seletivo, identidade, autonomia e governança cognitiva.
 
-### Scripts
-- `sharebook-agent/scripts/covers/INDEX.md` — Scripts de capas.
-- `sharebook-agent/playbooks/importers/ebook-importer/scripts.md` — Scripts de triagem e extração.
-- `sharebook-agent/scripts/production/INDEX.md` — Scripts de banco e autenticação.
+### Pacotes Operacionais
+- `sharebook-agent/playbooks/_shared/PLAYBOOK.md` — utilitários transversais: Git/token, VPS/SSH, túnel Postgres, varredura de segredos, auth/API de produção, S3 e `.env` canônico.
+- `sharebook-agent/playbooks/product-ux/cover-direction/PLAYBOOK.md` — direção e geração de capas; scripts de roleta, prompt, preparação e fallback local ficam em `scripts/`.
+- `sharebook-agent/playbooks/engineering/analytics/PLAYBOOK.md` — GA4, GSC, SEO, BI, Grafana/Loki e scripts de métricas/dashboards.
+- `sharebook-agent/playbooks/engineering/tag-manager/PLAYBOOK.md` — tags do catálogo, vocabulário controlado, backfill, refinamento e verificação E2E.
+- `sharebook-agent/playbooks/engineering/postgres-ro/PLAYBOOK.md` — SQL seguro, Postgres RO/RW controlado, exploração de dados e dashboard técnico.
+- `sharebook-agent/playbooks/importers/ebook-importer/PLAYBOOK.md` — scripts de fila, preparo editorial local, materialização, inspeção e publicação excepcional.

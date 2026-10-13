@@ -4,8 +4,10 @@ Infraestrutura, deploy, VPS, backups, restore e operação da casa fora do fluxo
 
 ## Playbooks
 - `./coolify-vps.md` — Gestão de infraestrutura, deploy, VPS, containers, logs, backups do Coolify, GCP bucket/S3, `s3_uploaded`, volume backup, restore drill e operação do dia a dia.
+- `./mail/PLAYBOOK.md` — Operações de e-mail do agente: envio SMTP/Stalwart e processamento de bounces por IMAP.
 - `./vps-migration.md` — Playbook de migração de VPS: checklist proativo, DNS de três camadas, restore do Coolify entre caixas, backup/restore, GitHub App source quebrando silenciosamente.
 
 ## Uso
 - Ler `coolify-vps.md` quando a tarefa envolver servidor, deploy, runtime externo, proxy, domínio, container, Docker logs, `.env` remoto, backups, GCP bucket, S3 storage, `s3_uploaded`, volume backup, restore drill, auto-update ou operação da VPS.
+- Ler `mail/PLAYBOOK.md` quando a tarefa envolver SMTP do agente, Stalwart, envio operacional de e-mail, bounce, IMAP ou entregabilidade.
 - Ler `vps-migration.md` antes de qualquer migração de VPS, ou ao investigar um problema que pode ter origem numa migração passada (deploy quebrado, DNS, backup, restore, certificado).

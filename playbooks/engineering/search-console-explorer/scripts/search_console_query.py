@@ -56,7 +56,7 @@ def default_key_file() -> Path:
     configured = os.environ.get("GA4_KEY_FILE_PATH")
     if configured:
         return Path(configured).expanduser().resolve()
-    return repository_root() / "scripts" / "production" / "ga4-key.json"
+    return repository_root() / "playbooks" / "engineering" / "analytics" / "secrets" / "ga4-key.json"
 
 
 def authorized_session(key_file: Path) -> AuthorizedSession:

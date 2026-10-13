@@ -22,7 +22,7 @@
 #     python cli.py publish-once --id <ID>
 #
 # A capa da página 1 nem sempre é capa de verdade (folha de rosto acadêmica). Conferir visualmente
-# antes de publicar; se não servir, gerar capa via scripts/covers/ e passar --cover-path no plan-set.
+# antes de publicar; se não servir, gerar capa via playbooks/product-ux/cover-direction/scripts/ e passar --cover-path no plan-set.
 #
 # Credenciais vêm de C:\Repos\SHAREBOOK\sharebook-agent\.env — nunca hardcode.
 

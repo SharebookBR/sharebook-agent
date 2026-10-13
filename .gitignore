@@ -149,7 +149,7 @@ codex-temp/
 var/
 sharebook-ebook-importer/
 editorial-covers/
-scripts/production/*.json
+playbooks/_shared/scripts/production/*.json
 *.json.key
 ga4-key.json
 .venv-ga4/
@@ -162,4 +162,4 @@ __pycache__/
 colinha.txt
 
 # sinopses temporárias geradas por sessão
-scripts/production/tmp_*.txt
+playbooks/_shared/scripts/production/tmp_*.txt

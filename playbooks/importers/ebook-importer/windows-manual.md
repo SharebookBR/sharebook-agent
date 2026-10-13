@@ -59,13 +59,13 @@ Só usar depois do preflight do novo container. Itens triados pelo worker do Ope
 Antes de qualquer workaround Windows, checar os assets no lugar certo:
 
 ```powershell
-python scripts/infra/vps_ssh.py --prefix VPS_HOSTGATOR_SSH --cmd "docker exec <container_openclaw> ls /data/workspace/sharebook-ebook-importer/var/tmp/triage-<ID>/"
+python playbooks/_shared/scripts/infra/vps_ssh.py --prefix VPS_HOSTGATOR_SSH --cmd "docker exec <container_openclaw> ls /data/workspace/sharebook-ebook-importer/var/tmp/triage-<ID>/"
 ```
 
 Existindo os assets, disparar o worker canônico por ID dentro do container:
 
 ```powershell
-python scripts/infra/vps_ssh.py --prefix VPS_HOSTGATOR_SSH --cmd "docker exec <container_openclaw> sh -lc 'cd /data/workspace/sharebook-ebook-importer && python3 cli.py publish-once --id <ID>'"
+python playbooks/_shared/scripts/infra/vps_ssh.py --prefix VPS_HOSTGATOR_SSH --cmd "docker exec <container_openclaw> sh -lc 'cd /data/workspace/sharebook-ebook-importer && python3 cli.py publish-once --id <ID>'"
 ```
 
 O padrão remoto foi validado no runtime antigo em 2026-07-11 (item 1367). O novo container exige nova prova antes de virar caminho verde.
@@ -98,7 +98,7 @@ Se `boto3` não estiver no Python 3.12: `pip install --user boto3` (instalado no
 
 **Token**: verificar antes de começar. Se houver 401, rodar:
 ```powershell
-python scripts/production/sharebook_refresh_token.py
+python playbooks/_shared/scripts/production/sharebook_refresh_token.py
 ```
 
 ---
@@ -242,7 +242,7 @@ Path(r'C:\Temp\fake.pdf').write_bytes(minimal)
 | "item sem PDF materializado pela triagem" | manifest aponta para `/data/workspace/...` do container morto | `materialize_assets_windows.py --ids <id>`, depois `publish-once --id` |
 | Worker reseta para `waiting_triage` | "item sem PDF materializado" — PDF no Windows, não no servidor | Ignorar, `publish_fake_pdf.py` bypassa o worker |
 | `WinError 10053/10054` no publish | Antes atribuído ao nginx; **não reproduzido em 34–36 MB em 2026-08-17** | Coletar o erro real antes de concluir; só então PDF fake + S3 |
-| Capa é folha de rosto, não capa | Página 1 de livro acadêmico costuma ser título + sumário | Gerar capa com `scripts/covers/generate_covers.py` e passar `--cover-path` no `plan-set` |
+| Capa é folha de rosto, não capa | Página 1 de livro acadêmico costuma ser título + sumário | Gerar capa com `playbooks/product-ux/cover-direction/scripts/generate_covers.py` e passar `--cover-path` no `plan-set` |
 | `head_object` do S3 não acha a capa | Capa não vive no S3 — é servida por `api.sharebook.com.br/Images/Books/<slug>.jpg` | Validar a capa pela URL da API, não pelo bucket |
 | `SSLEOFError` no publish com fake PDF | Capa PNG grande (>300KB) fecha a conexão | Comprimir capa para JPEG ~86KB antes de publicar |
 | 401 no publish | Token expirado | `sharebook_refresh_token.py` |

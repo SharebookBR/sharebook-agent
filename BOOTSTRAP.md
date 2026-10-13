@@ -154,7 +154,7 @@ Validações esperadas:
 ## Imagem, versão e persistência do OpenClaw
 
 - No Sharebook, usar `coollabsio/openclaw:latest` por decisão explícita de Raffa em 2026-08-30. É o wrapper esperado pelo template do Coolify e prepara `/data`, variáveis, autenticação web e browser sidecar.
-- Para evitar os prompts repetidos da Control UI, o deployment Sharebook remove deliberadamente o Basic Auth do wrapper com `scripts/infra/openclaw_disable_basic_auth_init.sh`. Manter `OPENCLAW_DOCKER_INIT_SCRIPT=/data/openclaw-init/disable-nginx-basic-auth.sh` no serviço e o pareamento nativo de dispositivos ativo.
+- Para evitar os prompts repetidos da Control UI, o deployment Sharebook remove deliberadamente o Basic Auth do wrapper com `playbooks/runtime/openclaw/scripts/openclaw_disable_basic_auth_init.sh`. Manter `OPENCLAW_DOCKER_INIT_SCRIPT=/data/openclaw-init/disable-nginx-basic-auth.sh` no serviço e o pareamento nativo de dispositivos ativo.
 
 ### Hook que desativa o Basic Auth do nginx
 
@@ -162,7 +162,7 @@ O wrapper aplica `AUTH_PASSWORD` com `auth_basic`, mas a Control UI faz requisi�
 
 Instalação e contrato:
 
-- fonte versionada: `scripts/infra/openclaw_disable_basic_auth_init.sh`;
+- fonte versionada: `playbooks/runtime/openclaw/scripts/openclaw_disable_basic_auth_init.sh`;
 - destino persistente no volume do OpenClaw: `/data/openclaw-init/disable-nginx-basic-auth.sh`;
 - variável do serviço Coolify: `OPENCLAW_DOCKER_INIT_SCRIPT=/data/openclaw-init/disable-nginx-basic-auth.sh`;
 - o hook espera o `openclaw.conf` gerado pelo wrapper, remove `auth_basic` e `auth_basic_user_file`, valida com `nginx -t` e recarrega o nginx;

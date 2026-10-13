@@ -24,7 +24,7 @@ Para investigação ad hoc no Search Console — queries, páginas, comparação
 
 ## Fonte da verdade
 
-- **GCP Key:** `sharebook-agent/scripts/production/ga4-key.json` (protegida)
+- **GCP Key:** `sharebook-agent/playbooks/engineering/analytics/secrets/ga4-key.json` (protegida)
 - **Property ID:** `386966473`
 - **GA4 API:** Google Analytics Data API v1beta
 - **Search Console property:** `sc-domain:sharebook.com.br`
@@ -199,7 +199,7 @@ Credenciais via variável de ambiente `GA4__CredentialsBase64` (base64 do `ga4-k
 
 ### Scripts operacionais
 
-- `scripts/production/backfill_book_download_events_ga4.py` — importa os últimos N dias de `ebook_download` do GA4 para `BookDownloadEvents` como eventos sintéticos `Ga4Backfill`. Usa `customEvent:book_slug` e cai para `pagePath` se a dimensão não estiver disponível. Idempotência: remove/recria apenas eventos `Ga4Backfill` do intervalo; nunca toca em eventos `Live`. Rodar primeiro com `--dry-run`; para escrever em produção, usar `--yes` após a migration existir no banco.
+- `playbooks/engineering/analytics/scripts/backfill_book_download_events_ga4.py` — importa os últimos N dias de `ebook_download` do GA4 para `BookDownloadEvents` como eventos sintéticos `Ga4Backfill`. Usa `customEvent:book_slug` e cai para `pagePath` se a dimensão não estiver disponível. Idempotência: remove/recria apenas eventos `Ga4Backfill` do intervalo; nunca toca em eventos `Live`. Rodar primeiro com `--dry-run`; para escrever em produção, usar `--yes` após a migration existir no banco.
 
 ### Dashboard Analytics (`/admin/analytics`)
 
@@ -278,7 +278,7 @@ A listagem pública de uma categoria-folha carrega 100 livros por página. Em 27
 
 ## Scripts disponíveis
 
-Todos em `scripts/production/`. Preferir scripts existentes antes de inventar query manual.
+Todos em `playbooks/engineering/analytics/scripts/`. Preferir scripts existentes antes de inventar query manual.
 
 | Script | Quando usar |
 |---|---|

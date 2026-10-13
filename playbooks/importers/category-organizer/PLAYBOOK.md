@@ -136,7 +136,7 @@ Escalar se houver:
 ### Exec de scripts Python
 - Preferir sempre comando direto com diretório de trabalho definido.
 - Exemplo certo:
-  - `python scripts/production/sharebook_prod_book.py categories`
+  - `python playbooks/_shared/scripts/production/sharebook_prod_book.py categories`
 - Evitar pipes, redirecionamentos e shell enfeitado no mesmo comando.
 - Se precisar de script auxiliar, escrever um arquivo temporário curto e rodar pelo path — regra reforçada no Windows, onde `python -c` inline quebra com regex, aspas aninhadas ou acentos (ver `playbooks/runtime/windows-local.md`).
 
@@ -198,15 +198,15 @@ Tabela:
 Rodar a partir de `C:\Repos\SHAREBOOK`. Nunca usar `python3` no Windows — é stub do Microsoft Store.
 
 ```powershell
-python sharebook-agent/scripts/production/sharebook_prod_book.py categories
+python sharebook-agent/playbooks/_shared/scripts/production/sharebook_prod_book.py categories
 ```
 
 ```powershell
-python sharebook-agent/scripts/production/sharebook_prod_book.py find --title "..." --author "..."
+python sharebook-agent/playbooks/_shared/scripts/production/sharebook_prod_book.py find --title "..." --author "..."
 ```
 
 ```powershell
-python sharebook-agent/scripts/production/sharebook_prod_book.py update --id <book_id> --category-id <subcategory_id>
+python sharebook-agent/playbooks/_shared/scripts/production/sharebook_prod_book.py update --id <book_id> --category-id <subcategory_id>
 ```
 
 Para volume maior, preferir Postgres produção com consulta RO e execução RW controlada.

@@ -9,11 +9,11 @@ Usar direção visual, não improviso.
 
 ## Fontes da verdade
 
-- `sharebook-agent/scripts/covers/cover_prompt_from_url.py`
-- `sharebook-agent/scripts/covers/cover_roulette.py`
-- `sharebook-agent/scripts/covers/prepare_cover.py`
-- `sharebook-agent/scripts/covers/INDEX.md`
-- `sharebook-agent/scripts/production/sharebook_prod_book.py`
+- `sharebook-agent/playbooks/product-ux/cover-direction/scripts/cover_prompt_from_url.py`
+- `sharebook-agent/playbooks/product-ux/cover-direction/scripts/cover_roulette.py`
+- `sharebook-agent/playbooks/product-ux/cover-direction/scripts/prepare_cover.py`
+- `sharebook-agent/playbooks/product-ux/cover-direction/scripts/INDEX.md`
+- `sharebook-agent/playbooks/_shared/scripts/production/sharebook_prod_book.py`
 
 ## Assets canônicos
 
@@ -61,7 +61,7 @@ Sem evidência de repetição recente, omitir as exclusões. A roleta sempre sor
 9. Salvar a escolhida no workspace e prepará-la para upload:
 
 ```bash
-python3 scripts/covers/prepare_cover.py "<CAPA_NATIVA>" "<CAPA_FINAL.jpg>"
+python3 playbooks/product-ux/cover-direction/scripts/prepare_cover.py "<CAPA_NATIVA>" "<CAPA_FINAL.jpg>"
 ```
 
 O utilitário preserva a proporção e mantém o arquivo abaixo de 800 KB.
@@ -69,7 +69,7 @@ O utilitário preserva a proporção e mantém o arquivo abaixo de 800 KB.
 10. Resolver o ID pelo livro real e atualizar **pela API**, nunca direto no banco:
 
 ```bash
-python3 scripts/production/sharebook_prod_book.py update \
+python3 playbooks/_shared/scripts/production/sharebook_prod_book.py update \
   --id "<BOOK_ID>" \
   --image-path "<CAPA_ESCOLHIDA>"
 ```

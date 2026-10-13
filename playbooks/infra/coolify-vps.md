@@ -21,7 +21,7 @@
 - Este playbook assume sessões futuras em Windows com PowerShell.
 - No Windows/PowerShell, `ssh` nativo pode existir sem helper para senha (`sshpass`, `plink`, módulos SSH do PowerShell).
 - Se o acesso for por senha e não houver helper disponível, usar `python` com `paramiko`.
-- O caminho preferido neste projeto é usar `scripts/infra/vps_ssh.py` em vez de reescrever bloco inline.
+- O caminho preferido neste projeto é usar `playbooks/_shared/scripts/infra/vps_ssh.py` em vez de reescrever bloco inline.
 - Antes de improvisar, verificar o que existe no ambiente: `ssh`, `plink`, `sshpass`, módulo `Posh-SSH` e pacote `paramiko`.
 - Se `paramiko` não estiver instalado, instalar localmente no usuário e seguir por script curto.
 - Evitar gambiarras interativas frágeis para injetar senha no `ssh`.
@@ -35,7 +35,7 @@ Desde **17/08/2026** a produção roda na **HostGator**: host, porta e credencia
 A VPS antiga da Hostinger foi desprovisionada (confirmado pelo Raffa em 08/09/2026). **Não usar `VPS_SSH_*` como produção** — esse prefixo é legado.
 
 ## Script Base para Windows
-- Script reutilizável: `scripts/infra/vps_ssh.py`
+- Script reutilizável: `playbooks/_shared/scripts/infra/vps_ssh.py`
 - `--prefix` escolhe o conjunto de credenciais no `.env`. Padrão: `VPS_SSH` (caixa antiga).
 - Exemplo de uso:
 
@@ -118,7 +118,7 @@ Validado em 2026-09-17 (promoção do Angular 19, dev e prod). Duas armadilhas d
 Padrão que funcionou:
 ```bash
 for i in $(seq 1 18); do
-  s=$(python3 scripts/infra/vps_ssh.py --prefix VPS_HOSTGATOR_SSH \
+  s=$(python3 playbooks/_shared/scripts/infra/vps_ssh.py --prefix VPS_HOSTGATOR_SSH \
       --cmd "docker exec coolify-db psql -U coolify -d coolify -Atc \"select status from application_deployment_queues where deployment_uuid='UUID'\"" \
       2>/dev/null | grep -v '^$' | tail -1)
   echo "$(date +%H:%M:%S) $s"

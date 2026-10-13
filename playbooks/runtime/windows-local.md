@@ -100,8 +100,8 @@ Ambiente configurado em 2026-05-23. Não há fricção de setup — tudo já est
 A exposição pública é um **toggle do Coolify** no recurso do Postgres. O Raffa autorizou (17/08/2026) ligar temporariamente quando houver necessidade real.
 
 1. **Antes de pedir, checar se dá para não pedir.** Na maioria dos casos não precisa:
-   - `scripts/infra/pg_tunnel.py` — túnel SSH até o Postgres da VPS. Os scripts locais rodam normalmente contra `localhost`, sem expor nada. **É o caminho padrão.**
-   - `docker exec` no container do Postgres, via `scripts/infra/vps_ssh.py`, para inspeção pontual.
+   - `playbooks/_shared/scripts/infra/pg_tunnel.py` — túnel SSH até o Postgres da VPS. Os scripts locais rodam normalmente contra `localhost`, sem expor nada. **É o caminho padrão.**
+   - `docker exec` no container do Postgres, via `playbooks/_shared/scripts/infra/vps_ssh.py`, para inspeção pontual.
 
    Só pedir a abertura quando o que precisa provar for o acesso *externo* em si.
 2. **Usar** — todo o trabalho de banco de uma vez. Não abrir para uma query e voltar a pedir dez minutos depois.
@@ -116,7 +116,7 @@ Para testar credencial sem abrir nada, ver "Testar credencial de banco — o fal
 - **Acesso de fora depende de um toggle do Coolify.** O Coolify tem a opção de expor (ou não) o Postgres na internet. Com ela desligada — postura mais segura, e o estado normal — a porta 5432 não é publicada no host e toda conexão direta do Windows morre com `Connection refused`, embora o container esteja sadio e o app o alcance pela rede interna do Docker.
   - **Não confundir com firewall.** Em 2026-08-17 diagnostiquei `ufw` inativo, nenhuma regra DROP, e o sintoma real apareceu em `docker ps --format '{{.Ports}}'`: `5432/tcp` sozinho, sem `0.0.0.0:5432->`. Esse é o sinal de que a porta não está publicada.
   - **O Raffa pode ligar o toggle temporariamente** quando o trabalho exigir. Pedir em vez de presumir indisponibilidade.
-  - **Alternativa sem reabrir a porta**: `python scripts/infra/pg_tunnel.py` levanta um túnel SSH até o container e o CLI canônico do importer funciona por ele sem alteração no servidor (`os.environ.setdefault` faz a variável exportada vencer o `.env`). Validado em 2026-08-17 com `cli.py status` e `cli.py status-set`.
+  - **Alternativa sem reabrir a porta**: `python playbooks/_shared/scripts/infra/pg_tunnel.py` levanta um túnel SSH até o container e o CLI canônico do importer funciona por ele sem alteração no servidor (`os.environ.setdefault` faz a variável exportada vencer o `.env`). Validado em 2026-08-17 com `cli.py status` e `cli.py status-set`.
 - **Script de exploração rápida**: `C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\explore_db.py`
 - **Atenção**: tabelas do `sharebook` têm nomes PascalCase — sempre usar aspas duplas nas queries: `SELECT * FROM "Books"`.
 
@@ -141,10 +141,10 @@ A auditoria de 09/06/2026 varreu **só `playbooks/**/*.md`** e declarou o repo l
 
 **Regra: varredura de segredo é por conteúdo, não por extensão de documentação.**
 
-Não improvisar grep — existe script canônico, `scripts/infra/sweep_secrets.py`:
+Não improvisar grep — existe script canônico, `playbooks/_shared/scripts/infra/sweep_secrets.py`:
 
 ```bash
-python sharebook-agent/scripts/infra/sweep_secrets.py
+python sharebook-agent/playbooks/_shared/scripts/infra/sweep_secrets.py
 ```
 
 Ele varre os 4 repos por **valor** (pega cada segredo do `.env` e procura literalmente) e por **padrão** (chave AWS, private key, DSN com senha). Sai com código 1 se achar algo. `--history` adiciona o pickaxe do git sobre todo o histórico — lento, mas é o que responde "isso já foi commitado alguma vez?".
@@ -205,7 +205,7 @@ client.connect(hostname, username=user, password=pwd)
 stdin, stdout, stderr = client.exec_command("docker inspect container_name")
 ```
 
-Não presumir que `paramiko` já está instalado no Python 3.12 local — confirmar com `python -c "import paramiko"` antes de depender do utilitário canônico (`scripts/infra/vps_ssh.py`). Ausente em produção em 2026-07-15; instalar com `pip install --user paramiko` resolve.
+Não presumir que `paramiko` já está instalado no Python 3.12 local — confirmar com `python -c "import paramiko"` antes de depender do utilitário canônico (`playbooks/_shared/scripts/infra/vps_ssh.py`). Ausente em produção em 2026-07-15; instalar com `pip install --user paramiko` resolve.
 
 ## `PYTHONUTF8=1` para saída de subprocesso
 
@@ -217,7 +217,7 @@ python meu_script.py
 
 ## `sharebook_refresh_token.py`
 
-Token da API pode expirar. O script `scripts/production/sharebook_refresh_token.py` já grava o novo token no `.env` automaticamente — sem necessidade de editar manual.
+Token da API pode expirar. O script `playbooks/_shared/scripts/production/sharebook_refresh_token.py` já grava o novo token no `.env` automaticamente — sem necessidade de editar manual.
 
 ## Armadilhas recorrentes já pagas
 
