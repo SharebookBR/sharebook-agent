@@ -244,6 +244,13 @@ Exceção conhecida e deliberada: `scripts/production/ga4-key.json`, chave de se
 - Antes de rodar `git status`, `git commit` ou mexer em branch/remote, entrar no repositório correto.
 - **Build antes de commit — obrigatório**: antes de qualquer commit em `sharebook-frontend` ou `sharebook-backend`, rodar o build local e confirmar zero erros. Não commitar código que não compila.
 
+## Fronteira do Harness
+- `sharebook-agent` é o harness: playbooks, memória, scripts operacionais e doutrina. Não é depósito de artefatos de trabalho, relatórios de execução, POCs editoriais, outputs de smoke test, capas, PDFs ou scratchpads.
+- Scratch temporário compartilhado deve viver na raiz agregadora do workspace: `/data/workspace/codex-temp/` no OpenClaw, ou `C:\Repos\SHAREBOOK\codex-temp\` no Windows. Limpar ao fim da investigação.
+- Saída operacional local e relatórios ignorados pelo Git devem viver na raiz agregadora: `/data/workspace/var/` no OpenClaw, ou `C:\Repos\SHAREBOOK\var\` no Windows.
+- Ferramentas de triagem/importação pertencem ao `sharebook-ebook-importer`, que é a fonte da verdade para esse domínio. Não recriar `tools/browser-triage` ou equivalentes dentro do `sharebook-agent`.
+- Workbenches de tradução, Gutenberg, PDF, capa, manuscrito e pipeline editorial pertencem ao importer ou ao diretório de trabalho correto do projeto. Não manter `work/` dentro do `sharebook-agent`; se aparecer, tratar como artefato deslocado e mover ou remover conscientemente.
+
 ---
 
 # 🧠 Autonomia e Decisão

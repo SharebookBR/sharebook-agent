@@ -59,6 +59,8 @@ Cadastrar livro físico é parecido com ebook, mas não igual. Este playbook exi
 
 ## Execução sugerida
 
+Use `codex-temp/` na raiz agregadora do workspace para sinopses e artefatos temporários (`C:\Repos\SHAREBOOK\codex-temp\` no Windows, `/data/workspace/codex-temp/` no OpenClaw). Não guardar esses arquivos dentro de `sharebook-agent/`; o harness não é a fonte de verdade dos artefatos de importação.
+
 ```powershell
 python C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\sharebook_refresh_token.py
 ```

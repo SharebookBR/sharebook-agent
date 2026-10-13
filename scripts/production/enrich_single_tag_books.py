@@ -5,8 +5,8 @@ Curadoria editorial manual (cada sinopse completa foi lida). Nunca remove tags;
 apenas adiciona até o limite de 3 por livro. Reusa o vocabulário existente e
 cria tag nova somente para lacuna recorrente real (ver NEW_TAGS).
 
-Por padrão roda em dry-run e grava relatório em var/reports/. Use --apply para
-aplicar em produção.
+Por padrão roda em dry-run e grava relatório em /data/workspace/var/reports/.
+Use --apply para aplicar em produção.
 """
 from __future__ import annotations
 
@@ -34,7 +34,7 @@ from sharebook_prod_auth import (  # noqa: E402
 )
 
 MAX_TAGS_PER_BOOK = 3
-REPORT_DIR = Path("/data/workspace/sharebook-agent/var/reports")
+REPORT_DIR = Path("/data/workspace/var/reports")
 
 # --- Tag nova (lacuna recorrente: ética/segurança/governança/impacto social de IA) ---
 NEW_TAGS: tuple[dict[str, Any], ...] = (

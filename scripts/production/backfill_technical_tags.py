@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Backfill controlado de tags para ebooks técnicos em produção.
 
-Por padrão roda em dry-run e grava relatório em var/reports/. Use --apply para
-aplicar apenas sugestões de alta confiança em livros ainda sem tags.
+Por padrão roda em dry-run e grava relatório em /data/workspace/var/reports/.
+Use --apply para aplicar apenas sugestões de alta confiança em livros ainda sem tags.
 """
 from __future__ import annotations
 
@@ -31,7 +31,7 @@ from sharebook_prod_auth import (  # noqa: E402
 TECH_ROOT_NAME = "Tecnologia"
 DEFAULT_LIMIT = 50
 MAX_TAGS_PER_BOOK = 3
-REPORT_DIR = Path("/data/workspace/sharebook-agent/var/reports")
+REPORT_DIR = Path("/data/workspace/var/reports")
 
 
 @dataclass(frozen=True)

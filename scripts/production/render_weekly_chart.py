@@ -35,8 +35,8 @@ fig.text(0.32, 0.90, 'Cadastros totais\n201', color='white', fontsize=12, bbox=d
 fig.text(0.49, 0.90, 'Conversão média\n5,72%', color='white', fontsize=12, bbox=dict(facecolor='#0b1220', edgecolor='#1f2937', boxstyle='round,pad=0.5'))
 
 plt.tight_layout(rect=[0, 0, 1, 0.88])
-out = '/data/workspace/sharebook-agent/var/weekly-sessions-signups.png'
+out = '/data/workspace/var/weekly-sessions-signups.png'
 import os
-os.makedirs('/data/workspace/sharebook-agent/var', exist_ok=True)
+os.makedirs('/data/workspace/var', exist_ok=True)
 plt.savefig(out, facecolor=fig.get_facecolor(), bbox_inches='tight')
 print(out)
