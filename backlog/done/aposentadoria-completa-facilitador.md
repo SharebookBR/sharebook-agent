@@ -29,14 +29,25 @@ Em 22/08/2026 foi decidido aposentar o conceito de facilitador. A primeira etapa
 
 ## Entrega
 
-- Backend removeu endpoints, view models, propriedades de domínio, includes, jobs/e-mails e a relação persistida `Books.UserIdFacilitator`/`Books.FacilitatorNotes`.
-- Frontend removeu seleção de facilitador, notas de facilitador, exibição em listagem/admin, modelo de usuário principal e chamada `Account/ListFacilitators`.
+- Backend removeu endpoints, view models, propriedades de domínio, includes, jobs/e-mails e a relação persistida `Books.UserIdFacilitator`. **`FacilitatorNotes` não foi removida: os comentários da administração são valiosos e viraram `AdminNotes`** (coluna renomeada, dados preservados).
+- Frontend removeu seleção de facilitador, exibição em listagem/admin, modelo de usuário principal e chamada `Account/ListFacilitators`. O modal "Comentários" foi mantido como `admin-notes`, apontando para `POST /api/Book/AddAdminNotes`.
 - Playbooks e scripts de produção deixaram de exigir ou aceitar `--facilitator-id`.
-- Migração adicionada no backend: `RetireFacilitatorFromBooks`.
+- Migração adicionada no backend: `RetireFacilitatorFromBooks`. Dropa FK, índice e `UserIdFacilitator` e renomeia `FacilitatorNotes` → `AdminNotes`.
+- O e-mail diário de atrasos (`LateDonationNotification`) voltou a exibir a coluna "ANOTAÇÕES", lendo `AdminNotes`.
+
+## Correção de rota e incidente (2026-10-14)
+
+A primeira versão da remoção (commit `4a2579a`) removeu também as anotações, que eram a feature "Comentários" da administração, e entrou na master sem o `.Designer.cs` da migration. Sem os atributos `[DbContext]`/`[Migration]` o EF não enxerga a migration, então ela não rodou e nada falhou em silêncio. Corrigido no mesmo dia: anotações renomeadas para `AdminNotes` (backend `a54c478`, frontend `09f71d3`) e migration regenerada com Designer.
+
+Esse deploy derrubou a API em produção por cerca de 27 min (01:06 a 01:33 UTC): a migration corrigida dava `DROP INDEX "IX_Books_UserIdFacilitator"` e esse índice **não existe no banco de produção** (Postgres `42704` no `Migrate()` do startup, crash loop). Hotfix `b0a0ac6`: drops com `IF EXISTS` e rename condicional de `FacilitatorNotes`. Sem rollback; API de volta às 01:33 UTC.
+
+Pontos em aberto:
+- A causa de o índice não existir em produção é desconhecida (o agente não consegue ler o banco de produção pelo habitat cloud). Pode haver outras divergências entre o schema real e as migrations.
+- Os comentários existentes em `AdminNotes` ainda não foram conferidos em produção pelo agente; verificar abrindo o modal em uma doação que já tinha notas.
 
 ## Critérios de aceite
 
 - Nenhum fluxo depende de facilitador para concluir uma doação.
 - Nenhuma API ou tela expõe o papel.
-- Banco, entidades, jobs, testes e documentação não carregam referências obsoletas.
+- Banco, entidades, jobs, testes e documentação não carregam referências obsoletas ao facilitador (as anotações administrativas permanecem, como `AdminNotes`).
 - Doador(a), ganhador(a), Fale Conosco e administração têm responsabilidades claras e não sobrepostas.
