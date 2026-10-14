@@ -23,19 +23,9 @@ Revisada em **2026-10-12**, após restaurar a tool dinâmica `memory_search` do 
 12. **[Update de ebook não troca o PDF](todo/fix-update-ebook-nao-troca-pdf.md)** — valor médio, esforço baixo. `BookService.UpdateAsync` ignora `PdfBytes` e responde sucesso; hoje trocar PDF exige sobrescrever no S3. Achado pelo OpenClaw em 2026-09-27, causa confirmada no código.
 13. **[Busca e recomendação](todo/busca-e-recomendacao-sharebook/index.md)** — valor baixo na leitura atual do Raffa. A v1 útil já está publicada com busca lexical e recomendações pragmáticas; tolerância a erro, embeddings, re-ranking e personalização ficam no fim da fila até dados reais provarem dor relevante.
 
-### ✅ Done relevante
+### ✅ Concluídos
 
-- **[Tags e conhecimento estruturado](done/tags-e-conhecimento-estruturado/index.md)** — missão cumprida em 2026-10-03. Entregou vocabulário controlado, modelo, navegação pública, motor mecânico na criação de livros, backfill técnico controlado e playbook operacional; a antiga Tarefa 7 foi cancelada por falta de valor percebido.
-- **[Aposentadoria completa do facilitador](done/aposentadoria-completa-facilitador.md)** — concluída em 2026-10-14. Removeu o conceito do backend, frontend, jobs/e-mails e scripts/playbooks; a migração retira `Books.UserIdFacilitator` e **renomeia `FacilitatorNotes` para `AdminNotes`** (os comentários da administração foram mantidos). A primeira versão sem Designer não rodou e a corrigida derrubou a API por ~27 min (índice inexistente em produção); resolvido por hotfix idempotente, detalhes no arquivo.
-- **[SMTP próprio com Stalwart](done/smtp-proprio-stalwart.md)** — concluído em 2026-10-14. Stalwart é o SMTP de produção desde 2026-09-08 e o Hostinger foi desprovisionado até 2026-09-16; bounces síncronos (webhook) e assíncronos (IMAP + job) implementados. Ficam como melhorias soltas: TLS válido, DMARC mais rígido e reconferir PTR.
-- **[Categoria "Matemática & Lógica"](done/categoria-matematica-e-logica/index.md)** — concluída em 2026-10-14. Raiz com 50 livros em 6 subcategorias, tirados do corredor de Tecnologia; verificação pública fechada em 2026-10-05 e decisões curatoriais fechadas.
-- **[Unificação de Scripts e Renomeação do Corpus](done/unificacao-scripts-e-renomeacao-corpus.md)** — concluída em 2026-10-14. Scripts passaram a morar junto dos playbooks que os explicam; a memória episódica vive em `sessions/`. A ideia de nomear as pastas `memory-durable/` e `memory-episodic/` foi desistida pelo Raffa.
-- **[Vitrine Bruxas & Magia](done/vitrine-bruxas-e-magia.md)** — frente editorial fechada em 2026-10-14. Validou pipeline Gutenberg/tradução/capa/PDF, categoria temática e vitrine com identidade clara.
-- **[Home v2 — mais baixados e vitrines temáticas](done/home-v2-curadoria-ranking.md)** — concluída em 2026-10-14. Entregou a prateleira "Mais baixados", `BookDownloadEvent`, backfill GA4, endpoint público e cache SSR preservado.
-- **[Restaurar índice de memória do OpenClaw](done/restaurar-indice-de-memoria.md)** — concluído em 2026-10-12. O índice e a CLI estavam saudáveis; a tool dinâmica `memory_search` falhava por estado velho do Gateway com `401 token_expired`. Restart controlado resolveu; `memory_search`/`memory_get` voltaram e a CLI confirmou `280/280`, `Dirty: no`.
-- **[Laboratório Sharebook — observabilidade .NET por 24h](done/observabilidade-dotnet-laboratorio-24h.md)** — concluído em 2026-10-12. A POC provou valor e virou stack mínima permanente: métricas OTLP/Grafana Cloud, logs Loki, playbook `grafana-cloud-explorer.md` e helper compacto de consulta.
-- **[Devroye cadastrado como errata](done/fix-devroye-errata-cadastrada-como-livro.md)** — removido do catálogo público em 2026-10-05. `Non-Uniform Random Variate Generation` prometia o livro completo, mas o PDF publicado era uma corrigenda/errata de 7 páginas.
-
+Ver [done/index.md](done/index.md).
 
 ---
 Para detalhes de execução de cada item, consulte o arquivo correspondente na pasta `todo/`.
