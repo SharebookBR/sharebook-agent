@@ -12,23 +12,17 @@ Cadastrar livro físico é parecido com ebook, mas não igual. Este playbook exi
 1. Ler a capa ou foto do exemplar e confirmar título, autor e editora legíveis.
 2. Pesquisar contexto público confiável antes de escrever a sinopse. Priorizar páginas de editora, livraria, acervo ou resenha claramente atribuída.
 3. Escrever sinopse de vitrine com no mínimo 3 parágrafos, sexy, tom envolvente e sem inventar fatos que a pesquisa não sustenta.
-4. Em sessão manual de PowerShell, se houver vários cadastros seguidos, rodar `python C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\sharebook_refresh_token.py` para renovar o token (o `sharebook_prod_login.ps1` está quebrado — módulo `sharebook_prod_auth` ausente).
+4. Em sessão manual de PowerShell, se houver vários cadastros seguidos, rodar `python C:\Repos\SHAREBOOK\sharebook-agent\playbooks\_shared\scripts\production\sharebook_refresh_token.py` para renovar o token (o `sharebook_prod_login.ps1` está quebrado — módulo `sharebook_prod_auth` ausente).
 5. Antes de cadastrar, consultar `GET /api/Category` e confirmar que a categoria escolhida é folha (`children` vazio). Em caso de homônimo, usar sempre `--category-id`.
-6. Cadastrar com `C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\sharebook_prod_book.py create --type Printed --freight-option ... --approve`, preferindo `--synopsis-file` em UTF-8.
+6. Cadastrar com `C:\Repos\SHAREBOOK\sharebook-agent\playbooks\_shared\scripts\production\sharebook_prod_book.py create --type Printed --freight-option ... --approve`, preferindo `--synopsis-file` em UTF-8.
 7. Validar o retorno publicado com `find-many` ou pelo próprio payload do script.
-8. **Definir o facilitador do livro.** O `create` não faz isso e o livro nasce com `UserIdFacilitator` NULL — ver a regra abaixo. Sem esse passo o cadastro está incompleto, mesmo com a página pública no ar.
-9. Reflita sobre as fricções nessa sessão e fique a vontade pra melhorar essa playbook ou scripts.
+8. Reflita sobre as fricções nessa sessão e fique a vontade pra melhorar essa playbook ou scripts.
 
 ## Regras
 
-- **Livro físico sem facilitador quebra os jobs de lembrete. Cadastro só termina com facilitador definido.**
-  - `POST /api/Book` não tem campo de facilitador — o `CreateBookVM` simplesmente não expõe `UserIdFacilitator`. Não existe jeito de nascer certo pela criação; é sempre um segundo passo.
-  - Quem aceita o campo é o `PUT /api/Book/{id}` (`UpdateBookVM.UserIdFacilitator`). Use `--facilitator-id` no `sharebook_prod_book.py`: no `create` ele encadeia o PUT logo depois de aprovar, no `update` ele troca o facilitador e confere o resultado por GET antes de retornar.
-  - **Essa flag depende do backend com a correção do `ImageSlug` (`12368a2`) deployado.** Antes dela, todo PUT sem imagem nova apagava a capa do livro — o `UpdateBookVM` não carrega `ImageSlug` e o service copiava o nulo por cima. Se o deploy ainda não rodou, definir o facilitador pelo admin do site em vez do script.
-  - Na dúvida sobre quem é o facilitador de um livro doado pelo próprio Raffa: é ele mesmo.
-  - **Incidente de 20/08/2026** — o livro físico "A volta", cadastrado em 26/07 por este playbook, chegou ao `ChooseDate` com 50 interessados e `UserIdFacilitator` NULL. O job `ChooseDateReminder` monta o e-mail lendo `book.UserFacilitator.Name` sem proteção e estourou `NullReferenceException`. Como `GenericJob.HasWork()` só para quando existe um `JobHistory` **de sucesso**, o job foi reexecutado a cada 5 minutos por 11 horas: **138 execuções falhas**, 100+ alertas no Rollbar (itens `#2936`/`#2937`) e o lembrete de escolha do ganhador nunca enviado. Destravou no minuto em que o facilitador entrou no banco.
-  - O estrago é maior que um job: `LateDonationNotification` e `RemoveBookFromShowcase` leem o facilitador do mesmo jeito. Um livro sem facilitador é uma bomba-relógio de três gatilhos, e cada um deles abre seu próprio loop de retentativa.
-  - Os três livros de 26/07 eram, juntos, os **únicos** livros físicos do catálogo sem facilitador. O buraco é do fluxo deste playbook, não do catálogo.
+- **Não existe mais passo de intermediário no cadastro.**
+  - O conceito foi aposentado no domínio: não use `UserIdFacilitator`, notas operacionais associadas, nem flags antigas como `--facilitator-id`.
+  - O fluxo correto agora é doador -> interessados -> pessoa escolhida. Jobs, e-mails e rastreio devem operar com pessoa doadora e pessoa ganhadora.
 - **A unidade de cadastro é a unidade da doação, não a unidade da foto.** Vários exemplares fotografados juntos não significam automaticamente vários anúncios — podem ser um kit doado como um só. Se a foto for ambígua sobre isso, confirmar com o usuário antes de decidir entre cadastros separados ou um kit único; quando for kit, deixar isso explícito no título e na sinopse (ex: "Kit com 2 volumes").
 - Duplicidade de livro físico é aceitável. Não bloquear cadastro só porque já existe exemplar parecido.
 - Usar a própria foto da capa do livro como imagem, salvo orientação contrária do usuário.
@@ -44,14 +38,13 @@ Cadastrar livro físico é parecido com ebook, mas não igual. Este playbook exi
 
 ## Scripts úteis
 
-- `C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\sharebook_prod_book.py`
+- `C:\Repos\SHAREBOOK\sharebook-agent\playbooks\_shared\scripts\production\sharebook_prod_book.py`
   - Hoje opera livro físico e digital.
   - Para físico, usar `create --type Printed --freight-option ...`.
   - Para ebook, usar `create --type Eletronic --pdf-path ...`.
   - Aceita `--synopsis` ou `--synopsis-file`.
-  - `--facilitator-id` funciona no `create` (encadeia o PUT depois de aprovar) e no `update` (troca o facilitador e confere por GET). Adicionado em 20/08/2026 — **validação ponta a ponta ainda pendente**, ver a regra de facilitador acima.
   - `find-many --pairs-file` é útil para validar vários cadastros com um único login.
-- `C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\sharebook_refresh_token.py`
+- `C:\Repos\SHAREBOOK\sharebook-agent\playbooks\_shared\scripts\production\sharebook_refresh_token.py`
   - Renova `SHAREBOOK_PROD_ACCESS_TOKEN`, salva no `.env` automaticamente.
   - **Usar este em vez do `sharebook_prod_login.ps1`** — o .ps1 está quebrado (módulo `sharebook_prod_auth` ausente desde 2026-06-11).
 - `C:\Repos\SHAREBOOK\sharebook-agent\scripts\web\sharebook_prod_login.ps1`
@@ -62,11 +55,11 @@ Cadastrar livro físico é parecido com ebook, mas não igual. Este playbook exi
 Use `codex-temp/` na raiz agregadora do workspace para sinopses e artefatos temporários (`C:\Repos\SHAREBOOK\codex-temp\` no Windows, `/data/workspace/codex-temp/` no OpenClaw). Não guardar esses arquivos dentro de `sharebook-agent/`; o harness não é a fonte de verdade dos artefatos de importação.
 
 ```powershell
-python C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\sharebook_refresh_token.py
+python C:\Repos\SHAREBOOK\sharebook-agent\playbooks\_shared\scripts\production\sharebook_refresh_token.py
 ```
 
 ```powershell
-python C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\sharebook_prod_book.py create `
+python C:\Repos\SHAREBOOK\sharebook-agent\playbooks\_shared\scripts\production\sharebook_prod_book.py create `
   --type Printed `
   --title "Título do Livro" `
   --author "Nome do Autor" `
@@ -74,16 +67,7 @@ python C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\sharebook_prod_book
   --freight-option Country `
   --synopsis-file "C:\Repos\SHAREBOOK\codex-temp\<slug>\synopsis.txt" `
   --image-path "C:\Users\raffa\Downloads\<foto-da-capa.jpeg>" `
-  --facilitator-id "<ID_DO_FACILITADOR>" `
   --approve
-```
-
-Para corrigir um livro já cadastrado que ficou sem facilitador:
-
-```powershell
-python C:\Repos\SHAREBOOK\sharebook-agent\scripts\production\sharebook_prod_book.py update `
-  --id "<ID_DO_LIVRO>" `
-  --facilitator-id "<ID_DO_FACILITADOR>"
 ```
 
 ## Referências

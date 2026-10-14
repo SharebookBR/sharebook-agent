@@ -256,50 +256,6 @@ def _read_optional_bytes(path: str | None) -> bytes:
     return Path(path).read_bytes()
 
 
-def set_facilitator(token: str, book_id: str, facilitator_id: str) -> dict[str, Any]:
-    """Define o facilitador de um livro ja cadastrado.
-
-    O POST /api/Book nao expoe UserIdFacilitator -- livro fisico sempre nasce sem
-    facilitador, e sem facilitador os jobs de lembrete quebram (incidente de
-    20/08/2026). Entao o passo e sempre um PUT depois da criacao.
-
-    O payload repete o estado atual do livro de proposito: o PUT substitui o
-    registro inteiro, e omitir campo aqui e perder dado.
-    """
-    current = get_book_by_id(token, book_id)
-    if not current:
-        raise SystemExit(f"Livro nao encontrado. ID: {book_id}")
-
-    payload = {
-        "Id": book_id,
-        "Title": current["title"],
-        "Author": current["author"],
-        "CategoryId": current["categoryId"],
-        "UserId": current.get("userId") or "00000000-0000-0000-0000-000000000000",
-        "UserIdFacilitator": facilitator_id,
-        "Approved": current.get("status") == "Available",
-        "ImageName": "",
-        "ImageBytes": [],
-        "Synopsis": current.get("synopsis") or "",
-        "ChooseDate": current.get("chooseDate"),
-        "FreightOption": current.get("freightOption"),
-        "Type": current.get("type"),
-        "PdfBytes": [],
-    }
-
-    request_json(
-        f"{API_BASE}/Book/{book_id}",
-        method="PUT",
-        body=payload,
-        headers=auth_headers(token),
-    )
-
-    updated = get_book_by_id(token, book_id)
-    if (updated or {}).get("userIdFacilitator") != facilitator_id:
-        raise SystemExit(f"Facilitador nao foi aplicado no livro {book_id}.")
-    return updated
-
-
 def create_book(args: argparse.Namespace, token: str) -> dict[str, Any]:
     title = args.title
     author = args.author
@@ -357,8 +313,6 @@ def create_book(args: argparse.Namespace, token: str) -> dict[str, Any]:
     if args.approve:
         result["approve_response"] = approve_book(token, created["id"])
         result["book"] = get_book_by_id(token, created["id"])
-    if getattr(args, "facilitator_id", None):
-        result["book"] = set_facilitator(token, created["id"], args.facilitator_id)
     return result
 
 
@@ -379,11 +333,6 @@ def update_book(args: argparse.Namespace, token: str) -> dict[str, Any]:
     image_bytes = _read_optional_bytes(getattr(args, "image_path", None))
     pdf_bytes = _read_optional_bytes(getattr(args, "pdf_path", None))
     user_id = current.get("userId") or "00000000-0000-0000-0000-000000000000"
-    facilitator_id = (
-        getattr(args, "facilitator_id", None)
-        or current.get("userIdFacilitator")
-        or "00000000-0000-0000-0000-000000000000"
-    )
 
     choose_date = getattr(args, "choose_date", None) or current.get("chooseDate")
 
@@ -393,7 +342,6 @@ def update_book(args: argparse.Namespace, token: str) -> dict[str, Any]:
         "Author": author,
         "CategoryId": category_id,
         "UserId": user_id,
-        "UserIdFacilitator": facilitator_id,
         "Approved": current.get("status") == "Available",
         "ImageName": Path(args.image_path).name if getattr(args, "image_path", None) else "",
         "ImageBytes": base64.b64encode(image_bytes).decode("ascii") if image_bytes else [],
@@ -491,10 +439,6 @@ def build_parser() -> argparse.ArgumentParser:
         help="Obrigatorio para livro fisico.",
     )
     create_parser.add_argument("--approve", action="store_true")
-    create_parser.add_argument(
-        "--facilitator-id",
-        help="Define o facilitador logo apos o cadastro. Sem facilitador os jobs de lembrete quebram.",
-    )
     create_parser.add_argument("--delete-existing", action="store_true")
 
     update_parser = sub.add_parser("update", help="Atualizar livro existente por id.")
@@ -517,10 +461,6 @@ def build_parser() -> argparse.ArgumentParser:
     update_parser.add_argument(
         "--choose-date",
         help="Data de decisao no formato ISO 8601 (ex: 2026-07-16T03:00:00Z).",
-    )
-    update_parser.add_argument(
-        "--facilitator-id",
-        help="Novo facilitador do livro. Sem isso, o facilitador atual e preservado.",
     )
     update_parser.add_argument("--approve", action="store_true")
 

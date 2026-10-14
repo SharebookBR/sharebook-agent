@@ -111,7 +111,7 @@ Regras:
 - A frase anterior ao rodapé pode variar conforme o contexto; ajuda, assinatura e slogan não variam.
 - Não incluir Instagram, LinkedIn, Facebook, licença open source ou outros links promocionais. Eles disputam atenção com a ação principal do e-mail.
 - Não orientar a pessoa a responder ao e-mail sem prova de que a caixa de resposta é acompanhada.
-- Não usar o facilitador como canal de ajuda. Dúvidas sobre o Sharebook vão para o Fale Conosco; quando houver uma exceção operacional real, combinações de entrega acontecem diretamente entre pessoa doadora e pessoa ganhadora.
+- Dúvidas sobre o Sharebook vão para o Fale Conosco; quando houver uma exceção operacional real, combinações de entrega acontecem diretamente entre pessoa doadora e pessoa ganhadora.
 
 ### Resumos e newsletters
 
