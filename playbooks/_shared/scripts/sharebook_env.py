@@ -50,6 +50,10 @@ def resolve_env_file(env_file: Path | None = None) -> Path:
 def load_env(env_file: Path | None = None) -> dict[str, str]:
     path = resolve_env_file(env_file)
     if not path.exists():
+        # Habitats sem o arquivo (ex.: Claude Code web) recebem as variaveis do proprio
+        # ambiente. So vale quando ninguem pediu um --env-file explicito.
+        if env_file is None and os.getenv("SHAREBOOK_AGENT_ENV_FILE") is None and os.environ:
+            return dict(os.environ)
         raise SystemExit(f".env não encontrado: {path}")
     return parse_env_file(path)
 

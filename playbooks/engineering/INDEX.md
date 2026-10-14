@@ -4,7 +4,7 @@ Conhecimento de frontend, backend, banco, analytics, observabilidade, logs, erro
 
 ## Playbooks
 - `./frontend.md` — Angular, UI patterns, Mobile, SSR v2, `ssr_access`, crawler/bot em SSR, JWT interceptor e download de ebook (URL assinada, rate limit, clique repetido).
-- `./backend.md` — .NET, EF Core, migrations, arquitetura hexagonal, logs da API, Rollbar, `JobHistories`, `JobExecutor`, SMTP/e-mail transacional e incidentes.
+- `./backend.md` — .NET, EF Core, migrations (Designer obrigatório, drops idempotentes, teste com drift de produção, `dotnet ef` fixado), arquitetura hexagonal, logs da API, Rollbar, `JobHistories`, `JobExecutor`, SMTP/e-mail transacional e incidentes.
 - `./tag-manager/PLAYBOOK.md` — Tags do catálogo: modelo de dados, motor mecânico, vocabulário, scripts de backfill/refinamento/verificação e endpoints.
 - `./postgres-ro/PLAYBOOK.md` — Consultas SQL seguras e exploração de dados.
 - `./postgres-slow-query-analysis/PLAYBOOK.md` — Diagnóstico e otimização de performance no banco.

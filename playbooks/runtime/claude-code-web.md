@@ -76,6 +76,18 @@ O container não vem com `dotnet`. O `dotnet-install.sh` falhava sob Trusted (CO
 
 Cuidado ao editar arquivos do backend com script Python: vários têm BOM e alguns usam CRLF. Abrir com `utf-8-sig` e gravar com `utf-8-sig` adiciona BOM em arquivo que não tinha. Preservar o estado original de BOM e de fim de linha e conferir com `git diff` (um diff de 1 linha que aparece como 2 é sinal disso).
 
+## Backend completo daqui: dotnet, dotnet-ef e Postgres local (validado em 2026-10-14)
+
+- `apt-get install -y dotnet-sdk-10.0` (10.0.112) e `dotnet restore ShareBook.sln` funcionam. `dotnet test ShareBook.Test.Unit` roda os 200+ testes em segundos.
+- `dotnet-ef`: usar o fixado no repo (`cd ShareBook.Api && dotnet tool restore && dotnet tool run dotnet-ef ...`). Receita completa em `engineering/backend.md` (Heurísticas de migration).
+- **Postgres 16 já vem instalado e dá para testar migration de verdade**: `pg_ctlcluster 16 main start`, `su postgres -c "psql -c \"CREATE USER mig WITH PASSWORD 'mig' SUPERUSER;\" -c 'CREATE DATABASE migtest OWNER mig;'"`, depois `dotnet tool run dotnet-ef database update <MigrationAlvo> ...` com `ConnectionStrings__PostgresConnection`. `pg_ctlcluster 16 main stop` no fim. Isto corrige a ideia de que o habitat não tem Postgres: não tem o **de produção**, tem um local descartável.
+- **Leitura do banco de produção continua bloqueada** pelo classificador ("Production Reads"), inclusive `psql` com o usuário RO (negado em 2026-10-14). Não contornar: pedir ao Raffa para rodar a consulta e colar o resultado.
+- **Logs de produção funcionam**: `python3 playbooks/engineering/analytics/scripts/grafana_logs.py --since 30m --limit 30` (agora cai nas variáveis do ambiente quando não há `.env`). Para a exceção completa de um crash no startup, o texto vem em **labels do stream** (`exception_message`, `exception_stacktrace`) e não na linha; o helper compacto mostra só a linha, então para um `fatal` consultar o Loki direto e imprimir `stream`. Sem `dig` no container: usar DNS-over-HTTPS (`cloudflare-dns.com/dns-query`).
+
+### Incidente com produção fora do ar (2026-10-14)
+
+Deploy da migration derrubou a API. Rotina que funcionou, em ~30 min: (1) `curl` no `/api/Operations/Ping` (503) e no `www`; (2) Loki com `{service_name="sharebook-api"}`, buscar `Application startup exception` e ler os labels `exception_*`; (3) reproduzir o erro no Postgres local; (4) **corrigir para frente, não dar rollback** (o Raffa autorizou explicitamente), com migration idempotente validada com e nos dois estados do schema; (5) push na master, sondar `Ping` a cada 15 s e confirmar `Now listening` no log. Deploy automático levou ~1 min.
+
 ## Memórias do dia no ritual de abertura
 
 O `AGENTS.md` manda ler todas as memórias do dia ordenando pela data de modificação. Aqui o clone é recém-criado e todos os arquivos têm o mesmo mtime, então essa ordenação não serve. Ordenar pelo nome (`ls sessions/ | sort | tail`), que começa com `YYYY-MM-DD`.
@@ -102,6 +114,7 @@ Neste habitat o ambiente proíbe o agente de identificar o modelo em qualquer ar
 | Faro | *** | 2026-10-04 |
 | Sereno | *** | 2026-10-11 |
 | Brasa | *** | 2026-10-12 |
+| Maré | *** | 2026-10-14 |
 
 ## Tradução pesada offline: armadilhas confirmadas no job 1873 (2026-10-04)
 

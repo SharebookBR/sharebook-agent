@@ -185,6 +185,7 @@ Esse princípio nasceu de uma fricção real, registrada em `sessions/2026-09-20
 - Ilustrar um livro traduzido (uma ilustração por capítulo, pranchas, prompt para IA de imagem, edição ilustrada, legenda "criado com IA") → abrir `sharebook-agent/playbooks/importers/INDEX.md`, playbook `illustrated-edition`.
 - Estratégia do acervo, priorização de títulos ou sources, criação de categoria por intenção editorial, público prioritário ou qualidade percebida do catálogo → abrir `sharebook-agent/playbooks/product-ux/INDEX.md`, playbook `catalog-strategy`.
 - Escolher ganhador(a) de uma doação, triar solicitações ou montar shortlist de interessados → abrir `sharebook-agent/playbooks/product-ux/INDEX.md`, playbook `winner-selection`.
+- Migration EF Core, `dotnet ef`, `Database.Migrate()` no startup, `.Designer.cs`, drop/rename de coluna ou índice, schema de produção divergente, API em crash loop depois de deploy → abrir `sharebook-agent/playbooks/engineering/INDEX.md` e ler **`backend.md`, seção "Heurísticas de migration", antes de escrever a migration** (não depois do incidente).
 - Diagnóstico de incidente, erro em produção ou "onde está o log de X" → abrir `sharebook-agent/playbooks/engineering/INDEX.md`; para API/backend, seguir `backend.md`, seção "Onde estão os logs".
 - Git push/pull por HTTPS pedindo usuário, token GitHub, `GITHUB_PERSONAL_ACCESS_TOKEN`, credencial de Git ou remoto sem autenticação → conferir o `.env` canônico do `sharebook-agent` e usar token de forma não interativa, sem imprimir segredo.
 

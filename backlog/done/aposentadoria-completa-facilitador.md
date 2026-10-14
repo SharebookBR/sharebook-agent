@@ -42,8 +42,8 @@ A primeira versão da remoção (commit `4a2579a`) removeu também as anotaçõe
 Esse deploy derrubou a API em produção por cerca de 27 min (01:06 a 01:33 UTC): a migration corrigida dava `DROP INDEX "IX_Books_UserIdFacilitator"` e esse índice **não existe no banco de produção** (Postgres `42704` no `Migrate()` do startup, crash loop). Hotfix `b0a0ac6`: drops com `IF EXISTS` e rename condicional de `FacilitatorNotes`. Sem rollback; API de volta às 01:33 UTC.
 
 Pontos em aberto:
-- A causa de o índice não existir em produção é desconhecida (o agente não consegue ler o banco de produção pelo habitat cloud). Pode haver outras divergências entre o schema real e as migrations.
-- Os comentários existentes em `AdminNotes` ainda não foram conferidos em produção pelo agente; verificar abrindo o modal em uma doação que já tinha notas.
+- Causa provável de o índice não existir com aquele nome em produção: as tabelas anteriores ao port SQL Server → Postgres têm índices/constraints com prefixo físico `idx_17657_` (regra já documentada em `playbooks/engineering/backend.md`, incidente de 2026-07-22). **Não confirmado**: o agente não lê o banco de produção pelo habitat cloud. Como `DROP COLUMN` leva índices e FKs junto, não deve ter sobrado objeto órfão; uma consulta em `pg_indexes` confirma.
+- Os comentários existentes em `AdminNotes` não foram conferidos em produção pelo agente. Sinal indireto: `POST /api/book/AddAdminNotes` respondeu 200 em produção às 01:51 UTC de 2026-10-14, então o modal está em uso; falta abrir uma doação que já tinha notas para ver o histórico antigo.
 
 ## Critérios de aceite
 

@@ -133,7 +133,7 @@ Após revisão de aderência temática, a vitrine deve privilegiar **Bruxas & Ma
 |---|---|---|
 | The King in Yellow | [8492](https://www.gutenberg.org/ebooks/8492) | Excelente para catálogo, mas mais adequado a uma vitrine futura de horror cósmico/oculto do que a **Bruxas & Magia**. |
 
-Lista operacional dos 15 itens cadastráveis: [Missão - Importar Bruxas & Magia via Project Gutenberg](import-bruxas-e-magia-gutenberg.md).
+Lista operacional dos 15 itens cadastráveis: [Missão - Importar Bruxas & Magia via Project Gutenberg](../todo/import-bruxas-e-magia-gutenberg.md).
 
 Source criada no importer em 2026-09-11: `project_gutenberg_witches_magic`, source id `8`, com 15 itens (`1868` a `1882`). A source ficou staged (`enabled = false`) até o pipeline Gutenberg/tradução estar pronto para consumir EPUB/texto sem cair no worker genérico de PDF.
 
