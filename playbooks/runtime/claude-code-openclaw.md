@@ -56,6 +56,7 @@ Na primeira sessão deste habitat, um `env | grep -i openclaw` para "detectar ha
 - **`git checkout <outro-ref> -- .` estando numa branch diferente é perigoso mesmo sem `--force`**: estagia o conteúdo inteiro do outro ref no índice da branch atual, sem avisar que está fora de contexto — fácil de gerar um commit de doutrina corrompido na branch errada sem perceber. Pra inspecionar ou trabalhar em cima de outro ref, sempre criar uma branch local dedicada primeiro (`git checkout -B <nome> origin/<nome>`), nunca misturar refs no índice da branch corrente.
 - Build do `sharebook-frontend` funciona aqui (Node 22, `npm ci` ~30s, `npm run build:ssr` ~35s). O `node_modules` do volume pode estar de outra era da migração Angular — se o build quebrar com `TS6046` no `target` do tsconfig, é dependência stale, não config: `npm ci` primeiro.
 - `sleep` em foreground no Bash do Claude Code é bloqueado. Espera por deploy/job: loop em `run_in_background` que imprime status a cada volta e sai no primeiro estado terminal — assim "vazio" e "terminou" são distinguíveis, ao contrário do monitor silencioso que o playbook do Windows já descarta.
+- **`jq` não está instalado neste container** (validado 2026-10-14, configuração da statusline do Claude Code). `node` está sempre disponível (é a base da imagem). Para parsing de JSON em comando de shell/hook neste habitat, preferir `node -e` em vez de assumir `jq` presente — um subagente de `statusline-setup` gerou um comando com `jq` que nunca teria funcionado aqui.
 
 ## Disciplina sem prompt de permissão
 
