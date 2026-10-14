@@ -1,6 +1,6 @@
 # Prompt do OpenClaw: criar "Matemática & Lógica" e mover 50 livros
 
-Contexto e decisões em [revisao-escopo-matematica-corredor-tecnologia.md](revisao-escopo-matematica-corredor-tecnologia.md). Lista de livros em [matematica-lista-movimentacao.csv](matematica-lista-movimentacao.csv).
+Contexto e decisões em [index.md](index.md). Lista de livros em [matematica-lista-movimentacao.csv](matematica-lista-movimentacao.csv).
 
 **Antes de colar:** conferir as duas decisões abertas desse item (Probabilidade e Estatística com 3 livros; *Computação: Matemática Discreta*). Se alguma mudar, ajustar o CSV e as contagens esperadas abaixo.
 
@@ -15,7 +15,7 @@ ECONOMIA DE TOKENS (obrigatório)
 - Imprima só resumos: contagens e as linhas que divergirem. Nunca despeje JSON ou tabelas inteiras.
 
 ENTRADA
-Repo sharebook-agent, branch master, arquivo backlog/todo/matematica-lista-movimentacao.csv
+Repo sharebook-agent, branch master, arquivo backlog/done/categoria-matematica-e-logica/matematica-lista-movimentacao.csv
 (git pull na master e leia o arquivo).
 Colunas: slug, titulo, subcategoria_destino, categoria_atual, categoria_atual_id, status. São 50 linhas, todas status=mover.
 
@@ -59,7 +59,7 @@ PASSO 3: verificação (pela API pública, poucas chamadas)
 REGRAS
 - Idempotente: se rodar de novo, deve detectar que já foi feito e não duplicar categorias.
 - Em caso de dúvida, pare e pergunte. Não improvise correção em produção.
-- Não crie PR. Registre o resultado em sessions/ seguindo o padrão do repo, curto, e atualize o estado em backlog/todo/revisao-escopo-matematica-corredor-tecnologia.md.
+- Não crie PR. Registre o resultado em sessions/ seguindo o padrão do repo, curto, e atualize o estado em backlog/done/categoria-matematica-e-logica/index.md.
 
 RELATÓRIO FINAL (máx. 15 linhas)
 IDs das 7 categorias criadas; contagem por subcategoria; caminho do rollback; resultado da verificação (ok/divergência); o que viu na Home; o que ficou pendente.

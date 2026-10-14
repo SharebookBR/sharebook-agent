@@ -2,6 +2,8 @@
 
 ## Estado
 
+**Status: concluído (done) em 2026-10-14, aprovado pelo Raffa.** O corpo abaixo preserva o histórico da decisão e da verificação.
+
 **Executado no banco de produção pelo OpenClaw em 2026-10-02 e verificação pública fechada em 2026-10-05.** A categoria já aparece na API de categorias, na Home, nas páginas públicas e nas contagens por subcategoria. Restam apenas decisões curatoriais pequenas, listadas em "Pendências e decisões abertas".
 
 **Verificado na API (consultas sem cache):**
@@ -71,7 +73,7 @@ Lista exata em [matematica-lista-movimentacao.csv](matematica-lista-movimentacao
 
 1. **Probabilidade e Estatística permanece como subcategoria própria.** Decisão do Raffa: manter, porque a intenção é clara e a folha deve crescer com novos livros.
 2. ***Computação: Matemática Discreta* permanece em Matemática & Lógica > Matemática Discreta e Grafos.** O conteúdo dominante é matemática discreta; "Computação" é curso/público, não a prateleira principal. Em 2026-10-05, recebeu tags manuais `fundamentos-da-computacao` e `matematica-discreta` para fazer a ponte transversal com computação.
-3. ***Non-Uniform Random Variate Generation* saiu do escopo desta migração e foi removido do catálogo público.** Em 2026-10-05, o PDF publicado foi confirmado como errata/corrigenda de 7 páginas (`Title: errors.dvi`, texto inicial "Corrigenda and addenda for 'Non-Uniform Random Variate Generation'"). O livro foi deletado via API, e a correção ficou registrada como done em [Devroye cadastrado como errata](../done/fix-devroye-errata-cadastrada-como-livro.md).
+3. ***Non-Uniform Random Variate Generation* saiu do escopo desta migração e foi removido do catálogo público.** Em 2026-10-05, o PDF publicado foi confirmado como errata/corrigenda de 7 páginas (`Title: errors.dvi`, texto inicial "Corrigenda and addenda for 'Non-Uniform Random Variate Generation'"). O livro foi deletado via API, e a correção ficou registrada como done em [Devroye cadastrado como errata](../fix-devroye-errata-cadastrada-como-livro.md).
 
 ## Riscos
 
@@ -88,7 +90,7 @@ Lista exata em [matematica-lista-movimentacao.csv](matematica-lista-movimentacao
 
 ## Evidência
 
-- [tarefa01-resultado.md](../done/tags-e-conhecimento-estruturado/tarefa01-resultado.md): contagens por tag e exemplos.
+- [tarefa01-resultado.md](../tags-e-conhecimento-estruturado/tarefa01-resultado.md): contagens por tag e exemplos.
 - [matematica-lista-movimentacao.csv](matematica-lista-movimentacao.csv): lista final.
 - API pública: `GET /api/Book/CategoryTree/{categoryId}/{page}/{items}` (Tecnologia: `1dc0f9e3-70d9-4bc8-a76c-90d7144e318c`) e `GET /api/Category`.
 - `sessions/2026-10-02-tags-e-categoria-matematica.md`: relato da sessão.

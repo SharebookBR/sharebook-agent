@@ -1,5 +1,24 @@
 # Missão — SMTP próprio com Stalwart
 
+**Status: concluído (done) em 2026-10-14, aprovado pelo Raffa.** O texto abaixo preserva o histórico da missão (de 2026-08-30 a 2026-09-09); o estado final está aqui.
+
+## Estado final
+
+- **Stalwart é o SMTP efetivo de produção** desde o corte de 2026-09-08 (backend `da77b34`). O **Hostinger Email foi desprovisionado pelo Raffa até 2026-09-16** (ver `sessions/2026-09-16-stalwart-hostinger-desprovisionado.md`), então o rollback para Hostinger deixou de existir e as caixas de seleção de Hostinger mais abaixo estão superadas.
+- **Envio:** primeiro dia real com 269 execuções do `MailSender`, 100 e-mails, 0 falhas; mailing semanal de 2026-09-14 drenou sem rate limit.
+- **DNS (reconferido em 2026-10-14 por DNS público):** `mail.sharebook.com.br` resolve para a VPS, SPF raiz autoriza o IP e DMARC publicado (`p=none`).
+- **Bounces síncronos:** o `BounceController` deixou de ser placeholder. Valida o token `X-Sharebook-Webhook-Token`, converte o evento em `MailBounce` e persiste. O Stalwart chama `POST /api/bounce` continuamente (visto no Loki em 2026-10-14, 200).
+- **Bounces assíncronos:** o job `MailSupressListUpdate` está ativo, diário às 02:00, lendo a caixa IMAP de bounce do Stalwart.
+- **Não verificado pelo agente:** que o job tenha gravado linhas recentes em `MailBounces` / `JobHistories` em produção (a leitura do banco de produção é bloqueada no habitat cloud). Se aparecer incoerência, reabrir como item próprio de bounces.
+
+## Melhorias soltas (não bloqueiam o done)
+
+- Certificado TLS válido para `mail.sharebook.com.br` no Stalwart (hoje autoassinado; o uso API → Stalwart é interno).
+- Avaliar endurecer o DMARC de `p=none` para `quarantine`/`reject` depois de período de observação.
+- Validar o PTR (reverso) em checagem recorrente; entrou como feito em 2026-09-06 mas não foi reconferido agora.
+
+---
+
 ## Objetivo
 
 Avaliar e, se a entregabilidade for comprovada, migrar o envio transacional do Sharebook da Hostinger para um SMTP próprio baseado em Stalwart no Coolify, reduzindo custo recorrente sem perder bounces, supressão ou capacidade de rollback.
