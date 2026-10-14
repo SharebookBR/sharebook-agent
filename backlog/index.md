@@ -5,8 +5,6 @@
 
 ### 🎯 Ordem de prioridade
 
-Revisada em **2026-10-12**, após restaurar a tool dinâmica `memory_search` do OpenClaw. O bloqueio era estado velho no Gateway; CLI e índice estavam saudáveis, e restart controlado resolveu. Validação final: `memory_search` e `memory_get` funcionando, índice `280/280`, `Dirty: no`.
-
 **Regra para débitos técnicos:** débito técnico concreto entra como item próprio no backlog, com escopo, valor, risco e validação. Não manter categoria genérica aberta como tarefa permanente.
 
 1. **[Lista de Desejos](todo/lista-de-desejos.md)** — maior aposta de valor direto ao usuário fora da frente editorial. Transforma busca frustrada em demanda explícita e reaproveita a confiança do fluxo atual de doação; v1 conectiva, sem pagamento, com caminho natural para patrocínio/Amazon na v2. **Em execução pelo Josué (humano) — não é item livre para agentes pegarem.**
