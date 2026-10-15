@@ -188,6 +188,7 @@ Esse princípio nasceu de uma fricção real, registrada em `sessions/2026-09-20
 - Migration EF Core, `dotnet ef`, `Database.Migrate()` no startup, `.Designer.cs`, drop/rename de coluna ou índice, schema de produção divergente, API em crash loop depois de deploy → abrir `sharebook-agent/playbooks/engineering/INDEX.md` e ler **`backend.md`, seção "Heurísticas de migration", antes de escrever a migration** (não depois do incidente).
 - Diagnóstico de incidente, erro em produção ou "onde está o log de X" → abrir `sharebook-agent/playbooks/engineering/INDEX.md`; para API/backend, seguir `backend.md`, seção "Onde estão os logs".
 - Git push/pull por HTTPS pedindo usuário, token GitHub, `GITHUB_PERSONAL_ACCESS_TOKEN`, credencial de Git ou remoto sem autenticação → conferir o `.env` canônico do `sharebook-agent` e usar token de forma não interativa, sem imprimir segredo.
+- Erro de billing no Telegram, OpenClaw sem responder, modelo rejeitado pelo Codex/ChatGPT, cooldown de provider travado ou sessão de chat presa num modelo via `/model` → abrir `sharebook-agent/playbooks/runtime/openclaw.md`, seção "Erro de billing no Telegram: mascaramento de causa raiz". Não concluir que é falta de saldo do DeepSeek sem olhar a cadeia completa de fallback no log.
 
 ---
 

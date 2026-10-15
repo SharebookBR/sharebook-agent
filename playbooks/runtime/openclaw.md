@@ -198,6 +198,35 @@ Quando sessões completarem sem output real, sem tool calls e com `usage: {}`, s
 4. Fazer teste controlado com outro provider/model. Se funcionar, o defeito é específico do caminho OpenAI+OAuth.
 5. Não copiar auth de um agente para outro; os perfis são independentes.
 
+## Erro de "billing" no Telegram: mascaramento de causa raiz
+
+Quando o Telegram mostra `⚠️ deepseek (deepseek-v4-pro) returned a billing error`, isso é quase sempre o ÚLTIMO elo de uma cadeia de fallback, não a causa raiz — o DeepSeek é o fallback configurado e está com saldo zerado desde 2026-10-11 (open loop em `backlog/`, não resolvido). Três causas raiz diferentes já produziram essa mesma mensagem final, em três incidentes entre 2026-10-11 e 2026-10-15:
+
+1. **Cooldown da OpenAI travado em memória** (2026-10-11, ver `sessions/2026-10-11-cooldown-openai-travado-e-deepseek-sem-saldo.md`) — o gateway recusava o provider por cooldown mesmo com o limite real já liberado (confirmado por probe). Corrigido com `docker restart` do container.
+2. **Modelo rejeitado pelo backend Codex/ChatGPT** (2026-10-14) — `openai/gpt-5.5` passou a ser hard-rejeitado com `400 invalid_request_error: "The 'gpt-5.5' model is not supported when using Codex with a ChatGPT account."`, não é rate limit. A família **GPT-5.6** (Sol/Terra/Luna) funciona via OAuth do plano; a família **GPT-6** (Astra/Luna/Sol, 6.1-Sol) ainda não está liberada pro plano ChatGPT Plus/Codex, mesmo depois de registrada no catálogo local (confirmado por probe real, 2026-10-15).
+3. **Sessão fixada em modelo estrito via `/model`** (2026-10-15) — um `/model <algo>` digitado no chat deixa a sessão em modo estrito: se aquele modelo falhar, a resposta falha direto, **sem cair no fallback configurado**. Um soluço transitório do `codex app-server` (`client closed before turn completed`, sem OOM — `docker stats`/`OOMKilled=false` descartaram isso, causa não identificada) bastou pra sessão acabar presa no DeepSeek morto, mesmo com o modelo default global saudável.
+
+### Diagnóstico correto (nessa ordem, dentro do container via `docker exec <container-openclaw>`)
+
+1. `openclaw models status --probe --probe-provider openai` — teste live contra o provider, ignora qualquer cooldown em memória do processo do gateway.
+2. `docker logs --since Xh <container> | grep -iE 'billing|model fallback decision|not supported|client closed'` — ver a cadeia INTEIRA de fallback (`requested=` do primeiro candidato), não só a última linha que o usuário vê.
+3. `openclaw sessions --active 240 --json` — checar `providerOverride`/`modelOverride` da sessão específica (`key` tem o formato `agent:<id>:telegram:direct:<chatId>`). Se existir e não for o default esperado, a sessão está presa em modo estrito, independente do que estiver configurado globalmente.
+4. Só depois de descartar 1-3, suspeitar de saldo/billing real do provider.
+
+### Fixes conhecidos
+
+- **Cooldown travado**: `docker restart <container>` — não garantido, só funciona se o limite real já tiver liberado no instante do boot; confirmar via probe antes de reiniciar.
+- **Modelo rejeitado pelo Codex**: `openclaw models set openai/<modelo-da-família-5.6>` dentro do container, confirmar com probe. Testar mensagem real no Telegram depois — a sessão existente pode estar presa (ver fix de sessão estrita).
+- **Sessão presa em modo estrito**: pedir pro usuário digitar `/model default -s` na própria conversa do chat. Não existe comando de CLI equivalente (`openclaw sessions`/`openclaw message` não expõem isso) — é só chat command.
+- **`openclaw gateway restart` não funciona nesse deployment** (sem systemd/launchd; o gateway roda como processo principal do container, PID 1). Usar `docker restart <container>` se precisar reiniciar de verdade.
+- **Registrar modelo ausente do catálogo**: `openclaw config patch --stdin` com `{"models":{"providers":{"openai":{"models":[{"id":"...","name":"...","contextWindow":...}]}}}}`, sempre com `--dry-run` primeiro. NÃO incluir `baseUrl`/`api`/`apiKey` ao estender um provider já embutido (ex: `openai` via Codex) — isso arrisca substituir o roteamento OAuth nativo por REST genérico e quebrar os modelos que já funcionam.
+
+### Regras duras sobre billing (Raffa, 2026-10-15)
+
+- **Nunca propor trocar OAuth da assinatura ChatGPT Plus por API key paga por token**, mesmo como fix pra esgotamento de cota — ele considera isso fora de questão ("é um crime pra mim"), mesmo que a key já exista sem uso no ambiente (`OPENAI_API_KEY`). Única saída dentro da cota: modelo mais leve da mesma família OAuth (ex: `gpt-5.4-mini`, `gpt-5.6-luna`).
+- **`claude-cli/*` como provider do OpenClaw não é escolha de custo, é proibição de ToS**: desde 2026-04-04 a Anthropic baniu formalmente login/OAuth de assinatura Claude (Free/Pro/Max) em ferramentas de terceiros, citando o OpenClaw nominalmente. Nunca configurar isso como fallback/default, nem para teste — só API key direta da Anthropic (billing por token) seria permitido, e isso cai na mesma regra acima.
+- **`nvidia/*` aparece no catálogo mas não tem auth configurada** (`Missing auth`, confirmado em probe). Precisaria de conta/key nova na NVIDIA NIM antes de ser opção real — não assumir que "aparece na lista" significa "funciona".
+
 ## Diagnóstico rápido
 
 1. `openclaw --version`, `openclaw config validate`, `openclaw doctor --lint`.
