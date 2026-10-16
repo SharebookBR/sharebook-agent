@@ -14,6 +14,7 @@ Itens concluídos. Raramente revisitados; a fila viva está em [`../index.md`](.
 - **[Restaurar índice de memória do OpenClaw](restaurar-indice-de-memoria.md)** — concluído em 2026-10-12. O índice e a CLI estavam saudáveis; a tool dinâmica `memory_search` falhava por estado velho do Gateway com `401 token_expired`. Restart controlado resolveu; `memory_search`/`memory_get` voltaram e a CLI confirmou `280/280`, `Dirty: no`.
 - **[Laboratório Sharebook — observabilidade .NET por 24h](observabilidade-dotnet-laboratorio-24h.md)** — concluído em 2026-10-12. A POC provou valor e virou stack mínima permanente: métricas OTLP/Grafana Cloud, logs Loki, playbook `grafana-cloud-explorer.md` e helper compacto de consulta.
 - **[Devroye cadastrado como errata](fix-devroye-errata-cadastrada-como-livro.md)** — removido do catálogo público em 2026-10-05. `Non-Uniform Random Variate Generation` prometia o livro completo, mas o PDF publicado era uma corrigenda/errata de 7 páginas.
+- **[Update de ebook não troca o PDF](fix-update-ebook-nao-troca-pdf.md)** — correção concluída em 2026-10-16. `BookService.UpdateAsync` passou a fazer upload do `PdfBytes` usando o slug salvo, persistir `EBookPdfPath` e preservar o PDF quando nenhum novo arquivo é enviado; inclui testes unitários e foi enviada à `master` no commit `6550162`.
 
 ## Demais
 
