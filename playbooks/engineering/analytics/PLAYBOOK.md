@@ -16,7 +16,7 @@ GET https://api.sharebook.com.br/api/analytics/dashboard
 Authorization: Bearer <SHAREBOOK_PROD_ACCESS_TOKEN>
 ```
 
-Retorna em uma chamada: sessões por semana (13 semanas), downloads, logins, cadastros, top 10 livros por views e downloads (acumulado e por semana), busca interna e visão orgânica do Search Console. Cache de 12h no backend — resposta instantânea na maioria das vezes.
+Retorna em uma chamada: sessões por semana (13 semanas), downloads, logins, cadastros, top 10 livros por views e downloads (acumulado e por semana), busca interna e visão orgânica do Search Console. Cache de 24h no backend, aquecido no startup e diariamente às 03:00 UTC — resposta instantânea na maioria das vezes.
 
 Usar as APIs GA4 ou Search Console diretamente só quando precisar de granularidade, filtros ou métricas que o endpoint não expõe.
 
@@ -142,7 +142,11 @@ Dashboard integrado ao painel admin em 2026-06-01.
 ### Acesso
 - Rota Angular: `/admin/analytics` (protegida por `AuthGuardAdmin`)
 - Endpoint backend: `GET /api/analytics/dashboard` (admin only, `[AuthorizationFilter(Permissions.Permission.ApproveBook)]`)
-- Cache `IMemoryCache` com TTL 12h — primeira request bate no GA4, restante instantâneo
+- Cache `IMemoryCache` com TTL 24h, aquecido no startup e diariamente às 03:00 UTC (meia-noite no horário de Brasília)
+
+O warmup roda em um `BackgroundService` e não bloqueia o startup da API. Refreshes concorrentes de startup, agendamento e requisições compartilham a mesma task, evitando chamadas duplicadas ao GA4 e ao Search Console. Enquanto um refresh agendado acontece, requisições continuam recebendo o snapshot válido já armazenado.
+
+Se o refresh falhar, o serviço preserva o cache atual; depois da expiração, pode republicar por 1h o último snapshot bem-sucedido do mesmo processo. Sem snapshot, a falha é registrada e uma requisição futura ainda pode tentar preencher o cache. O agendador não possui retry curto próprio: depois de uma falha, a próxima tentativa proativa é o próximo warmup diário. Como o estado vive em `IMemoryCache`, restart perde cache e snapshot; múltiplas instâncias mantêm caches independentes.
 
 ### Eventos rastreados
 
