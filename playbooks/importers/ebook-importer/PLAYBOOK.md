@@ -336,6 +336,7 @@ bash setup-importer-cron.sh install && bash setup-importer-cron.sh status
 - Uma leitura: `editor-next`
 - Uma escrita: `plan-set`
 - Uma rejeição curatorial legítima: `python cli.py editorial-reject --id <ID> --reason "<motivo humano>"`
+- Recuperação de asset completo: `python cli.py recovery-asset-set --id <ID> --pdf-path <PDF> --cover-path <CAPA> --note "<evidência>"`
 - Regra editorial canônica: `importer.sources.editorial_prompt`
 - Não reabrir consultas extras quando o payload concierge já trouxer o contexto
 - `pg_db.mark_item()` deve preservar `metadata_json` por merge — erosão entre etapas é bug estrutural
@@ -366,6 +367,11 @@ Antes de desistir de um item cujo PDF esteja incompleto, seja apenas prefácio/c
 3. quando subagentes estiverem autorizados e disponíveis, delegar buscas independentes em paralelo;
 4. se encontrar o asset correto, atualizar a proveniência e devolver o item a `waiting_triage`;
 5. se a tentativa razoável não encontrar o PDF completo, registrar fontes consultadas e mover para `source_blocked`, preservando caminho barato de retomada.
+
+Quando o item já tiver caído indevidamente em `editorial_rejected`, não editar o
+banco por fora nem usar `plan-set` para pular o editorial. Depois de validar o
+PDF completo e a capa, usar `recovery-asset-set`; a rota preserva o metadata,
+registra a transição e devolve o item a `waiting_editorial`.
 
 Não publicar um fragmento fingindo ser a obra completa. O objetivo da recuperação é salvar a obra, não maquiar o asset.
 
