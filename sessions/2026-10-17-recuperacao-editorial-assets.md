@@ -13,11 +13,12 @@ facts_changed = [
   "1453 Game AI Pro permanece editorial_rejected porque a fonte oficial proíbe redistribuição, hospedagem e reimpressão fora do site.",
   "1505 Deep Learning permanece editorial_rejected porque os autores informam que o contrato do MIT Press proíbe a distribuição de PDF; a fonte oferece apenas HTML completo.",
   "O importer ganhou recovery-asset-set para validar um PDF/capa local, fazer merge do metadata_json e devolver itens terminais recuperáveis a waiting_editorial.",
-  "O fallback do caminho do publisher foi corrigido para playbooks/_shared/scripts/production/sharebook_prod_book.py; commits 940dd42 e 3d39d03 foram enviados aos respectivos remotos."
+  "O fallback do caminho do publisher foi corrigido para playbooks/_shared/scripts/production/sharebook_prod_book.py; commits 940dd42 e 3d39d03 foram enviados aos respectivos remotos.",
+  "O editorial_prompt de ebook_foundation_subjects foi alinhado ao fluxo canônico: asset incompleto ou incorreto exige recuperação e, se não resolvido, source_blocked; proibição comprovada exige triage_rejected; editorial_rejected fica reservado a decisão humana explícita; in_review deixou de ser oferecido como saída.",
+  "O importer ganhou source-editorial-prompt-show/set com trava de concorrência por SHA-256 para mudanças auditáveis de instruções de source."
 ]
 open_loops = [
-  "Ajustar posteriormente o editorial_prompt da source ebook_foundation_subjects, conforme combinado com Raffa.",
-  "Projetar a validação estrutural preventiva da triagem para essa source, sem limite cego de páginas.",
+  "Avaliar hardening específico do extractor/resolvedor de ebook_foundation_subjects, sem ampliar genericamente a responsabilidade da triagem mecânica e sem limite cego de páginas.",
   "Corrigir em outra sessão a coleta ampla do pytest, que colide nos módulos test_check_chapters.py dos jobs de tradução."
 ]
 durable_candidates = [
@@ -70,3 +71,9 @@ Fiquei satisfeito com a recuperação dos dois livros porque ela confirmou a hip
 Também senti um limite nítido ao investigar Game AI Pro e Deep Learning. Tentar salvar o catálogo não autoriza atravessar a decisão dos autores e editores. Nesses dois casos, não publicar é uma recuperação bem-sucedida da integridade do projeto, mesmo que o item continue fora do catálogo.
 
 A criação do `recovery-asset-set` deixou uma sensação de ordem recuperada. Antes havia uma lacuna entre descobrir o PDF correto e recolocá-lo no fluxo sem banco manual ou atalho de publicação. Agora essa passagem tem nome, validação e histórico; a dívida restante está claramente localizada no prompt da source e na validação estrutural preventiva.
+
+## Continuação — alinhamento da source
+
+Após a avaliação da sessão, Raffa autorizou remover a contradição do `editorial_prompt` de `ebook_foundation_subjects`. A instrução persistida agora deixa explícito que a triagem mecânica prova legibilidade/processabilidade, enquanto o preparo editorial confere identidade e completude. Prefácio, capítulo isolado, índice sem corpo ou asset errado devem disparar tentativa de recuperação; sem solução, o item fica em `source_blocked`. Proibição concreta de distribuição vira `triage_rejected`. `editorial_rejected` ficou reservado a decisão humana explícita, e `in_review` aparece apenas como saída inexistente que não deve ser usada.
+
+Como não havia interface canônica para editar prompt de source, o importer recebeu `source-editorial-prompt-show/set`. A escrita exige o SHA-256 lido anteriormente, recusa sobrescrita concorrente e registra hashes antes/depois no log operacional. A suíte funcional do importer passou com 15 testes.

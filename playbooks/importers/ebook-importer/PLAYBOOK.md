@@ -337,9 +337,16 @@ bash setup-importer-cron.sh install && bash setup-importer-cron.sh status
 - Uma escrita: `plan-set`
 - Uma rejeição curatorial legítima: `python cli.py editorial-reject --id <ID> --reason "<motivo humano>"`
 - Recuperação de asset completo: `python cli.py recovery-asset-set --id <ID> --pdf-path <PDF> --cover-path <CAPA> --note "<evidência>"`
+- Leitura de instrução da source: `python cli.py source-editorial-prompt-show --source <SOURCE>`
+- Atualização protegida da instrução: `python cli.py source-editorial-prompt-set --source <SOURCE> --prompt-file <ARQUIVO> --expected-sha256 <HASH_VIGENTE> --note "<motivo>"`
 - Regra editorial canônica: `importer.sources.editorial_prompt`
 - Não reabrir consultas extras quando o payload concierge já trouxer o contexto
 - `pg_db.mark_item()` deve preservar `metadata_json` por merge — erosão entre etapas é bug estrutural
+
+O update do `editorial_prompt` usa o SHA-256 retornado pelo comando de leitura
+como trava otimista: se outra sessão alterar a source entre leitura e escrita, o
+CLI recusa a sobrescrita. Não editar `importer.sources` por SQL ou por script
+one-shot quando esse comando estiver disponível.
 
 ### `editorial_rejected` — doutrina
 
