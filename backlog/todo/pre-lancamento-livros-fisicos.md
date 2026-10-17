@@ -1,7 +1,30 @@
 # Pré-lançamento de livros físicos — calendário editorial e avisos
 
 ## Prioridade e estado
-**Top 1 do backlog.** Proposta aprovada pelo Raffa em 2026-10-17; **planejamento, ainda não implementado**. Primeira campanha pretendida: último trimestre de 2026, com novos livros aproximadamente a cada 15 dias. Datas e títulos específicos ainda serão definidos.
+**Top 1 do backlog.** Proposta aprovada pelo Raffa em 2026-10-17; **planejamento, ainda não implementado**. Primeira temporada planejada para novembro e dezembro de 2026, com cinco lançamentos a cada 14 dias. Títulos e datas escolhidos em 2026-10-17; sujeitos à validação de preço, disponibilidade e execução operacional. Horário de liberação ainda será definido.
+
+## Calendário editorial aprovado — novembro e dezembro de 2026
+
+**Decisão de produto:** publicar **o calendário inteiro desde o começo**, com título, capa, sinopse e countdown de cada livro. Sem títulos secretos, revelação gradual, `RevealAt` ou trabalho manual quinzenal de divulgação. A liberação para solicitações é automática na data/hora configurada. O hype vem da programação pública e da expectativa pela data.
+
+| Liberação | Título | Autor | Papel na temporada | Teto-alvo de aquisição* |
+| --- | --- | --- | --- | ---: |
+| 01/11/2026 | Harry Potter e a Pedra Filosofal | J. K. Rowling | Grande estreia / nostalgia | R$ 35 |
+| 15/11/2026 | A Menina que Roubava Livros | Markus Zusak | Emoção / afinidade com leitura | R$ 30 |
+| 29/11/2026 | A Paciente Silenciosa | Alex Michaelides | Suspense / curiosidade | R$ 25 |
+| 13/12/2026 | É Assim que Acaba | Colleen Hoover | Romance contemporâneo / público ampliado | R$ 35 |
+| 27/12/2026 | O Hobbit | J. R. R. Tolkien | Grande final / fantasia | R$ 40 |
+
+\* **Metas de compra, não cotações verificadas.** Valores incluem frete e devem ser confirmados antes de anunciar. Soma das metas: **R$ 165**; reserva proposta de **R$ 35**; orçamento total de referência **R$ 200**. Horários de liberação pendentes de decisão.
+
+### Estratégia de aquisição e curadoria
+- O Sharebook **compra o exemplar somente após a escolha do ganhador**, preferencialmente no sebo online com menor **preço total (livro + frete)** e entrega diretamente no endereço da pessoa. Não exige compra ou estoque antecipado.
+- A condição de livro usado é natural ao Sharebook; **não adicionar avisos explicativos redundantes na campanha**. Evitar prometer uma edição específica sem garantia de fornecimento.
+- Maximizar **desejo/hype por real gasto**: reconhecimento, vontade de receber, circulação de usados, disponibilidade, custo total e diversidade de públicos.
+- Antes de confirmar qualquer título, conferir se **já está na vitrine atual ou participou de campanha recente**, para assegurar novidade. **O Código Da Vinci foi descartado por já estar na vitrine**, substituído por **A Paciente Silenciosa**.
+- Conferir disponibilidade em mais de um sebo e preços com frete antes do anúncio; revalidar no momento da compra e prever alternativa em caso de esgotamento. Os valores acima não foram pesquisados/validados.
+- Esta heurística de curadoria é candidata a uma **local skill** futura, após aprendizado com a primeira temporada.
+- A execução pressupõe que a operação de doação patrocinada pelo Sharebook e envio direto ao ganhador seja compatível com o fluxo de doador/seleção existente; validar no discovery técnico antes de lançar.
 
 ## Objetivo e hipótese
 Transformar a vitrine existente de livros físicos em uma experiência de antecipação e retorno: anunciar doações futuras, permitir que leitores optem por receber um aviso e abrir solicitações somente no momento anunciado. Hipótese: calendário quinzenal aumenta revisitas, interesse e participação em doações. Validar com métricas reais.
