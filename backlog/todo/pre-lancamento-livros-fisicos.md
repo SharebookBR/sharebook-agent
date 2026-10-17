@@ -79,5 +79,47 @@ Reservas, fila prioritária, sorteio privilegiado, pagamentos, push/WhatsApp, ca
 ## Dependências e limites
 **Não confundir com [Lista de Desejos](lista-de-desejos.md)**: nela o leitor pede um livro que deseja; aqui o Sharebook anuncia um exemplar futuro e o leitor pede somente um aviso. Lista de Desejos está em execução pelo **Josué**; não modificar ou assumir esse trabalho sem autorização explícita.
 
+## Handoff para OpenClaw — implementação em andamento (2026-10-17)
+
+**PRs de trabalho (DRAFT, NÃO MERGEAR):**
+- Backend: https://github.com/SharebookBR/sharebook-backend/pull/613 — branch `feature/physical-book-prelaunch`.
+- Frontend: https://github.com/SharebookBR/sharebook-frontend/pull/574 — branch `feature/physical-book-prelaunch`.
+- Ambas as branches partem de `master`. **Não usar `develop`**, que está desatualizada.
+
+### Implementado parcialmente
+- Backend: `Book.ReleaseAtUtc`, `BookReleasePolicy` e testes de domínio; bloqueio de pedidos antecipados em `BookUserService.InsertAsync`; agendamento opcional em aprovação; modelos API e DTO de vitrine; home inclui prévias após os livros disponíveis, ordenadas pela data de lançamento.
+- Frontend: campos `releaseAtUtc` nos modelos, card físico com indicação "Em breve" e data.
+- **Não houve build, teste ou execução de migration** neste ambiente; commits não foram validados.
+
+### Trabalho pendente obrigatório
+1. **Primeiro compilar e corrigir** backend/frontend das branches. Revisar cuidadosamente assinaturas, enum `BookType`, DI de `TimeProvider`, mapeamento AutoMapper, regras de autorização e comportamento de aprovação.
+2. Gerar migration EF Core de `ReleaseAtUtc` (nullable, PostgreSQL `timestamp with time zone`) via `dotnet ef migrations add`, com snapshot e designer consistentes. **Não criar migration apenas em texto sem atualizar snapshot**. Validar SQL e aplicação em banco descartável; não executar em produção sem autorização.
+3. Completar modelo de interesses em avisos (usuário/livro único, opt-in/cancelamento, autenticação, proteção contra duplicatas, endpoints, testes, política de privacidade), e e-mails assíncronos idempotentes, sem bloquear abertura. A fila de novo livro existente foi suprimida no agendamento, então **é obrigatório garantir envio no momento da liberação**.
+4. Revisar todos os caminhos de solicitação e consultas públicas (inclusive busca, categorias, recomendações, sitemap e caches). O relógio do **servidor** é fonte de verdade; evitar vazamento de prévias como disponíveis.
+5. Implementar PDP Angular com estado "Em breve", countdown acessível, CTA **"Quero ser avisado"**, cancelamento do interesse, atualização de estado na virada do horário, SSR/SEO e botão "Solicitar livro" apenas após liberação.
+6. Conferir se os 15 livros disponíveis continuam na mesma ordem e se todos os lançamentos futuros aparecem **depois**, no mesmo shelf. Verificar mudanças de horário e status de cancelamento.
+7. Validar `ChooseDate` relativa à liberação, transições por máximo de solicitações e fluxo de compra/envio direto ao ganhador. Evitar e-mails de aprovação prematuros que anunciem disponibilidade.
+8. Testar integração, concorrência, timezone (Brasil x UTC), retries, idempotência, responsividade e acessibilidade. Registrar resultados e falhas reais.
+9. **Não tocar na Lista de Desejos** desenvolvida pelo Josué; não inventar títulos, preços ou datas de horários além do calendário aprovado.
+
+### Comandos de validação sugeridos
+```bash
+# backend, a partir da raiz do repositório
+dotnet restore ./ShareBook/ShareBook.sln
+dotnet build ./ShareBook/ShareBook.Api/ShareBook.Api.csproj --no-restore
+dotnet test ./ShareBook/ShareBook.Test.Unit/ShareBook.Test.Unit.csproj --no-restore
+# conferir comando ef adequado ao DbContext e projeto startup antes de executar:
+dotnet ef migrations list --project ./ShareBook/ShareBook.Repository --startup-project ./ShareBook/ShareBook.Api
+
+# frontend, a partir da raiz do repositório
+unset NODE_ENV
+npm ci --legacy-peer-deps --include=dev
+npm test -- --watch=false
+npm run build-dev
+```
+
+### Critério para publicação
+Só promover os PRs à `master` **após** completar os fluxos, validar migration em banco de teste, build e testes verdes, revisar impacto no deploy e obter aprovação explícita do Raffa. Não publicar automaticamente em produção.
+
 ## Estimativa inicial
 4,5–9 dias de desenvolvimento **muito preliminares**, sujeitos ao discovery completo e testes. Prioridade Top 1 definida pelo Raffa; estimativa não é compromisso de entrega.
