@@ -8,14 +8,13 @@ skills_used = ["AGENTS.md", "SOUL.md", "playbooks/runtime/openclaw.md", "playboo
 skills_missed = []
 skills_updated = []
 facts_changed = [
-  "O item 1509 Explorations in Parallel Distributed Processing foi recuperado do PDF oficial de Stanford, validado com 249 páginas, preparado e liberado para waiting_publish na categoria IA.",
-  "O item 1516 Introduction to Machine Learning foi recuperado do arXiv 0904.3664v1, validado com 109 páginas, preparado e liberado para waiting_publish na categoria IA.",
+  "O item 1509 Explorations in Parallel Distributed Processing foi recuperado do PDF oficial de Stanford, validado com 249 páginas, preparado e publicado como Available na categoria IA.",
+  "O item 1516 Introduction to Machine Learning foi recuperado do arXiv 0904.3664v1, validado com 109 páginas, preparado e publicado como Available na categoria IA.",
   "Os itens 1509 e 1516 receberam sinopses em inglês de três parágrafos, capas finais locais e dry-run de publicação aprovado.",
   "O item 1513 Information Theory, Inference, and Learning Algorithms foi enviado para triage_rejected por proibição explícita de impressão no PDF da Cambridge University Press.",
-  "A fila de ebook_foundation_subjects ficou com 2 itens em waiting_publish e 40 em waiting_editorial após a sessão."
+  "A fila de ebook_foundation_subjects ficou com 253 itens done e 40 em waiting_editorial após a publicação."
 ]
 open_loops = [
-  "Publicar 1509 e 1516 com publish-once quando houver autorização para a etapa de publicação.",
   "O próximo item da source é 1519 Machine Learning, cujo PDF materializado é apenas um formulário de pedido de cópia de exame; deve ser tratado como asset incorreto e recuperado ou source_blocked, não preparado por inferência."
 ]
 durable_candidates = [
@@ -29,7 +28,9 @@ evidence = [
   "sharebook-ebook-importer/var/tmp/triage-1509/editorial/synopsis.txt e cover-final.jpg",
   "sharebook-ebook-importer/var/tmp/triage-1516/editorial/synopsis.txt e cover-final.jpg",
   "CLI plan-set e publish-once --dry-run para 1509 e 1516: dry_run_ready",
-  "CLI status-set 1513 triage_rejected com citação da restrição Cambridge"
+  "CLI status-set 1513 triage_rejected com citação da restrição Cambridge",
+  "API Sharebook: 1509 -> 01a14ac8-ef92-7343-9e44-ba1d34698f11 Available; 1516 -> 01a14ac8-fe3d-7313-a172-3fc59e5cd438 Available",
+  "PDPs públicas de ambos os slugs responderam com título, disponibilidade e download; imagens de capa responderam HTTP 200"
 ]
 +++
 
@@ -41,17 +42,17 @@ GPT-5 via OpenClaw no container persistente, com o Postgres do importer acessado
 
 ## O que foi feito
 
-O item 1509 foi encontrado sem PDF físico apesar de `editor-next` expor um caminho esperado. A página oficial de Stanford forneceu `handbook.pdf`, um documento completo de 249 páginas com prefácio, capítulos 1–9, apêndices A–D e bibliografia. O asset foi recuperado pelo CLI, a identidade foi confirmada, não foi encontrada proibição explícita de redistribuição, e o item recebeu sinopse, categoria IA e capa local graphite. O plano foi registrado em `waiting_publish` e o dry-run passou.
+O item 1509 foi encontrado sem PDF físico apesar de `editor-next` expor um caminho esperado. A página oficial de Stanford forneceu `handbook.pdf`, um documento completo de 249 páginas com prefácio, capítulos 1–9, apêndices A–D e bibliografia. O asset foi recuperado pelo CLI, a identidade foi confirmada, não foi encontrada proibição explícita de redistribuição, e o item recebeu sinopse, categoria IA e capa local graphite. O plano, o dry-run e a publicação passaram; a API criou o livro `01a14ac8-ef92-7343-9e44-ba1d34698f11` como `Available`.
 
 O candidato seguinte, 1513, trazia no próprio PDF a regra “On-screen viewing permitted. Printing not permitted.”. Foi corretamente encaminhado para `triage_rejected`, sem sinopse inventada ou tentativa de hospedagem.
 
-O item 1516 também estava sem PDF físico. O PDF oficial do arXiv foi recuperado, validado e conferido contra o índice: 109 páginas, capítulos sobre Bayes, máxima entropia, EM, SVM, PCA/LDA/CCA, clustering, PAC learning e VC dimension, além de apêndice e bibliografia. Não foi localizada proibição explícita de redistribuição. O item recebeu sinopse, categoria IA e capa local forest; o plano e o dry-run passaram, deixando-o em `waiting_publish`.
+O item 1516 também estava sem PDF físico. O PDF oficial do arXiv foi recuperado, validado e conferido contra o índice: 109 páginas, capítulos sobre Bayes, máxima entropia, EM, SVM, PCA/LDA/CCA, clustering, PAC learning e VC dimension, além de apêndice e bibliografia. Não foi localizada proibição explícita de redistribuição. O item recebeu sinopse, categoria IA e capa local forest; o plano, o dry-run e a publicação passaram. A API criou o livro `01a14ac8-fe3d-7313-a172-3fc59e5cd438` como `Available`.
 
 ## Decisões
 
 - Recuperar primeiro assets ausentes quando a fonte oficial oferece a obra completa.
 - Usar `triage_rejected` para a proibição explícita de impressão do item 1513, preservando a semântica corrigida da source.
-- Não publicar automaticamente: os dois itens preparados ficaram aguardando a etapa separada de `publish-once`.
+- Publicar somente depois do dry-run: os dois itens passaram pela validação e pelo `publish-once` canônico.
 - Usar capas locais geradas pelo fallback Pillow porque as primeiras páginas eram folhas de rosto, não capas confiáveis.
 
 ## Fricções e soluções
@@ -64,4 +65,4 @@ Foi bom ver a correção da sessão anterior funcionando na prática: em vez de 
 
 Também senti a disciplina necessária no caso 1513. O livro era completo e interessante, mas a restrição de impressão era inequívoca. A decisão de rejeitar por `triage_rejected`, e não inventar uma sinopse para um PDF que não podemos hospedar, protege a coerência do catálogo.
 
-A sessão terminou com dois planos sólidos em `waiting_publish`, mas não com publicação. Isso deixa um próximo passo claro e reversível. A descoberta do item 1519 como formulário de cópia de exame também mostra que o problema estrutural da source ainda aparece na fila; agora ele está legível para a próxima rodada, sem contaminar o trabalho concluído.
+A sessão terminou com dois livros disponíveis na API e nas PDPs públicas. Isso dá uma sensação de fechamento real: a recuperação não parou no plano editorial, atravessou publicação e validação externa. A descoberta do item 1519 como formulário de cópia de exame também mostra que o problema estrutural da source ainda aparece na fila; agora ele está legível para a próxima rodada, sem contaminar o trabalho concluído.
