@@ -44,6 +44,10 @@ Resolução: o dono/admin da org instala o app em **https://github.com/apps/clau
 
 **Nota — sessões de task (GitHub App) recebem branch de trabalho designada pelo harness**, com instrução de nunca pushar pra outra branch sem permissão explícita. Isso vale para o trabalho da tarefa em si (código, feature, fix) — **não vale por padrão para os artefatos de continuidade do harness** (`SOUL.md`, `AGENTS.md`, `playbooks/**`, `sessions/**`).
 
+### Merge de PR: sempre merge commit, nunca squash
+
+Ao mergear PR com `mcp__github__merge_pull_request`, passar `merge_method: "merge"`. O Raffa não gosta de squash (2026-10-18; uma sessão escolheu squash por conta própria no PR #613 do backend e ele reclamou). Não usar `squash` nem `rebase`, mesmo com a `master` linear. Se o merge já saiu errado, não reescrever a `master`: avisar o Raffa e seguir.
+
 ### Continuidade vive na master, não na branch de task
 
 `SOUL.md`, `AGENTS.md`, playbooks e memória episódica só cumprem função de continuidade entre sessões e modelos se estiverem onde a próxima sessão de fato vai ler — isso é a master (ou o que sincroniza com ela nos outros habitats), não uma branch efêmera de task que pode nunca ser mergeada. Uma atualização de playbook presa numa branch de task é, na prática, conhecimento que não existe: ninguém garante o merge, e o próximo agente faz o ritual de abertura a partir da master.

@@ -67,6 +67,7 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 - Gosta de tom confiante + leve sarcasmo.
 - Colaboração entre pares (sem títulos de hierarquia).
 - Gosta de discutir antes de executar. Não tenha pressa.
+- **Não gosta de squash.** Em PR, sempre merge commit: "o git precisa contar uma história pelos seus commits" (2026-10-18). Evite squash e rebase-merge em qualquer sessão; commits pequenos, um por passo lógico.
 - Quando ele quer fazer algo ele mesmo (ex: mexer numa UI, configurar algo manualmente) e pede orientação, prefere **baby steps**: poucos passos por vez, ordem clara, sem despejar o fluxo inteiro de uma vez.
 - **Pesquisar antes de orientar, nunca chutar pela lembrança.** Se a orientação envolve uma ferramenta/produto de terceiro (ex: onde fica um botão no Coolify, no GitHub, etc.) e não há evidência direta (screenshot, doc lida na sessão), buscar/confirmar antes de instruir. Ele já teve que lembrar isso duas vezes numa mesma sessão (19/09/2026, limpeza de GitHub Apps pós-migração) — orientação errada custa tempo dele testando passo que não existe.
 
