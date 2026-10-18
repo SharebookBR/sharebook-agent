@@ -1,12 +1,12 @@
 # Pré-lançamento de livros físicos — calendário editorial e avisos
 
 ## Prioridade e estado
-**Top 1 do backlog.** Prioridade definida pelo Raffa em 2026-10-17. **Implementado e mergeado na `master` em 2026-10-18** (backend `fe28ff2`, frontend `e43ce6a`); deploy confirmado em produção (API subiu, migrations aplicadas). **Aguardando validação do Raffa**; depois o OpenClaw cadastra os livros do calendário.
+**Top 1 do backlog.** Prioridade definida pelo Raffa em 2026-10-17. **Implementado, validado e em produção em 2026-10-18** (backend `fe28ff2`, frontend `e43ce6a`). Os cinco livros do calendário foram cadastrados como `Scheduled` em 2026-10-18. Na validação dos cadastros, foi descoberto e corrigido o bug que omitia `ReleaseDate` nas projeções da busca/PDP pública (backend `e2ad43b`).
 
 Divisão de trabalho combinada em 2026-10-18:
 1. **Claude (web)**: merge na `master` do front e do back. Feito.
-2. **Raffa**: validação em produção (roteiro abaixo).
-3. **OpenClaw**: cadastrar os livros do calendário (seção "Cadastro do calendário pelo OpenClaw").
+2. **Raffa**: validação em produção. Feito.
+3. **OpenClaw**: cadastrar os livros do calendário. Feito em 2026-10-18.
 
 ## Calendário editorial aprovado — novembro e dezembro de 2026
 
@@ -27,7 +27,7 @@ Divisão de trabalho combinada em 2026-10-18:
 - A condição de livro usado é natural ao Sharebook; **não adicionar avisos explicativos redundantes na campanha**. Evitar prometer uma edição específica sem garantia de fornecimento.
 - Maximizar **desejo/hype por real gasto**: reconhecimento, vontade de receber, circulação de usados, disponibilidade, custo total e diversidade de públicos.
 - Antes de confirmar qualquer título, conferir se **já está na vitrine atual ou participou de campanha recente**, para assegurar novidade. **O Código Da Vinci foi descartado por já estar na vitrine**, substituído por **A Paciente Silenciosa**.
-- Conferir disponibilidade em mais de um sebo e preços com frete antes do anúncio; revalidar no momento da compra e prever alternativa em caso de esgotamento. Os valores acima não foram pesquisados/validados.
+- **Não pesquisar sebo ou preço no cadastro/pré-lançamento.** Raffa fará essa pesquisa muito mais adiante, quando houver pessoa ganhadora e for a hora real da compra. Nesse momento, conferir disponibilidade, preço total com frete e alternativa em caso de esgotamento. Os tetos acima continuam apenas como metas de referência.
 - Esta heurística de curadoria é candidata a uma **local skill** futura, após aprendizado com a primeira temporada.
 - A execução pressupõe que a operação de doação patrocinada pelo Sharebook e envio direto ao ganhador seja compatível com o fluxo de doador/seleção existente. **Ainda não validado de ponta a ponta**: conferir na primeira escolha de ganhador de um livro do calendário.
 
@@ -87,8 +87,8 @@ Transformar a vitrine de livros físicos em uma experiência de antecipação e 
 5. Fluxo normal de doação intacto: aprovar um livro sem data deve se comportar como sempre.
 6. Remover o livro de teste ao final.
 
-## Cadastro do calendário pelo OpenClaw
-Pré-requisito: Raffa validou o roteiro acima. Seguir `playbooks/importers/physical-book-importer/PLAYBOOK.md`, acrescentando **`--release-date`** no `create ... --approve` (ou `approve --id ... --release-date ...`):
+## Cadastro do calendário pelo OpenClaw — concluído em 2026-10-18
+O calendário foi cadastrado depois da validação do Raffa, seguindo `playbooks/importers/physical-book-importer/PLAYBOOK.md` e usando **`--release-date`** no `create ... --approve`:
 
 ```bash
 python playbooks/_shared/scripts/production/sharebook_prod_book.py create \
@@ -105,7 +105,7 @@ python playbooks/_shared/scripts/production/sharebook_prod_book.py create \
 | 2026-12-13 | É Assim que Acaba |
 | 2026-12-27 | O Hobbit |
 
-Regras: cadastrar **o calendário inteiro desde já** (decisão de produto: nada de títulos secretos); `--release-date` só funciona junto com `--approve`; a data é a do dia da abertura em São Paulo; conferir o resultado (`status: Scheduled`, `releaseDate` preenchida) e a PDP depois de cadastrar cada um. Antes de cadastrar, repetir a checagem de novidade (já está na vitrine? participou de campanha recente?) e a conferência de preço e disponibilidade nos sebos citada na estratégia de aquisição acima. Não inventar títulos nem datas fora desta tabela.
+Resultado validado nos cinco livros: `status: Scheduled`, `releaseDate` preenchida, capa/thumbnail públicas, PDP com data e countdown, "Quer ser avisado?" presente e "Solicitar livro" ausente. A pesquisa de sebo/preço foi explicitamente adiada pelo Raffa para a escolha da pessoa ganhadora. Não inventar títulos nem datas fora desta tabela.
 
 ## Métricas e critérios de aceite
 - Visualizações de PDP em prévia; interessados únicos (total de avisos pedidos por livro); conversão de visualização para aviso.
