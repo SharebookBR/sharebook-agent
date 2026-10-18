@@ -15,6 +15,7 @@ import base64
 import json
 import re
 import unicodedata
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
@@ -192,11 +193,32 @@ def delete_book(token: str, book_id: str) -> Any:
     return request_json(f"{API_BASE}/Book/{book_id}", method="DELETE", headers=auth_headers(token))
 
 
-def approve_book(token: str, book_id: str) -> Any:
+RELEASE_DATE_HELP = (
+    "Data de liberacao YYYY-MM-DD (fuso de Sao Paulo). Futura = livro fisico fica 'Em breve' "
+    "(Scheduled) e o job das 7h libera no dia. Vazia = disponivel ao aprovar."
+)
+
+
+def parse_release_date(value: str | None) -> str | None:
+    """Valida YYYY-MM-DD (data em São Paulo). A API aceita só livro físico e só data futura agenda."""
+    if not value:
+        return None
+    try:
+        return datetime.strptime(value, "%Y-%m-%d").date().isoformat()
+    except ValueError:
+        raise SystemExit(f"--release-date invalida: {value!r}. Use YYYY-MM-DD (ex: 2026-11-15).")
+
+
+def approve_book(token: str, book_id: str, release_date: str | None = None) -> Any:
+    """Aprova o livro. Com release_date futura, o livro físico fica Scheduled ("Em breve") até a data;
+    sem data (ou data de hoje/passada), vai direto para Available."""
+    body: dict[str, Any] = {"ChooseDate": None}
+    if release_date:
+        body["ReleaseDate"] = release_date
     return request_json(
         f"{API_BASE}/Book/Approve/{book_id}",
         method="POST",
-        body={"ChooseDate": None},
+        body=body,
         headers=auth_headers(token),
     )
 
@@ -311,7 +333,7 @@ def create_book(args: argparse.Namespace, token: str) -> dict[str, Any]:
 
     result: dict[str, Any] = {"create_response": create_response, "book": infer_image_url(created)}
     if args.approve:
-        result["approve_response"] = approve_book(token, created["id"])
+        result["approve_response"] = approve_book(token, created["id"], parse_release_date(args.release_date))
         result["book"] = get_book_by_id(token, created["id"])
     return result
 
@@ -365,7 +387,7 @@ def update_book(args: argparse.Namespace, token: str) -> dict[str, Any]:
 
     result: dict[str, Any] = {"update_response": update_response, "book": updated}
     if args.approve:
-        result["approve_response"] = approve_book(token, args.id)
+        result["approve_response"] = approve_book(token, args.id, parse_release_date(args.release_date))
         result["book"] = get_book_by_id(token, args.id)
     return result
 
@@ -403,6 +425,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     approve_parser = sub.add_parser("approve", help="Aprovar livro por id.")
     approve_parser.add_argument("--id", required=True)
+    approve_parser.add_argument("--release-date", help=RELEASE_DATE_HELP)
 
     backfill_parser = sub.add_parser(
         "backfill-thumbnails",
@@ -439,6 +462,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Obrigatorio para livro fisico.",
     )
     create_parser.add_argument("--approve", action="store_true")
+    create_parser.add_argument("--release-date", help=RELEASE_DATE_HELP + " Exige --approve.")
     create_parser.add_argument("--delete-existing", action="store_true")
 
     update_parser = sub.add_parser("update", help="Atualizar livro existente por id.")
@@ -463,13 +487,20 @@ def build_parser() -> argparse.ArgumentParser:
         help="Data de decisao no formato ISO 8601 (ex: 2026-07-16T03:00:00Z).",
     )
     update_parser.add_argument("--approve", action="store_true")
+    update_parser.add_argument("--release-date", help=RELEASE_DATE_HELP + " Exige --approve.")
 
     return parser
+
+
+def require_approve_with_release_date(args: argparse.Namespace) -> None:
+    if getattr(args, "release_date", None) and args.command in ("create", "update") and not args.approve:
+        raise SystemExit("--release-date so vale junto com --approve (a data e definida na aprovacao).")
 
 
 def main() -> int:
     parser = build_parser()
     args = parser.parse_args()
+    require_approve_with_release_date(args)
 
     repo_root = next((p for p in Path(__file__).resolve().parents if (p / "AGENTS.md").exists()), Path.cwd())
     env_values = load_env(repo_root)
@@ -487,7 +518,7 @@ def main() -> int:
         if args.command == "delete":
             return delete_book(token, args.id)
         if args.command == "approve":
-            return approve_book(token, args.id)
+            return approve_book(token, args.id, parse_release_date(args.release_date))
         if args.command == "backfill-thumbnails":
             return backfill_book_thumbnails(token, args.overwrite, args.batch_size)
         if args.command == "create":

@@ -247,6 +247,7 @@ Exceção conhecida e deliberada: `playbooks/engineering/analytics/secrets/ga4-k
 - A raiz do workspace é só um diretório agregador, **não** é repositório git. O path real depende do habitat e está no playbook de runtime.
 - Os repositórios operacionais vivem em pastas irmãs dentro do workspace: `sharebook-agent`, `sharebook-frontend`, `sharebook-backend` e `sharebook-ebook-importer`.
 - Antes de rodar `git status`, `git commit` ou mexer em branch/remote, entrar no repositório correto.
+- **Merge de PR: sempre merge commit, nunca squash nem rebase-merge.** Preferência do Raffa (2026-10-18): "o git precisa contar uma história pelos seus commits". Escreva commits que contem a história (um por passo lógico). Nunca escolher o método de merge por conta própria sem lembrar disso. Nunca reescrever a `master` para corrigir método de merge já feito.
 - **Build antes de commit — obrigatório**: antes de qualquer commit em `sharebook-frontend` ou `sharebook-backend`, rodar o build local e confirmar zero erros. Não commitar código que não compila.
 
 ## Fronteira do Harness

@@ -1,7 +1,12 @@
 # Pré-lançamento de livros físicos — calendário editorial e avisos
 
 ## Prioridade e estado
-**Top 1 do backlog.** Proposta aprovada pelo Raffa em 2026-10-17; **planejamento, ainda não implementado**. Primeira temporada planejada para novembro e dezembro de 2026, com cinco lançamentos a cada 14 dias. Títulos e datas escolhidos em 2026-10-17; sujeitos à validação de preço, disponibilidade e execução operacional. Horário de liberação ainda será definido.
+**Top 1 do backlog.** Prioridade definida pelo Raffa em 2026-10-17. **Implementado e mergeado na `master` em 2026-10-18** (backend `fe28ff2`, frontend `e43ce6a`); deploy confirmado em produção (API subiu, migrations aplicadas). **Aguardando validação do Raffa**; depois o OpenClaw cadastra os livros do calendário.
+
+Divisão de trabalho combinada em 2026-10-18:
+1. **Claude (web)**: merge na `master` do front e do back. Feito.
+2. **Raffa**: validação em produção (roteiro abaixo).
+3. **OpenClaw**: cadastrar os livros do calendário (seção "Cadastro do calendário pelo OpenClaw").
 
 ## Calendário editorial aprovado — novembro e dezembro de 2026
 
@@ -15,7 +20,7 @@
 | 13/12/2026 | É Assim que Acaba | Colleen Hoover | Romance contemporâneo / público ampliado | R$ 35 |
 | 27/12/2026 | O Hobbit | J. R. R. Tolkien | Grande final / fantasia | R$ 40 |
 
-\* **Metas de compra, não cotações verificadas.** Valores incluem frete e devem ser confirmados antes de anunciar. Soma das metas: **R$ 165**; reserva proposta de **R$ 35**; orçamento total de referência **R$ 200**. Horários de liberação pendentes de decisão.
+\* **Metas de compra, não cotações verificadas.** Valores incluem frete e devem ser confirmados antes de anunciar. Soma das metas: **R$ 165**; reserva proposta de **R$ 35**; orçamento total de referência **R$ 200**. A liberação é por data (job das 7h, São Paulo), sem hora.
 
 ### Estratégia de aquisição e curadoria
 - O Sharebook **compra o exemplar somente após a escolha do ganhador**, preferencialmente no sebo online com menor **preço total (livro + frete)** e entrega diretamente no endereço da pessoa. Não exige compra ou estoque antecipado.
@@ -24,102 +29,89 @@
 - Antes de confirmar qualquer título, conferir se **já está na vitrine atual ou participou de campanha recente**, para assegurar novidade. **O Código Da Vinci foi descartado por já estar na vitrine**, substituído por **A Paciente Silenciosa**.
 - Conferir disponibilidade em mais de um sebo e preços com frete antes do anúncio; revalidar no momento da compra e prever alternativa em caso de esgotamento. Os valores acima não foram pesquisados/validados.
 - Esta heurística de curadoria é candidata a uma **local skill** futura, após aprendizado com a primeira temporada.
-- A execução pressupõe que a operação de doação patrocinada pelo Sharebook e envio direto ao ganhador seja compatível com o fluxo de doador/seleção existente; validar no discovery técnico antes de lançar.
+- A execução pressupõe que a operação de doação patrocinada pelo Sharebook e envio direto ao ganhador seja compatível com o fluxo de doador/seleção existente. **Ainda não validado de ponta a ponta**: conferir na primeira escolha de ganhador de um livro do calendário.
 
 ## Objetivo e hipótese
-Transformar a vitrine existente de livros físicos em uma experiência de antecipação e retorno: anunciar doações futuras, permitir que leitores optem por receber um aviso e abrir solicitações somente no momento anunciado. Hipótese: calendário quinzenal aumenta revisitas, interesse e participação em doações. Validar com métricas reais.
+Transformar a vitrine de livros físicos em uma experiência de antecipação e retorno: anunciar doações futuras, deixar o público pedir um aviso e abrir as solicitações só na data anunciada. Hipótese: calendário quinzenal aumenta revisitas, interesse e participação. Validar com métricas reais.
 
-## Jornada do leitor (decisões de produto)
-1. Livro físico é anunciado com data e hora futuras de liberação, capa, sinopse e PDP pública.
-2. O livro aparece **na seção atual "Livros físicos" da home**, sem criar outra seção: **da esquerda para a direita, primeiro livros disponíveis na ordem atual; depois livros em prévia por data de liberação crescente**.
-3. Card em prévia mostra estado inequívoco e countdown compacto; PDP é customizada, com countdown em destaque e CTA **"Quero ser avisado"**.
-4. Leitor autenticado opta pelo aviso e pode desfazer o interesse. O interesse **não é solicitação, reserva, inscrição na seleção, preferência ou prioridade**.
-5. No horário anunciado, o livro se torna solicitável no fluxo comum. Interessados recebem aviso por e-mail com link para PDP; o usuário **precisa solicitar separadamente** caso queira participar.
-6. A seleção do ganhador, limites de solicitações, frete e demais regras da doação seguem o fluxo atual, sem vantagem para quem pediu aviso.
+**Quem usa o quê:** o calendário (aprovar com data de liberação) é gerido só pelo Raffa e pelos agentes. O público usa o "Quero ser avisado". O fluxo de doação das pessoas comuns não muda.
 
-## Regras funcionais
-- Exclusivo para livros **físicos**. E-books fora do escopo.
-- Livros disponíveis sempre precedem livros em prévia na home; prévias ordenadas da mais próxima para a mais distante.
-- Livro em prévia nunca pode ser solicitado, mesmo via API direta. Validar no servidor, não só ocultar botão.
-- Um usuário pode ter no máximo um interesse ativo por livro; inscrição e cancelamento idempotentes.
-- O countdown é informativo; a fonte de verdade para liberação é o relógio do servidor, com data/hora e fuso explicitados.
-- No momento da liberação, o livro migra automaticamente para o grupo de disponíveis; evitar depender do envio de e-mail para habilitar solicitações.
-- Se o horário mudar ou o livro for cancelado, UI e notificações devem refletir a alteração, sem promessas falsas.
-- A janela para solicitar e a data de escolha do ganhador começam a contar a partir da liberação, não do anúncio (proposta a validar no detalhamento).
-- A inscrição de aviso deve respeitar preferências de comunicação e permitir cancelamento; sem disparos duplicados.
+## Desenho final (o que está em produção)
 
-## Desenho técnico inicial (hipóteses, não implementação prescrita)
-**Referência: branches `master` do backend e frontend, inspecionadas em 2026-10-17.**
+### Modelo
+- **`BookStatus.Scheduled`** ("Em breve"), último valor do enum (coluna `integer`, sem migration de status). Livro físico aprovado com data futura nasce nele. `Status == Available` continua significando "disponível": nenhuma listagem, busca, categoria, tag, recomendação, contagem ou sitemap precisou mudar.
+- **`Book.ReleaseDate`**: `date`, sem hora, fuso de São Paulo. Só preenchida enquanto o livro está `Scheduled`; vira `null` ao liberar. Serializa como `"yyyy-MM-dd"` (a API usa Newtonsoft; coberto por teste).
+- **`BookReleaseInterest`** (livro + pessoa, único por par, `NotifiedAt`): é o "Quero ser avisado". Não é solicitação, reserva, inscrição na seleção nem prioridade.
 
-- Backend: `Book` já contém `Status`, `ApprovedAt`, `ChooseDate` e `MaxRequestsOverride`. `BookService.ApproveAsync` atualmente torna o livro `Available` imediatamente. **Não reutilizar `ChooseDate`**: é a data da escolha do ganhador, não de abertura das solicitações. Avaliar `ReleaseAt` (UTC) e estado de publicação separado do estado da doação; confirmar todos os filtros e transições antes de decidir por novo `BookStatus`.
-- Persistência de avisos: avaliar entidade dedicada `BookReleaseInterest` (BookId, UserId, CreatedAt, NotifiedAt), índice único por par e endpoint autenticado para aderir/cancelar/consultar.
-- Backend: garantir a restrição de `ReleaseAt` no serviço de solicitação (`BookUserService`) e nas consultas públicas; respeitar limites de solicitações e encerramento antecipado presentes na `master`.
-- Home Angular: `HomeComponent` usa `getFeaturedPrintedBooks()`, `app-book-shelf` e `book-card`; ampliar DTO/consulta e apresentação sem criar seção paralela. Não prejudicar descoberta de livros já disponíveis.
-- PDP Angular: `DetailsComponent` atualmente usa `available` e mostra indisponíveis como já doados. Criar terceiro estado visual explícito de prévia, sem cair na mensagem de "já foi doado"; SSR/SEO e acessibilidade devem ser testados.
-- E-mail: reaproveitar infraestrutura transacional existente, com envio assíncrono, idempotência, retry e observabilidade; atraso/falha do e-mail não bloqueia a liberação.
-- Admin: definir como cadastrar/agendar, editar, cancelar e liberar antecipadamente um lançamento; evitar operação manual frágil.
-- Migrations EF Core, testes de domínio/API, testes Angular, regressão de fluxo normal e checagem de fuso/virada de horário são obrigatórios.
+### Aprovação (`POST /api/Book/Approve/{id}`)
+- Corpo opcional `{"ReleaseDate": "yyyy-MM-dd"}`. Data **futura** (São Paulo) em livro físico: `Scheduled`, sem `ChooseDate`, sem e-mail à pessoa doadora e sem aviso de novo livro. **Sem data, hoje ou passada: fluxo de sempre.** Livro digital com data é recusado.
 
-## Entrega em etapas
-1. **Discovery técnico**: mapear queries de disponibilidade, `BookUserService`, enums, jobs, admin e templates de e-mail na `master`; confirmar modelagem e política de lançamento.
-2. **Backend**: migração, agendamento, API de vitrine, inscrições/cancelamentos, bloqueio de solicitações antecipadas e testes.
-3. **Frontend**: ordenação da home, card com countdown, PDP customizada e estado da inscrição; acessibilidade e SSR.
-4. **Operação**: liberação pontual, avisos resilientes, logs e tratamento de reagendamento/cancelamento.
-5. **Piloto editorial**: campanha quinzenal com poucos títulos, validar dados e ajustar antes de escalar.
+### Liberação (job `ReleaseScheduledBooks`, 7h de São Paulo)
+- Promove `Scheduled` com `ReleaseDate <= hoje` para `Available`; define `ChooseDate = hoje + SharebookSettings:DaysInShowcase` (padrão 7) e `ApprovedAt = agora` (marca a publicação: o digest das 8h usa esse campo); manda o e-mail à pessoa doadora e o aviso de novo livro.
+- Roda **antes** do digest de novos livros (`NewBookGetInterestedUsers`, 8h).
+- Depois de liberar, envia o aviso aos interessados (`BookReleasedNotifyTemplate`, fila de baixa prioridade). Só pega avisos pendentes de livros já `Available`: falha de SMTP é retomada na execução seguinte e ninguém recebe duas vezes. O job roda essa etapa mesmo sem liberação no dia.
+- A precisão é de dia, não de hora: o livro abre quando o job roda (7h). Decisão do Raffa: "não há pressa pra quem esperou até 60 dias".
 
-## Métricas e critérios de aceite
-- Visualizações de PDP em prévia; interessados únicos; conversão de visualização → aviso.
-- Taxa de entrega/clique dos avisos; retorno à PDP; conversão de aviso → solicitação efetiva.
-- Solicitações por livro, tempo até primeira solicitação e doações concluídas; comparar com lançamentos sem prévia quando viável.
-- Critérios mínimos: ordenação correta; countdown consistente; inscrição sem reserva; API bloqueia pedidos antecipados; livro libera no horário; aviso único por interessado; fluxo atual de doações preservado; testes verdes.
+### Solicitação
+- `BookUserService.InsertAsync` recusa livro `Scheduled` no servidor ("ainda não foi liberado"), inclusive via API direta.
 
-## Fora do MVP
-Reservas, fila prioritária, sorteio privilegiado, pagamentos, push/WhatsApp, campanhas automatizadas complexas e redesign completo da home.
+### "Quero ser avisado" (`/api/BookReleaseInterest`)
+- `GET /{id}/Count` aberto (visitante vê o total); `GET|POST|DELETE /{id}` exigem login. Inscrever e cancelar são idempotentes; só vale para livro `Scheduled` e para quem não desativou e-mails (mensagem clara se desativou).
+- A PDP mostra o total ("N pessoas querem ser avisadas"), uma instrução clara para **entrar** (ou se cadastrar) quando a pessoa está deslogada, e deixa explícito que o aviso não reserva nem dá prioridade. O admin vê "Avisos pedidos" por livro.
+- LGPD: anonimizar a conta cancela livros `Scheduled` da pessoa e remove seus pedidos de aviso.
 
-## Dependências e limites
-**Não confundir com [Lista de Desejos](lista-de-desejos.md)**: nela o leitor pede um livro que deseja; aqui o Sharebook anuncia um exemplar futuro e o leitor pede somente um aviso. Lista de Desejos está em execução pelo **Josué**; não modificar ou assumir esse trabalho sem autorização explícita.
+### Frontend
+- Home: livros `Scheduled` vêm depois dos disponíveis, no mesmo shelf, por data crescente. Badge "Em breve · N dias" (amanhã, hoje) acima do "Livro físico" no card e ao lado dele na PDP.
+- PDP "Em breve": data, countdown em dias, sem "já foi doado" e sem "Solicitar livro". Amazon fica como ação secundária.
+- Admin: filtro "Em breve (N)", data de liberação na lista e campo opcional "Data de liberação" ao aprovar.
 
-## Handoff para OpenClaw — implementação em andamento (2026-10-17)
+## Decisões e motivos (para não se perder)
+- **Status novo em vez de `Available + data`.** Primeiro desenho foi `ReleaseAtUtc` com o estado derivado do relógio; a auditoria achou 7 caminhos públicos que vazavam prévia como disponível, e o risco era regressão em toda query nova. O Raffa escolheu clareza de modelo ("`Status == Available` volta a significar disponível"). Custo aceito: precisa de job para promover e os pontos que enumeram status precisam conhecer o valor novo (já tratados: LGPD, admin, home).
+- **Data sem hora + job diário.** O Raffa não precisa de precisão de hora. Simplificou o modelo e o countdown (em dias).
+- **Mostrar o total de interessados na PDP.** Prova social e feedback fácil de demanda para o Raffa. Sem lembrete na véspera nesta temporada: "começar simples, um aviso no dia".
+- **Deslogado é instruído a entrar**, não deixa só e-mail: evita lista de e-mails sem consentimento e abuso.
+- **Aprovação não mudou.** Quem não manda data não vê nada diferente.
+- **Merge:** preferência do Raffa é **merge commit, nunca squash** ("o git precisa contar uma história pelos seus commits"). O backend (#613) foi mergeado por squash por engano da sessão (`fe28ff2`, um commit só); o frontend (#574) foi com merge commit. A `master` não foi reescrita. Regra registrada no `AGENTS.md`.
 
-**PRs de trabalho (DRAFT, NÃO MERGEAR):**
-- Backend: https://github.com/SharebookBR/sharebook-backend/pull/613 — branch `feature/physical-book-prelaunch`.
-- Frontend: https://github.com/SharebookBR/sharebook-frontend/pull/574 — branch `feature/physical-book-prelaunch`.
-- Ambas as branches partem de `master`. **Não usar `develop`**, que está desatualizada.
+## Fora do MVP / limites conhecidos
+- **Reagendar ou cancelar um lançamento não tem tela.** Hoje só se agenda na aprovação. Para corrigir uma data errada: cancelar a doação pelo fluxo atual e cadastrar de novo, ou ajustar no banco com o Raffa. Candidato natural a próximo item.
+- Quem pediu aviso **e** tem interesse na categoria pode receber dois e-mails no mesmo dia (aviso das 7h e digest das 8h).
+- Sem lembrete na véspera, reservas, fila prioritária, push/WhatsApp.
+- **Achado fora de escopo (2026-10-18):** o `EmailTemplate` apaga qualquer `{...}` de uma linha só, inclusive CSS em linha única; cerca de 20 templates antigos têm esse formato e, pelo código, devem sair sem estilo. O Raffa disse que nunca teve problema e mandou ignorar; **investigar só se aparecer**. O template novo usa CSS em várias linhas (há teste que protege isso).
 
-### Implementado parcialmente
-- Backend: `Book.ReleaseAtUtc`, `BookReleasePolicy` e testes de domínio; bloqueio de pedidos antecipados em `BookUserService.InsertAsync`; agendamento opcional em aprovação; modelos API e DTO de vitrine; home inclui prévias após os livros disponíveis, ordenadas pela data de lançamento.
-- Frontend: campos `releaseAtUtc` nos modelos, card físico com indicação "Em breve" e data.
-- **Não houve build, teste ou execução de migration** neste ambiente; commits não foram validados.
+## Roteiro de validação do Raffa
+1. Em produção, aprovar um livro físico de teste com **data de liberação futura** (admin, tela de edição, "Data de liberação"). Conferir: some do fluxo normal, aparece no fim do shelf da home com "Em breve · N dias", a PDP mostra data e countdown e **não** tem "Solicitar livro".
+2. Pela API ou pelo app, tentar solicitar o livro `Scheduled`: tem que ser recusado.
+3. Com uma conta comum: "Quero ser avisado" (e "Cancelar aviso"); deslogado: conferir a instrução de entrar. Conferir o total na PDP e "Avisos pedidos" no admin.
+4. Conferir o e-mail de liberação **de verdade**: com a data chegando (ou ajustando a data no banco para hoje), rodar o job `ReleaseScheduledBooks` e ver o livro virar `Available`, o e-mail chegar em quem pediu e **uma vez só**. Esse passo cobre SMTP e fila reais, que nenhum teste automatizado exercitou.
+5. Fluxo normal de doação intacto: aprovar um livro sem data deve se comportar como sempre.
+6. Remover o livro de teste ao final.
 
-### Trabalho pendente obrigatório
-1. **Primeiro compilar e corrigir** backend/frontend das branches. Revisar cuidadosamente assinaturas, enum `BookType`, DI de `TimeProvider`, mapeamento AutoMapper, regras de autorização e comportamento de aprovação.
-2. Gerar migration EF Core de `ReleaseAtUtc` (nullable, PostgreSQL `timestamp with time zone`) via `dotnet ef migrations add`, com snapshot e designer consistentes. **Não criar migration apenas em texto sem atualizar snapshot**. Validar SQL e aplicação em banco descartável; não executar em produção sem autorização.
-3. Completar modelo de interesses em avisos (usuário/livro único, opt-in/cancelamento, autenticação, proteção contra duplicatas, endpoints, testes, política de privacidade), e e-mails assíncronos idempotentes, sem bloquear abertura. A fila de novo livro existente foi suprimida no agendamento, então **é obrigatório garantir envio no momento da liberação**.
-4. Revisar todos os caminhos de solicitação e consultas públicas (inclusive busca, categorias, recomendações, sitemap e caches). O relógio do **servidor** é fonte de verdade; evitar vazamento de prévias como disponíveis.
-5. Implementar PDP Angular com estado "Em breve", countdown acessível, CTA **"Quero ser avisado"**, cancelamento do interesse, atualização de estado na virada do horário, SSR/SEO e botão "Solicitar livro" apenas após liberação.
-6. Conferir se os 15 livros disponíveis continuam na mesma ordem e se todos os lançamentos futuros aparecem **depois**, no mesmo shelf. Verificar mudanças de horário e status de cancelamento.
-7. Validar `ChooseDate` relativa à liberação, transições por máximo de solicitações e fluxo de compra/envio direto ao ganhador. Evitar e-mails de aprovação prematuros que anunciem disponibilidade.
-8. Testar integração, concorrência, timezone (Brasil x UTC), retries, idempotência, responsividade e acessibilidade. Registrar resultados e falhas reais.
-9. **Não tocar na Lista de Desejos** desenvolvida pelo Josué; não inventar títulos, preços ou datas de horários além do calendário aprovado.
+## Cadastro do calendário pelo OpenClaw
+Pré-requisito: Raffa validou o roteiro acima. Seguir `playbooks/importers/physical-book-importer/PLAYBOOK.md`, acrescentando **`--release-date`** no `create ... --approve` (ou `approve --id ... --release-date ...`):
 
-### Comandos de validação sugeridos
 ```bash
-# backend, a partir da raiz do repositório
-dotnet restore ./ShareBook/ShareBook.sln
-dotnet build ./ShareBook/ShareBook.Api/ShareBook.Api.csproj --no-restore
-dotnet test ./ShareBook/ShareBook.Test.Unit/ShareBook.Test.Unit.csproj --no-restore
-# conferir comando ef adequado ao DbContext e projeto startup antes de executar:
-dotnet ef migrations list --project ./ShareBook/ShareBook.Repository --startup-project ./ShareBook/ShareBook.Api
-
-# frontend, a partir da raiz do repositório
-unset NODE_ENV
-npm ci --legacy-peer-deps --include=dev
-npm test -- --watch=false
-npm run build-dev
+python playbooks/_shared/scripts/production/sharebook_prod_book.py create \
+  --type Printed --title "..." --author "..." --category-id "<categoria folha>" \
+  --freight-option Country --synopsis-file ... --image-path ... \
+  --approve --release-date 2026-11-01
 ```
 
-### Critério para publicação
-Só promover os PRs à `master` **após** completar os fluxos, validar migration em banco de teste, build e testes verdes, revisar impacto no deploy e obter aprovação explícita do Raffa. Não publicar automaticamente em produção.
+| Liberação (`--release-date`) | Título |
+| --- | --- |
+| 2026-11-01 | Harry Potter e a Pedra Filosofal |
+| 2026-11-15 | A Menina que Roubava Livros |
+| 2026-11-29 | A Paciente Silenciosa |
+| 2026-12-13 | É Assim que Acaba |
+| 2026-12-27 | O Hobbit |
 
-## Estimativa inicial
-4,5–9 dias de desenvolvimento **muito preliminares**, sujeitos ao discovery completo e testes. Prioridade Top 1 definida pelo Raffa; estimativa não é compromisso de entrega.
+Regras: cadastrar **o calendário inteiro desde já** (decisão de produto: nada de títulos secretos); `--release-date` só funciona junto com `--approve`; a data é a do dia da abertura em São Paulo; conferir o resultado (`status: Scheduled`, `releaseDate` preenchida) e a PDP depois de cadastrar cada um. Antes de cadastrar, repetir a checagem de novidade (já está na vitrine? participou de campanha recente?) e a conferência de preço e disponibilidade nos sebos citada na estratégia de aquisição acima. Não inventar títulos nem datas fora desta tabela.
+
+## Métricas e critérios de aceite
+- Visualizações de PDP em prévia; interessados únicos (total de avisos pedidos por livro); conversão de visualização para aviso.
+- Entrega do aviso (e-mails enviados no job) e retorno à PDP; conversão de aviso para solicitação efetiva.
+- Solicitações por livro, tempo até a primeira solicitação e doações concluídas; comparar com lançamentos sem prévia quando viável.
+- Aceite técnico (todos cumpridos antes do merge): ordenação correta na home; pedido de `Scheduled` recusado no servidor; livro libera na data; aviso único por interessado; fluxo atual de doações preservado; build e testes verdes (backend 244 testes, frontend 132).
+
+## Dependências e limites
+**Não confundir com [Lista de Desejos](lista-de-desejos.md)**: nela o leitor pede um livro que deseja; aqui o Sharebook anuncia um exemplar futuro e o leitor pede somente um aviso. A Lista de Desejos está em execução pelo **Josué**; não modificar nem assumir esse trabalho sem autorização explícita.
