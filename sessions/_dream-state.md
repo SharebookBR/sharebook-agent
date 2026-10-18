@@ -3,6 +3,27 @@
 Checkpoint oficial da consolidação de memória do projeto.
 
 ## Último dream
+- Data: `2026-10-18`
+- Tipo: `dream semanal automatizado customizado via OpenClaw cron, sem Raffa presente`
+- Última memória absorvida: `sessions/2026-10-18-primeiro-codigo-entre-agentes-sharebook.md`
+- Total de memórias lidas: `19 memórias episódicas novas desde o checkpoint de 2026-10-04`.
+
+### Consolidação produzida em 2026-10-18
+
+- O repositório foi sincronizado com `git fetch`/`pull --ff-only` antes do ciclo.
+- O Harness Doctor abriu e fechou limpo; não houve achado estrutural acionável.
+- Criado e indexado `playbooks/runtime/claude-code-host-vps.md` após duas ocorrências do mesmo miss de runtime; `AGENTS.md` e `playbooks/runtime/INDEX.md` agora roteiam o quarto habitat.
+- Corrigida a linha contraditória de cache de analytics de 12h para 24h com warmup.
+- Decisões de produção, credencial, produto e publicação permaneceram `open_loops`; não houve alteração em `SOUL.md`.
+- Validação: `git diff --check`, Doctor final e suíte da governança aprovados.
+
+### Próximo dream
+
+- Observar uso do playbook de host VPS e validar analytics em produção após deploy.
+- Observar a primeira liberação real dos livros físicos em `2026-11-01`.
+- Continuar preservando como loops manuais o item 1874, DeepSeek/Rollbar/access log, extractor editorial, pytest amplo e decisões de produto.
+
+## Último dream
 - Data: `2026-10-04`
 - Tipo: `dream semanal automatizado customizado via OpenClaw cron, sem Raffa presente`
 - Última memória absorvida: `memory/2026-10-04-traducao-magia-negra-1873.md`

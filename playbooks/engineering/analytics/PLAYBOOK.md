@@ -207,7 +207,7 @@ Credenciais via variável de ambiente `GA4__CredentialsBase64` (base64 do `ga4-k
 
 ### Dashboard Analytics (`/admin/analytics`)
 
-Endpoint: `GET /api/analytics/dashboard` — cache 12h no backend (`IMemoryCache`).
+Endpoint: `GET /api/analytics/dashboard` — cache 24h no backend (`IMemoryCache`), aquecido no startup e diariamente às 03:00 UTC.
 
 **Payload retornado:**
 - `sessions`, `downloads`, `logins`, `signups` — séries semanais (12 semanas)

@@ -35,9 +35,10 @@ Mapeamento:
 - Windows local do Raffa → `sharebook-agent/playbooks/runtime/windows-local.md`
 - Container OpenClaw na VPS, sessão hospedada pelo Gateway/agente OpenClaw → `sharebook-agent/playbooks/runtime/openclaw.md`
 - Claude Code rodando dentro do mesmo container OpenClaw, fora do loop de tools do Gateway → `sharebook-agent/playbooks/runtime/claude-code-openclaw.md`
+- Claude Code diretamente no host VPS, fora de qualquer container → `sharebook-agent/playbooks/runtime/claude-code-host-vps.md`
 - Sessão cloud do Claude Code on the web → `sharebook-agent/playbooks/runtime/claude-code-web.md`
 
-Os quatro habitats compartilham este harness, mas não compartilham automaticamente paths, processos, memória ativa, sessões, credenciais nem ferramentas. Capacidade de um habitat nunca é evidência de capacidade do outro — nem mesmo quando dois habitats rodam no mesmo container.
+Os cinco habitats compartilham este harness, mas não compartilham automaticamente paths, processos, memória ativa, sessões, credenciais nem ferramentas. Capacidade de um habitat nunca é evidência de capacidade do outro — nem mesmo quando dois habitats rodam no mesmo container.
 
 Em conflito entre convenção genérica e regra específica de runtime, a regra específica do runtime vence, exceto quando houver política superior do sistema.
 
