@@ -92,6 +92,14 @@ Cuidado ao editar arquivos do backend com script Python: vários têm BOM e algu
 
 Deploy da migration derrubou a API. Rotina que funcionou, em ~30 min: (1) `curl` no `/api/Operations/Ping` (503) e no `www`; (2) Loki com `{service_name="sharebook-api"}`, buscar `Application startup exception` e ler os labels `exception_*`; (3) reproduzir o erro no Postgres local; (4) **corrigir para frente, não dar rollback** (o Raffa autorizou explicitamente), com migration idempotente validada com e nos dois estados do schema; (5) push na master, sondar `Ping` a cada 15 s e confirmar `Now listening` no log. Deploy automático levou ~1 min.
 
+## Backend e frontend com a master direta (2026-10-18)
+
+- **Autorização:** em 2026-10-18 o Raffa liberou commit direto na master do backend e do frontend para ajustes simples. Migration, job e fluxo de doação continuam pedindo aviso antes. Em mudança visual, mostrar a captura renderizada e esperar o OK antes de publicar.
+- **Estacionar o trabalho:** o hook de parada cobra commit e push do que estiver pendente. Enquanto espera OK, commitar na branch designada da sessão (`ccr-...`). Para publicar, `git checkout -B master origin/master` e `git cherry-pick` dos commits (histórico linear, sem o merge de sincronização). Confirmar `git diff` zero contra a árvore testada.
+- **Conferir o deploy:** backend, `curl` no `/api/Operations/Ping` e `grafana_logs.py` procurando `Now listening`; frontend, `curl` na página e `grep` por uma classe nova (o deploy leva cerca de 3 minutos).
+- **Renderizar tela sem API real:** servir `dist/angular/browser` com um servidor Node mínimo (fallback para `index.html`), abrir no Playwright com `executablePath` do Chromium e simular a API com `context.route`. Ícones do Material aparecem como texto porque o Google Fonts é bloqueado: é do ambiente, não da tela. Marcar o cookie de privacidade com `localStorage.cookieAccepted` para ele não cobrir a captura.
+- **Merge de PR:** sempre `merge_method: "merge"` (ver seção acima).
+
 ## Memórias do dia no ritual de abertura
 
 O `AGENTS.md` manda ler todas as memórias do dia ordenando pela data de modificação. Aqui o clone é recém-criado e todos os arquivos têm o mesmo mtime, então essa ordenação não serve. Ordenar pelo nome (`ls sessions/ | sort | tail`), que começa com `YYYY-MM-DD`.
@@ -119,6 +127,7 @@ Neste habitat o ambiente proíbe o agente de identificar o modelo em qualquer ar
 | Sereno | *** | 2026-10-11 |
 | Brasa | *** | 2026-10-12 |
 | Maré | *** | 2026-10-14 |
+| Prumo | *** | 2026-10-18 |
 
 ## Tradução pesada offline: armadilhas confirmadas no job 1873 (2026-10-04)
 
