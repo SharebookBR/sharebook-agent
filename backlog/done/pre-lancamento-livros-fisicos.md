@@ -1,12 +1,7 @@
 # Pré-lançamento de livros físicos — calendário editorial e avisos
 
-## Prioridade e estado
-**Top 1 do backlog.** Prioridade definida pelo Raffa em 2026-10-17. **Implementado, validado e em produção em 2026-10-18** (backend `fe28ff2`, frontend `e43ce6a`). Os cinco livros do calendário foram cadastrados como `Scheduled` em 2026-10-18. Na validação dos cadastros, foi descoberto e corrigido o bug que omitia `ReleaseDate` nas projeções da busca/PDP pública (backend `e2ad43b`).
-
-Divisão de trabalho combinada em 2026-10-18:
-1. **Claude (web)**: merge na `master` do front e do back. Feito.
-2. **Raffa**: validação em produção. Feito.
-3. **OpenClaw**: cadastrar os livros do calendário. Feito em 2026-10-18.
+## Estado: concluído em 2026-10-18
+Prioridade Top 1 definida pelo Raffa em 2026-10-17; **implementado, validado pelo Raffa e em produção em 2026-10-18** (backend `fe28ff2` + ajustes na `master`, frontend `e43ce6a` + ajustes na `master`). O OpenClaw cadastra o calendário com `--release-date`. Este arquivo fica como memória do desenho, das decisões e dos limites conhecidos.
 
 ## Calendário editorial aprovado — novembro e dezembro de 2026
 
@@ -56,46 +51,36 @@ Transformar a vitrine de livros físicos em uma experiência de antecipação e 
 - `BookUserService.InsertAsync` recusa livro `Scheduled` no servidor ("ainda não foi liberado"), inclusive via API direta.
 
 ### "Quero ser avisado" (`/api/BookReleaseInterest`)
-- `GET /{id}/Count` aberto (visitante vê o total); `GET|POST|DELETE /{id}` exigem login. Inscrever e cancelar são idempotentes; só vale para livro `Scheduled` e para quem não desativou e-mails (mensagem clara se desativou).
-- A PDP mostra o total ("N pessoas querem ser avisadas"), uma instrução clara para **entrar** (ou se cadastrar) quando a pessoa está deslogada, e deixa explícito que o aviso não reserva nem dá prioridade. O admin vê "Avisos pedidos" por livro.
+- `GET /{id}/Count` (aberto) e `GET|POST|DELETE /{id}` (exigem login). A tela hoje usa só o `GET` e o `POST` (o total público e o cancelar saíram da PDP, mas os endpoints ficam). Inscrever e cancelar são idempotentes; só vale para livro `Scheduled` e para quem não desativou e-mails (mensagem clara se desativou).
+- O visitante clica no mesmo botão e vai ao login; o aviso não reserva nem dá prioridade (dito no toast e no e-mail). O admin vê "Avisos pedidos" por livro: é o feedback de demanda do Raffa.
 - LGPD: anonimizar a conta cancela livros `Scheduled` da pessoa e remove seus pedidos de aviso.
 
-### Frontend
-- Home: livros `Scheduled` vêm depois dos disponíveis, no mesmo shelf, por data crescente. Badge "Em breve · N dias" (amanhã, hoje) acima do "Livro físico" no card e ao lado dele na PDP.
-- PDP "Em breve": data, countdown em dias, sem "já foi doado" e sem "Solicitar livro". Amazon fica como ação secundária.
-- Admin: filtro "Em breve (N)", data de liberação na lista e campo opcional "Data de liberação" ao aprovar.
+### Frontend (versão final, depois de várias rodadas de feedback do Raffa)
+- **Home:** livros `Scheduled` vêm depois dos disponíveis, no mesmo shelf, por data crescente. Badge "Em breve · N dias" (amanhã, hoje) acima do "Livro físico" no card e ao lado dele na PDP.
+- **PDP "Em breve":** (1) uma **faixa compacta** no azul-claro do aviso do livro digital (`alert-info`), com o número de dias em destaque, "DIAS" e "Será lançado em 1º de novembro"; (2) **um botão âmbar com sino, "Quero ser avisado"**, junto de "Comprar na Amazon" e "Compartilhar". Sem seção extra, sem texto corrido, sem total público de avisos.
+- **O botão é o mesmo para todos.** Visitante vai ao login e, ao voltar (`?avisar=1`), o pedido é concluído sozinho. Logado: o sino balança durante o envio, toast "Combinado! Avisaremos por e-mail em 1º de novembro. Nesse dia, lembre-se de solicitar o livro." e o botão vira o selo verde "Aviso ativado! Você será avisado em 1º de novembro." (mesmo padrão do "Você já solicitou"). **Não há cancelar na tela**: as saídas são o link de descadastro do e-mail e a configuração de e-mails da conta. O endpoint `DELETE /api/BookReleaseInterest/{id}` existe e não é usado pela tela.
+- **Listagens:** categoria, tag e busca pública também mostram os livros `Scheduled` (com o badge). Ordem das três: **físicos disponíveis → físicos "Em breve" (liberação mais próxima primeiro) → digitais**; dentro de cada grupo vale o critério de cada tela (data de cadastro; relevância na busca, com título exato sempre em primeiro). A regra vive em `BookCatalogOrder` (backend); a busca tem a mesma expressão escrita à mão em `BookRepository.FullTextSearch`, manter igual. Contagens de categoria e tag incluem os agendados. Recomendações seguem só com disponíveis (decisão do Raffa).
+- **Admin:** filtro "Em breve (N)", data de liberação e "Avisos pedidos" por livro, e campo opcional "Data de liberação" ao aprovar (sem data = fluxo de sempre).
+- **Utilitário `release-date`:** dia de hoje em São Paulo, dias restantes, data por extenso e badge; não passa por `Date`, para não deslocar o dia por fuso.
 
 ## Decisões e motivos (para não se perder)
 - **Status novo em vez de `Available + data`.** Primeiro desenho foi `ReleaseAtUtc` com o estado derivado do relógio; a auditoria achou 7 caminhos públicos que vazavam prévia como disponível, e o risco era regressão em toda query nova. O Raffa escolheu clareza de modelo ("`Status == Available` volta a significar disponível"). Custo aceito: precisa de job para promover e os pontos que enumeram status precisam conhecer o valor novo (já tratados: LGPD, admin, home).
 - **Data sem hora + job diário.** O Raffa não precisa de precisão de hora. Simplificou o modelo e o countdown (em dias).
-- **Mostrar o total de interessados na PDP.** Prova social e feedback fácil de demanda para o Raffa. Sem lembrete na véspera nesta temporada: "começar simples, um aviso no dia".
-- **Deslogado é instruído a entrar**, não deixa só e-mail: evita lista de e-mails sem consentimento e abuso.
+- **Total de interessados só no admin.** Chegou a ser mostrado na PDP como prova social; o Raffa desanimou (gasta espaço, pouco valor) e saiu. Sem lembrete na véspera nesta temporada: "começar simples, um aviso no dia".
+- **Deslogado precisa entrar** (nada de só e-mail): evita lista de e-mails sem consentimento e abuso. Primeiro com instrução na tela; no fim, o mesmo botão para todos que leva ao login e conclui o pedido na volta.
 - **Aprovação não mudou.** Quem não manda data não vê nada diferente.
+- **Aviso simples na PDP.** A primeira PDP teve dois blocos e depois um cartão azul-escuro; o Raffa achou poluído e depois gritante. Ficou: faixa de contagem discreta + um botão. Aprendizado: o hype está na data e no botão, não em texto; a ressalva "não reserva nem dá prioridade" mora no toast do momento do pedido e no e-mail.
+- **Prévia vem antes do digital nas listagens** (a prévia é a vitrine da campanha e o físico é o diferencial), mas depois dos físicos disponíveis (esses têm ação imediata e prazo). A regra de tipo-primeiro vale em toda categoria, não só nas que têm prévia.
 - **Merge:** preferência do Raffa é **merge commit, nunca squash** ("o git precisa contar uma história pelos seus commits"). O backend (#613) foi mergeado por squash por engano da sessão (`fe28ff2`, um commit só); o frontend (#574) foi com merge commit. A `master` não foi reescrita. Regra registrada no `AGENTS.md`.
 
 ## Fora do MVP / limites conhecidos
 - **Reagendar ou cancelar um lançamento não tem tela.** Hoje só se agenda na aprovação. Para corrigir uma data errada: cancelar a doação pelo fluxo atual e cadastrar de novo, ou ajustar no banco com o Raffa. Candidato natural a próximo item.
-- Quem pediu aviso **e** tem interesse na categoria pode receber dois e-mails no mesmo dia (aviso das 7h e digest das 8h).
+- Quem pediu aviso **e** tem interesse na categoria pode receber dois e-mails no mesmo dia (aviso das 7h e digest das 8h). Sem decisão de mudar.
 - Sem lembrete na véspera, reservas, fila prioritária, push/WhatsApp.
 - **Achado fora de escopo (2026-10-18):** o `EmailTemplate` apaga qualquer `{...}` de uma linha só, inclusive CSS em linha única; cerca de 20 templates antigos têm esse formato e, pelo código, devem sair sem estilo. O Raffa disse que nunca teve problema e mandou ignorar; **investigar só se aparecer**. O template novo usa CSS em várias linhas (há teste que protege isso).
 
-## Roteiro de validação do Raffa
-1. Em produção, aprovar um livro físico de teste com **data de liberação futura** (admin, tela de edição, "Data de liberação"). Conferir: some do fluxo normal, aparece no fim do shelf da home com "Em breve · N dias", a PDP mostra data e countdown e **não** tem "Solicitar livro".
-2. Pela API ou pelo app, tentar solicitar o livro `Scheduled`: tem que ser recusado.
-3. Com uma conta comum: "Quero ser avisado" (e "Cancelar aviso"); deslogado: conferir a instrução de entrar. Conferir o total na PDP e "Avisos pedidos" no admin.
-4. Conferir o e-mail de liberação **de verdade**: com a data chegando (ou ajustando a data no banco para hoje), rodar o job `ReleaseScheduledBooks` e ver o livro virar `Available`, o e-mail chegar em quem pediu e **uma vez só**. Esse passo cobre SMTP e fila reais, que nenhum teste automatizado exercitou.
-5. Fluxo normal de doação intacto: aprovar um livro sem data deve se comportar como sempre.
-6. Remover o livro de teste ao final.
-
-## Cadastro do calendário pelo OpenClaw — concluído em 2026-10-18
-O calendário foi cadastrado depois da validação do Raffa, seguindo `playbooks/importers/physical-book-importer/PLAYBOOK.md` e usando **`--release-date`** no `create ... --approve`:
-
-```bash
-python playbooks/_shared/scripts/production/sharebook_prod_book.py create \
-  --type Printed --title "..." --author "..." --category-id "<categoria folha>" \
-  --freight-option Country --synopsis-file ... --image-path ... \
-  --approve --release-date 2026-11-01
-```
+## Como cadastrar um lançamento (referência)
+Seguir `playbooks/importers/physical-book-importer/PLAYBOOK.md` e acrescentar **`--release-date YYYY-MM-DD`** (data do dia da abertura, fuso de São Paulo) ao `create ... --approve` ou ao `approve --id ...`. A flag só vale com `--approve` e em livro físico. Conferir `status: Scheduled` e `releaseDate` no retorno e abrir a PDP. Cadastrar a temporada inteira de uma vez (decisão de produto: sem títulos secretos). Não existe tela nem comando para reagendar.
 
 | Liberação (`--release-date`) | Título |
 | --- | --- |
@@ -105,13 +90,18 @@ python playbooks/_shared/scripts/production/sharebook_prod_book.py create \
 | 2026-12-13 | É Assim que Acaba |
 | 2026-12-27 | O Hobbit |
 
-Resultado validado nos cinco livros: `status: Scheduled`, `releaseDate` preenchida, capa/thumbnail públicas, PDP com data e countdown, "Quer ser avisado?" presente e "Solicitar livro" ausente. A pesquisa de sebo/preço foi explicitamente adiada pelo Raffa para a escolha da pessoa ganhadora. Não inventar títulos nem datas fora desta tabela.
+## Lições técnicas (valem para próximas features)
+- **Projeções manuais esquecem campo novo.** `FullSearch` e a consulta da PDP por slug montam `new Book { ... }` campo a campo; `ReleaseDate` ficou de fora e só apareceu em produção. Ao expor campo em DTO, procurar `new Book {`.
+- **A API usa Newtonsoft** (`.AddNewtonsoftJson()`): `DateOnly` trafega como `"yyyy-MM-dd"` e há teste que protege isso.
+- **O `EmailTemplate` apaga qualquer `{...}` de uma linha só**, inclusive CSS em linha única. Cerca de 20 templates antigos têm CSS assim e, pelo código, devem sair sem estilo; o Raffa disse que nunca teve problema e **mandou investigar só se aparecer**. O template novo (`BookReleasedNotifyTemplate`) usa CSS em várias linhas e há teste que protege isso.
+- **Status novo exige varrer quem enumera status** (LGPD, admin, home, contagens); por isso o `Scheduled` foi tratado nesses pontos.
+- **Merge com histórico preservado**: PRs sempre com merge commit (regra no `AGENTS.md` e no playbook do habitat). O #613 foi mergeado por squash por engano.
 
 ## Métricas e critérios de aceite
 - Visualizações de PDP em prévia; interessados únicos (total de avisos pedidos por livro); conversão de visualização para aviso.
 - Entrega do aviso (e-mails enviados no job) e retorno à PDP; conversão de aviso para solicitação efetiva.
 - Solicitações por livro, tempo até a primeira solicitação e doações concluídas; comparar com lançamentos sem prévia quando viável.
-- Aceite técnico (todos cumpridos antes do merge): ordenação correta na home; pedido de `Scheduled` recusado no servidor; livro libera na data; aviso único por interessado; fluxo atual de doações preservado; build e testes verdes (backend 244 testes, frontend 132).
+- Aceite técnico (todos cumpridos antes do merge): ordenação correta na home; pedido de `Scheduled` recusado no servidor; livro libera na data; aviso único por interessado; fluxo atual de doações preservado; build e testes verdes (no fim: backend 250 testes, frontend 131). **Não verificado de ponta a ponta com e-mail real** na data do fechamento do item; o Raffa validou o fluxo em produção.
 
 ## Dependências e limites
-**Não confundir com [Lista de Desejos](lista-de-desejos.md)**: nela o leitor pede um livro que deseja; aqui o Sharebook anuncia um exemplar futuro e o leitor pede somente um aviso. A Lista de Desejos está em execução pelo **Josué**; não modificar nem assumir esse trabalho sem autorização explícita.
+**Não confundir com [Lista de Desejos](../todo/lista-de-desejos.md)**: nela o leitor pede um livro que deseja; aqui o Sharebook anuncia um exemplar futuro e o leitor pede somente um aviso. A Lista de Desejos está em execução pelo **Josué**; não modificar nem assumir esse trabalho sem autorização explícita.
