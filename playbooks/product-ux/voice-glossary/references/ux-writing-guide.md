@@ -11,6 +11,9 @@ Fonte canônica de linguagem de produto da agência Sharebook.
 - **Entrar**: CTA principal para login (evite o termo em inglês "Login" em labels visíveis).
 - **Código de rastreio**: Para envios.
 - **Data de escolha**: Momento de escolher quem vai receber a doação.
+- **Pré-lançamento**: Termo oficial para a funcionalidade, a campanha e o estado anterior à liberação. Não use "prévia" como sinônimo; reserve "prévia" para uma visualização antecipada literal, como prévia de imagem ou documento.
+
+**Tipo e estado são dimensões diferentes:** livro físico / livro digital descreve o tipo; pré-lançamento descreve o estado do ciclo. Um livro pode, portanto, exibir ao mesmo tempo os badges **Físico** e **Pré-lançamento**. **Em breve** continua válido como indicação temporal e countdown.
 
 ## Princípios
 1. **Clareza primeiro**: Frases curtas, diretas e "uma frase, uma ideia".

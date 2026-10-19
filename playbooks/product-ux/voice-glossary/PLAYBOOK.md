@@ -70,6 +70,8 @@ Sinopse de *As Superstições da Bruxaria*, Howard Williams (aprovada em 2026-10
 - Usar **entrar** em vez de `login` em labels visíveis.
 - Usar **código de rastreio** para envio.
 - Usar **data de escolha** para o momento da decisão.
+- Usar **pré-lançamento** para nomear a funcionalidade, a campanha e o estado editorial anterior à liberação. Não usar `prévia` como sinônimo; reservar **prévia** para uma visualização antecipada literal, como prévia de imagem ou documento.
+- **Livro físico / livro digital** descreve o tipo do livro; **pré-lançamento** descreve um estado do ciclo. Por isso, um livro pode carregar ao mesmo tempo os badges **Físico** e **Pré-lançamento**. A copy pública **Em breve** continua válida para countdown e indicação temporal.
 - Depois da escolha de um livro físico, o Sharebook já fornece à pessoa doadora todos os
   dados necessários para o envio. Não pedir à pessoa ganhadora que responda, confirme
   endereço ou combine a entrega, salvo se houver uma exceção real e explícita.
