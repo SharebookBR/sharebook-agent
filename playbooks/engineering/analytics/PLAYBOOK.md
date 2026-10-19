@@ -167,6 +167,8 @@ Todos usam `GoogleAnalyticsService.sendEvent` em `src/app/core/services/analytic
 | `book_request_modal_open` | abriu modal de pedido de livro | `request.component.ts` | `book_id`, `book_title` | ✅ |
 | `book_request_success` | pedido enviado com sucesso | `request.component.ts` | `book_id`, `book_title` | ✅ |
 | `book_request_error` | pedido falhou | `request.component.ts` | `book_id`, `book_title` | ✅ |
+| `release_interest_click` | clique em “Quero ser avisado” na PDP de um pré-lançamento | `details.component.ts` | `book_title`, `book_slug`, `auth_state` | ✅ funil |
+| `release_interest_subscribe` | aviso de lançamento ativado com sucesso | `details.component.ts` | `book_title`, `book_slug` | ✅ funil |
 
 **Botões sem evento GA4** (intencional): "Denunciar direitos autorais" e "Editar livro".
 
@@ -190,10 +192,12 @@ Parâmetros só ficam disponíveis na Data API após registro em **GA4 Admin →
 | Dimensão (API) | Parâmetro | Eventos que enviam | Registrada em |
 |---|---|---|---|
 | `customEvent:search_term` | `search_term` | `search` | 04/06/2026 |
-| `customEvent:book_title` | `book_title` | `amazon_click`, `ebook_download`, `share_modal_open`, `social_share`, `book_request_*` | 04/06/2026 |
-| `customEvent:book_slug` | `book_slug` | `amazon_click`, `ebook_download`, `share_modal_open`, `social_share` | 04/06/2026 |
+| `customEvent:book_title` | `book_title` | `amazon_click`, `ebook_download`, `share_modal_open`, `social_share`, `book_request_*`, `release_interest_*` | 04/06/2026 |
+| `customEvent:book_slug` | `book_slug` | `amazon_click`, `ebook_download`, `share_modal_open`, `social_share`, `release_interest_*` | 04/06/2026 |
 
-**Parâmetros enviados mas NÃO registrados:** `method` (canal do `social_share`) e `book_id` (eventos de pedido) como custom dimensions; `results_count` (evento `search`) como custom metric; `source_book_slug`, `first_recommended_book_slug`, `recommended_book_slug`, `recommended_book_type` e `position` (eventos de recomendação) como custom dimensions; `recommendation_count` como custom metric.
+**Parâmetros enviados mas NÃO registrados:** `method` (canal do `social_share`), `book_id` (eventos de pedido) e `auth_state` (`release_interest_click`) como custom dimensions; `results_count` (evento `search`) como custom metric; `source_book_slug`, `first_recommended_book_slug`, `recommended_book_slug`, `recommended_book_type` e `position` (eventos de recomendação) como custom dimensions; `recommendation_count` como custom metric.
+
+Em 19/10/2026, o registro de `auth_state` ficou bloqueado porque a Google Analytics Admin API está desativada no projeto GCP e a service account do dashboard não possui `serviceusage.services.enable`. Um responsável pelo projeto precisa habilitar a API; depois, cadastrar `auth_state` como dimensão personalizada de escopo de evento no GA4.
 
 **Regra:** ao criar evento novo com parâmetros relevantes, registrar a custom dimension imediatamente — dados não retroagem.
 
@@ -216,11 +220,14 @@ Endpoint: `GET /api/analytics/dashboard` — cache 24h no backend (`IMemoryCache
 - `topBooksByViewsPerWeek`, `topBooksByDownloadsPerWeek` — top 10 por semana
 - `eventSummary` — contagem de todos os eventos rastreados (período completo)
 - `eventSummaryPerWeek` — contagem por semana (filtro de semana client-side)
+- `prelaunchInterestFunnel` — cliques e ativações do aviso na mesma janela fixa, iniciada em `2026-10-20`, para não misturar ativações antigas com o evento novo de clique
 - `searchAnalytics` — recorte fixo dos últimos 30 dias (`29daysAgo` até hoje, datas inclusivas): total de buscas, usuários, termos distintos, top 10 termos e divisão por dispositivo
 - `searchConsole` — disponibilidade, datas, KPIs do período atual e anterior, série diária e até cinco oportunidades por query + landing page
 
 **KPIs:** sessões, downloads, logins, cadastros — filtrados pela semana selecionada.
 **Select de semana:** ISO week internamente, display `YYYY-MM-Wn`. Semana corrente com highlight laranja.
+
+**Funil de pré-lançamento:** `release_interest_click → release_interest_subscribe`. A linha explicita a data inicial e não acompanha o select semanal, pois sua janela precisa permanecer idêntica nos dois lados. O ranking de visualizações recebe metadados atuais do catálogo em lote e mostra badges coexistentes de tipo (`Físico`/`Digital`) e estado (`Pré-lançamento`); o ranking de downloads não mostra badges.
 
 **Seção de busca:** é fixa em 30 dias e deliberadamente independente do select semanal. `DistinctTerms` usa os termos exatamente como foram digitados; diferenças de caixa, acento e typo permanecem separadas para expor o comportamento real da busca.
 
