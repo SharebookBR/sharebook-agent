@@ -9,3 +9,4 @@ Ferramentas de tagueamento, backfill e verificacao do catalogo.
 - `enrich_single_tag_books.py` — enriquece ebooks tecnicos com exatamente uma tag.
 - `discover_tag_books.py` e `probe_tags.py` — sondas de descoberta e endpoints de tag.
 - `verify_tags_e2e.py` — verificacao ponta a ponta.
+- `seed_amores_perigosos.py` — cria a tag editorial transversal e aplica a curadoria inicial sem apagar tags existentes.

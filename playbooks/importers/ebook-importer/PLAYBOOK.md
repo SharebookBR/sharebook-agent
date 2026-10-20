@@ -339,6 +339,7 @@ bash setup-importer-cron.sh install && bash setup-importer-cron.sh status
 - Recuperação de asset completo: `python cli.py recovery-asset-set --id <ID> --pdf-path <PDF> --cover-path <CAPA> --note "<evidência>"`
 - Leitura de instrução da source: `python cli.py source-editorial-prompt-show --source <SOURCE>`
 - Atualização protegida da instrução: `python cli.py source-editorial-prompt-set --source <SOURCE> --prompt-file <ARQUIVO> --expected-sha256 <HASH_VIGENTE> --note "<motivo>"`
+- Configuração protegida de tradução: `python cli.py source-translation-config-show --source <SOURCE>` seguida de `python cli.py source-translation-config-set --source <SOURCE> --prompt-file <ARQUIVO> --expected-sha256 <HASH_VIGENTE> --note "<motivo>"`.
 - Regra editorial canônica: `importer.sources.editorial_prompt`
 - Não reabrir consultas extras quando o payload concierge já trouxer o contexto
 - `pg_db.mark_item()` deve preservar `metadata_json` por merge — erosão entre etapas é bug estrutural
