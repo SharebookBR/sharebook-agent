@@ -57,6 +57,14 @@ O conto nao tem capitulos formais; as sete pranchas acompanham viradas narrativa
 
 O livro publico e `O Vampiro: um conto`, categoria Ficcao > Terror, em https://www.sharebook.com.br/livros/o-vampiro-um-conto. O PDF definitivo tem 51 paginas e preserva sete ilustracoes 1024x1280.
 
+## Economia de tokens para proximas traducoes
+
+Adotar como padrao `job completo + prompt curto + lote de tres + commit + QA fixo`. Cada job deve manter um briefing canonico versionado com fronteira, glossario, comandos e criterios de aceite; o prompt levado pelo Raffa ao Claude Code Web aponta para esse arquivo, sem repetir todo o contrato.
+
+Traducao, verificacao e auditoria devem andar em lotes de tres ou quatro segmentos. Cada lote produz um commit e um retorno minimo: `feitos / alertas / proximo lote`. O QA recorrente fica estavel: verificador e amostras de abertura, meio e fim, sem reexplicar o metodo a cada troca.
+
+Para arte, manter um bloco-base reutilizavel de estilo e personagens; cada prompt novo informa so a cena e os personagens presentes, anexando uma prancha aprovada como referencia quando necessario. So iniciar PDF e publicacao depois de a traducao inteira estar na master, evitando idas e vindas por estado incompleto.
+
 ## Friccoes e solucoes
 
 O primeiro PDF tinha paginas quase vazias entre 45 e 51: o montador interpretava linhas consecutivas de cabecalho em maiusculas da carta final como secoes independentes. Corrigi o agrupamento em `output/tools/build_pdf.py`, reconstruí o artefato, enviei a versao de revisao ao Raffa e so publiquei depois da aprovacao dele. A correcao esta no commit `fcc50f2`.
