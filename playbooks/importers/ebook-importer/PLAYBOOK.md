@@ -153,6 +153,8 @@ O agente não deve precisar conhecer a estrutura interna do `metadata_json` para
 
 #### Tradução pesada em job offline (habitat sem banco)
 
+> **Autonomia na tradução (preferência do Raffa, 2026-10-22; vale SÓ para tradução literária offline, não é regra geral).** No trabalho de tradução e QA, o agente decide pelo critério de fidelidade ao original, registra a decisão e o que muda se o Raffa discordar em `qa.md`, e corrige de saída o que ele mesmo marcaria como "soa estranho" (caso: `it` de Heathcliff criança vertido com concordância feminina; o certo era o masculino, sem consultá-lo). Perguntar só o que é irreversível ou externo (publicar, apagar, gastar) ou muda a direção do livro (título, escopo, política editorial). Em outros contextos, por exemplo criação de features, o padrão é o contrário: discutir antes de executar, conforme `AGENTS.md`.
+
 Quando a tradução roda num habitat sem acesso ao Postgres (ex.: Claude Code web), o orquestrador com banco (OpenClaw) faz `translation-next` e materializa um job versionado em `sharebook-ebook-importer/translation_jobs/<source>/<id>-<slug>/`, com `input/` (brief, original, payload, prompt, manifest de imagens) e `output/`. O tradutor mexe só em `output/` e faz commit direto na master, uma vez por lote. Depois, o orquestrador puxa e roda `translation-set --translated-manuscript .../output/translated.md`.
 
 Padrão validado no item 1869 (27/09/2026, ≈234 mil palavras), com referência completa em `translation_jobs/project_gutenberg_witches_magic/1869-the-lancashire-witches/output/`:
