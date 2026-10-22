@@ -8,7 +8,7 @@ skills_used = ["playbooks/runtime/claude-code-web.md", "playbooks/importers/eboo
 skills_missed = ["claude-code-web.md: push direto na master do importer; só soube depois que a branch de sessão não é visível ao OpenClaw"]
 skills_updated = ["playbooks/runtime/claude-code-web.md (tradução offline vai sempre para a master)"]
 facts_changed = ["Carmilla (1883), The Vampyre (1884) e Wuthering Heights (1885) traduzidos integralmente e na master do importer", "Branch de sessão ccr-... é invisível ao OpenClaw: tradução só conta quando está na master", "Contagem de progresso deve ser feita só com segmentos auditados e na master, não com os em voo"]
-open_loops = ["1886 Les Liaisons dangereuses e 1887 Le Fantôme de l'Opéra (originais franceses) ainda não traduzidos", "Wuthering Heights: Raffa decide se reverte o `it` -> feminino do menino Heathcliff (cap. IV pars. 38-39, XX-XXI)", "Wuthering Heights: inconsistência de tratamento Hindley->Isabella (XIII `a senhora`, XVII `você`)", "OpenClaw: translation-set e preparo editorial de 1884 (publicado) e 1885"]
+open_loops = ["1886 Les Liaisons dangereuses e 1887 Le Fantôme de l'Opéra (originais franceses) ainda não traduzidos", "OpenClaw: refazer PDF/PDP se já usou o translated.md anterior de Wuthering Heights (it do menino agora masculino) e de Carmilla (3 diminutivos corrigidos)", "OpenClaw: translation-set e preparo editorial de 1884 (publicado) e 1885"]
 durable_candidates = ["Verificador verde não pega: inversão de direção (`a face dele à sua`), diminutivos vindos de `little`, concordância de `it`, `Master X` ambíguo; auditar abertura/meio/fim contra a fonte em toda rodada", "Subagente que admite releitura parcial: refazer a leitura do orquestrador no segmento inteiro quando for curto", "Normalização em massa guiada pela fonte (script por parágrafo) para `Master Heathcliff` -> `o jovem Heathcliff`", "Commit `checkpoint (pending audit)` só para silenciar o stop hook, nunca para master", "Ao retomar subagente morto por limite (429), SendMessage com o mesmo agentId continua do ponto onde parou"]
 supersedes = []
 evidence = ["git log origin/master do sharebook-ebook-importer (commits Translate ... e d1fd855)", "translation_jobs/project_gutenberg_dangerous_loves/{1883-carmilla,1884-the-vampyre-a-tale,1885-wuthering-heights}/output/{qa.md,notes.md,translated.md}", "playbooks/runtime/claude-code-web.md (commit 4c0ba7a)"]
@@ -28,7 +28,7 @@ Claude Sonnet 5.5 no Claude Code web, orquestrando até 3 subagentes por vez. Re
 - **Wuthering Heights (1885):** 34 capítulos em 41 segmentos, 115.940 palavras, glossário com decisões do Raffa (nomes mantidos, dialeto de Joseph leve); `translated.md` com 114.601 palavras e contagens idênticas à fonte (aspas, travessões, itálicos). Master recebeu tudo.
 
 ## 4. Decisões tomadas
-Sempre master (ordem do Raffa) mesmo com branch de sessão designada; `Master Heathcliff` -> `o jovem Heathcliff`; `it` do menino Heathcliff vertido com concordância feminina em `criança`/`coisa` (decisão reversível, no `qa.md`); `stone` -> `alguns quilos`; linguagem de época literal sem suavizar; `você`/`o senhor` conforme registro, nunca `tu`.
+Sempre master (ordem do Raffa) mesmo com branch de sessão designada; `Master Heathcliff` -> `o jovem Heathcliff`; `it` do menino Heathcliff/Linton: a 1ª versão (concordância feminina) foi trocada no mesmo dia, a pedido do Raffa, por pronomes masculinos com nomes de desprezo (`aquele fedelho cigano`); Hindley->Isabella uniformizado em `você`; `stone` -> `alguns quilos`; linguagem de época literal sem suavizar; `você`/`o senhor` conforme registro, nunca `tu`.
 
 ## 5. Contexto relevante
 O OpenClaw trabalha na master em paralelo (capa, pranchas, PDF); o merge da master na branch deu conflito só em `PROGRESS.md`/`notes.md`, resolvido juntando os dois lados. O hook de parada cobra commit de arquivo não rastreado enquanto o subagente ainda escreve.
@@ -45,3 +45,7 @@ Houve um cansaço específico no meio de Wuthering Heights: quarenta e um segmen
 O erro do placar me incomodou mais do que o do push na branch. Não foi dado errado, foi uma pequena vaidade de progresso: contar o que ainda estava em voo como se fosse feito. O limite de sessão me tirou isso do jeito certo, forçando a conta honesta antes de qualquer outra coisa, e o Raffa recebeu 36/41 no lugar de um número bonito.
 
 No fim, o último parágrafo do livro, as três lápides e o vento na relva, saiu melhor do que eu esperava de um fluxo tão industrial. Fiquei com a sensação de que a disciplina (glossário antes da rodada 1, commits pequenos, handoff escrito) é o que deixa espaço para esse tipo de cuidado aparecer no texto. Saio satisfeito, com dois livros franceses ainda na fila e a vontade de começar por eles.
+
+
+## Adendo (2026-10-22, depois do fechamento)
+O Raffa questionou a concordância feminina do `it`; refiz IV pars. 38-39 e XX par. 30 em masculino, uniformizei o tratamento Hindley->Isabella, corrigi três diminutivos da Carmilla já publicada e atualizei qa/glossário. Lição: decisão marcada como `soa estranho` no relatório já é sinal para corrigir de saída, não para empurrar ao Raffa.
