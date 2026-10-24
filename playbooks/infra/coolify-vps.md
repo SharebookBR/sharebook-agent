@@ -129,6 +129,43 @@ done
 
 Teste de 404 real na validação funcional: desde o `@angular/ssr` 19, `CommonEngine` sem `allowedHosts` cai silenciosamente em CSR e a home continua 200 com HTML plausível. `curl -D - https://HOST/rota-inexistente` precisa devolver `HTTP/2 404` com `<title>Página não encontrada | ShareBook</title>` — só isso prova que o SSR está de pé.
 
+## Invalidação manual do cache SSR do frontend
+
+### Quando usar
+
+Usar quando Raffa pedir para **"limpar o cache do front"**, **"invalidar o cache SSR"** ou **"forçar a atualização da Home/PDP"**. É uma operação manual do agente; não há integração automática com o backend.
+
+O endpoint público aceita somente `POST` autenticado por token. Sem token — ou com token inválido — ele devolve `404`. O token canônico fica fora do Git, no `.env` privado do `sharebook-agent` como `SSR_CACHE_INVALIDATION_TOKEN`.
+
+### Executar
+
+No habitat que contém o `.env` do agente, carregar o segredo sem imprimi-lo e chamar o frontend de produção:
+
+```bash
+set -a
+. /data/workspace/sharebook-agent/.env
+set +a
+curl --fail --silent --show-error --output /dev/null --write-out '%{http_code}\n' \
+  --request POST 'https://www.sharebook.com.br/_internal/ssr-cache/invalidate' \
+  --header "X-SSR-Cache-Token: $SSR_CACHE_INVALIDATION_TOKEN"
+```
+
+O resultado esperado é `204`. O endpoint remove o HTML SSR da Home, as PDPs e o cache de dados SSR; não altera dados do catálogo.
+
+### Validar
+
+Fazer uma requisição pública à Home logo depois e conferir `X-SSR-Cache: MISS`:
+
+```bash
+curl --silent --show-error --head 'https://www.sharebook.com.br/' | tr -d '\r' | rg -i '^x-ssr-cache:'
+```
+
+A primeira resposta depois da limpeza precisa ser `MISS`; consultas posteriores podem voltar `HIT`. Nunca registrar ou imprimir o token em logs, saída de ferramenta, memória ou Git.
+
+### Limite atual
+
+O cache vive na memória do processo Node. A operação cobre a réplica atual do `sharebook-frontend`; se o frontend passar a ter múltiplas réplicas, será preciso disparar a invalidação em todas elas ou usar uma versão de cache compartilhada.
+
 ## Containers que merecem atenção
 - `coolify`: aplicação web do painel. Primeiro suspeito em lentidão da interface.
 - `coolify-proxy`: Traefik/proxy reverso. Observar, mas não culpar no escuro.
