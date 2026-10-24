@@ -16,7 +16,7 @@ Criar cinco edições próprias em português do Brasil para ampliar a tag e a v
 - [waiting_triage] Carmilla | https://www.gutenberg.org/ebooks/10007 | Sheridan Le Fanu; inglês; romance gótico e desejo sobrenatural.
 - [waiting_triage] The Vampyre | https://www.gutenberg.org/ebooks/6087 | John William Polidori; inglês; arquétipo do vampiro sedutor.
 - [waiting_triage] Wuthering Heights | https://www.gutenberg.org/ebooks/768 | Emily Brontë; inglês; obsessão, vingança e amor destrutivo.
-- [waiting_triage] Les Liaisons dangereuses | https://www.gutenberg.org/ebooks/52006 | Pierre Choderlos de Laclos; original francês completo; sedução como poder e crueldade.
+- [done] Ligações Perigosas | https://www.gutenberg.org/ebooks/52006 | Choderlos de Laclos; original francês completo; publicado em 2026-10-24: https://www.sharebook.com.br/livros/ligacoes-perigosas
 - [waiting_triage] Le Fantôme de l'Opéra | https://www.gutenberg.org/ebooks/62215 | Gaston Leroux; original francês completo; obsessão, música e desejo sob ameaça.
 
 ## Critérios editoriais
