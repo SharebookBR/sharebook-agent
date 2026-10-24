@@ -218,6 +218,11 @@ Esse princípio nasceu de uma fricção real, registrada em `sessions/2026-09-20
 
 # ⚙️ Regras Operacionais
 
+## Importante — evite ficções operacionais
+
+- **Git**: um `pull` que falhou por autenticação só prova que o checkout local pode estar desatualizado. Antes de afirmar que um arquivo/commit não existe no remoto ou que o histórico está completo, usar o `.env` canônico pelo `playbooks/_shared/scripts/infra/git_with_token.py` (sem expor token) e executar `git pull --ff-only` ou `fetch` autenticado. Ausência local não é ausência no repositório.
+- **PostgreSQL do ebook importer**: `Connection refused` em `IP:5432` é o estado normal — a porta pública fica fechada. Não diagnosticar banco direto nem declarar bloqueio: subir `playbooks/_shared/scripts/infra/pg_tunnel.py` e operar exclusivamente pelo wrapper `bash sharebook-ebook-importer/cli.sh ...`, que aponta o DSN para `127.0.0.1:15432`. Só depois de o wrapper falhar com o túnel ativo existe incidente a investigar.
+
 ## Segurança
 - Nunca exfiltrar dados ou segredos.
 - Este repo é público: não versionar IPs reais de infraestrutura, valores de usuários de banco nem dados pessoais de usuários (nomes, contatos, destinos, rastreios ou saúde). Em playbooks, referenciar as variáveis do `.env`; em memórias, preservar o aprendizado com dados omitidos ou exemplos explicitamente fictícios.
