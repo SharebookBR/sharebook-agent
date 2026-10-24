@@ -29,6 +29,22 @@ Esta v1 existe para validar a pergunta central: demanda explícita gera doação
 
 ---
 
+## Antes da v1 — experimento sem código com *O Código Da Vinci*
+
+Decisão de 2026-10-23: não implementar a Lista de Desejos antes de provar que a demanda explícita produz oferta utilizável. O teste usa *O Código Da Vinci*, escolhido por ser popular e por ter data de escolha antes de *Harry Potter e a Pedra Filosofal*.
+
+1. A data de escolha de *O Código Da Vinci* é **15/11/2026**.
+2. Em **16/11/2026**, levantar as pessoas que não receberam o exemplar.
+3. Enviar um único e-mail para a base que aceita e-mail e já doou ou recebeu livro: “N pessoas ainda querem *O Código Da Vinci*. Você tem um exemplar em casa e toparia doá-lo e enviá-lo?”
+4. Medir por 14 dias respostas, exemplares confirmados, doações publicadas e envios concluídos.
+5. Se houver oferta real, decidir a v1; se não houver, investigar primeiro o atrito de frete, não construir formulário, push ou dashboard novo.
+
+Fora do experimento: OneSignal/push, resumo semanal, seção nova de dashboard e qualquer código de Lista de Desejos. O experimento é deliberadamente só e-mail e acompanhamento manual.
+
+Um lembrete Telegram foi criado para 16/11/2026 às 09:00 de Brasília (`lista-desejos-codigo-da-vinci-check`, autoapagável após executar).
+
+---
+
 ## Dados do pedido
 
 - Título do livro
