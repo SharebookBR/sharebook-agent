@@ -3,6 +3,25 @@
 Checkpoint oficial da consolidação de memória do projeto.
 
 ## Último dream
+- Data: `2026-10-25`
+- Tipo: `dream semanal automatizado customizado via OpenClaw cron, sem Raffa presente`
+- Última memória absorvida: `sessions/2026-10-25-dream-semanal-governanca.md`
+- Total de memórias lidas: `8 memórias episódicas novas desde o checkpoint de 2026-10-18`, mais a memória deste ciclo.
+
+### Consolidação produzida em 2026-10-25
+
+- O repositório foi sincronizado antes da leitura do checkpoint.
+- O Harness Doctor abriu com um achado de data divergente no frontmatter de `sessions/2026-10-22-traducao-amores-proibidos-carmilla-vampyre-wuthering.md`; classificado como regressão segura e corrigido para `2026-10-22`.
+- Os candidatos duráveis da safra já estavam cobertos por `playbooks/runtime/claude-code-web.md` e `playbooks/importers/ebook-importer/PLAYBOOK.md`; não houve nova playbook, split, merge, arquivamento ou mudança em `SOUL.md`.
+- Loops de publicação, produção editorial, validação em produção, token, experimento de produto e aprovação de ilustrações foram preservados como `open_loops` por dependerem de decisão humana ou de outro agente.
+- Doctor final limpo; suíte da governança aprovada.
+
+### Próximo dream
+
+- Observar se os playbooks de tradução e PDF continuam sendo usados nas entregas 1886/1887 e nos próximos jobs.
+- Preservar os loops manuais de publicação, aprovação editorial, onboarding, token Netlify e experimento da Lista de Desejos.
+
+## Último dream
 - Data: `2026-10-18`
 - Tipo: `dream semanal automatizado customizado via OpenClaw cron, sem Raffa presente`
 - Última memória absorvida: `sessions/2026-10-18-primeiro-codigo-entre-agentes-sharebook.md`

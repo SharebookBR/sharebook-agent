@@ -1,6 +1,6 @@
 +++
 schema_version = 1
-session_date = 2026-10-20
+session_date = 2026-10-22
 title = "Tradução offline: Carmilla, The Vampyre e Wuthering Heights (Amores Proibidos)"
 model = "claude-sonnet-5-5 (Claude Code web; orquestração de subagentes)"
 runtime = "Claude Code web (claude-code-web.md)"
