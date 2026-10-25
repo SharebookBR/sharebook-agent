@@ -351,6 +351,7 @@ bash setup-importer-cron.sh install && bash setup-importer-cron.sh status
 - Uma escrita: `plan-set`
 - Uma rejeição curatorial legítima: `python cli.py editorial-reject --id <ID> --reason "<motivo humano>"`
 - Recuperação de asset completo: `python cli.py recovery-asset-set --id <ID> --pdf-path <PDF> --cover-path <CAPA> --note "<evidência>"`
+- Publicação criada mas sem retorno ao importer: após confirmar o livro na API e sua aprovação, usar `python cli.py publish-reconcile --id <ID> --book-id <UUID> --note "<evidência>"`. Não usar para duplicata pré-existente; só para uma criação comprovada que ficou presa em `publish_retry`/`publishing`.
 - Leitura de instrução da source: `python cli.py source-editorial-prompt-show --source <SOURCE>`
 - Atualização protegida da instrução: `python cli.py source-editorial-prompt-set --source <SOURCE> --prompt-file <ARQUIVO> --expected-sha256 <HASH_VIGENTE> --note "<motivo>"`
 - Configuração protegida de tradução: `python cli.py source-translation-config-show --source <SOURCE>` seguida de `python cli.py source-translation-config-set --source <SOURCE> --prompt-file <ARQUIVO> --expected-sha256 <HASH_VIGENTE> --note "<motivo>"`.
