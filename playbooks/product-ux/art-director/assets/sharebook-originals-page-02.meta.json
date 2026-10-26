@@ -1,7 +1,5 @@
 {
-  "asset": "sharebook-originals-page-02.png",
-  "master": "sharebook-originals-page-02-v1.svg",
-  "background": "sharebook-originals-page-02-background-v1.png",
+  "asset": "sharebook-originals-page-02.jpg",
   "kind": "pdf-page",
   "usage": "Página institucional reutilizável da coleção Sharebook Originals.",
   "default_pdf_context": {
@@ -22,5 +20,5 @@
     "Não aplicar a marca visual de traduções: bandeira, verde ou amarelo.",
     "Alterações de copy, logo, paleta ou composição exigem decisão editorial explícita."
   ],
-  "source": "Fundo abstrato original gerado em 2026-10-26 e composição tipográfica vetorial do Sharebook."
+  "source": "Imagem final aprovada por Raffa via Telegram em 2026-10-26."
 }

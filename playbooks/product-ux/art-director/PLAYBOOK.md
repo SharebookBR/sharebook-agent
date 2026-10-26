@@ -62,6 +62,8 @@ Para posts, campanhas, banners e peças visuais do Sharebook, sempre fornecer `s
 
 - `assets/sharebook-translation-page-02.jpg` — página institucional reutilizável para a página 2 de PDFs de traduções PT-BR do Sharebook, em proporção 4:5.
 - `assets/sharebook-translation-page-02.meta.json` — contrato de uso, origem e validação da página institucional. Não alterar texto, logo ou proporção sem decisão editorial explícita.
+- `assets/sharebook-originals-page-02.jpg` — página institucional canônica da série Sharebook Originals, em proporção 4:5; usar após a capa e antes do miolo de qualquer obra autoral.
+- `assets/sharebook-originals-page-02.meta.json` — contrato de uso da página de Originals. Não misturar com a peça de traduções nem alterar texto, logo ou proporção sem decisão editorial explícita.
 
 ## Voz visual
 
