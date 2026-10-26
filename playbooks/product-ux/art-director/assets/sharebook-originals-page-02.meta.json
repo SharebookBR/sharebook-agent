@@ -1,0 +1,26 @@
+{
+  "asset": "sharebook-originals-page-02.png",
+  "master": "sharebook-originals-page-02-v1.svg",
+  "background": "sharebook-originals-page-02-background-v1.png",
+  "kind": "pdf-page",
+  "usage": "Página institucional reutilizável da coleção Sharebook Originals.",
+  "default_pdf_context": {
+    "page_number": 2,
+    "page_ratio": "4:5",
+    "placement": "usar após a capa e antes do miolo",
+    "reuse": "usar em qualquer livro autoral do Sharebook, independentemente de gênero ou público"
+  },
+  "copy": {
+    "eyebrow": "Sharebook Originals",
+    "headline": "Livros que nascem aqui para circular.",
+    "body": "Obras autorais, gratuitas e feitas para encontrar novos leitores.",
+    "footer": "sharebook.com.br · compartilhando conhecimento"
+  },
+  "visual_contract": [
+    "Preservar a proporção 4:5 e o espaço livre à esquerda.",
+    "Usar o logo canônico do frontend; não redesenhar ou gerar tipografia de marca por IA.",
+    "Não aplicar a marca visual de traduções: bandeira, verde ou amarelo.",
+    "Alterações de copy, logo, paleta ou composição exigem decisão editorial explícita."
+  ],
+  "source": "Fundo abstrato original gerado em 2026-10-26 e composição tipográfica vetorial do Sharebook."
+}
