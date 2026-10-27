@@ -226,10 +226,87 @@ Projeto de referência: **`sharebook-ebook-importer/originals/bruxa-por-acaso/`*
 | Bruxa por Acaso & o Galã de Milhões | `sharebook-ebook-importer/originals/bruxa-por-acaso/` | publicado |
 | Lumi, a Bruxinha | `sharebook-ebook-importer/originals/lumi-a-bruxinha/` | publicado |
 | Promessa de Dez Verões | `sharebook-ebook-importer/originals/promessa-de-dez-veroes/` | publicado |
+| Cansado de Estar Cansado (Vida Real 01) | `sharebook-ebook-importer/originals/cansado-de-estar-cansado/` | publicado |
 
 O selo da folha de rosto é um só para todos, em `originals/_shared/`. Antes cada build o
 alcançava por `../../../product-ux/cover-direction/assets/`, caminho que **não sobrevive à
 mudança de repo** — foi a única dependência cruzada da migração.
+
+## Linha Vida Real: livros de divulgação (não ficção)
+
+Série de seis livros pequenos (30–60 páginas) sobre assuntos que ocupam muito espaço na vida.
+Plano e voz: `sharebook-ebook-importer/originals/_curadoria/vida-e-bem-estar-2026-10/biblia-editorial-sharebook-originals-vida-real.md`.
+Referência de projeto pronto: `originals/cansado-de-estar-cansado/` (vol. 01, publicado). Contexto da source e da fila:
+`sharebook-ebook-importer/sources/vida_bem_estar_2026/` (`README.md`, `editorial_prompt.md`). Estes livros não passam por
+`triage-once`: a triagem é humana, e só entram na fila de publicação depois de manuscrito, capa e PDF reais.
+
+### Fluxo (ordem importa)
+
+1. **Página de posição, antes de qualquer rascunho** (modelo abaixo). O Raffa e o GPT web aprovam. Sem ela, o livro sai hesitante.
+2. **Verificar as fontes antes de escrever a frase que depende delas** (seção seguinte). Citar de memória é proibido.
+3. **Redigir em `chapters/NN.md`:** `00` abertura, `01..N` capítulos (`## Capítulo N — Título`), penúltimo fechamento, último nota editorial.
+4. **`references.md`** é a única lista de fontes e já nasce em formato de leitor (título, DOI/link, ano, data de acesso). O manuscrito a anexa.
+5. **`build_manuscript.py`** (copiar do vol. 01): monta o manuscrito v1, recusa montar se faltar capítulo ou fontes. Nunca editar o manuscrito à mão.
+6. **`revisao-factual-vN.md`:** cada afirmação-chave ↔ fonte ↔ como foi verificada ↔ o que não foi conferido. É o que a revisão por profissional lê.
+7. **Sinopse** em modo clique (`product-ux/voice-glossary`, 3 parágrafos, "livro digital", "você"). Só fatos que estão no livro.
+8. **Capa, PDF, categoria-folha** pelo fluxo normal deste playbook. Revisão por profissional de saúde antes de publicar quando o tema for saúde.
+9. Commit só da pasta do livro, na `master` do importer, com o hash no relato final.
+
+### Página de posição (uma página, por volume)
+
+- **Tese em uma frase.** O que este livro afirma que o leitor não sabia ou não dizia.
+- **Definições assumidas** (3 ou 4 termos centrais). Cada uma escrita como afirmação, uma vez. Se há controvérsia, a posição do livro fica clara e a controvérsia ocupa no máximo uma frase.
+- **Linha do argumento:** o fio que liga os capítulos, uma ideia memorável por capítulo, e o que cada capítulo *não* repete dos outros volumes.
+- **Exemplos concretos previstos** por capítulo (cena, número, caso composto).
+- **Fora do livro, de propósito.**
+- **Onde mora a orientação de ajuda profissional** (um lugar só) e quais sinais específicos entram nela.
+- **Riscos de saúde, se houver, que mudam conduta** (ex.: um sinal de alarme real), listados à parte e ditos uma vez.
+
+### Verificação de fontes (o que funcionou e as armadilhas)
+
+- **Metadados:** conferir DOI, autores, ano, volume e páginas no Crossref (`https://api.crossref.org/works/<doi>`). Pegou erro de sobrenome no vol. 01.
+- **Conteúdo de estudos:** ler o resumo no PubMed (`esearch` com `<doi>[AID]` e `efetch`). Citar só o que o resumo diz (n, efeito, intervalo). Estudos de ciências sociais podem não estar no PubMed: ler a página do periódico.
+- **Páginas institucionais** (OMS, NICE, IBGE, CDC): ler a página, não o resumo do buscador. Anotar a data de acesso.
+- **Ambiente claude-code-web:** `bvsms.saude.gov.br` dá 503 (F5) e `educapes.capes.gov.br` derruba a conexão; para esses, o fetcher da Parallel funciona (cache). `cks.nice.org.uk` devolve 403 a `curl`. Não falsificar user-agent: o classificador bloqueia, mesmo com autorização verbal.
+- **Tabela de verificado x não conferido** no `revisao-factual-vN.md`. O que é conhecimento geral e não foi aberto na fonte vai para a lista "não conferido" e não é afirmado com ar de certeza.
+- **Limite de evidência:** uma frase, no ponto em que ela muda a conclusão (ex.: "pesquisa qualitativa, amostra pequena").
+
+### Lições do vol. 01 (feedback do Raffa, 2026-10-27)
+
+O texto saiu rigoroso e **medroso**. Dois sintomas concretos, a evitar nos próximos:
+
+1. **Não definir duas vezes, não fugir da definição.** O vol. 01 definiu burnout no cap. 1, voltou a ele no cap. 4 ("esta é a hora de voltar à palavra") e nas duas vezes terminou em "a fronteira é frágil / depende". O leitor sai sem saber. Regra: **cada termo central é definido uma vez, no lugar certo, com posição.** Exemplo bom: "Burnout, neste livro, é o da OMS: esgotamento por estresse crônico de trabalho. O resto é exaustão." A discussão acadêmica cabe numa frase ou numa nota de fim, não numa seção.
+2. **Ajuda profissional repetida.** Apareceu ~8 vezes (abertura, três vezes no cap. 1, caps. 3, 5, 6, fechamento, nota). Fica chato e infantiliza. Regra: **um lugar** (uma seção concreta "Quando procurar ajuda", com sinais específicos) **+ o contato de crise** (CVV 188) onde o tema pedir. Fora dele, zero lembrete. Exceção: risco específico que muda a conduta do capítulo, dito uma vez, de forma concreta ("se os sintomas pioram depois do esforço, esse conselho não vale para você").
+3. **Meta-hedges proibidos:** "sem alarmismo", "com cautela", "com honestidade", "vale lembrar", "é importante ressaltar", "convém notar", "cabe uma ressalva". Se a ressalva é real, ela já está dentro da frase. Se não está, a frase não precisava dela.
+4. **Posição antes de cuidado.** O texto toma partido primeiro e só depois qualifica, quando a qualificação muda o que o leitor faz. Ordem proibida: ressalva → ressalva → afirmação tímida.
+5. **Concretude.** Cada capítulo assume uma ideia, um dado e um exemplo e fica com eles. Preferir o número ao adjetivo, a cena à categoria, "faça X" a "pode ser útil considerar X".
+6. **Repetição estrutural.** Se um capítulo "retoma" o anterior, ele só pode retomar para *avançar*, nunca para refazer.
+
+### Checklist de revisão final (antes de commitar)
+
+```bash
+cd originals/<livro>
+# termos centrais: quantas vezes aparecem e onde são definidos
+grep -c -i "<termo>" chapters/*.md
+# ajuda profissional: deve cair em UM lugar (+ CVV)
+grep -n -i -E "profissional|procure|avaliação clínica|um médico|olhar clínico" chapters/*.md
+# meta-hedges
+grep -n -i -E "sem alarmismo|com cautela|com honestidade|vale lembrar|é importante ressaltar|convém notar|cabe uma ressalva|ressalva" chapters/*.md
+# manuscrito gerado reproduz os capítulos e git está limpo
+python3 build_manuscript.py && git diff --check
+```
+
+Aceite: o termo central tem uma definição com posição; a orientação de ajuda aparece em um lugar; nenhum meta-hedge sobrou; cada
+capítulo tem uma ideia memorável nomeável em uma frase; as afirmações de saúde estão no `revisao-factual`.
+
+### Outras decisões do vol. 01 que valem como padrão
+
+- **Narrador coletivo** ("vamos"), sem "eu" de autor e sem credencial inventada. Assinatura "Sharebook Originals, ano". Nunca inventar nome de autor, revisor ou citação. Pendência do Raffa: declarar ou não apoio de IA na nota editorial.
+- **Vinhetas compostas** declaradas como ilustrativas; números hipotéticos assumidos como tal.
+- **Exercícios:** poucos, curtos, sempre opcionais, só se úteis.
+- **Remissões a outros volumes:** discretas, sem título.
+- **Tamanho:** ~230 palavras/página no preset 4:5; 8.400 palavras de corpo + 900 de fontes ≈ 44–50 páginas. A extensão serve ao conteúdo.
+- **Sinopse** no modo clique: gancho em até 2 linhas, promessa + 1 detalhe concreto verificável do livro, chamada emocional. Sem "(a)" de gênero: reformular.
 
 ## Estrutura sugerida de arquivos
 
