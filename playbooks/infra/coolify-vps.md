@@ -293,6 +293,8 @@ Vale generalizar a desconfiança: qualquer rotina que reporta sucesso sem nunca 
 
 As capas dos livros vivem **só no disco da VPS**, em `/data/coolify/applications/sharebook-wwwroot/Images/Books` (~2.900 arquivos, 1,1 GB). O banco guarda apenas o nome do arquivo em `Books.ImageSlug`; a imagem é servida por `https://api.sharebook.com.br/Images/Books/<slug>`. **Não estão no S3 do Sharebook** — lá ficam os PDFs.
 
+**O bind persistente deve montar somente `Images/Books`, nunca o `wwwroot` inteiro.** Em 2026-10-28, o mount de `/data/coolify/applications/sharebook-wwwroot` para `/app/wwwroot` encobriu todos os assets publicados pela imagem, inclusive as quatro artes de onboarding, que passaram a responder `404` embora estivessem no commit e no `dotnet publish`. A configuração correta é origem `/data/coolify/applications/sharebook-wwwroot/Images/Books` para destino `/app/wwwroot/Images/Books`. Antes de encerrar um ajuste desse tipo, validar o mount com `docker inspect`, listar os arquivos publicados no container e testar as URLs públicas relevantes.
+
 Até 2026-08-17 não existia backup nenhum delas. O `wwwrootbackup.zip` que morava dentro da própria pasta não era backup: era o pacote de *restore* usado para trazer as imagens na migração de setembro/2025 (confirmado no `.bash_history`). Nome de backup, função de veículo, e guardado no disco que deveria proteger.
 
 Configurado via Coolify 4.3.x: **Persistent Storage → o mount → Configure Backup**. Grava em `scheduled_volume_backups` / `scheduled_volume_backup_executions`.
