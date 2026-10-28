@@ -227,6 +227,7 @@ Projeto de referência: **`sharebook-ebook-importer/originals/bruxa-por-acaso/`*
 | Lumi, a Bruxinha | `sharebook-ebook-importer/originals/lumi-a-bruxinha/` | publicado |
 | Promessa de Dez Verões | `sharebook-ebook-importer/originals/promessa-de-dez-veroes/` | publicado |
 | Cansado de Estar Cansado (Vida Real 01) | `sharebook-ebook-importer/originals/cansado-de-estar-cansado/` | publicado |
+| Sua Mente Não Desliga (Vida Real 02) | `sharebook-ebook-importer/originals/sua-mente-nao-desliga/` | manuscrito e PDF v1 prontos (sem capa); falta capa e revisão de profissional de saúde mental |
 
 O selo da folha de rosto é um só para todos, em `originals/_shared/`. Antes cada build o
 alcançava por `../../../product-ux/cover-direction/assets/`, caminho que **não sobrevive à
@@ -239,6 +240,12 @@ Plano e voz: `sharebook-ebook-importer/originals/_curadoria/vida-e-bem-estar-202
 Referência de projeto pronto: `originals/cansado-de-estar-cansado/` (vol. 01, publicado). Contexto da source e da fila:
 `sharebook-ebook-importer/sources/vida_bem_estar_2026/` (`README.md`, `editorial_prompt.md`). Estes livros não passam por
 `triage-once`: a triagem é humana, e só entram na fila de publicação depois de manuscrito, capa e PDF reais.
+
+### Antes de escrever: o que ler (e como se trabalha)
+
+- **Ler, nesta ordem:** esta seção; a bíblia editorial da série; `product-ux/voice-glossary` (sinopse); `importers/sharebook-pdf-typesetting` (miolo); `product-ux/art-director` (assets canônicos, entre eles a página institucional de Originals); `product-ux/cover-direction` (capa e selo). No vol. 02 só este playbook foi lido, e o PDF saiu sem a página institucional canônica até o Raffa avisar. Não repetir.
+- **Autonomia (Raffa, 2026-10-28):** aprovada a página de posição, o agente decide e avança sozinho até o PDF v1, sem pedir aprovação de cada etapa. Volta ao Raffa com o PDF, o relato e as pendências que só ele resolve (capa, revisão por profissional, publicação).
+- **Posição editorial obrigatória** (Raffa, vol. 02, vale para todos os livros): escolher **uma definição operacional por termo central, dizê-la uma vez e conduzir o livro por ela**. Quando há desacordo real na literatura ou na prática, avaliar a evidência, escolher o lado que o livro defende e escrever a partir dele. Nada de parágrafo que abre com "alguns definem assim, outros assado" nem de justificativa repetida. Controvérsia só entra se mudar materialmente a conclusão, e então vai breve, para a nota editorial ou as fontes. A página de posição declara a **aposta** do livro numa frase.
 
 ### Fluxo (ordem importa)
 
@@ -270,6 +277,15 @@ Referência de projeto pronto: `originals/cansado-de-estar-cansado/` (vol. 01, p
 - **Ambiente claude-code-web:** `bvsms.saude.gov.br` dá 503 (F5) e `educapes.capes.gov.br` derruba a conexão; para esses, o fetcher da Parallel funciona (cache). `cks.nice.org.uk` devolve 403 a `curl`. Não falsificar user-agent: o classificador bloqueia, mesmo com autorização verbal.
 - **Tabela de verificado x não conferido** no `revisao-factual-vN.md`. O que é conhecimento geral e não foi aberto na fonte vai para a lista "não conferido" e não é afirmado com ar de certeza.
 - **Limite de evidência:** uma frase, no ponto em que ela muda a conclusão (ex.: "pesquisa qualitativa, amostra pequena").
+
+### PDF v1 de livro de divulgação (o que o vol. 02 estabeleceu)
+
+- **Base do build:** copiar `build_book.py`, `book.css` e `print_pdf.mjs` de `originals/sua-mente-nao-desliga/` (não do `bruxa-por-acaso`, que é de ficção ilustrada). Ele já trata `###`, citações, listas e as fontes impressas ao final, sem pranchas. Ajustar `TITULO`, `PERGUNTA`, `SLUG`, os textos da página de créditos e o volume.
+- **Ordem das páginas:** capa (entra quando existir, `assets/<slug>-capa.png`), **página institucional canônica de Originals** (`product-ux/art-director/assets/sharebook-originals-page-02.jpg`, copiada para `originals/_shared/`), folha de rosto, créditos e disclaimer, sumário, capítulos, fontes. A capa é inserida por último na posição 0 e a página 02 fica logo depois; sem capa, o build avisa em `PENDENTE` e gera o PDF mesmo assim.
+- **Ambiente claude-code-web:** podem faltar `markdown`, `pymupdf` e `pyphen` (`pip install markdown pymupdf pyphen`). O Chromium fica em `/opt/pw-browsers/chromium-*/chrome-linux64/chrome` e o `print_pdf.mjs` o procura por `CHROME_BIN`. As fontes impressas não são hifenizadas (URL e DOI quebram com `overflow-wrap: anywhere`).
+- **Validação antes de entregar:** `pdfinfo` (páginas, 512 x 640 pt), `pdfimages -list` (página institucional, selo e, se houver, capa), amostras renderizadas do começo, do meio e do fim, capítulos em página nova, nenhum `**` cru. Conferir que a página 02 é a institucional canônica.
+- **Fontes no ambiente:** a E-utilities do PubMed devolve 429 se as chamadas forem seguidas: pausar alguns segundos entre elas. Artigo fora do PubMed: o buscador da Parallel traz o resumo e a definição. Nome de pesquisador só por sobrenome quando o primeiro nome não está verificado na fonte. **Fonte candidata cujo conteúdo não foi conferido sai do livro**; não fica como "a verificar".
+- **Tamanho de referência:** o vol. 02 saiu com ~7.400 palavras de corpo e 34 páginas (piso da faixa de 30 a 60). A bíblia estimava 44. Se ficar curto, aprofundar com conteúdo que avança, não com repetição.
 
 ### Lições do vol. 01 (feedback do Raffa, 2026-10-27)
 

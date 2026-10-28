@@ -10,7 +10,7 @@ Fluxos de ingestão, triagem, preparo editorial, tradução, PDFs, categorias e 
 - `./daily-triage-recovery/PLAYBOOK.md` — Recorte diário da triagem: analisar itens processados hoje, recuperar `source_blocked`, decidir rejeição limpa, rejeição editorial posterior ou hardening.
 - `./physical-book-importer/PLAYBOOK.md` — Cadastro, doação, importação e validação de livros físicos em produção.
 - `./category-organizer/PLAYBOOK.md` — Gestão, taxonomia e hierarquia de categorias.
-- `./escrever-livros/PLAYBOOK.md` — Produção editorial de Originals, manuscritos, PDFs, capas autorais e assets de obras novas. Inclui a linha **Vida Real** (livros de divulgação/não ficção): página de posição, verificação de fontes (Crossref/PubMed), `references.md`, `revisao-factual`, sinopse em modo clique e as lições de escrita (definir uma vez, ajuda profissional em um lugar só, sem meta-hedges). Termos: Vida Real, não ficção, divulgação científica, manuscrito, referências, burnout, saúde, tom, medo de se posicionar.
+- `./escrever-livros/PLAYBOOK.md` — Produção editorial de Originals, manuscritos, PDFs, capas autorais e assets de obras novas. Inclui a linha **Vida Real** (livros de divulgação/não ficção): página de posição, verificação de fontes (Crossref/PubMed), `references.md`, `revisao-factual`, sinopse em modo clique e as lições de escrita (definir uma vez, ajuda profissional em um lugar só, sem meta-hedges). Também: leitura obrigatória antes de escrever, autonomia, posição editorial, PDF v1 com a página institucional canônica de Originals. Termos: Vida Real, não ficção, divulgação científica, manuscrito, referências, burnout, saúde, tom, medo de se posicionar.
 
 ## Uso
 
