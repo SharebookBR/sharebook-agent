@@ -320,6 +320,18 @@ Ao revisar, reescreva cada seção que hesita **como se tivesse certeza** e comp
 
 Se a versão confiante não distorce a evidência, ela **substitui** a original. Se distorce, fica o que a evidência sustenta, dito com a mesma firmeza. Exemplo de referência (burnout, vol. 01): a v1 definia a palavra duas vezes e terminava em "conceitualmente frágil" e "depende"; a versão confiante diz que burnout é o que a OMS define (três dimensões, contexto de trabalho), que quem está exausto sem as três marcas está esgotado, e que o termo não vale fora do trabalho. A discussão com a depressão fica numa frase na nota editorial.
 
+### Contra o molde: cada livro com forma própria (Raffa, 2026-10-29)
+
+Os vols. 01 e 02 saíram com o mesmo esqueleto: cena, estudo com número, citação "para levar", exercício opcional e "no próximo capítulo", mais uma abertura com o mesmo bloco de combinações e a metáfora da "conta". O Raffa notou a repetição. Regras a partir do vol. 03:
+
+- **Forma por capítulo, não por série.** Cada capítulo escolhe a forma que o assunto pede: diálogo, instruções satíricas, verbetes de dicionário, lista de decisões, carta, perguntas e respostas, cena curta, dado seco. Nem todo capítulo leva cena, estudo, citação final ou exercício.
+- **Abertura enxuta, uma por livro.** As combinações ("não faz diagnóstico", "cenas ilustrativas", "exercício opcional") vão para a nota editorial. A abertura traz a cena ou o gancho, a aposta e as definições, escritos de modo diferente em cada volume.
+- **Uma metáfora central por livro, sem herdar a do anterior.** Vol. 01: a conta. Vol. 02: o controle e o espaço. Vol. 03: a régua. Os próximos precisam de outra.
+- **Exercício: no máximo um ou dois por livro**, nomeado de modo diferente em cada um (não "Um exercício opcional" em todo capítulo).
+- **Fechamento com forma própria** (uma cena curta, uma lista, um parágrafo só), sem "no começo dissemos" nem "se você levar uma só ideia".
+- **Tom:** humor leve é bem-vindo (ironia, sátira de si mesmo), sem exagero e sem sacrificar a precisão. Piada nunca entra no lugar de dado, e o que é sátira é declarado na nota editorial.
+- **Checagem final:** contar, por livro, citações finais (`^> `), "exercício opcional", "no próximo capítulo", "leia de novo", "repare" e o substantivo da metáfora (ex.: "conta"). Valores altos repetidos entre os livros são sinal de molde.
+
 ### Checklist de revisão final (antes de commitar)
 
 ```bash
