@@ -228,7 +228,7 @@ Projeto de referência: **`sharebook-ebook-importer/originals/bruxa-por-acaso/`*
 | Lumi, a Bruxinha | `sharebook-ebook-importer/originals/lumi-a-bruxinha/` | publicado |
 | Promessa de Dez Verões | `sharebook-ebook-importer/originals/promessa-de-dez-veroes/` | publicado |
 | Cansado de Estar Cansado (Vida Real 01) | `sharebook-ebook-importer/originals/cansado-de-estar-cansado/` | publicado |
-| Sua Mente Não Desliga (Vida Real 02) | `sharebook-ebook-importer/originals/sua-mente-nao-desliga/` | PDF v2 aprovado (capa + 7 pranchas), pronto para publicar; falta revisão de profissional de saúde mental |
+| Sua Mente Não Desliga (Vida Real 02) | `sharebook-ebook-importer/originals/sua-mente-nao-desliga/` | PDF v2 aprovado (capa + 7 pranchas), pronto para publicar |
 
 O selo da folha de rosto é um só para todos, em `originals/_shared/`. Antes cada build o
 alcançava por `../../../product-ux/cover-direction/assets/`, caminho que **não sobrevive à
@@ -245,7 +245,7 @@ Referência de projeto pronto: `originals/cansado-de-estar-cansado/` (vol. 01, p
 ### Antes de escrever: o que ler (e como se trabalha)
 
 - **Ler, nesta ordem:** esta seção; a bíblia editorial da série; `product-ux/voice-glossary` (sinopse); `importers/sharebook-pdf-typesetting` (miolo); `product-ux/art-director` (assets canônicos, entre eles a página institucional de Originals); `product-ux/cover-direction` (capa e selo). No vol. 02 só este playbook foi lido, e o PDF saiu sem a página institucional canônica até o Raffa avisar. Não repetir.
-- **Autonomia (Raffa, 2026-10-28):** aprovada a página de posição, o agente decide e avança sozinho até o PDF v1, sem pedir aprovação de cada etapa. Volta ao Raffa com o PDF, o relato e as pendências que só ele resolve (capa, revisão por profissional, publicação).
+- **Autonomia (Raffa, 2026-10-28):** aprovada a página de posição, o agente decide e avança sozinho até o PDF v1, sem pedir aprovação de cada etapa. Volta ao Raffa com o PDF, o relato e as pendências que só ele resolve (capa e publicação).
 - **Posição editorial obrigatória** (Raffa, vol. 02, vale para todos os livros): escolher **uma definição operacional por termo central, dizê-la uma vez e conduzir o livro por ela**. Quando há desacordo real na literatura ou na prática, avaliar a evidência, escolher o lado que o livro defende e escrever a partir dele. Nada de parágrafo que abre com "alguns definem assim, outros assado" nem de justificativa repetida. Controvérsia só entra se mudar materialmente a conclusão, e então vai breve, para a nota editorial ou as fontes. A página de posição declara a **aposta** do livro numa frase.
 
 ### Fluxo (ordem importa)
@@ -255,9 +255,9 @@ Referência de projeto pronto: `originals/cansado-de-estar-cansado/` (vol. 01, p
 3. **Redigir em `chapters/NN.md`:** `00` abertura, `01..N` capítulos (`## Capítulo N — Título`), penúltimo fechamento, último nota editorial.
 4. **`references.md`** é a única lista de fontes e já nasce em formato de leitor (título, DOI/link, ano, data de acesso). O manuscrito a anexa.
 5. **`build_manuscript.py`** (copiar do vol. 01): monta o manuscrito v1, recusa montar se faltar capítulo ou fontes. Nunca editar o manuscrito à mão.
-6. **`revisao-factual-vN.md`:** cada afirmação-chave ↔ fonte ↔ como foi verificada ↔ o que não foi conferido. É o que a revisão por profissional lê.
+6. **`revisao-factual-vN.md`:** cada afirmação-chave ↔ fonte ↔ como foi verificada ↔ o que não foi conferido. É a trilha de auditoria factual do livro.
 7. **Sinopse** em modo clique (`product-ux/voice-glossary`, 3 parágrafos, "livro digital", "você"). Só fatos que estão no livro.
-8. **Capa, PDF, categoria-folha** pelo fluxo normal deste playbook. Revisão por profissional de saúde antes de publicar quando o tema for saúde.
+8. **Capa, PDF, categoria-folha** pelo fluxo normal deste playbook.
 9. Commit só da pasta do livro, na `master` do importer, com o hash no relato final.
 
 ### Página de posição (uma página, por volume)
