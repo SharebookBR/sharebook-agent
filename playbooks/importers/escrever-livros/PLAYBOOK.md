@@ -309,6 +309,16 @@ O texto saiu rigoroso e **medroso**. Dois sintomas concretos, a evitar nos próx
 5. **Concretude.** Cada capítulo assume uma ideia, um dado e um exemplo e fica com eles. Preferir o número ao adjetivo, a cena à categoria, "faça X" a "pode ser útil considerar X".
 6. **Repetição estrutural.** Se um capítulo "retoma" o anterior, ele só pode retomar para *avançar*, nunca para refazer.
 
+### Teste da versão confiante (nome do Raffa, 2026-10-29)
+
+Ao revisar, reescreva cada seção que hesita **como se tivesse certeza** e compare com a original. A comparação mostra onde o texto estava com medo. Três movimentos:
+
+1. **Afirmar na primeira ou na segunda frase.** A definição ou a tese vem antes de qualquer contexto.
+2. **Dar um critério de decisão que o leitor possa aplicar** (regra, teste, pergunta), antes de qualquer ressalva. Exemplo: "três marcas, um contexto".
+3. **Cortar a frase de desconfiança sem fonte.** Se a dúvida não está numa fonte e não muda o que o leitor faz, sai. Exemplo cortado: "um questionário de internet não o confirma".
+
+Se a versão confiante não distorce a evidência, ela **substitui** a original. Se distorce, fica o que a evidência sustenta, dito com a mesma firmeza. Exemplo de referência (burnout, vol. 01): a v1 definia a palavra duas vezes e terminava em "conceitualmente frágil" e "depende"; a versão confiante diz que burnout é o que a OMS define (três dimensões, contexto de trabalho), que quem está exausto sem as três marcas está esgotado, e que o termo não vale fora do trabalho. A discussão com a depressão fica numa frase na nota editorial.
+
 ### Checklist de revisão final (antes de commitar)
 
 ```bash
@@ -319,6 +329,7 @@ grep -c -i "<termo>" chapters/*.md
 grep -n -i -E "profissional|procure|avaliação clínica|um médico|olhar clínico" chapters/*.md
 # meta-hedges
 grep -n -i -E "sem alarmismo|com cautela|com honestidade|vale lembrar|é importante ressaltar|convém notar|cabe uma ressalva|ressalva" chapters/*.md
+# teste da versão confiante: cada seção que hesita foi reescrita com certeza e comparada?
 # manuscrito gerado reproduz os capítulos e git está limpo
 python3 build_manuscript.py && git diff --check
 ```
