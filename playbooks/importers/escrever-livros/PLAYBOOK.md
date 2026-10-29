@@ -287,6 +287,16 @@ Referência de projeto pronto: `originals/cansado-de-estar-cansado/` (vol. 01, p
 - **Fontes no ambiente:** a E-utilities do PubMed devolve 429 se as chamadas forem seguidas: pausar alguns segundos entre elas. Artigo fora do PubMed: o buscador da Parallel traz o resumo e a definição. Nome de pesquisador só por sobrenome quando o primeiro nome não está verificado na fonte. **Fonte candidata cujo conteúdo não foi conferido sai do livro**; não fica como "a verificar".
 - **Tamanho de referência:** o vol. 02 saiu com ~7.400 palavras de corpo e 34 páginas (piso da faixa de 30 a 60). A bíblia estimava 44. Se ficar curto, aprofundar com conteúdo que avança, não com repetição.
 
+### Ilustrações em livro de divulgação (o que o vol. 02 estabeleceu)
+
+- **Sete pranchas, uma de cada vez:** o agente propõe a ideia da prancha e o prompt, o Raffa gera numa IA de imagem, devolve a imagem e o agente valida e salva antes de planejar a próxima. Plano e estado em `assets/plates.md`; arquivos `ilus-NN-<tema>.png`, commit a cada prancha aprovada.
+- **Personagens com nome** antes da prancha 1 (ficha em `plates.md`: idade, cabelo, roupa, expressão padrão). Os prompts passam a citar os nomes e anexam a capa e as pranchas anteriores como referência. Isso resolveu a consistência.
+- **Sem texto dentro da imagem** (a IA erra palavra pequena): só ícones e símbolos. Se vier texto errado, regenerar sem texto.
+- **Uma ideia por capítulo, composições diferentes** (reunião, cama, close de mesa, sofá, colina, cozinha, porta de casa); o motivo recorrente (a nuvem de pensamentos) é o selo da série, não a composição.
+- **Arco de tom:** a curva sobe até o pico no meio do livro e as últimas pranchas são positivas, com final feliz (pedido do Raffa).
+- **Originals não levam legenda "ilustração criada com IA"** (decisão do Raffa, 2026-10-29: não há risco de confundir com obra clássica). A legenda segue valendo nas edições ilustradas de domínio público.
+- **No PDF:** prancha em página inteira antes de cada abertura, inserida com PyMuPDF depois do Chromium (`PLATES` no `build_book.py`); capa por último, na posição 0. Na validação, `pdfimages -list` deve listar capa, página institucional, selo e as N pranchas.
+
 ### Lições do vol. 01 (feedback do Raffa, 2026-10-27)
 
 O texto saiu rigoroso e **medroso**. Dois sintomas concretos, a evitar nos próximos:
