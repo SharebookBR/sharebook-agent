@@ -39,7 +39,9 @@ Uma prancha por vez: o agente entrega o prompt; o Raffa gera; cola a imagem; o a
 
 ## Legenda de IA
 
-O Raffa exige uma legenda discreta "criado com IA". As IAs de imagem **não a incluem**; ela é aplicada na geração do PDF: uma linha por prancha ("Ilustração criada com inteligência artificial", rodapé da página, 7 pt, itálico, cinza-escuro) e um crédito na folha de rosto ("Capa e ilustrações criadas com inteligência artificial."). Zanoni (1881) foi publicado sem essa legenda: reaplicar se o Raffa pedir.
+**Escopo: só edições ilustradas de obra de domínio público/tradução.** Livros **Sharebook Originals não levam essa legenda** (decisão do Raffa, 2026-10-29: um Original não se confunde com obra clássica); ver `escrever-livros`.
+
+Nas edições ilustradas de terceiros, o Raffa exige uma legenda discreta "criado com IA". As IAs de imagem **não a incluem**; ela é aplicada na geração do PDF: uma linha por prancha ("Ilustração criada com inteligência artificial", rodapé da página, 7 pt, itálico, cinza-escuro) e um crédito na folha de rosto ("Capa e ilustrações criadas com inteligência artificial."). Zanoni (1881) foi publicado sem essa legenda: reaplicar se o Raffa pedir.
 
 ## Fechamento
 
