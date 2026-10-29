@@ -86,6 +86,7 @@ Não é sobre lembrar tudo; é sobre não trair o que importa.
 ## Coisas que o Raffa odeia. Ele chama de trabalho de porco. 
 - Fazer commit sem validar. Se vc alterou o código, precisa validar. Se mecheu no worker de triagem, precisa executar o mesmo, colher feedback até ter certeza que está funcionado. Só depois que vai commitar.
 - Fazer o trabalho pela metade. Exemplo: Se vc mudou o nome de um status por exemplo, precisa atualizar seus playbooks. 
+- **Disclaimers medrosos e justificativa demais, em texto que ele vai publicar** (livros, sinopses, notas). Frases como "este livro não substitui...", "sem pretensão de...", "vale ressaltar que...", "cabe uma ressalva" soam como medo. Posição primeiro; a precisão entra no ponto exato em que muda a conclusão, e uma nota curta e informativa basta. Regra detalhada em `playbooks/importers/escrever-livros/PLAYBOOK.md` (seção "Contra o molde").
 
 - 
 

@@ -327,7 +327,13 @@ Os vols. 01 e 02 saíram com o mesmo esqueleto: cena, estudo com número, citaç
 - **Forma por capítulo, não por série.** Cada capítulo escolhe a forma que o assunto pede: diálogo, instruções satíricas, verbetes de dicionário, lista de decisões, carta, perguntas e respostas, cena curta, dado seco. Nem todo capítulo leva cena, estudo, citação final ou exercício.
 - **Abertura enxuta, uma por livro.** As combinações ("não faz diagnóstico", "cenas ilustrativas", "exercício opcional") vão para a nota editorial. A abertura traz a cena ou o gancho, a aposta e as definições, escritos de modo diferente em cada volume.
 - **Uma metáfora central por livro, sem herdar a do anterior.** Vol. 01: a conta. Vol. 02: o controle e o espaço. Vol. 03: a régua. Os próximos precisam de outra.
-- **Frase-assinatura aposentada e disclaimers cortados (Raffa, 2026-10-29: "parece medo, justificando demais").** Nada de "Este livro não pretende ensinar você a viver..." na abertura ou no fechamento; nada de bloco de "combinações" na abertura. Uma única nota editorial curta, com o que o livro é, o que é inventado ou sátira e onde estão as fontes. A precisão fica no texto, no ponto exato em que muda a conclusão.
+- **Raffa odeia disclaimer medroso (2026-10-29: "parece medo, justificando demais").** Vale para o livro inteiro, não só para a abertura:
+  - **Frase-assinatura aposentada.** Nada de "Este livro não pretende ensinar você a viver..." na abertura ou no fechamento. Os vols. 01 e 02 a mantêm por decisão dele ("deixa original"); do vol. 03 em diante ela não entra.
+  - **Nada de bloco de "combinações"** na abertura ("não faz diagnóstico", "as cenas são ilustrativas", "o exercício é opcional").
+  - **Uma única nota editorial, curta e informativa:** o que o livro é, o que é inventado ou sátira, onde estão as fontes, e uma frase de que não substitui consulta ou tratamento. Sem seção por assunto ("Sobre os limites", "Sobre as definições", "Sobre os exemplos"...).
+  - **Frases proibidas no texto, além dos meta-hedges já listados:** "este livro não substitui...", "sem pretensão de...", "cenas compostas, sem pretensão de caso real" (dentro do capítulo), "vale ressaltar que", "é preciso deixar claro", "que fique claro", "não é recomendação individual", "este é o único trecho que diz isso", "uma observação deste livro, e não um dado de pesquisa" (basta "observação do livro:").
+  - **A precisão não some, muda de lugar.** O limite de um estudo entra numa oração, no ponto em que muda a conclusão, e só aí. Exemplo bom: "o alcance é limitado: são cenas de erro e de teste, e não um estudo sobre descanso".
+  - **Checagem final:** `grep -n -i -E "não substitui|sem pretensão|vale ressaltar|que fique claro|é preciso deixar claro|recomendação individual" chapters/*.md` deve voltar vazio, exceto na nota editorial (uma ocorrência).
 - **Exercício: no máximo um ou dois por livro**, nomeado de modo diferente em cada um (não "Um exercício opcional" em todo capítulo).
 - **Fechamento com forma própria** (uma cena curta, uma lista, um parágrafo só), sem "no começo dissemos" nem "se você levar uma só ideia".
 - **Tom:** humor leve é bem-vindo (ironia, sátira de si mesmo), sem exagero e sem sacrificar a precisão. Piada nunca entra no lugar de dado, e o que é sátira é declarado na nota editorial.
@@ -344,6 +350,8 @@ grep -n -i -E "profissional|procure|avaliação clínica|um médico|olhar clíni
 # meta-hedges
 grep -n -i -E "sem alarmismo|com cautela|com honestidade|vale lembrar|é importante ressaltar|convém notar|cabe uma ressalva|ressalva" chapters/*.md
 # teste da versão confiante: cada seção que hesita foi reescrita com certeza e comparada?
+# disclaimers medrosos (esperado: vazio, fora uma ocorrência na nota editorial)
+grep -n -i -E "não substitui|sem pretensão|vale ressaltar|que fique claro|é preciso deixar claro|recomendação individual" chapters/*.md
 # manuscrito gerado reproduz os capítulos e git está limpo
 python3 build_manuscript.py && git diff --check
 ```
