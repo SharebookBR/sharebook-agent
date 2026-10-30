@@ -314,6 +314,7 @@ Vale para todo livro ilustrado da linha. Prancha que precisa ser explicada ao le
 - **Hierarquia da composição:** (1) a situação engraçada, (2) a reação do protagonista, (3) o contexto necessário, (4) detalhes só quando acrescentam. Riqueza visual não pode competir com a ideia central.
 - **Personagem recorrente (ex.: a gata) não precisa ter função narrativa em toda cena.** Às vezes basta dormir e ignorar o caos.
 - **Texto na imagem:** só quando autorizado e essencial à piada (ex.: o rótulo do pote de gel do vol. 04).
+- **Texto e prancha conversam (Raffa, vol. 04):** a última frase de um capítulo pode passar a vez para a prancha seguinte. A abertura do vol. 04 termina com "Vamos ao contrato." e a página seguinte é o contrato gigante escorrendo pelo chão. Ao escrever o fecho, olhar a prancha que vem depois.
 - **O que funcionou no vol. 04:** o joelho chorando na perna impassível; o vendedor de gel ignorado. **O que não funcionou:** a oficina com médica, cartas e vilões ao mesmo tempo.
 
 ### Lições do vol. 01 (feedback do Raffa, 2026-10-27)
