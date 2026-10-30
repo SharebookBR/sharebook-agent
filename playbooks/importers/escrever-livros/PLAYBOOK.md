@@ -230,6 +230,7 @@ Projeto de referência: **`sharebook-ebook-importer/originals/bruxa-por-acaso/`*
 | Cansado de Estar Cansado (Vida Real 01) | `sharebook-ebook-importer/originals/cansado-de-estar-cansado/` | publicado |
 | Sua Mente Não Desliga (Vida Real 02) | `sharebook-ebook-importer/originals/sua-mente-nao-desliga/` | PDF v2 aprovado (capa + 7 pranchas), pronto para publicar |
 | O Direito de Descansar (Vida Real 03) | `sharebook-ebook-importer/originals/o-direito-de-descansar/` | texto completo e PDF v1 prontos (sem capa nem pranchas); faltam capa, pranchas e revisão de profissional |
+| Depois dos 40 (Vida Real 04) | `sharebook-ebook-importer/originals/depois-dos-40/` | texto completo e PDF v1 prontos (49 páginas, sem capa nem pranchas; Raffa aceitou 49); faltam capa, pranchas e revisão de profissional |
 
 O selo da folha de rosto é um só para todos, em `originals/_shared/`. Antes cada build o
 alcançava por `../../../product-ux/cover-direction/assets/`, caminho que **não sobrevive à
