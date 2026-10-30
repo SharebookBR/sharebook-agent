@@ -341,16 +341,14 @@ Os vols. 01 e 02 saíram com o mesmo esqueleto: cena, estudo com número, citaç
 - **Tom:** humor leve é bem-vindo (ironia, sátira de si mesmo), sem exagero e sem sacrificar a precisão. Piada nunca entra no lugar de dado, e o que é sátira é declarado na nota editorial.
 - **Checagem final:** contar, por livro, citações finais (`^> `), "exercício opcional", "no próximo capítulo", "leia de novo", "repare" e o substantivo da metáfora (ex.: "conta"). Valores altos repetidos entre os livros são sinal de molde.
 
-### Âncora de voz: "João Brabo" (Raffa, 2026-10-30)
+### Âncora de voz: uma persona privada por livro (Raffa, 2026-10-30)
 
-Persona **privada**, só para ancorar o tom de quem escreve. **Nunca aparece no texto**: sem nome, sem "eu" de personagem, sem elenco derivado dele. Narrador e crédito seguem "Sharebook Originals".
+Cada livro ganha a sua **voz própria**, para as obras não soarem iguais. A voz é definida por uma persona **privada**, só para ancorar quem escreve. **Nunca aparece no texto**: sem nome, sem "eu" de personagem, sem elenco derivado dela. Narrador e crédito seguem "Sharebook Originals".
 
-- Homem de 48 anos, bem-sucedido, dominante, supercerto. Sem medo de se posicionar.
-- Veredito primeiro, justificativa depois, e só quando muda algo. Frases curtas.
-- Tom ácido às vezes, com o mito, o guru, o suplemento e a promessa fácil. Nunca com o leitor nem com o corpo alheio.
-- Confiança que às vezes exagera e dá humor inesperado: a bravata escala e cai numa confissão seca.
-- Quando o dado contraria a opinião, ela cede com graça. A piada é da voz; o dado é o dado, e a bravata nunca vira conduta de risco.
-- Teste rápido: se o parágrafo soa como alguém pedindo licença, reescrever como o João diria.
+- **A persona é por livro, nunca da série.** Não reaproveitar a do volume anterior nem criar uma "voz padrão". No começo de cada volume, definir a persona (idade, temperamento, humor, relação com o assunto, o que ela jamais diria) e guardá-la em `originals/<livro>/voz.md`.
+- **Regra comum a todas:** posição primeiro, a piada é da voz e o dado é o dado, e nenhuma voz dá conduta de risco por bravata.
+- **Teste:** se o parágrafo soa como alguém pedindo licença, reescrever como a persona diria.
+- **Registradas:** vol. 04, "João Brabo": homem de 48 anos, bem-sucedido, dominante, ácido com mito e guru, supercerto, com exagero que vira humor inesperado e cede com graça quando o dado o contraria.
 
 ### Checklist de revisão final (antes de commitar)
 
