@@ -252,7 +252,7 @@ Referência de projeto pronto: `originals/cansado-de-estar-cansado/` (vol. 01, p
 ### Fluxo (ordem importa)
 
 1. **Página de posição, antes de qualquer rascunho** (modelo abaixo). O Raffa e o GPT web aprovam. Sem ela, o livro sai hesitante.
-2. **Verificar as fontes antes de escrever a frase que depende delas** (seção seguinte). Citar de memória é proibido.
+2. **Verificar só o que é dado** (seção seguinte): número, estudo, diretriz, afirmação de saúde que muda conduta. Senso comum, observação de vida e opinião do livro não precisam de fonte e dão identidade ao texto. Citar de memória um dado ou estudo continua proibido.
 3. **Redigir em `chapters/NN.md`:** `00` abertura, `01..N` capítulos (`## Capítulo N — Título`), penúltimo fechamento, último nota editorial.
 4. **`references.md`** é a única lista de fontes e já nasce em formato de leitor (título, DOI/link, ano, data de acesso). O manuscrito a anexa.
 5. **`build_manuscript.py`** (copiar do vol. 01): monta o manuscrito v1, recusa montar se faltar capítulo ou fontes. Nunca editar o manuscrito à mão.
@@ -272,6 +272,8 @@ Referência de projeto pronto: `originals/cansado-de-estar-cansado/` (vol. 01, p
 - **Riscos de saúde, se houver, que mudam conduta** (ex.: um sinal de alarme real), listados à parte e ditos uma vez.
 
 ### Verificação de fontes (o que funcionou e as armadilhas)
+
+- **Escopo (Raffa, 2026-10-30: "não estamos criando uma tese científica").** A verificação vale para o que é dado: números, estudos, diretrizes, doses, rastreamentos, sinais de alarme. Senso comum, observação cotidiana, humor, cena e posição do livro entram sem fonte, ditos como o que são ("observação do livro:" só quando houver risco de passar por dado). Não encher o texto de citações para se proteger, e não cortar uma boa frase por não ter DOI. Quando um dado sustenta a tese de um capítulo, vale a fonte; quando só enfeita, vale a frase.
 
 - **Metadados:** conferir DOI, autores, ano, volume e páginas no Crossref (`https://api.crossref.org/works/<doi>`). Pegou erro de sobrenome no vol. 01.
 - **Conteúdo de estudos:** ler o resumo no PubMed (`esearch` com `<doi>[AID]` e `efetch`). Citar só o que o resumo diz (n, efeito, intervalo). Estudos de ciências sociais podem não estar no PubMed: ler a página do periódico.
