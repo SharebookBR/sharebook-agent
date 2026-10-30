@@ -302,6 +302,20 @@ Referência de projeto pronto: `originals/cansado-de-estar-cansado/` (vol. 01, p
 - **Originals não levam legenda "ilustração criada com IA"** (decisão do Raffa, 2026-10-29: não há risco de confundir com obra clássica). A legenda segue valendo nas edições ilustradas de domínio público.
 - **No PDF:** prancha em página inteira antes de cada abertura, inserida com PyMuPDF depois do Chromium (`PLATES` no `build_book.py`); capa por último, na posição 0. Na validação, `pdfimages -list` deve listar capa, página institucional, selo e as N pranchas.
 
+#### Direção de arte: uma cena, uma piada, três segundos (Raffa, vol. 04, 2026-10-30)
+
+Vale para todo livro ilustrado da linha. Prancha que precisa ser explicada ao leitor é prancha mal dirigida.
+
+- **Regra principal:** cada ilustração comunica uma ideia em cerca de três segundos, sem que o leitor tenha lido o capítulo. Se a piada depende de explicação, repensar a cena antes de gerar.
+- **Avaliação obrigatória antes de escrever o prompt** (cinco linhas, no chat): *Mensagem* (o que comunica), *Piada visual* (o que faz rir de imediato), *Composição* (onde o olhar pousa primeiro), *Personagens* (quem realmente precisa estar), *Teste dos três segundos* (quem não leu o capítulo entende?).
+- **Simplificar radicalmente.** Dois personagens com uma interação clara valem mais que cinco fazendo coisas diferentes. Personagem secundário só entra se contribuir diretamente para a piada. Uma prancha não precisa representar todos os conceitos do capítulo.
+- **Metáfora visual completa ou nenhuma.** Se a prancha mostra só uma pessoa fazendo algo dentro de um cenário, a metáfora não aconteceu. Mostrar os dois lados do paralelo (ex.: o protagonista e um carro, ambos na mesma revisão).
+- **O protagonista é o recurso de humor:** impassível, nunca faz careta nem gesticula. O mundo ao redor é que é ridículo; quanto mais sério ele fica diante do absurdo, maior o efeito. Ele nunca percebe que é parte da piada.
+- **Hierarquia da composição:** (1) a situação engraçada, (2) a reação do protagonista, (3) o contexto necessário, (4) detalhes só quando acrescentam. Riqueza visual não pode competir com a ideia central.
+- **Personagem recorrente (ex.: a gata) não precisa ter função narrativa em toda cena.** Às vezes basta dormir e ignorar o caos.
+- **Texto na imagem:** só quando autorizado e essencial à piada (ex.: o rótulo do pote de gel do vol. 04).
+- **O que funcionou no vol. 04:** o joelho chorando na perna impassível; o vendedor de gel ignorado. **O que não funcionou:** a oficina com médica, cartas e vilões ao mesmo tempo.
+
 ### Lições do vol. 01 (feedback do Raffa, 2026-10-27)
 
 O texto saiu rigoroso e **medroso**. Dois sintomas concretos, a evitar nos próximos:
