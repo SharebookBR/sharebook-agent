@@ -230,7 +230,7 @@ Projeto de referência: **`sharebook-ebook-importer/originals/bruxa-por-acaso/`*
 | Cansado de Estar Cansado (Vida Real 01) | `sharebook-ebook-importer/originals/cansado-de-estar-cansado/` | publicado |
 | Sua Mente Não Desliga (Vida Real 02) | `sharebook-ebook-importer/originals/sua-mente-nao-desliga/` | PDF v2 aprovado (capa + 7 pranchas), pronto para publicar |
 | O Direito de Descansar (Vida Real 03) | `sharebook-ebook-importer/originals/o-direito-de-descansar/` | texto completo e PDF v1 prontos (sem capa nem pranchas); faltam capa, pranchas e revisão de profissional |
-| Depois dos 40 (Vida Real 04) | `sharebook-ebook-importer/originals/depois-dos-40/` | texto completo e PDF v1 prontos (49 páginas, sem capa nem pranchas; Raffa aceitou 49); faltam capa, pranchas e revisão de profissional |
+| Depois dos 40 (Vida Real 04) | `sharebook-ebook-importer/originals/depois-dos-40/` | final aprovado pelo Raffa: texto revisado na voz do narrador, capa, 8 pranchas e PDF v4 (59 páginas); faltam revisão de profissional e o número do item |
 
 O selo da folha de rosto é um só para todos, em `originals/_shared/`. Antes cada build o
 alcançava por `../../../product-ux/cover-direction/assets/`, caminho que **não sobrevive à
@@ -365,6 +365,16 @@ Cada livro ganha a sua **voz própria**, para as obras não soarem iguais. A voz
 - **Regra comum a todas:** posição primeiro, a piada é da voz e o dado é o dado, e nenhuma voz dá conduta de risco por bravata.
 - **Teste:** se o parágrafo soa como alguém pedindo licença, reescrever como a persona diria.
 - **Registradas:** vol. 04, "João Brabo": homem de 48 anos, bem-sucedido, dominante, ácido com mito e guru, supercerto, com exagero que vira humor inesperado e cede com graça quando o dado o contraria.
+
+### Lições do vol. 04 (Raffa, 2026-10-30/31)
+
+- **Persona e revisão de voz depois do primeiro PDF.** O texto saiu correto e sem voz. O ciclo que funcionou: o Raffa lê, aponta parágrafos concretos, o agente reescreve **só aquele parágrafo**, o Raffa reage, e cada reação vira regra em `voz.md` na hora (autorizado, sem pedir). No fim, um passe único aplica as regras ao livro todo, preservando o que o Raffa aprovou sem mudanças.
+- **Fonte de vez em quando.** Citação em toda frase ("Fulano e colegas, 2020") faz o texto soar relatório e não autor. Regra: um aceno por seção, só onde carrega o argumento, dito como fala; sem n, mediana e intervalo; lista completa no fim. Isto vale como padrão dos próximos livros.
+- **Primeira pessoa é decisão por livro.** O narrador pode virar um personagem (ele erra, estuda, conta o que funcionou). Quando for, as experiências dele são ficção e a nota editorial diz isso em uma frase.
+- **Frase de colunista é medo disfarçado** ("só não precisa virar religião", "vale lembrar"). Troca por ordem seca ou por irritação com humor. Frase que repete o fecho sai. Piada sem explicação.
+- **Tópico de risco: dizer o benefício e traçar a linha.** Em reposição hormonal, o livro pode ser firme a favor do tratamento de deficiência comprovada, com benefícios e riscos de ensaios clínicos e ordem de procurar médico. Não escreve dose, nome de produto, ciclo, nem hormônio como caminho para estética, massa ou performance (Resolução CFM 2.333/2023). Antes de escrever tema sensível de saúde, verificar diretriz e resolução vigentes, e dizer ao Raffa onde está a linha e por quê.
+- **Pessoa real:** não citar influenciador pelo nome no livro; usar "a turma da musculação". Conferir o que ele diz serve de referência de debate, não de fonte do texto.
+- **Pranchas: ver "Direção de arte: uma cena, uma piada, três segundos".** Gerar o texto antes das pranchas permite que a última frase do capítulo passe a vez à imagem.
 
 ### Checklist de revisão final (antes de commitar)
 
