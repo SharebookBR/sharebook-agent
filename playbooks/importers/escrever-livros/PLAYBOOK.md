@@ -40,7 +40,7 @@ Regras:
 
 Criar uma pasta simples e previsível:
 
-- `playbooks/importers/escrever-livros/<projeto>/assets/`
+- `sharebook-ebook-importer/originals/<livro>/assets/` (no `sharebook-agent` fica só o playbook, nunca o artefato)
 
 Tudo visual relevante deve cair ali:
 
@@ -48,20 +48,7 @@ Tudo visual relevante deve cair ali:
 - prompts de capa
 - imagens auxiliares aprovadas
 
-Artefatos legados migrados de missões antigas ainda vivem diretamente nesta playbook e devem permanecer observáveis até um sonho manual decidir reorganização ou poda:
-
-- `assets/cloud-para-devs-capa-v1.jpg`
-- `assets/cloud-para-devs-cover-prompt.txt`
-- `assets/redes-neurais-capa.png`
-- `cloud-para-devs-book-v1.pdf`
-- `cloud-para-devs-book-v2.pdf`
-- `cloud-para-devs-book-v3.pdf`
-- `cloud-para-devs-book-v4.pdf`
-- `cloud-para-devs-book-v5.pdf`
-- `cloud-para-devs-book-v6.pdf`
-- `cloud-para-devs-book-v7.pdf`
-- `cloud-para-devs-book-v8.pdf`
-- `redes-neurais-book-v3.pdf`
+Artefatos legados de missões antigas (os PDFs de *Cloud para Devs* v1 a v8, o de *Introdução a Redes Neurais* e as capas) foram **removidos em 2026-10-31**: já estavam publicados, o fluxo daquela época era embrionário e o harness não é depósito de artefatos. Recuperáveis no histórico do git até o commit `26e2e76` (por exemplo, `git show 26e2e76:playbooks/importers/escrever-livros/cloud-para-devs-book-v8.pdf`), e as versões publicadas estão no Sharebook. Obra nova vive em `sharebook-ebook-importer/originals/<livro>/`, nunca aqui.
 
 Evitar espalhar artefatos por raiz, `tmp` eterno ou pastas inventadas no impulso.
 
