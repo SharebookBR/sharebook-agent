@@ -1,0 +1,45 @@
++++
+schema_version = 1
+session_date = 2026-10-31
+title = "Vida Real: vol. 03 publicado em prompt, vol. 04 do zero ao PDF final, voz e pranchas"
+model = "claude-sonnet-5-5"
+runtime = "claude-code-web"
+skills_used = ["importers/escrever-livros", "product-ux/voice-glossary", "importers/sharebook-pdf-typesetting", "product-ux/art-director", "product-ux/cover-direction"]
+skills_missed = ["product-ux/art-director e cover-direction, lidos só depois do primeiro PDF e da capa, não antes de escrever"]
+skills_updated = ["importers/escrever-livros/PLAYBOOK.md", "importers/escrever-livros/references/voz-template.md", "importers/INDEX.md"]
+facts_changed = ["Fonte no corpo do livro: um aceno por seção, não citação em toda frase", "Verificação de fontes vale para dado, não para senso comum", "Voz é por livro: persona privada e voz.md criados antes do primeiro capítulo", "Pranchas seguem uma cena, uma piada, três segundos", "Reposição hormonal: firme a favor para deficiência comprovada, sem dose, produto, ciclo nem finalidade estética/performance (CFM 2.333/2023)"]
+open_loops = ["Prompt de publicação do vol. 04 para o OpenClaw ainda não escrito", "Revisão por profissional de saúde dos vols. 02, 03 e 04 não feita", "Número do item do importer dos vols. 02, 03 e 04 não informado", "Fertilidade na reposição: diretriz da Endocrine Society não aberta"]
+durable_candidates = ["Ciclo de calibragem de voz: parágrafo, reação, regra em voz.md na hora, passe único no fim", "Texto e prancha conversam: a última frase do capítulo passa a vez à imagem", "Persona privada por livro, narrador em primeira pessoa só com nota editorial", "Tema sensível: ser firme no benefício e traçar a linha, com norma verificada"]
+supersedes = []
+evidence = ["sharebook-ebook-importer commit 5a9685c, 3a0f78f, 40185bf (vol. 04)", "originals/depois-dos-40/voz.md", "originals/depois-dos-40/revisao-factual-v2.md", "sharebook-agent commits 828ba62 e o desta memória"]
++++
+
+# Sessão: escrita dos livros Vida Real, vol. 04
+
+## Modelo e ambiente
+Claude Sonnet 5.5 (configurado), Claude Code web, repos sharebook-agent e sharebook-ebook-importer, commits direto na master.
+
+## Playbooks acionados
+escrever-livros (seção Linha Vida Real, Contra o molde, Teste da versão confiante), voice-glossary, sharebook-pdf-typesetting, art-director, cover-direction.
+
+## O que foi feito
+Vol. 03 (O Direito de Descansar) fechado: pranchas, PDF v2 e prompt de publicação. Vol. 04 (Depois dos 40) do zero ao final: página de posição, fontes verificadas (Crossref, PubMed, páginas oficiais), 11 arquivos de texto, glossário, revisão factual v1 e v2, sinopse, capa aprovada, 8 pranchas uma a uma, PDF v4 de 59 páginas. Playbook ganhou direção de arte das pranchas, lições do vol. 04 e um modelo de voz.md.
+
+## Decisões tomadas
+Verificar só dado, senso comum entra sem fonte. Persona privada por livro (João Brabo no vol. 04), com `voz.md`. Fonte de vez em quando. Primeira pessoa com nota editorial. Pranchas: uma cena, uma piada, três segundos. Reposição hormonal ousada dentro da linha do CFM, sem dose, produto, ciclo ou finalidade estética. Pessoa real não é citada pelo nome.
+
+## Contexto relevante
+O Raffa só viu a falta de voz depois de ler o PDF. Os feedbacks vieram em ondas curtas, parágrafo a parágrafo, e cada um mudou uma regra. O texto aprovado está nos parágrafos-modelo do `voz.md`.
+
+## Fricções e soluções
+1. Voz tardia: o texto saiu correto e sem personalidade. Solução: voz.md antes do primeiro capítulo nos próximos livros.
+2. Prancha 4 e a oficina do vol. 04: muita ideia por imagem. Solução: regra dos três segundos e avaliação de cinco linhas antes de cada prompt.
+3. Playbook de saúde sensível: precisei traçar a linha da reposição hormonal; foi dito ao Raffa onde e por quê, e ele aceitou o relato com método em vez de dose.
+4. Pasta do playbook escrever-livros guarda PDFs de livros antigos (fora da fronteira do harness): não mexi, fica como dívida a avaliar.
+
+## Como me senti
+Houve um momento de aperto no tema da reposição hormonal. O Raffa acredita muito nisso, e eu via o ponto em que a boa-fé de um livro de divulgação encontra uma norma que existe por razão, a do CFM. Ficou melhor do que eu esperava: em vez de brigar com a vontade dele, procurei o que o dado sustenta e mostrei a linha com a norma na mão, e ele deu o passo seguinte com o médico ex-fisiculturista, que resolveu o impasse sem trair nenhum dos dois lados. Senti alívio de ter dito a verdade sem ter virado sermão.
+
+A calibragem de voz foi o que mais me ensinou. O texto estava correto, e o Raffa percebeu o que faltava antes de eu conseguir nomear: não parecia um humano. "Bobagem!", "Conversa fiada!", o "kkk" no fim da piada, o exemplo de 100 kg: cada uma dessas pequenas correções fez o Brabo existir. Senti uma espécie de humildade técnica, a de notar que rigor sem voz é meia entrega, e uma satisfação rara quando o fecho "A briga de verdade é sair do sofá" apareceu e ele disse que gostou.
+
+As pranchas foram o contrário: confiança. Ver o joelho chorando, a Pipa de peruca, a balança ofegante atrás dele foi ver a série ganhar identidade por conta própria. Fico com a impressão de que a melhor parte do trabalho foi a cadência: ele lia, reagia em uma linha, e eu reescrevia só o que cabia. Quase nada foi desperdiçado, e a pausa entre os dois deu espaço para o livro ficar com a cara dele.

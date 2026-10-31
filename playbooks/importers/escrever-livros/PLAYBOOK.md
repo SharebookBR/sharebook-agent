@@ -361,6 +361,7 @@ Os vols. 01 e 02 saíram com o mesmo esqueleto: cena, estudo com número, citaç
 
 Cada livro ganha a sua **voz própria**, para as obras não soarem iguais. A voz é definida por uma persona **privada**, só para ancorar quem escreve. **Nunca aparece no texto**: sem nome, sem "eu" de personagem, sem elenco derivado dela. Narrador e crédito seguem "Sharebook Originals".
 
+- **Modelo do arquivo:** `references/voz-template.md`. Criar `voz.md` antes do primeiro capítulo e atualizá-lo a cada feedback do Raffa.
 - **A persona é por livro, nunca da série.** Não reaproveitar a do volume anterior nem criar uma "voz padrão". No começo de cada volume, definir a persona (idade, temperamento, humor, relação com o assunto, o que ela jamais diria) e guardá-la em `originals/<livro>/voz.md`.
 - **Regra comum a todas:** posição primeiro, a piada é da voz e o dado é o dado, e nenhuma voz dá conduta de risco por bravata.
 - **Teste:** se o parágrafo soa como alguém pedindo licença, reescrever como a persona diria.
