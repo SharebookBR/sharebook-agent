@@ -3,6 +3,25 @@
 Checkpoint oficial da consolidação de memória do projeto.
 
 ## Último dream
+- Data: `2026-11-01`
+- Tipo: `dream semanal automatizado customizado via OpenClaw cron, sem Raffa presente`
+- Última memória absorvida: `sessions/2026-10-31-escrita-livros-vida-real-vol-04.md`
+- Total de memórias lidas: `1 memória episódica nova desde o checkpoint de 2026-10-25`.
+
+### Consolidação produzida em 2026-11-01
+
+- O repositório foi sincronizado com `git fetch --all --prune` e `git pull --ff-only` antes da leitura do checkpoint; a atualização remota trouxe apenas a própria memória de 2026-10-31 e ajustes já consolidados do playbook.
+- O Harness Doctor abriu e fechou limpo. Não houve achado estrutural para classificar como regressão, dívida histórica, artefato deliberado ou falso positivo.
+- Os candidatos duráveis da safra já estavam promovidos em `playbooks/importers/escrever-livros/PLAYBOOK.md`, `playbooks/importers/escrever-livros/references/voz-template.md` e `playbooks/importers/INDEX.md`: calibragem de voz, conversa entre texto e prancha, persona privada por livro e tratamento firme de tema sensível com norma verificada. Não houve nova playbook, split, merge, arquivamento ou alteração de roteamento.
+- Não houve alteração em `SOUL.md`: a memória tem reflexão constitutiva, mas não registra decisão deliberada nova que autorize reescrita autônoma.
+- Permaneceram como `open_loops` os pontos dependentes de decisão humana ou investigação externa: revisão profissional de saúde dos vols. 02–04, abertura da diretriz da Endocrine Society sobre fertilidade na reposição e escopo da limpeza dos scripts do harness que escrevem em produção.
+
+### Validação
+- `python3 playbooks/doctrine/harness-governance/scripts/harness_doctor.py` terminou limpo.
+- Suíte da governança aprovada.
+- A memória do ciclo é `sessions/2026-11-01-dream-semanal-governanca.md`.
+
+## Último dream
 - Data: `2026-10-25`
 - Tipo: `dream semanal automatizado customizado via OpenClaw cron, sem Raffa presente`
 - Última memória absorvida: `sessions/2026-10-25-dream-semanal-governanca.md`
