@@ -216,10 +216,11 @@ Projeto de referência: **`sharebook-ebook-importer/originals/bruxa-por-acaso/`*
 | Lumi, a Bruxinha | `sharebook-ebook-importer/originals/lumi-a-bruxinha/` | publicado |
 | Promessa de Dez Verões | `sharebook-ebook-importer/originals/promessa-de-dez-veroes/` | publicado |
 | Cansado de Estar Cansado (Vida Real 01) | `sharebook-ebook-importer/originals/cansado-de-estar-cansado/` | publicado |
-| Sua Mente Não Desliga (Vida Real 02) | `sharebook-ebook-importer/originals/sua-mente-nao-desliga/` | PDF v2 aprovado (capa + 7 pranchas), pronto para publicar |
-| O Direito de Descansar (Vida Real 03) | `sharebook-ebook-importer/originals/o-direito-de-descansar/` | texto completo e PDF v1 prontos (sem capa nem pranchas); faltam capa, pranchas e revisão de profissional |
+| Sua Mente Não Desliga (Vida Real 02) | `sharebook-ebook-importer/originals/sua-mente-nao-desliga/` | publicado (item `done` no importer) |
+| O Direito de Descansar (Vida Real 03) | `sharebook-ebook-importer/originals/o-direito-de-descansar/` | publicado (item `done` no importer) |
 | Depois dos 40 (Vida Real 04) | `sharebook-ebook-importer/originals/depois-dos-40/` | publicado pelo importer em 2026-10-31 (item #1891, PDF v4, 59 páginas); falta revisão de profissional |
-| Dormir Bem Outra Vez (Vida Real 05) | `sharebook-ebook-importer/originals/dormir-bem-outra-vez/` | publicado pelo importer (PDF v2, 44 páginas, capa e 8 pranchas a lápis de cor) |
+| Dormir Bem Outra Vez (Vida Real 05) | `sharebook-ebook-importer/originals/dormir-bem-outra-vez/` | publicado pelo importer (PDF v2, 44 páginas, capa e 8 pranchas a lápis de cor); download público conferido em 2026-11-04 (sha256 igual ao local) |
+| Amor, Sexo e Felicidade (Vida Real 06) | `sharebook-ebook-importer/originals/amor-sexo-e-felicidade/` | publicado pelo importer (PDF v2, 42 páginas, capa e 8 pranchas em guache); download público conferido em 2026-11-04 (sha256 igual ao local). Fecha a série |
 
 O selo da folha de rosto é um só para todos, em `originals/_shared/`. Antes cada build o
 alcançava por `../../../product-ux/cover-direction/assets/`, caminho que **não sobrevive à
@@ -365,6 +366,38 @@ Cada livro ganha a sua **voz própria**, para as obras não soarem iguais. A voz
 - **Tópico de risco: dizer o benefício e traçar a linha.** Em reposição hormonal, o livro pode ser firme a favor do tratamento de deficiência comprovada, com benefícios e riscos de ensaios clínicos e ordem de procurar médico. Não escreve dose, nome de produto, ciclo, nem hormônio como caminho para estética, massa ou performance (Resolução CFM 2.333/2023). Antes de escrever tema sensível de saúde, verificar diretriz e resolução vigentes, e dizer ao Raffa onde está a linha e por quê.
 - **Pessoa real:** não citar influenciador pelo nome no livro; usar "a turma da musculação". Conferir o que ele diz serve de referência de debate, não de fonte do texto.
 - **Pranchas: ver "Direção de arte: uma cena, uma piada, três segundos".** Gerar o texto antes das pranchas permite que a última frase do capítulo passe a vez à imagem.
+
+### Lições dos vols. 05 e 06 (Raffa, 2026-11-01 a 11-04)
+
+**Voz e narradora**
+- **A voz pode ser um personagem com nome.** O vol. 06 abre com "Oi, meu nome é Bernadete, sou cabeleireira e hoje vou falar sobre sexo." É exceção ao padrão "persona privada, sem nome", e vale só quando o Raffa a escolhe. A persona continua sendo ancoragem, nunca elenco derivado.
+- **Público específico, sem explicar o recorte.** O livro fala com quem ele fala. Nunca descreve o público, nunca pede desculpa, nunca diz o que não está no livro. "Ninguém fala assim": o modo certo é a narradora se apresentar e falar do assunto. A bíblia editorial é revisada quando o Raffa decide, e o `voz.md` guarda a decisão.
+- **Critério de sucesso da voz** (vol. 06): "parece escrito por uma pessoa simples". Frases curtas, vocabulário de conversa, nada de palavra de livro nem de jargão moderno.
+- **Parágrafos-modelo entram verbatim.** Os trechos que o Raffa aprova antes do livro ficar pronto (oral, dedos, anal no vol. 06) viram parte do texto sem mudar uma palavra.
+
+**Conteúdo**
+- **Histórias de pessoas reais viram causos compostos.** Ler relatos publicados serve para achar padrões. Nenhuma história identificável é reproduzida: nomes, datas e detalhes mudam, e a nota editorial diz que as personagens são inventadas. Trocar o nome não anonimiza.
+- **Pouco ou nenhum dado quando o livro é de experiência** (vol. 06: só o Ligue 180 foi verificado). Verificar sempre o que muda conduta de saúde.
+- **Sexo: sugestivo, nunca gráfico.** A malícia vem da confissão, da piada e da imagem, e não da anatomia. O consentimento entra pela alegria ("hoje não" é frase completa). Cuidado prático (calma, lubrificante, camisinha) dito uma vez, como piada de cuidado.
+- **Rede de segurança de uma linha.** Quando o livro tira o assunto pesado de cena por decisão editorial, uma frase de saída (no vol. 06, o Ligue 180) entra por padrão, sem tocar no tom, e o Raffa decide se fica.
+- **Remédio e hormônio (vol. 05):** sem nome de produto, dose ou esquema; o aviso de abstinência dito uma vez, onde cabe.
+
+**Forma e metáfora**
+- **Cada capítulo com forma própria, e a forma pode ser um documento** (vol. 05: laudo, manual, POP, ata, escala, ficha, passagem de turno) ou uma conversa (vol. 06: tabela de filme, receita, tradutor de casal, caixa de perguntas, regras, "antes e depois"). Quando todos os capítulos são "documento", a série vira molde; vale a pena avisar o Raffa.
+- **Metáfora central nova por livro:** vol. 05, o turno da noite; vol. 06, a cadeira do salão.
+- **Abertura numa página só**, para a última frase ficar colada na prancha: aparar palavras até caber (testado no PDF; o vol. 06 precisou de várias rodadas).
+
+**Pranchas**
+- **Quem gera a capa decide o cânone.** O Raffa gerou a capa direto (sem fichas de personagem) nos dois livros; a capa aprovada vira a referência canônica da protagonista e do estilo, e o `plates.md` registra o cânone visual.
+- **Traço-assinatura da protagonista sai só na última prancha** (vol. 05: capacete, colete e prancheta; o vol. 04 tinha os óculos escuros).
+- **Plano de prancha sem piada é refeito.** O agente propõe a ideia com a avaliação de cinco linhas, e a ideia muda quando a piada é fraca (a escada iluminada virou escada com buraco; a "leitora no espelho" cedeu ao beijo no vol. 06).
+- **Frase-ponte:** a última frase de cada capítulo passa a vez para a prancha seguinte; o agente propõe e aplica a linha ao aprovar o plano.
+- **Marca real em imagem é aviso.** A revista "NOVA" na capa do vol. 06 foi apontada ao Raffa; nas pranchas, revista sem letra nenhuma.
+- **Mapeamento das pranchas no build:** `PLATES` usa o **número do arquivo** do capítulo (a prancha entra antes da abertura dele). Um fechamento deslocado muda o mapeamento: conferir a ordem das páginas no PDF antes de entregar.
+- **Estilos já usados:** aquarela (01 e 02), cartum (03), graphic novel quente (04), lápis de cor azul-noite (05), cartaz de salão dos anos 80 em guache e colagem (06). O próximo precisa ser outro.
+
+**Publicação**
+- Vols. 05 e 06 foram publicados pelo importer com o prompt-modelo (source `vida_bem_estar_2026`, `final-artifact-set --included-plates N`, `plan-set`, `publish-once --dry-run` e depois real, validação pelo download público: páginas, primeira e segunda página, tamanho e sha256). O agente pode conferir o download público depois, mas **o endpoint pode devolver 429**: tentar de novo após uma pausa.
 
 ### Checklist de revisão final (antes de commitar)
 

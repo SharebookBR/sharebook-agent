@@ -13,6 +13,8 @@ Regra de ouro: a voz é **por livro**. Não copiar a persona do volume anterior.
 
 ## 2. Narrador e crédito
 
+> **Exceção do vol. 06 (Raffa, 2026-11-03):** a narradora pode ter nome e se apresentar no texto ("Oi, meu nome é Bernadete, sou cabeleireira..."), quando a voz é um personagem de verdade. É decisão do Raffa por livro, não padrão. Público específico: o livro fala com quem fala, sem explicar o recorte.
+
 - Coletivo ("vamos") ou primeira pessoa com experiências inventadas? Decisão por livro.
 - Se primeira pessoa: a nota editorial diz, numa frase, que o narrador e as experiências dele são inventados.
 - Crédito segue "Sharebook Originals".
@@ -48,4 +50,4 @@ Para cada assunto de saúde sensível: o que o livro afirma com firmeza, onde es
 
 ## 8. Estado
 
-Data, versão do texto e do PDF aprovados como finais.
+Data, versão do texto e do PDF aprovados como finais. Exemplos completos: `originals/depois-dos-40/voz.md` (bravata), `originals/dormir-bem-outra-vez/voz.md` (ironia fria), `originals/amor-sexo-e-felicidade/voz.md` (conversa de salão, com os parágrafos aprovados).
