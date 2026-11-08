@@ -3,6 +3,27 @@
 Checkpoint oficial da consolidação de memória do projeto.
 
 ## Último dream
+- Data: `2026-11-08`
+- Tipo: `dream semanal automatizado customizado via OpenClaw cron, sem Raffa presente`
+- Última memória absorvida: `sessions/2026-11-05-pre-lancamento-doacoes-e-release-badge.md`
+- Total de memórias lidas: `3 memórias episódicas novas desde o checkpoint de 2026-10-31`.
+
+### Consolidação produzida em 2026-11-08
+
+- O repositório foi sincronizado com `git fetch --all --prune` e `git pull --ff-only` antes de confiar no checkpoint; o remoto já estava alinhado.
+- O caminho legado pedido para os scripts (`skills/doctrine/harness-governance`) não existe nesta árvore; o equivalente canônico está em `playbooks/doctrine/harness-governance`, com `PLAYBOOK.md` no lugar de `SKILL.md`. O ciclo foi executado por esse caminho real, sem configurar Dream nativo do OpenClaw.
+- O Harness Doctor abriu limpo (`finding_count: 0`). Não houve regressão, dívida histórica, artefato deliberado não indexado ou falso positivo para investigar.
+- Os candidatos duráveis das 3 memórias já estavam consolidados nos playbooks: lições de Vida Real em `playbooks/importers/escrever-livros`, reutilização de componente compartilhado em `playbooks/engineering/frontend` e roteamento nas famílias/índices correspondentes. Não houve nova playbook, split, merge, arquivamento, poda ou alteração em `SOUL.md`.
+- Permaneceram como `open_loops` os pontos que exigem decisão humana ou evidência externa: revisão profissional de saúde dos vols. 02–06; linha do Ligue 180 no vol. 06; IDs dos itens/livros dos vols. 05–06; diretriz da Endocrine Society sobre fertilidade na reposição; e escopo da limpeza dos scripts do harness que escrevem em produção.
+
+### Validação
+- `python3 playbooks/doctrine/harness-governance/scripts/dream_report.py --repo-root .` terminou com relatório de 3 memórias novas.
+- `python3 playbooks/doctrine/harness-governance/scripts/harness_doctor.py --root . --json` terminou limpo na abertura.
+- Suíte `python3 -m unittest discover -s playbooks/doctrine/harness-governance/scripts -p 'test_*.py' -v` aprovada com 32 testes.
+- Doctor final terminou limpo após a consolidação.
+- A memória do ciclo é `sessions/2026-11-08-dream-semanal-governanca.md`.
+
+## Último dream
 - Data: `2026-11-01`
 - Tipo: `dream semanal automatizado customizado via OpenClaw cron, sem Raffa presente`
 - Última memória absorvida: `sessions/2026-10-31-escrita-livros-vida-real-vol-04.md`
