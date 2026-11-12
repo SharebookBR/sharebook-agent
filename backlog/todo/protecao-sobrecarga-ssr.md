@@ -174,5 +174,92 @@ Responder em "Respostas do OpenClaw (rodada 2)" abaixo, com evidência (comando 
 
 ### Respostas do OpenClaw (rodada 2)
 
-_(pendente)_
+#### Registro pré-alteração — 2026-11-12 (BRT)
 
+T2 — a API estava `healthy` e respondia `GET /api/Operations/Ping = 200`. A variável atual do Coolify, com credenciais mascaradas, era:
+
+```text
+Host=fgsgwsckccgk8sccc4gg0gg0;Port=5432;Database=sharebook;
+Username=***;Password=***;Pooling=true;SSL Mode=Disable;
+Trust Server Certificate=true;Maximum Pool Size=80;Connection Idle Lifetime=300;
+```
+
+Reversão registrada antes da mudança: restaurar exatamente esta string na variável `ConnectionStrings__PostgresConnection` da aplicação `sharebook-api` pelo model `App\\Models\\EnvironmentVariable` do Coolify e redeployar/reiniciar a API. Não há `Timeout` nem `Command Timeout` nesta versão anterior.
+
+T3 — não havia coletor de logs de container (`vector`, `promtail`, `alloy` ou `fluent*`), nem plugin Docker de Loki; o frontend usava o driver `json-file` com rotação `max-size=10m`, `max-file=3`, e não tinha variável OTEL/log configurada. Reversão planejada: remover apenas o coletor dedicado ao frontend e o seu diretório/volume de posições; isto devolve o frontend ao driver `json-file` atual sem alterar o container da aplicação ou Traefik.
+
+#### T1 — deploy do frontend (somente leitura)
+
+**Não passou ainda.** No momento da conferência, o container estava `healthy`, sem restarts, porém a imagem era `ykggs80oko0ck00gsk0c8ckg:598e310b467bd34c853035b7ef8f6959a87f5f60`. Esse SHA é anterior ao `c526152` solicitado: o timeout de 4 s já está presente, mas a correção da mensagem/semântica 503 ainda aguarda deploy. A API, por contraste, já estava em `bosc4k0k8cws844ckosswsw0:6d4f2cbd17ab8e06de3253ce6825e5e87d63abb0`, `healthy`.
+
+As variáveis `SSR_MAX_CONCURRENT_RENDERS` e `SSR_MAX_CONCURRENT_BOT_RENDERS` não estavam definidas no container; portanto os padrões do código são 30 e 18. Desde o deploy atual: **0** linhas `ssr_overloaded`, logo não há `peakInFlight` a reportar ainda.
+
+Comandos usados (saída resumida):
+
+```bash
+docker ps --format '{{.Names}} {{.Image}} {{.Status}}'
+docker exec sharebook-frontend sh -lc \
+  'env | cut -d= -f1 | grep -E "^SSR_MAX_CONCURRENT_(RENDERS|BOT_RENDERS)$" || true'
+docker logs --since 24h sharebook-frontend 2>&1 | grep -c ssr_overloaded
+# frontend ...:598e310... Up (healthy); api ...:6d4f2cb... Up (healthy)
+# (variáveis ausentes); 0
+```
+
+T2 e T3 prosseguiram porque a API estava saudável, como permitido pela tarefa.
+
+#### T2 — timeouts Npgsql
+
+Aplicado fora do pico, via `App\\Models\\EnvironmentVariable` do Coolify (não por update SQL direto), mantendo todo o valor anterior e acrescentando apenas:
+
+```text
+Timeout=5;Command Timeout=15;
+```
+
+Valor efetivo após o redeploy (credenciais mascaradas):
+
+```text
+Host=fgsgwsckccgk8sccc4gg0gg0;Port=5432;Database=sharebook;
+Username=***;Password=***;Pooling=true;SSL Mode=Disable;
+Trust Server Certificate=true;Maximum Pool Size=80;Connection Idle Lifetime=300;
+Timeout=5;Command Timeout=15;
+```
+
+O Coolify fez o deploy `2tteczxbllqpwbuai27f4qzj`, finalizado às 21:41 BRT. Ao fim dos **30 minutos** de observação, o container continuava `healthy`, `GET /api/Operations/Ping` retornava 200 e não houve novos logs de timeout/Npgsql/pool no Loki.
+
+```logql
+{service_name="sharebook-api"} |~ "(?i)(timeout|timed out|connection pool|NpgsqlException)"
+```
+
+O acesso de leitura ao Rollbar não está configurado neste runtime (não há credencial/API de leitura no `.env`); portanto essa metade da checagem não foi inventada. O Loki não mostrou rota legítima recém-cortada e não houve motivo para reverter. A reversão permanece a registrada antes da mudança: restaurar a string prévia, sem os dois parâmetros, no model do Coolify e redeployar a API.
+
+#### T3 — logs do SSR no Loki
+
+Como não havia coletor nem plugin de logging no host, foi instalado o menor componente persistente que não toca no container do frontend: o serviço systemd `sharebook-frontend-log-shipper`. Ele executa o script versionado `playbooks/engineering/analytics/scripts/ship_docker_logs_to_otlp.py`, segue `docker logs --tail 0 --follow sharebook-frontend` e reanexa após uma substituição/restart do container. Envia apenas esse stream ao endpoint OTLP já usado pelo Sharebook, com resource attribute `service.name=sharebook-frontend`. As três credenciais ficam em `/opt/sharebook-frontend-log-shipper/shipper.env` (modo 0600), copiadas do `.env` operacional sem aparecer em saída ou Git.
+
+Validação: uma requisição pública controlada à Home com User-Agent único retornou 200 e apareceu no Loki como `ssr_access` do novo serviço.
+
+```bash
+systemctl is-active sharebook-frontend-log-shipper.service
+# active
+curl -A 'openclaw-ssr-loki-validation-1794521716' https://www.sharebook.com.br/
+# 200
+```
+
+```logql
+{service_name="sharebook-frontend"} |= "openclaw-ssr-loki-validation-1794521716"
+```
+
+Resultado: uma linha JSON `{"event":"ssr_access",...,"status":200,...}` às `2026-11-12T22:15:16Z`. Os campos continuam no corpo JSON (consultáveis com `| json`); não foram promovidos a labels, evitando cardinalidade de IP, rota e User-Agent. O serviço usa `Restart=always` e reconecta por nome de container, portanto sobrevive ao restart/redeploy do frontend sem alterar o app. Não forcei um restart adicional só para o teste, para não introduzir indisponibilidade desnecessária.
+
+Reversão de T3, se for necessária:
+
+```bash
+systemctl disable --now sharebook-frontend-log-shipper.service
+rm -f /etc/systemd/system/sharebook-frontend-log-shipper.service
+rm -rf /opt/sharebook-frontend-log-shipper
+systemctl daemon-reload
+```
+
+Traefik: o container `coolify-proxy` não tem `--accesslog` configurado. Habilitá-lo exigiria alterar a configuração gerenciada do proxy e geraria uma linha por request; preservar IP/User-Agent exigiria manter headers e aumenta volume/PII em log. Não foi ativado, conforme pedido. O `ssr_access` recém-centralizado já cobre IP e User-Agent que chegam ao SSR.
+
+T4 não foi executada: aguarda confirmação do Raffa.
