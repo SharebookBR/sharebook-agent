@@ -23,6 +23,8 @@ Implementado em 2026-11-12 como job semanal **LegacyOnboardingBackfill**:
 - grava no histórico do job a janela processada e um cursor composto por `CreationDate` e `UserId`, para o lote seguinte continuar exatamente do ponto anterior;
 - a entrega dos e-mails segue o MailSender de baixa prioridade já existente, sem aumentar seu limite.
 
+Lote 1 executado em produção em 12/11/2026 às 03:49 UTC: 2.000 jornadas criadas, cobrindo cadastros de 23/10/2026 13:55 UTC até 05/09/2023 14:52 UTC. Restaram 20.481 contas elegíveis; o próximo lote continuará abaixo desse cursor na próxima execução semanal.
+
 ## Objetivo
 
 Medir o efeito real da jornada fixa de cinco e-mails de onboarding sem depender do GA4: etapas enfileiradas, aberturas rastreáveis e cliques nos CTAs, com uma tela administrativa de acompanhamento.
