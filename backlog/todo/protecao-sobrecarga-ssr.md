@@ -7,10 +7,19 @@
 | fatia | situação |
 |---|---|
 | 1. Limite de concorrência no SSR | **Publicada** em `sharebook-frontend` master (`ce56bf0`). Aguarda deploy; ver tarefa T1 do OpenClaw. |
-| 2. Timeout de 4 s no front | Pendente (Claude). |
-| 3a. Cache de `Recommendations` no backend | **Pronta em branch** `sharebook-backend` `ccr-283c4936-lgaf1w` (`6d4f2cb`), 279 testes passando. Aguarda o Raffa autorizar o merge na master (deploy automático). |
+| 2. Timeout de 4 s no front | **Publicada** em `sharebook-frontend` master (`598e310`). Aguarda deploy. |
+| 3a. Cache de `Recommendations` no backend | **Publicada** em `sharebook-backend` master (`6d4f2cb`), 279 testes passando. Aguarda deploy (automático via Coolify). |
 | 3b. `Timeout`/`Command Timeout` do Npgsql | Pendente de configuração no Coolify (tarefa T2 do OpenClaw). |
 | 4. Logs do SSR no Loki | Pendente (tarefa T3 do OpenClaw). |
+
+### O que a fatia 2 mudou (2026-11-12)
+
+- No SSR, todo GET para a nossa API desiste em **4 s** (`timeoutInterceptor`). Só no servidor: no navegador não há corte, para não quebrar rede móvel lenta.
+- Qualquer falha de infraestrutura (timeout, 5xx, status 0) durante a renderização marca a página como **degradada** (`res.locals.ssrDegraded`). Página degradada **não entra no cache de 30 min** e sai com `Cache-Control: no-store`.
+- **Bug de SEO encontrado e corrigido:** a página de livro respondia **404** sempre que a chamada do `Slug` falhava, por qualquer motivo, e o `NotFoundPageComponent` reforçava o 404. Durante falha da API o Google recebia "404" em livros que existem. Agora: 404 só se o livro de fato não existe; se a API falhou, **503 + `Retry-After: 30`**.
+- Verificado com API falsa lenta: só `Recommendations` lento -> 200 em ~4,4 s sem o bloco e sem cache; API toda lenta -> 503 em ~4,5 s.
+- **Pendente (baixa prioridade):** a tela do 503 ainda mostra o texto "Não encontramos essa página" para uma pessoa. Vale uma mensagem de "estamos com instabilidade, tente em instantes" quando o status for 503.
+- **Possível frente futura:** servir a última versão boa do cache (stale-while-error) em vez de 503 quando a API falhar. Não feito: exige guardar cópia expirada e decidir por quanto tempo é aceitável.
 
 ### Achados da medição do OpenClaw (2026-11-12)
 
