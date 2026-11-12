@@ -59,4 +59,78 @@ Preciso destes números para calibrar as fatias 1 a 3. **Responder neste arquivo
 
 ### Respostas do OpenClaw
 
-_(pendente)_
+Consulta feita somente para leitura em 2026-11-12. Horários abaixo em BRT (UTC-3), salvo quando a query mostra UTC.
+
+#### 1. Concorrência reconstruída a partir dos logs da API
+
+Para cada linha `responded ... in X ms`, considerei o intervalo `[timestamp - duração, timestamp)`. A contagem é a quantidade de intervalos ativos no instante de cada segundo. Isto mede requisições que **chegaram a registrar resposta**; uma conexão que jamais respondeu não aparece na reconstrução.
+
+| recorte | no primeiro erro EF (03:26:05.513) | pico | baseline 03:20–03:25 |
+|---|---:|---:|---:|
+| todas as rotas | **305** | **339** às 03:26:03 | p50=0, p95=0, máximo=1; média=0,037 req/s |
+| somente rotas que tocam Postgres | **215** | **223** às 03:26:02 | p50=0, p95=0, máximo=1; média=0,027 req/s |
+
+O `0` do baseline não contradiz as ~44 respostas/minuto: é uma amostragem em pontos inteiros de um segundo, e as respostas normais duram poucos milissegundos, portanto quase todas começam e terminam entre dois pontos. O contraste útil é que, no incidente, as requests ficaram penduradas e a concorrência sustentada chegou a 339 (223 nas rotas de banco).
+
+As rotas classificadas como banco foram `Slug`, `Recommendations`, `tag/*`, `Category/*` e `CategoryTree/*`. `category/Counts` (cacheado) e `freightOptions` (enum em memória) ficaram fora deste segundo recorte.
+
+LogQL de coleta (as linhas foram paginadas por intervalos de tempo e a reconstrução foi local):
+
+```logql
+{service_name="sharebook-api"} |= "responded"
+{service_name="sharebook-api"} |= "connection to database"
+```
+
+Janela da primeira query: `2026-11-12T06:20:00Z` a `2026-11-12T06:27:00Z`; da segunda: `06:26:00Z` a `06:27:00Z`. Foram 1.669 linhas `responded` parseáveis. O primeiro erro EF registrado foi `2026-11-12T06:26:05.512731Z`.
+
+#### 2. Pool e timeouts efetivos da API em produção
+
+Connection string lida da variável do container da API, com credenciais mascaradas:
+
+```text
+Host=fgsgwsckccgk8sccc4gg0gg0;Port=5432;Database=sharebook;
+Username=***;Password=***;Pooling=true;SSL Mode=Disable;
+Trust Server Certificate=true;Maximum Pool Size=80;Connection Idle Lifetime=300;
+```
+
+| parâmetro | valor |
+|---|---|
+| `Maximum Pool Size` | **80** |
+| `Connection Idle Lifetime` | **300 s** |
+| `Timeout` | não configurado na string |
+| `Command Timeout` | não configurado na string |
+| `EnableRetryOnFailure` | **não usado**: `DatabaseConfiguration.cs` apenas chama `UseNpgsql(connectionString)` |
+
+Assim, não há um retry explícito de EF/Npgsql no código que explique por si os ~49 s. Os valores-padrão dos parâmetros ausentes não foram inferidos como se fossem configuração de produção.
+
+#### 3. Latência de Slug e Recommendations
+
+Dados extraídos de `responded ... in X ms`. O baseline é a janela de sete dias até `2026-11-12T19:16:30Z`, excluído o intervalo do incidente; linhas 5xx foram excluídas do baseline normal. A janela do incidente é `03:20–03:27 BRT` e inclui as respostas 500, pois elas fazem parte da degradação observada.
+
+| endpoint | baseline normal (n, p50, p95) | incidente (n, p50, p95) |
+|---|---:|---:|
+| `GET /api/book/Slug/{slug}` | 43.008; **5,28 ms**; **23,59 ms** | 278; **4.913,12 ms**; **26.120,07 ms** |
+| `GET /api/book/Recommendations/{id}` | 35.489; **221,69 ms**; **425,90 ms** | 252; **21.803,42 ms**; **61.195,87 ms** |
+
+LogQL de coleta (paginado; duração e rota extraídas das linhas retornadas):
+
+```logql
+{service_name="sharebook-api"} |= "/api/book/Slug/" |= "responded"
+{service_name="sharebook-api"} |= "/api/book/Recommendations/" |= "responded"
+```
+
+#### 4. Réplicas em produção
+
+Há **1 container do SSR/frontend** (`sharebook-frontend`) e **1 container da API** (`sharebook-api`) em execução; não há réplicas adicionais. Logo, o limite de 30 da fatia 1 é, no estado atual, efetivamente por processo e também global. Isto deve ser reavaliado se o deploy passar a escalar horizontalmente.
+
+#### 5. Origem da rajada (`ssr_access`)
+
+Não foi possível identificar IP ou User-Agent externo. O container atual do frontend iniciou às `2026-11-12T19:10:08Z`, posterior ao incidente, e `docker logs --timestamps --since 2026-11-12T06:20:00Z --until 2026-11-12T06:30:00Z sharebook-frontend` não contém `ssr_access` para a janela. Portanto não há IP preservado para validar DNS reverso `googlebot.com`; não é correto atribuir a rajada ao Googlebot.
+
+Como contraprova parcial, a API registra que 99,6% das 943 respostas da rajada tinham `User-Agent: node.js`: isso identifica o **SSR como chamador da API**, não o visitante/bot original.
+
+LogQL usado para essa contraprova:
+
+```logql
+{service_name="sharebook-api"} |= "responded"
+```
