@@ -150,6 +150,8 @@ Ainda falta amadurecer:
 
 Atualizacao 2026-10-11: o gatilho aconteceu (restart do container apagou os logs da janela de um incidente do Rollbar). Primeira fatia entregue so para a API, sem infra nova: sink OTLP do Serilog direto para Grafana Cloud Logs, com `ClientIp` e `UserAgent` em todo log da requisicao. Ver `playbooks/engineering/backend.md`, secao "Onde estao os logs". Pendente: `ssr_access` do frontend, e access log do Traefik (hoje desligado).
 
+Atualizacao 2026-11-12: o incidente de 03:26 BRT (ver `protecao-sobrecarga-ssr.md`) mostrou o custo dessas lacunas: nao foi possivel identificar o bot nem reconstruir consultas lentas, locks ou conexoes do minuto. Acrescentar ao pendente: `pg_stat_statements`, `log_min_duration_statement` (ex: 1s), `log_lock_waits=on` e `track_io_timing=on` no Postgres; e uma metrica ou log de **requisicoes simultaneas em andamento** na API e no SSR (o limite de concorrencia do SSR ja registra recusas e pico no log do container).
+
 ### 7. Crawlers, SEO e trafego nao humano
 
 Usar metricas, logs SSR e Search Console para separar:
