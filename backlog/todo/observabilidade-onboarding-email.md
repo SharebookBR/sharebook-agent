@@ -11,7 +11,17 @@ Implementado e publicado em `master` em 2026-11-12:
 - backend `c29b150` — tracking, endpoints públicos, migration, métricas e testes;
 - frontend `f931cb1` — painel admin em `/admin/onboarding` e acesso pelo Painel.
 
-Pendente apenas a validação de produção: migration aplicada, novo e-mail recebido, pixel registrado, redirect do CTA preservado e painel consolidando a etapa. Não há backfill dos e-mails enviados antes desta versão.
+Validação de produção concluída: migration aplicada, novo e-mail recebido, pixel registrado, redirect do CTA preservado e painel consolidando a etapa. Não há backfill de telemetria para e-mails enviados antes desta versão.
+
+## Rollout da base legada
+
+Implementado em 2026-11-12 como job semanal **LegacyOnboardingBackfill**:
+
+- inicia até 2.000 jornadas por lote, a cada 7 dias;
+- seleciona contas elegíveis criadas antes de 23/10/2026 18:26 UTC, do cadastro mais novo para o mais antigo;
+- exclui contas sem consentimento, inativas/pendentes, já inscritas na jornada e hard bounces conhecidos;
+- grava no histórico do job a janela processada e um cursor composto por `CreationDate` e `UserId`, para o lote seguinte continuar exatamente do ponto anterior;
+- a entrega dos e-mails segue o MailSender de baixa prioridade já existente, sem aumentar seu limite.
 
 ## Objetivo
 
