@@ -15,15 +15,15 @@ Validação de produção concluída: migration aplicada, novo e-mail recebido, 
 
 ## Rollout da base legada
 
-Implementado em 2026-11-12 como job semanal **LegacyOnboardingBackfill**:
+Implementado em 2026-11-12 como job quinzenal **LegacyOnboardingBackfill**:
 
-- inicia até 2.000 jornadas por lote, a cada 7 dias;
+- inicia até 2.000 jornadas por lote, a cada 15 dias;
 - seleciona contas elegíveis criadas antes de 23/10/2026 18:26 UTC, do cadastro mais novo para o mais antigo;
 - exclui contas sem consentimento, inativas/pendentes, já inscritas na jornada e hard bounces conhecidos;
 - grava no histórico do job a janela processada e um cursor composto por `CreationDate` e `UserId`, para o lote seguinte continuar exatamente do ponto anterior;
 - a entrega dos e-mails segue o MailSender de baixa prioridade já existente, sem aumentar seu limite.
 
-Lote 1 executado em produção em 12/11/2026 às 03:49 UTC: 2.000 jornadas criadas, cobrindo cadastros de 23/10/2026 13:55 UTC até 05/09/2023 14:52 UTC. Restaram 20.481 contas elegíveis; o próximo lote continuará abaixo desse cursor na próxima execução semanal.
+Lote 1 executado em produção em 12/11/2026 às 03:49 UTC: 2.000 jornadas criadas, cobrindo cadastros de 23/10/2026 13:55 UTC até 05/09/2023 14:52 UTC. Restaram 20.481 contas elegíveis; o próximo lote continuará abaixo desse cursor após 15 dias.
 
 ## Objetivo
 
