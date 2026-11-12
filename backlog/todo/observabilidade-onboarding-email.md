@@ -4,6 +4,15 @@
 
 Prioridade 2 desde 2026-11-12, por decisão do Raffa.
 
+## Progresso
+
+Implementado e publicado em `master` em 2026-11-12:
+
+- backend `c29b150` — tracking, endpoints públicos, migration, métricas e testes;
+- frontend `f931cb1` — painel admin em `/admin/onboarding` e acesso pelo Painel.
+
+Pendente apenas a validação de produção: migration aplicada, novo e-mail recebido, pixel registrado, redirect do CTA preservado e painel consolidando a etapa. Não há backfill dos e-mails enviados antes desta versão.
+
 ## Objetivo
 
 Medir o efeito real da jornada fixa de cinco e-mails de onboarding sem depender do GA4: etapas enfileiradas, aberturas rastreáveis e cliques nos CTAs, com uma tela administrativa de acompanhamento.
