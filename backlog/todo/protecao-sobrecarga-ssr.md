@@ -10,7 +10,7 @@
 | 2. Timeout de 4 s no front | **Publicada** em `sharebook-frontend` master (`598e310`, mensagem de 503 em `c526152`). Aguarda deploy. |
 | 3a. Cache de `Recommendations` no backend | **Publicada** em `sharebook-backend` master (`6d4f2cb`), 279 testes passando. Aguarda deploy (automático via Coolify). |
 | 3b. `Timeout`/`Command Timeout` do Npgsql | Pendente de configuração no Coolify (tarefa T2 do OpenClaw). |
-| 4. Logs do SSR no Loki | Pendente (tarefa T3 do OpenClaw). |
+| 4. Logs do SSR no Loki | **Feito** (T3, `e11431d`) com script Python provisório; **substituição por Grafana Alloy** na T5 (rodada 3). |
 
 ### O que a fatia 2 mudou (2026-11-12)
 
@@ -263,3 +263,34 @@ systemctl daemon-reload
 Traefik: o container `coolify-proxy` não tem `--accesslog` configurado. Habilitá-lo exigiria alterar a configuração gerenciada do proxy e geraria uma linha por request; preservar IP/User-Agent exigiria manter headers e aumenta volume/PII em log. Não foi ativado, conforme pedido. O `ssr_access` recém-centralizado já cobre IP e User-Agent que chegam ao SSR.
 
 T4 não foi executada: aguarda confirmação do Raffa.
+
+## Tarefas do OpenClaw (rodada 3)
+
+Responder em "Respostas do OpenClaw (rodada 3)" abaixo, com evidência (comando ou query e saída resumida). Mesma regra da rodada 2: tudo que altera produção registra antes o estado atual e a reversão, e nada é inventado.
+
+**Contexto da T5.** O coletor atual (`ship_docker_logs_to_otlp.py`, T3) funciona mas é frágil: uma requisição HTTP por linha, linha descartada se falhar, buraco de ~3 s no restart do container e severidade sempre `INFO`. Numa rajada de centenas de linhas por segundo, que é o cenário do incidente, ele atrasa e pode perder linhas. Decisão do Raffa: usar o **Grafana Alloy** (coletor oficial; o Promtail chegou ao fim da vida em 2026-03-02), **só para o frontend por enquanto**. O Alloy faz lotes, reenvio, controle de ritmo e guarda a posição de leitura. Alternativa descartada: Log Drain do Coolify com Fluent Bit (exige redeploy do frontend, muda o driver de log do container e tem relatos de crash em loop, ver `coollabsio/coolify` #2764 e #5327).
+
+**T1b. Deploy do frontend (somente leitura).** A T1 anterior encontrou o frontend em `598e310`. Confirmar se já roda `c526152` ou mais novo. Se ainda não, dizer o que o Coolify mostra para o deploy (fila, erro de build, webhook) e, se o deploy não foi disparado, seguir o procedimento de "Deploy manual quando o webhook não enfileira" de `playbooks/infra/coolify-vps.md`, avisando o Raffa antes.
+
+**T2b. Acompanhamento do `Command Timeout=15` depois de uma noite inteira.** Os jobs noturnos da API usam a mesma connection string, e uma consulta legítima acima de 15 s agora seria cortada. Procurar no Loki, entre 22:00 e 08:00 BRT, ocorrências de `timeout`, `Npgsql`, `canceling statement` e `pool` na API, e comparar com a noite anterior à mudança. Informar também se algum job (`JobHistories`) falhou ou ficou mais lento. Se houver corte de rota ou job legítimo, reverter o `Command Timeout` para um valor maior (ou removê-lo) e relatar qual consulta e quanto ela leva.
+
+**T5. Grafana Alloy só para o frontend, no lugar do script Python.**
+1. **Cota.** Informar o plano atual do Grafana Cloud e quanto de logs já é usado por mês (volume ingerido e limite), antes de qualquer mudança.
+2. **Endpoint.** O Alloy envia ao endpoint **Loki** (`.../loki/api/v1/push`), que é diferente da URL OTLP usada hoje. Localizar a URL e o usuário (instance ID) da stack e confirmar se o token atual com escopo de escrita de logs serve. Se for preciso um token novo, **pedir ao Raffa por mensagem no backlog**; nunca colocar valor de segredo em arquivo, commit ou resposta.
+3. **Instalação isolada.** Instalar a versão estável atual do Alloy como serviço separado (container próprio ou pacote com systemd, o que for mais simples e reversível), com `docker.sock` somente leitura. Não alterar o container do frontend, o Traefik nem a configuração do Coolify. Credenciais em arquivo com modo 0600, como na T3.
+4. **Configuração mínima**, só o frontend: `discovery.docker` → `discovery.relabel` (manter apenas o container `sharebook-frontend`) → `loki.source.docker` → `loki.write`. Rótulos: `service_name="sharebook-frontend"` e `deployment_environment="production"`, para as consultas atuais continuarem funcionando. **Não promover IP, rota ou User-Agent a rótulo** (cardinalidade); eles ficam no corpo JSON, consultáveis com `| json`. Se for simples, mapear `ssr_overloaded` para nível de aviso. Registrar o arquivo de configuração usado (sem segredos) no próprio backlog.
+5. **Validação sem duplicar.** Primeiro enviar com `service_name="sharebook-frontend-alloy-test"` enquanto o script Python continua ativo. Conferir por LogQL que as linhas do Alloy batem com as do script (mesma contagem de `ssr_access` em uma janela de 10 min). Gerar uma requisição com User-Agent único, como na T3, e achá-la nos dois.
+6. **Restart sem buraco.** Validar a continuidade no **próximo deploy real** do frontend (T1b), sem forçar um restart extra: nenhum trecho do log pode faltar entre o container antigo e o novo.
+7. **Troca.** Só depois de 5 e 6: trocar o rótulo para `sharebook-frontend`, desligar e remover o serviço `sharebook-frontend-log-shipper` (reversão da T3 já está registrada) e deixar o Alloy como único coletor. Remover `playbooks/engineering/analytics/scripts/ship_docker_logs_to_otlp.py` do repositório e atualizar `playbooks/engineering/grafana-cloud-explorer.md` e o épico de observabilidade com o fluxo novo.
+8. **Custo e saúde.** Registrar uso de CPU e memória do Alloy (`docker stats`) depois de 24 h e quanto de log ele envia por dia.
+9. **Reversão.** Descrever como voltar ao script Python (reinstalar o serviço da T3) caso o Alloy dê problema.
+10. **Próximas fases, só registrar, não fazer:** (a) logs dos demais containers, exceto a API, que já envia por OTLP e duplicaria; (b) métricas de container, host e Postgres. Anotar se o `coolify-sentinel` já coleta CPU e memória por container.
+
+**T6. Conferir o documento de arquitetura.** Ler `playbooks/infra/arquitetura-sharebook.md` (rascunho de Claude, ainda não verificado no servidor). Corrigir o que estiver errado, responder a lista "A confirmar" marcando cada item, e acrescentar o que faltar (containers reais, volumes, como o deploy é disparado). Fazer commit direto no arquivo; nada em produção é alterado nesta tarefa.
+
+**T4 continua aguardando** o deploy do frontend (T1b) e a confirmação do Raffa.
+
+### Respostas do OpenClaw (rodada 3)
+
+_(pendente)_
+
