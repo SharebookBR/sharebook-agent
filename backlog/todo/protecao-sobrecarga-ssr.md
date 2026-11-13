@@ -916,3 +916,95 @@ Não invalidei a home: o playbook exige POST autenticado que remove cache em pro
 Reservar aproximadamente **2 vCPUs de responsividade** para API, Postgres, Traefik, kernel e serviços residentes. Não há cálculo honesto de MiB/CPU por renderização: T9 mostrou 346–452 ms isolados, mas não preservou CPU; o frontend já tem ~803 MB RSS, OpenClaw 1,096 GiB, browser 80 MiB e swap global 2,2 GiB.
 
 A evidência aponta **contenção de recursos da VPS/API sob rajada**, não pool Postgres (máximo anterior de 2 conexões), mas não prova falta permanente de recursos: a fotografia atual tinha load 0,87 em 15 min e 3,5 GiB disponíveis. Antes de elevar o teto, usar origem externa e CPU/cgroup confiável; para reduzir o risco estrutural, decidir entre VPS maior e menos SSR via [pré-renderização](pre-renderizacao-paginas-publicas.md). Nenhuma configuração, container ou deploy foi alterado.
+
+### Respostas do OpenClaw (rodada 5)
+
+#### Registro pré-alteração — limites SSR e promoção Alloy
+
+Autorização explícita do Raffa para aplicar a recomendação T10. Antes de qualquer
+mudança, frontend `c526152` e API `6d4f2cb` estavam `running` e `healthy`,
+ambos com 0 restarts. `SSR_MAX_CONCURRENT_RENDERS` e
+`SSR_MAX_CONCURRENT_BOT_RENDERS` não existiam no ambiente do container; os
+padrões efetivos do código eram, portanto, **30** e **18**. A reversão já
+registrada é remover as duas variáveis pelo model
+`App\\Models\\EnvironmentVariable` do Coolify e redeployar o frontend.
+
+```bash
+docker inspect sharebook-frontend ...health...restarts...
+docker inspect sharebook-api ...health...restarts...
+docker inspect sharebook-frontend --format '{{range .Config.Env}}{{println .}}{{end}}' \
+  | cut -d= -f1 | grep -E '^SSR_MAX_CONCURRENT_(RENDERS|BOT_RENDERS)$' || true
+```
+
+O monitor automático de promoção descrito na rodada 3 não está ativo: não há
+unit systemd, crontab, script operacional nem cron OpenClaw correspondente.
+Logo ele não poderia distinguir novo ID de container versus imagem nova. Este
+redeploy será a promoção **manual** prevista pela revisão: após o container
+novo ficar saudável, apagar posições de teste, trocar o rótulo do Alloy,
+comparar a virada por minuto e só então desligar o shipper Python se não houver
+buraco nem duplicata.
+
+Estado imediatamente antes da promoção manual: shipper Python `active` e
+`enabled`; Alloy `running`, 0 restarts, ainda em
+`ALLOY_SERVICE_NAME=sharebook-frontend-alloy-test`; o diretório persistente de
+posições é `/opt/sharebook-frontend-alloy/data`. Reversão da promoção, se a
+comparação falhar: restaurar esse rótulo no arquivo protegido, reiniciar Alloy,
+reativar/habilitar o shipper Python e parar Alloy se for necessário voltar ao
+coletor único anterior. Nenhum segredo será lido ou registrado.
+
+#### Aplicação — observação limpa interrompida pelo V2
+
+Pelo model `App\\Models\\EnvironmentVariable` do Coolify, criei as duas
+variáveis runtime e enfileirei o redeploy `jfdesnqetxksgusts4odb4vh` (finalizado).
+O novo container `bcaf7da…`, mesma imagem `c526152`, iniciou às 23:19:06Z
+`healthy`, 0 restarts; a API também permaneceu `healthy`. Confirmação no
+container, sem listar outros envs: `SSR_MAX_CONCURRENT_RENDERS=6` e
+`SSR_MAX_CONCURRENT_BOT_RENDERS=3`.
+
+Como o monitor de promoção antigo não existia, fiz a promoção manual às
+23:20:41Z: parei (sem remover) o shipper Python, parei Alloy, apaguei somente
+`data/loki.source.docker.frontend/positions.yml`, troquei o rótulo de teste
+por `sharebook-frontend` no arquivo 0600 e subi Alloy (`running`, 0 restarts).
+A observação limpa de 30 min e a comparação de virada não foram concluídas:
+o Raffa autorizou o V2 antes do seu término. Por isso o shipper continua
+parado, mas não foi removido/desabilitado, e a reversão registrada continua
+válida.
+
+### Respostas do OpenClaw (rodada 6)
+
+#### V2 — abortado no início da etapa humana c=3
+
+O Raffa mandou iniciar antes de a observação limpa de 30 min da rodada 5
+terminar; isso fica registrado como exceção à pré-condição original. A
+pré-checagem às `2026-11-13T23:27:35Z` confirmou frontend/API `healthy`, 0
+restarts, Alloy `running`, variáveis efetivas `SSR_MAX_CONCURRENT_RENDERS=6`
+e `SSR_MAX_CONCURRENT_BOT_RENDERS=3`, home 200 em 56 ms e PDP 200 em 444 ms.
+Antes do teste: RAM usada 3.130.380.288 bytes, swap usada
+2.326.007.808 bytes e load 3,18 / 2,23 / 1,36. A origem era a própria VPS;
+o gerador Go foi limitado a um CPU com `taskset -c 3` e prioridade `nice 19`.
+
+O teste foi interrompido antes de fechar a primeira etapa: foram **23 GETs**
+humanos c=3, todos HTTP 200. O monitor escreveu uma única amostra:
+
+```text
+frontend/API healthy, 0 restarts; CPU host 36,8%; swap 2.321.813.504 bytes;
+pg_stat_activity 10 total / 0 active; frontend 88,88% CPU, API 44,77%.
+vmstat si=4, so=0; 0 erros API.
+```
+
+O abort foi **técnico do monitor, não um gatilho comprovado do site**: sua
+primeira versão parava em qualquer `si>0`, mas o critério autorizado exige
+swap-in/out intenso por 10 s consecutivos. Logo, não há evidência de 500, 503,
+Npgsql, crescimento de swap >300 MiB, healthcheck falho ou restart; tampouco
+há dados para avaliar os critérios de carga. Por segurança e pela regra de
+não insistir após parada, não reiniciei o teste. O arquivo de amostras está em
+`codex-temp/ssr-v2-run/20261113T2334Z/` no runtime e não é versionado. As 27
+PDPs frias somando a tentativa de aquecimento anterior não materializam o
+efeito de encher cache SSR de até 1.000 páginas; não foi observada primeira
+visita lenta posterior.
+
+Comandos principais: `taskset -c 3 nice -n 19 ssr-v2-load`, monitor de 1 s
+por SSH com `docker stats`, `free -b`, `/proc/loadavg`, `vmstat` e
+`pg_stat_activity`. Nenhuma configuração, container ou deploy foi alterado
+pelo V2. Os critérios "Log de recusas em produção" e "No próximo pico"
+permanecem não verificáveis nesta execução abortada; o item não foi movido.
