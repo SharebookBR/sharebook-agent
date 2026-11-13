@@ -262,7 +262,65 @@ systemctl daemon-reload
 
 Traefik: o container `coolify-proxy` não tem `--accesslog` configurado. Habilitá-lo exigiria alterar a configuração gerenciada do proxy e geraria uma linha por request; preservar IP/User-Agent exigiria manter headers e aumenta volume/PII em log. Não foi ativado, conforme pedido. O `ssr_access` recém-centralizado já cobre IP e User-Agent que chegam ao SSR.
 
-T4 não foi executada: aguarda confirmação do Raffa.
+#### T4 — baseline pós-deploy (medição parcial; janela ainda aberta)
+
+O Raffa autorizou a T4 em 2026-11-13. O frontend `c526152` iniciou em
+`2026-11-12T21:38:25Z`; as primeiras 24 horas só terminam em
+`2026-11-13T21:38:25Z` (18:38 BRT). Esta é uma medição **parcial**, somente
+leitura, até `2026-11-13T12:34:17Z`; a conclusão e qualquer decisão de mover
+este item aguardam a repetição agendada para 18:45 BRT.
+
+LogQL coletada em blocos de 15 minutos para não truncar resultados; as
+durações vieram de `responded ... in X ms` e os percentis usam interpolação
+linear sobre a amostra ordenada:
+
+```logql
+{service_name="sharebook-api"} |= "responded"
+{service_name="sharebook-api"} |~ "(?i)(connection pool|connection to database|npgsql|canceling statement|timeout)"
+{service_name="sharebook-frontend"} |~ "ssr_(access|overloaded)"
+```
+
+| medida parcial (21:38:25Z–12:34:17Z) | resultado | baseline anterior |
+|---|---:|---:|
+| `Slug` | n=6.777; p50 **5,19 ms**; p95 **23,32 ms** | p50 5,28 ms; p95 23,59 ms |
+| `Recommendations` | n=6.111; p50 **191,92 ms**; p95 **319,43 ms** | p50 221,69 ms; p95 425,90 ms |
+| rotas de banco (`Slug`, `Recommendations`, tags, `Category`, `CategoryTree`) | 22.075 respostas; pico reconstruído **21** em andamento, às 09:25:45Z | incidente: 223 |
+| `ssr_overloaded` | **0** linhas; logo nenhum `peakInFlight` registrado | — |
+| `ssr_access` com status 503 | **0**; não houve 503 de degradação no log | — |
+| respostas API 500 e erros de conexão/pool/Npgsql/timeout | **0** e **0** linhas, respectivamente | — |
+
+O frontend ainda é o mesmo container saudável `cba0d6b2…`, imagem
+`c526152…`, iniciado em `2026-11-12T21:38:25Z`, sem restart. O Alloy continua
+em teste e o shipper Python está `active`/`enabled`; portanto a promoção ainda
+não ocorreu e não foi provocada nesta tarefa.
+
+Fotografia do Postgres às 12:35Z, não uma série histórica: `pg_stat_activity`
+mostrou **1** conexão da base, **1** ativa, maior duração ativa **0,000 s**;
+`docker stats` mostrou **0,57% CPU**, **26,37 MiB / 7,755 GiB** (**0,33%**).
+Não há nesta consulta uma fonte de métricas históricas de CPU/memória/conexões,
+portanto ela não permite afirmar o pico do Postgres em toda a janela.
+
+Comandos de produção, todos somente leitura e sem imprimir credenciais:
+
+```bash
+docker inspect -f '{{.Config.Image}}|{{.State.Status}}|{{.State.StartedAt}}|{{.RestartCount}}' sharebook-frontend
+systemctl is-active sharebook-frontend-log-shipper.service
+systemctl is-enabled sharebook-frontend-log-shipper.service
+# frontend c526152 healthy, 0 restarts; Alloy running; shipper active/enabled
+
+# dentro do container Postgres, usando POSTGRES_USER/POSTGRES_DB sem exibir valores:
+psql -Atc "select count(*), count(*) filter (where state = 'active'), max(now()-query_start) from pg_stat_activity ..."
+# 1|1|0.000
+docker stats --no-stream ...
+# 0.57% CPU | 26.37MiB / 7.755GiB | 0.33%
+```
+
+O teste focal do limitador passou: `npm test -- --include=src/app/core/ssr/ssr-render-limiter.spec.ts` → **7/7 SUCCESS**. Ele cobre teto total, teto menor para bots, liberação e pico; a revisão final da validação deve registrar que ainda não há teste HTTP que demonstre diretamente `503` + `Retry-After` nem teste automatizado de HIT/coalescido fora do limitador. O código os trata antes de `renderSsr`, mas isso não substitui a cobertura pedida no critério.
+
+T4 não é concluída nesta medição parcial. A repetição de 24 h foi agendada para
+**2026-11-13 18:45 BRT** (`2026-11-13T21:45:00Z`); ela repetirá as queries,
+avaliará todos os critérios de `Validação` e só então decidirá se o item pode ir
+para `backlog/done/`.
 
 ## Tarefas do OpenClaw (rodada 3)
 
