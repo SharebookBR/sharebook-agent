@@ -292,5 +292,84 @@ Responder em "Respostas do OpenClaw (rodada 3)" abaixo, com evidência (comando 
 
 ### Respostas do OpenClaw (rodada 3)
 
-_(pendente)_
+#### T1b — deploy do frontend
 
+**Passou.** O frontend já roda `c526152f340418ce4d9e0a3d8da0b7334955f5b4`, está `healthy` e iniciou em `2026-11-12T21:38:25Z`. Logo, inclui o limitador, o timeout SSR de 4 s e a resposta 503 corrigida. Não houve deploy manual nem alteração de produção.
+
+```bash
+docker ps --format '{{.Names}}|{{.Image}}|{{.Status}}'
+docker inspect -f '{{.Config.Image}}|{{.State.Status}}|{{.State.Health.Status}}|{{.State.StartedAt}}' sharebook-frontend
+```
+
+Saída relevante: `sharebook-frontend|...:c526152...|Up ... (healthy)`. A API também está saudável no `6d4f2cb`.
+
+#### T6 — arquitetura
+
+Conferi e reescrevi diretamente `playbooks/infra/arquitetura-sharebook.md`, removendo os itens pendentes que foram verificáveis. O documento agora registra, entre outros pontos:
+
+- SSR chama `https://api.sharebook.com.br/api`, portanto passa pelo Traefik, não por rota Docker interna;
+- uma réplica de frontend e uma de API; jobs executam no processo da API e não existe container `Sharebook.Jobs`;
+- capas no bind `Images/Books` da API e PDFs/e-books no S3 por URL pré-assinada;
+- inventário real de containers, volumes relevantes, GitHub App como source de deploy e backups atuais;
+- Sentinel confirmado como processo que envia dados ao Coolify a cada minuto, mas sem afirmar quais métricas ele retém; e restore drill ainda sem evidência de execução concluída.
+
+Comandos/evidências principais:
+
+```bash
+docker ps --format '{{.Names}}|{{.Image}}|{{.Status}}'
+docker inspect -f '{{range .Mounts}}{{println .Type .Source .Destination .RW}}{{end}}' sharebook-api
+docker exec coolify-db psql ... 'select name, source_type, swarm_replicas, status from applications ...'
+docker exec coolify-db psql ... 'select ... from scheduled_*_backup*_executions ...'
+```
+
+Confirmações observadas: API e frontend com `swarm_replicas=1`; mount da API somente em `/app/wwwroot/Images/Books`; backup de volume mais recente com `s3_uploaded=true` e ~1,23 GB; dumps recentes com tamanhos coerentes. Não foi feita nenhuma alteração em produção nesta tarefa.
+
+#### T2b — acompanhamento do `Command Timeout=15`
+
+**Observação parcial, ainda não uma noite inteira.** A janela pedida é 22:00–08:00 BRT, mas a coleta ocorreu às 01:12 BRT; portanto ela cobre somente `2026-11-13 01:00–04:12 UTC` (22:00–01:12 BRT). Não antecipei uma conclusão de manhã inteira.
+
+LogQL usada nos dois recortes:
+
+```logql
+{service_name="sharebook-api"} |~ "(?i)(timeout|npgsql|canceling statement|pool)"
+```
+
+| janela | resultado Loki |
+|---|---:|
+| pós-mudança parcial, 22:00–01:12 BRT | **0** linhas |
+| noite anterior, 22:00–08:00 BRT | **127** linhas, concentradas no incidente de pool de 03:26 BRT de 12/11 |
+
+Também consultei `JobHistories` sem expor detalhes de jobs. Na parte observada após a mudança, 39 execuções de `JobExecutor`, 39 de `MailSender`, 39 de `OnboardingEmailSender` e uma de `MeetupSearch` tiveram **0 falhas**. `JobExecutor` teve média de **1,96 s** e máximo de **3,30 s**, comparado à noite anterior com média de **1,88 s** e máximo de **4,13 s** (121 execuções, 0 falhas). Não há evidência de corte de rota ou job legítimo, portanto **não reverti** o `Command Timeout=15`; a reversão registrada na rodada 2 continua disponível se a janela completa mostrar problema.
+
+```sql
+select "JobName", count(*),
+       count(*) filter (where not "IsSuccess"),
+       avg("TimeSpentSeconds"), max("TimeSpentSeconds")
+from "JobHistories"
+where "CreationDate" >= timestamptz '2026-11-13 01:00:00+00'
+  and "CreationDate" < timestamptz '2026-11-13 04:12:48+00'
+group by "JobName";
+```
+
+#### T5 — Grafana Alloy para logs do frontend
+
+**Bloqueada antes de qualquer instalação por falta de credencial de escrita Loki válida.** Não instalei Alloy, não alterei frontend, Traefik, Coolify ou o coletor atual.
+
+Estado pré-alteração e reversão, registrados antes de uma eventual troca:
+
+- `sharebook-frontend-log-shipper.service` está `active` e `enabled`; executa o script Python atual, com `Restart=always` e `RestartSec=3`.
+- O arquivo de credenciais do shipper existente está em modo `0600`; nenhum valor foi lido nem registrado.
+- Não há container Alloy em execução. A reversão de uma futura troca será restaurar este serviço exatamente como está (unit + script + arquivo de credenciais 0600), habilitá-lo e só então remover/parar Alloy.
+
+```bash
+systemctl is-active sharebook-frontend-log-shipper.service
+systemctl is-enabled sharebook-frontend-log-shipper.service
+systemctl cat sharebook-frontend-log-shipper.service   # EnvironmentFile oculto
+docker ps --format '{{.Names}}|{{.Image}}' | grep -i alloy
+```
+
+Resultado: `active`, `enabled`, script presente, nenhum Alloy.
+
+O token OTLP atual foi testado em memória contra o endpoint Loki de push com corpo vazio (`{"streams":[]}`), sem imprimir URL, usuário ou token, e recebeu **HTTP 401**. Ele não pode ser reutilizado pelo Alloy. As credenciais disponíveis também não dão acesso ao plano/uso mensal da conta Grafana Cloud: Loki permite consulta de logs, mas não expõe billing/usage com esses tokens. Há menção histórica ao plano Free e retenção de 14 dias nos playbooks, mas isso **não foi tratado como confirmação do plano ou da cota atual**, e volume mensal/limite não foram inventados.
+
+**Pedido ao Raffa para continuar T5:** criar um token de Access Policy da stack Grafana Cloud com escopo `logs:write` para o tenant Loki e disponibilizá-lo somente no `.env` canônico como `GRAFANA_CLOUD_LOGS_WRITE_TOKEN` (modo 0600; não colar valor neste backlog, commit ou Telegram). Também é necessário acesso de leitura ao billing/usage, ou a informação de plano e uso mensal exibida pela conta, para registrar a cota antes da instalação. Depois disso, valido o token, instalo o Alloy isolado e sigo a dupla escrita/teste sem duplicação.
