@@ -1,0 +1,38 @@
+// Secret-free Grafana Alloy configuration for the Sharebook frontend only.
+// Credentials and target service label are supplied by the 0600 environment file.
+
+discovery.docker "frontend" {
+  host = "unix:///var/run/docker.sock"
+}
+
+discovery.relabel "frontend" {
+  targets = discovery.docker.frontend.targets
+
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    regex         = "/sharebook-frontend"
+    action        = "keep"
+  }
+}
+
+loki.source.docker "frontend" {
+  host       = "unix:///var/run/docker.sock"
+  targets    = discovery.relabel.frontend.output
+  forward_to = [loki.write.grafana.receiver]
+
+  labels = {
+    service_name           = sys.env("ALLOY_SERVICE_NAME"),
+    deployment_environment = "production",
+  }
+}
+
+loki.write "grafana" {
+  endpoint {
+    url = sys.env("GRAFANA_CLOUD_LOGS_LOKI_URL") + "/loki/api/v1/push"
+
+    basic_auth {
+      username = sys.env("GRAFANA_CLOUD_LOGS_WRITE_USER")
+      password = sys.env("GRAFANA_CLOUD_LOGS_WRITE_TOKEN")
+    }
+  }
+}
