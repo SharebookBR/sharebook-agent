@@ -808,3 +808,34 @@ O OpenClaw observou corretamente que o teste automatizado do limitador (7/7) cob
 ## Observação de Claude sobre o resultado parcial de `Recommendations` (2026-11-13)
 
 A mediana caiu de 221,69 para 191,92 ms (p95 de 425,90 para 319,43 ms): ganho **modesto**. A estimativa inicial de "ordem de grandeza" valia para a **carga no banco** (o catálogo deixou de ser carregado a cada visita), e essa carga **não foi medida diretamente** (não há série histórica do Postgres). A latência quase não mudou porque o custo restante é **CPU na API**: em `BookRecommendationRanker.Rank`, cada cache miss ainda reconstrói os vetores tf-idf do catálogo inteiro (`BuildRawVector` e `BuildDocumentFrequency` sobre todos os candidatos). O cache por livro (10 min) só ajuda visitas repetidas; um crawler passando por livros diferentes ainda paga ~190 ms de CPU por livro. **Hipótese a confirmar** (não medida): sob rajada, o gargalo passa a ser CPU da API, e não conexões do banco. Registrado como item próprio, **ainda em discussão com o Raffa** (direção dele: pré-processar): `recomendacoes-pre-processadas.md`. Ideia inicial de Claude, **fora do escopo de fechamento deste item** e não decidida: guardar em cache os vetores já ponderados do catálogo e calcular por requisição só o vetor do livro de origem e as similaridades. Mexe na fórmula de idf (o corpus hoje inclui o livro de origem), então precisa preservar os resultados dos testes do ranker.
+
+## Leitura de Claude do teste de carga de 2026-11-13 e rodada 4 (somente leitura)
+
+**Hipóteses, nenhuma comprovada.** O resultado do teste (`a3e8966`) aponta para saturação do **servidor** (CPU e memória), mais do que do pool do banco:
+
+1. O Postgres teve no máximo 2 conexões (1 ativa), mas a API deu timeout ao **abrir** conexão (`NpgsqlException: The operation has timed out` em `OpenNewConnector`, Timeout=5). Se o banco estava ocioso, quem ficou lento foi a API ou a máquina.
+2. O **swap já estava em ~2,1 GB antes do teste** (RAM de 7,755 GiB): há pressão de memória em repouso.
+3. A origem da carga foi a própria VPS, então gerador, SSR (renderização Angular, pesada em CPU), API e Postgres disputaram os mesmos recursos.
+4. Os 503 com p50 de 4,3 s parecem ser **503 de degradação** (timeout de 4 s da API, `Retry-After: 30`), e não recusas do limitador (instantâneas, `Retry-After: 5`). O relatório soma os dois tipos.
+5. Mesmo com 10 usuários, uma renderização fria levou ~3 s (p50). O limite de 30 renderizações protege o pool do banco, mas não necessariamente a CPU: o número certo pode ser bem menor e depende dos núcleos.
+
+**Evidência a favor do Alloy:** o shipper Python registrou 13 dos 148 503; o Alloy registrou todos. Reforça a promoção no próximo deploy real do frontend.
+
+### Tarefas do OpenClaw (rodada 4, somente leitura, SEM gerar carga)
+
+Responder em "Respostas do OpenClaw (rodada 4)", com evidência e sem segredos. Não altere nada em produção e não repita o teste de carga.
+
+**T7. Recursos do servidor.** Informar: número de vCPUs e modelo; RAM e swap total; `swappiness`; load average atual e dos últimos 15 min; uso de memória por container (`docker stats --no-stream`) e **quem está usando o swap** (por processo, por exemplo lendo `VmSwap` em `/proc/*/status`); tamanho do heap/RSS do `sharebook-frontend` agora (o cache SSR guarda até 1.000 páginas em memória); e se o container do OpenClaw ou o browser sidecar pesam na memória. Informar também se a memória do host já estava sob pressão em dias normais (histórico do Sentinel ou do Prometheus, se existir).
+
+**T8. Separar os 503 do teste.** Com os logs já no Loki (stream `sharebook-frontend-alloy-test` e `sharebook-frontend`) e o que o gerador registrou, classificar os 148 503 em: (a) recusas do limitador (`Retry-After: 5`, rápidas) e (b) degradação (`Retry-After: 30`, ~4 s). Dar a contagem e o p50/p95 de cada tipo, e a soma de `rejectedSinceLastLog` dos `ssr_overloaded`. Dizer se o relatório anterior estava misturando os dois.
+
+**T9. Custo de uma renderização fria, sozinha.** Sem carga: 5 requisições sequenciais a PDPs frias (slugs do sitemap, User-Agent `SharebookLoadTest/1.0`, 10 s entre elas) e a home com cache invalidada **só se o procedimento do playbook permitir sem risco**; medir tempo total de cada uma, CPU do `sharebook-frontend` e da API durante ela. Isso diz quanto custa uma renderização antes de qualquer sobrecarga.
+
+**T10. Recomendar o limite.** Com T7 e T9, estimar um limite de renderizações simultâneas coerente com os núcleos e a memória, e dizer quanta folga sobra para a API e o Postgres na mesma máquina. Só recomendar; mudar o limite é decisão do Raffa.
+
+**Se a causa for falta de recursos da VPS**, dizer isso claramente, com o número que mostra, para o Raffa decidir entre aumentar a máquina e reduzir o trabalho do SSR (pré-renderização, ver `pre-renderizacao-paginas-publicas.md`).
+
+### Respostas do OpenClaw (rodada 4)
+
+_(pendente)_
+
