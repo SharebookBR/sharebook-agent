@@ -460,6 +460,14 @@ O volume Loki de 24h já observado e registrado antes desta validação foi: API
 
 **Cota e estimativa real.** O plano informado pelo Raffa é Cloud Free, com limite de 50 GB/mês para logs; a página mostrava 0 GB. A API `GET /loki/api/v1/index/stats` do próprio Loki, na janela móvel de 24 h, retornou: `sharebook-api` **44.804.761 bytes / 130.205 entries** (~44,8 MB/dia), `sharebook-frontend` **2.468.566 bytes / 7.278 entries** (~2,47 MB/dia). Extrapolação linear bruta: ~**1,42 GB/mês** para API + frontend, muito abaixo de 50 GB. O stream de teste mostrava 680.989 bytes/2.282 entradas, pois o `loki.source.docker` fez backfill dos logs já existentes do container; ele não entra na estimativa de produção e será removido antes da promoção final.
 
+##### Pendência de endurecimento e promoção no próximo deploy (2026-11-13)
+
+`docker.sock:ro` **não** limita a API Docker a operações de leitura; ele só monta o arquivo do socket como somente leitura. A defesa adicional atual (imagem por digest, `cap-drop=ALL`, `no-new-privileges`, filesystem raiz somente leitura e credenciais 0600) permanece, mas há uma pendência explícita: antes de ampliar o Alloy para outros containers, interpor um proxy de socket que permita somente os endpoints Docker necessários para containers e logs, em modo leitura. Isto não bloqueia a promoção do frontend já aprovada.
+
+Baseline da promoção: em `2026-11-13T05:12Z`, o frontend era o container `cba0d6b2…` na imagem `c526152…`, iniciado em `2026-11-12T21:38:25Z` e `healthy`; o shipper Python estava `active` e o Alloy de teste `running`, com zero restarts. Um monitor aguardará um **novo container com imagem diferente**. Logo após esse deploy real, ele vai: parar o shipper, mudar o rótulo do Alloy para `sharebook-frontend`, apagar as posições de teste, reiniciar o Alloy e comparar por minuto `ssr_access` do log local e do Loki na virada. Sem restart artificial e sem remoção do shipper/script antes de a ausência de buraco e duplicata ficar demonstrada.
+
+T2b continua agendada para fechar a janela 22:00–08:00 BRT. T4 permanece sem execução até essa conclusão; depois será reportada como liberada para a confirmação do Raffa.
+
 ## Atualização do Raffa e de Claude sobre a T5 (2026-11-13)
 
 **O token novo provavelmente não é necessário.** O Raffa lembrou que já existe credencial de escrita: a própria API envia logs ao Grafana Cloud por OTLP (`GrafanaLogs__Endpoint` e `GrafanaLogs__Headers`, formato `Authorization=Basic <base64(usuario:token)>`, ver `ShareBook.Api/Logging/GrafanaLogsConfiguration.cs` no backend). É o mesmo tipo de credencial que o shipper da T3 já usa, e o OpenClaw testou esse token no endpoint **Loki de push** e recebeu 401.
@@ -498,4 +506,3 @@ Se preferir promover antes do deploy, comparar primeiro e **medir** quantas linh
 **2. `docker.sock` com `:ro` não torna a API do Docker somente leitura.** O `:ro` só impede escrita no arquivo do socket; quem o monta continua podendo chamar a API inteira (listar, criar e remover containers). A mitigação atual (`cap-drop=ALL`, `no-new-privileges`, rootfs somente leitura, imagem fixada por digest) é boa, mas não elimina o risco. Registrar como pendência de endurecimento, **não bloqueia a promoção**: colocar um proxy do socket (por exemplo `tecnativa/docker-socket-proxy`, expondo só os endpoints de containers e logs em modo leitura) entre o Alloy e o Docker. Avaliar antes de ampliar o Alloy para outros containers (fase 2).
 
 **3. Confirmado e registrado:** consumo de 0,14% de CPU e ~37 MiB; volume estimado de ~1,4 GB/mês para API e frontend contra 50 GB do plano Cloud Free (o "0 GB" da página de uso continua sem explicação).
-
