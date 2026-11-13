@@ -837,5 +837,82 @@ Responder em "Respostas do OpenClaw (rodada 4)", com evidência e sem segredos. 
 
 ### Respostas do OpenClaw (rodada 4)
 
-_(pendente)_
+#### T7 — recursos do servidor
 
+Fotografia somente leitura da VPS às `2026-11-13T19:57Z` (relógio do host): **4 vCPUs** (`AMD EPYC 9J45 128-Core Processor`), **7,8 GiB** de RAM e **4,0 GiB** de swap. Havia 3,6 GiB de RAM usados, 3,5 GiB disponíveis, 2,2 GiB de swap usados, `vm.swappiness=10` e load average **0,91 / 0,65 / 0,87** (1/5/15 min). Não era um host saturado nesse instante, mas o swap já era alto antes do teste e continuou alto depois.
+
+```bash
+nproc; lscpu | grep -E 'Model name|CPU\(s\)|Thread|Core|Socket'
+free -h; cat /proc/sys/vm/swappiness; uptime
+docker stats --no-stream --format '{{.Name}}|{{.CPUPerc}}|{{.MemUsage}}|{{.MemPerc}}|{{.PIDs}}'
+for f in /proc/[0-9]*/status; do ... awk '/^VmSwap:/{print $2}' "$f" ...; done
+docker top sharebook-frontend -eo pid,ppid,comm,rss,vsz
+grep -E '^(VmRSS|VmHWM|VmSize|VmSwap|RssAnon|RssFile):' /proc/<frontend-pid>/status
+```
+
+Snapshot de `docker stats --no-stream` (CPU/memória):
+
+| container | CPU | memória |
+|---|---:|---:|
+| `sharebook-frontend` | 15,55% | **801,2 MiB** |
+| `sharebook-api` | 10,78% | 274,7 MiB |
+| `sharebook-frontend-alloy` | 0,22% | 42,3 MiB |
+| `coolify` / `coolify-db` / `coolify-redis` / `coolify-sentinel` | 0,37% / 0,00% / 0,42% / 0,03% | 145,9 / 21,0 / 6,1 / 7,8 MiB |
+| `openclaw-*` | 1,31% | **1,096 GiB** |
+| `browser-*` | 1,40% | **80,1 MiB** |
+| `coolify-proxy` | 0,10% | 112,7 MiB |
+| `stalwart-*` / Postgres da aplicação / demais apps | 0,00–0,51% | 141,9 / 180,7 / 25,6–92,3 MiB |
+
+O processo Node do frontend tinha RSS **802.696 kB** (783.152 kB anônimos), HWM 1.577.980 kB e `VmSwap` 12.140 kB; o cgroup reportou 801.947.648 bytes anônimos. Não forcei inspector nem sinal no processo: o **RSS é verificável**, mas heap V8 interno não é exposto com segurança nesta leitura. O RSS inclui o cache SSR de até 1.000 páginas.
+
+Maiores `VmSwap`: `openclaw-gateway` 316.580 kB, `stalwart` 179.528 kB, `fwupd` 128.808 kB, `dockerd` 80.620 kB e o `dotnet` da API 78.448 kB; Chromium do browser sidecar soma dezenas de MiB (maior processo: 63.148 kB). A soma por processo foi 1.610.108 kB, menor que os 2,2 GiB de `free`, cuja contabilidade é global. OpenClaw **pesa materialmente**; o sidecar pesa menos, mas não é zero.
+
+Histórico de RAM/swap: **não verificável**. Sentinel está `running` e faz push por minuto, mas os logs não expõem séries e não há tabela de métricas no `coolify-db`; o `.env` tem credenciais Prometheus, porém não uma URL de leitura Mimir/Prometheus configurada. O aviso isolado do Sentinel às 22:48Z (`failed to list container sizes: docker: Timeout error`) não é série de pressão.
+
+#### T8 — separação dos 503 do teste autorizado
+
+Usei Alloy, o stream completo: **148** `ssr_access` 503. O shipper Python reteve apenas 13 (todos lentos). A classificação usa duração no `ssr_access` e os caminhos exclusivos do `server.ts`: limitador emite `Retry-After: 5`; degradação por falha de API emite `Retry-After: 30`.
+
+```logql
+{service_name="sharebook-frontend-alloy-test"} |= "SharebookLoadTest" |= "ssr_access"
+{service_name="sharebook-frontend-alloy-test"} |= "ssr_overloaded" |= "SharebookLoadTest"
+{service_name="sharebook-frontend"} |= "SharebookLoadTest" |= "ssr_access"
+```
+
+| tipo | regra observada | contagem | p50 | p95 |
+|---|---|---:|---:|---:|
+| recusa do limitador | 503 em <300 ms; `Retry-After: 5` pelo caminho do código | **48** | **0,58 ms** | **1,16 ms** |
+| degradação SSR | 503 em >=3 s; timeout da API, `Retry-After: 30` pelo caminho do código | **100** | **4.271,73 ms** | **5.085,59 ms** |
+| total antes misturado | ambos | **148** | **4.200,22 ms** | **4.863,56 ms** |
+
+Não houve intervalo intermediário: 48 ficaram entre 0,33 e 3,42 ms; 100 entre 4.094,07 e 5.620,71 ms. `ssr_access` não grava o header; o gerador registrou presença em 148/148, não o valor. Assim, 5 e 30 são inferências verificáveis pelos caminhos mutuamente exclusivos do código e pelas durações, não header inventado.
+
+Foram 5 linhas `ssr_overloaded`, todas com `peakInFlight=30`, `inFlight=30`, `maxTotal=30`, `maxBots=18`, `lastIsBot=false`; soma de `rejectedSinceLastLog`: **34**. Ela fica abaixo das 48 recusas rápidas porque o log é limitado a uma emissão por segundo e pode deixar rejeições finais sem descarregar. Para contar recusas, usar `ssr_access` Alloy. **Sim: o relatório anterior misturava as duas classes.** O p95 cliente anterior (5.723 ms) ainda inclui Traefik/rede.
+
+#### T9 — cinco renderizações frias, sem carga
+
+Fiz exatamente **5 GETs** sequenciais, `User-Agent: SharebookLoadTest/1.0`, para PDPs do sitemap fora da faixa usada pelo gerador anterior, iniciando a cada 10 s. A origem foi o próprio OpenClaw na VPS pela URL pública; limitação registrada, mas sem rajada. O Alloy confirmou:
+
+```logql
+{service_name="sharebook-frontend-alloy-test"} |= "SharebookLoadTest/1.0" |= "ssr_access"
+```
+
+| início UTC | PDP | status/cache | duração no SSR |
+|---|---|---|---:|
+| 23:01:24 | `meu-amigo-robo` | 200 / MISS | 358,68 ms |
+| 23:01:34 | `a-bruxa-de-salem` | 200 / MISS | 364,79 ms |
+| 23:01:44 | `a-biblioteca-invisivel` | 200 / MISS | 452,36 ms |
+| 23:01:54 | `tecnologia-de-informacao-o-uso-de-ti-pelas-em` | 200 / MISS | 359,37 ms |
+| 23:02:04 | `pro-linq-language-integrated-query-in-c-2010` | 200 / MISS | 346,31 ms |
+
+P50 **359,37 ms**, p95 **434,85 ms** no processo SSR. O temporizador ponta-a-ponta do cliente e a série de CPU por cgroup, iniciados junto da coleta, não foram preservados pelo runner; não os substituí por nova chamada porque o limite era estritamente cinco. Portanto **CPU por renderização e total externo não são verificáveis** nesta rodada; o snapshot T7 não foi usado como se fosse medição durante as chamadas.
+
+Não invalidei a home: o playbook exige POST autenticado que remove cache em produção, incompatível com somente leitura. Logo, não há medição fria da home.
+
+#### T10 — recomendação de limite (sem alteração)
+
+**Recomendação provisória ao Raffa: `SSR_MAX_CONCURRENT_RENDERS=6` e `SSR_MAX_CONCURRENT_BOT_RENDERS=3`, não 30/18.** É redução defensiva, não capacidade provada: com 4 vCPUs, 30 permite até 7,5 renderizações frias em voo por vCPU; c=30 já produziu 100 degradações de ~4–5 s, 12 500/Npgsql e aumento de swap. Com 6/3, há no máximo seis SSRs e bots ocupam no máximo metade, deixando três vagas para humanos.
+
+Reservar aproximadamente **2 vCPUs de responsividade** para API, Postgres, Traefik, kernel e serviços residentes. Não há cálculo honesto de MiB/CPU por renderização: T9 mostrou 346–452 ms isolados, mas não preservou CPU; o frontend já tem ~803 MB RSS, OpenClaw 1,096 GiB, browser 80 MiB e swap global 2,2 GiB.
+
+A evidência aponta **contenção de recursos da VPS/API sob rajada**, não pool Postgres (máximo anterior de 2 conexões), mas não prova falta permanente de recursos: a fotografia atual tinha load 0,87 em 15 min e 3,5 GiB disponíveis. Antes de elevar o teto, usar origem externa e CPU/cgroup confiável; para reduzir o risco estrutural, decidir entre VPS maior e menos SSR via [pré-renderização](pre-renderizacao-paginas-publicas.md). Nenhuma configuração, container ou deploy foi alterado.
