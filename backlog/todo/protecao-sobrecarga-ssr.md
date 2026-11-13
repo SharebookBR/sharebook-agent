@@ -322,6 +322,105 @@ T4 não é concluída nesta medição parcial. A repetição de 24 h foi agendad
 avaliará todos os critérios de `Validação` e só então decidirá se o item pode ir
 para `backlog/done/`.
 
+#### T4 — fechamento da janela completa pós-deploy (2026-11-13)
+
+Consulta concluída somente em leitura para a janela exata
+`2026-11-12T21:38:25Z`–`2026-11-13T21:38:25Z`, correspondente ao frontend
+`c526152` e à API `6d4f2cb`. As consultas foram paginadas em blocos de 10
+minutos, carregando as credenciais do `.env` somente em memória; nenhum segredo
+foi impresso ou registrado.
+
+LogQL repetida:
+
+```logql
+{service_name="sharebook-api"} |= "responded"
+{service_name="sharebook-api"} |= "/api/book/Slug/" |= "responded"
+{service_name="sharebook-api"} |= "/api/book/Recommendations/" |= "responded"
+{service_name="sharebook-api"} |~ "(?i)(connection pool|connection to database|npgsql|canceling statement|timeout)"
+{service_name="sharebook-frontend"} |~ "ssr_(access|overloaded)"
+```
+
+As durações foram extraídas de `responded ... in X ms`; p50 e p95 usam
+interpolação linear sobre a amostra ordenada.
+
+| rota | n | p50 | p95 | baseline anterior |
+|---|---:|---:|---:|---:|
+| `GET /api/book/Slug/` | 10.395 | **5,15 ms** | **19,11 ms** | 5,28 / 23,59 ms |
+| `GET /api/book/Recommendations/` | 9.332 | **192,35 ms** | **306,89 ms** | 221,69 / 425,90 ms |
+
+Foram 75.574 respostas `responded`. A reconstrução das rotas que tocam o
+Postgres (`Slug`, `Recommendations`, `tag`, `Category` e `CategoryTree`), com
+intervalos `[fim - duração, fim)`, encontrou 34.463 intervalos e pico de
+**21 requisições em andamento**, às `2026-11-13T09:25:45.475740Z`. Contagens
+por correspondência: Slug 10.383, Recommendations 9.320, tag 462,
+CategoryTree 285 e Category 14.319 (a correspondência de Category inclui
+CategoryTree). O pico é muito abaixo dos 223 observados no incidente, mas não
+é um pico equivalente para validar o comportamento sob rajada.
+
+Não houve linha de erro de conexão/pool/Npgsql/timeout na consulta de uma hora
+da API, nem resposta HTTP 500 (ou outra 5xx) na janela: **0 linhas e 0
+respostas 500**. Portanto não existe correlação de 500 por conexão a informar;
+não se infere causalidade a partir da ausência de eventos.
+
+No frontend, a consulta retornou 11.372 eventos `ssr_access`/`ssr_overloaded`:
+**0 `ssr_overloaded`**, sem `peakInFlight` registrado, e **0 `ssr_access`
+com status 503**. Isso é tráfego normal, não prova a resposta em um próximo
+pico.
+
+Estado/deploy verificado na VPS, sem alteração:
+
+```text
+sharebook-frontend: imagem ...:c526152f340418ce4d9e0a3d8da0b7334955f5b4,
+  running/healthy, iniciado 2026-11-12T21:38:25.749755627Z, 0 restarts
+sharebook-api: imagem ...:6d4f2cbd17ab8e06de3253ce6825e5e87d63abb0,
+  running/healthy
+Alloy: running, imagem fixada pelo digest registrado, serviço ainda com
+  ALLOY_SERVICE_NAME=sharebook-frontend-alloy-test
+shipper Python: active e enabled
+```
+
+Snapshot read-only atual do Postgres e containers (não é série histórica):
+
+```text
+pg_stat_activity: 1 conexão, 1 active, maior duração ativa 0,000 s
+docker stats: Postgres 0,01% / 161,9 MiB (2,04%); API 0,30% / 284,2 MiB
+  (3,58%); frontend 2,19% / 384,7 MiB (4,84%); Alloy 0,23% / 43 MiB (0,54%)
+```
+
+Não há nesta fotografia fonte histórica de CPU, memória, conexões ou carga do
+Postgres; portanto a queda de carga no banco ao longo das 24 horas é **não
+verificável** por esse snapshot. A connection string presente na API ainda
+confirma, sem exibir valor, `Maximum Pool Size=80`, `Timeout=5` e `Command
+Timeout=15`.
+
+#### Validação final da T4
+
+- **Teste unitário do limitador: atendido para o escopo coberto** —
+  `ssr-render-limiter.spec.ts` passou 7/7 e cobre teto total, teto de bots,
+  liberação e pico. O requisito completo, contudo, fica **não atendido** como
+  cobertura de integração: não há teste HTTP automatizado de `503` +
+  `Retry-After`, nem de HIT/coalescido; a evidência HTTP manual registrada
+  anteriormente não substitui esses testes.
+- **Log de recusas em produção: não verificável** — houve 0
+  `ssr_overloaded` e 0 status 503 no tráfego observado; não ocorreu pico que
+  exercitasse a recusa.
+- **No próximo pico / meta de zero 500 por estol: não verificável** — não houve
+  rajada equivalente; a janela normal teve 0 500 e 0 erro de conexão, o que não
+  valida esse cenário.
+- **Search Console: para o Raffa conferir**
+
+Conclusão: os números pós-deploy são saudáveis e melhores que o baseline, mas
+há critérios técnicos não atendidos ou não verificáveis. Este item permanece
+em `backlog/todo`; não foi movido para `backlog/done/`, e `backlog/index.md` e
+`backlog/done/index.md` não foram alterados. Ações sugeridas: adicionar teste
+HTTP automatizado para 503/Retry-After e HIT/coalescido; observar um pico
+controlado ou real equivalente antes de afirmar a validação de produção; e
+medir séries históricas do Postgres antes de concluir queda de carga. A
+promoção do Alloy permanece para o próximo deploy real, sem promovê-lo nesta
+rodada; o proxy read-only de `docker.sock`, restore drill sem evidência e fases
+2/3 (demais containers/Postgres) permanecem pendências próprias já registradas
+na T5. O link da pré-renderização foi preservado.
+
 ## Tarefas do OpenClaw (rodada 3)
 
 Responder em "Respostas do OpenClaw (rodada 3)" abaixo, com evidência (comando ou query e saída resumida). Mesma regra da rodada 2: tudo que altera produção registra antes o estado atual e a reversão, e nada é inventado.
@@ -621,4 +720,3 @@ O OpenClaw observou corretamente que o teste automatizado do limitador (7/7) cob
 ## Observação de Claude sobre o resultado parcial de `Recommendations` (2026-11-13)
 
 A mediana caiu de 221,69 para 191,92 ms (p95 de 425,90 para 319,43 ms): ganho **modesto**. A estimativa inicial de "ordem de grandeza" valia para a **carga no banco** (o catálogo deixou de ser carregado a cada visita), e essa carga **não foi medida diretamente** (não há série histórica do Postgres). A latência quase não mudou porque o custo restante é **CPU na API**: em `BookRecommendationRanker.Rank`, cada cache miss ainda reconstrói os vetores tf-idf do catálogo inteiro (`BuildRawVector` e `BuildDocumentFrequency` sobre todos os candidatos). O cache por livro (10 min) só ajuda visitas repetidas; um crawler passando por livros diferentes ainda paga ~190 ms de CPU por livro. **Hipótese a confirmar** (não medida): sob rajada, o gargalo passa a ser CPU da API, e não conexões do banco. Registrado como item próprio, **ainda em discussão com o Raffa** (direção dele: pré-processar): `recomendacoes-pre-processadas.md`. Ideia inicial de Claude, **fora do escopo de fechamento deste item** e não decidida: guardar em cache os vetores já ponderados do catálogo e calcular por requisição só o vetor do livro de origem e as similaridades. Mexe na fórmula de idf (o corpus hoje inclui o livro de origem), então precisa preservar os resultados dos testes do ranker.
-
