@@ -23,6 +23,7 @@
 14. **[Busca e recomendação](todo/busca-e-recomendacao-sharebook/index.md)** — valor baixo na leitura atual do Raffa. A v1 útil já está publicada com busca lexical e recomendações pragmáticas; tolerância a erro, embeddings, re-ranking e personalização ficam no fim da fila até dados reais provarem dor relevante.
 15. **[Segunda vitrine transversal](todo/segunda-vitrine-transversal.md)** — decidir só depois de 30 dias de dados de **Amores Perigosos**; cruzar desempenho real, profundidade do catálogo em português e coerência editorial antes de escolher o tema.
 16. **[Pré-renderização das páginas públicas](todo/pre-renderizacao-paginas-publicas.md)** — alto valor para SEO e estabilidade, esforço alto. Solução estrutural contra renderização on-demand sob crawler; `protecao-sobrecarga-ssr.md` é a rede de proteção até lá. Retomar se o tráfego de crawler crescer ou o limite começar a recusar o Googlebot.
+17. **[Recomendações pré-processadas](todo/recomendacoes-pre-processadas.md)** — baixa urgência; solução ainda a discutir com o Raffa. Hoje cada visita a um livro fora do cache recalcula as recomendações (~190 ms de CPU na API, medido em 2026-11-13). A direção desejada é pré-processar; escopo e forma não estão decididos.
 
 ### ✅ Concluídos
 
