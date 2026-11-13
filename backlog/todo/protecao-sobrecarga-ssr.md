@@ -421,6 +421,94 @@ rodada; o proxy read-only de `docker.sock`, restore drill sem evidência e fases
 2/3 (demais containers/Postgres) permanecem pendências próprias já registradas
 na T5. O link da pré-renderização foi preservado.
 
+#### Teste de carga controlado autorizado pelo Raffa (2026-11-13)
+
+**Abortado pelo gatilho de segurança, sem alterar configuração, container ou
+deploy.** A origem disponível era a própria VPS (mesmo IP público do servidor),
+portanto a carga passou por `https://www.sharebook.com.br`/Traefik, mas também
+disputou CPU e rede do host. Isto limita a extrapolação para tráfego externo.
+
+Pré-checagem: frontend `c526152` e API `6d4f2cb` `healthy`, ambos com 0
+restarts; home e PDP responderam 200; Postgres tinha 2 conexões, 1 ativa; o
+tráfego normal do minuto anterior foi 18 `ssr_access`. O gerador usou somente
+GET público de PDPs e categorias tirados do sitemap, com os UAs
+`SharebookLoadTest/1.0` e `SharebookLoadTest-bot/1.0`. Não chamou API,
+administração, login, download ou rota interna.
+
+O monitor de 5 s abortou em `2026-11-13T22:37:26Z`: o swap, já alto antes do
+teste, subiu de 2.097 para **2.146 MiB** enquanto a etapa humana de concorrência
+30 estava ativa. Nenhum outro gatilho apareceu: frontend/API permaneceram
+healthy, 0 restarts, máximo observado de Postgres **2** conexões (**1** ativa),
+CPU do host abaixo de 90% por 30 s, e o monitor local não viu 500 nem erro de
+conexão. A etapa de bot e a de 250 não foram iniciadas.
+
+| etapa executada | 200 | 503 | p50/p95 200 | p50/p95 503 | `Retry-After` nos 503 |
+|---|---:|---:|---:|---:|---:|
+| humano, c=10, 60 s | 255 | 0 | 3.032 / 4.744 ms | — | — |
+| humano, c=30, interrompida | 466 | 148 | 782 / 8.751 ms | 4.327 / **5.723 ms** | **148/148** |
+
+O teto total foi de fato atingido: o Alloy de teste registrou
+`ssr_overloaded` com `peakInFlight=30`, `inFlight=30`, `maxTotal=30` e
+`maxBots=18`. Porém a recusa não foi imediata nessa origem/condição: p95 de
+503 foi 5,723 s, muito acima da meta de 300 ms. Mais grave, a API registrou
+**12 respostas 500** e 12 cadeias `connection to database`/`NpgsqlException`
+com timeout durante a etapa. Foram 11 `Slug` distintos e 1 `Recommendations`;
+não houve linha `connection pool` nem `canceling statement`, portanto a causa
+exata (conexão, comando ou saturação de CPU) não foi inferida além da exceção
+registrada.
+
+O teste também evidenciou uma lacuna do shipper Python: para o mesmo User-Agent
+e recorte, `sharebook-frontend` registrou 602 `ssr_access` (589 200, 13 503),
+enquanto `sharebook-frontend-alloy-test` registrou **908** (760 200, **148
+503**). A contagem Alloy coincide com todos os 503 vistos pelo cliente; o
+shipper atual perdeu linhas sob rajada. Isto reforça a promoção já pendente do
+Alloy no próximo deploy real, mas **não** a antecipou nem mudou produção.
+
+Após a parada, a recuperação foi observada por 3 minutos, com uma request
+humana a cada 5 s: **36/36 HTTP 200**, p50 **39,64 ms**, p95 **282,44 ms**
+(máximo 4.042,83 ms); frontend e API continuaram healthy, sem restart, e
+Postgres permaneceu em 2/1 conexões. A recuperação voltou ao normal em menos
+de 60 s para 95% das amostras, embora o máximo isolado seja registrado acima.
+
+LogQL usada (janela `2026-11-13T22:35:00Z–22:43:00Z`):
+
+```logql
+{service_name="sharebook-frontend"} |= "SharebookLoadTest" |= "ssr_access"
+{service_name="sharebook-frontend-alloy-test"} |= "SharebookLoadTest" |= "ssr_access"
+{service_name="sharebook-frontend"} |= "ssr_overloaded" |= "SharebookLoadTest"
+{service_name="sharebook-api"} |= "responded 500"
+{service_name="sharebook-api"} |~ "(?i)(connection to database|NpgsqlException|connection pool|canceling statement)"
+{service_name="sharebook-api"} |= "/api/book/Slug/" |= "responded"
+{service_name="sharebook-api"} |= "/api/book/Recommendations/" |= "responded"
+```
+
+Durante o recorte, p95 da API foi **7.061,39 ms** para `Slug` (n=509) e
+**21.520,84 ms** para `Recommendations` (n=410), contra o baseline normal de
+19,11 ms e 306,89 ms, respectivamente.
+
+**Critérios do teste controlado:**
+
+- **Recusas 503 + `Retry-After` + p95 abaixo de 300 ms: não atendido.** Todos
+  os 148 503 trouxeram o header, mas p95 foi 5.723 ms.
+- **Zero 500/erro de conexão e Postgres abaixo de 80: não atendido.** Conexões
+  ficaram em 2, mas houve 12 HTTP 500 e 12 exceções Npgsql/DB.
+- **Reserva de vaga para humanos sob bot: não verificável.** A etapa de bot não
+  iniciou, corretamente, após o abort.
+- **Cache em milissegundos durante rajada de bot: não verificável.** Também não
+  houve etapa de bot; houve HITs no tráfego humano, mas não prova este critério.
+- **`ssr_overloaded` no teto 30/18: parcialmente atendido.** Há evidência do
+  teto total 30 e da configuração `maxBots=18`; não houve saturação de bot que
+  demonstre 18 recusando e a reserva humana.
+- **Recuperação até 60 s sem restart: atendido para p95.** 36/36 200, p95
+  282,44 ms, containers saudáveis e sem restart; o máximo isolado de 4,043 s
+  permanece registrado.
+
+Conclusão operacional: **não repetir nem elevar a carga agora**. O teste
+reproduziu falha real sob uma carga bem menor que a meta máxima; investigar os
+12 timeouts/500 e a latência de 503 fora da própria VPS antes de qualquer nova
+rodada. A validação de produção da T4 passa de “não verificável” para **não
+atendida** no requisito de zero 500 sob rajada equivalente.
+
 ## Tarefas do OpenClaw (rodada 3)
 
 Responder em "Respostas do OpenClaw (rodada 3)" abaixo, com evidência (comando ou query e saída resumida). Mesma regra da rodada 2: tudo que altera produção registra antes o estado atual e a reversão, e nada é inventado.
