@@ -429,7 +429,34 @@ O config passou `alloy validate`; o container está `running`, sem warnings/erro
 {service_name="sharebook-frontend-alloy-test"} |= "alloy-frontend-validation-20261113t0453z"
 ```
 
-A comparação completa de contagem de `ssr_access` na janela de 10 min está agendada antes de promover o rótulo. Não forcei restart do frontend; a prova de continuidade entre containers continua pendente do próximo deploy real.
+Validação da janela completa, sem restart forçado, de `2026-11-13T04:52:42Z` a `2026-11-13T05:02:42Z`:
+
+```bash
+python3 - <<'PY'
+# consulta Loki /loki/api/v1/query_range com os timestamps fixos da janela;
+# credenciais carregadas do .env, sem imprimir URL, usuário ou token
+for service in ("sharebook-frontend", "sharebook-frontend-alloy-test"):
+    query = f'{{service_name="{service}"}} |= "ssr_access"'
+    ua_query = f'{{service_name="{service}"}} |= "alloy-frontend-validation-20261113t0453z"'
+    print(service, count(query), count(ua_query))
+PY
+```
+
+Saída resumida: `sharebook-frontend`: **19** `ssr_access`, **1** User-Agent; `sharebook-frontend-alloy-test`: **19** `ssr_access`, **1** User-Agent. Portanto, nesta janela, as contagens batem e a requisição controlada foi confirmada nos dois streams. Não mudei o rótulo para produção, não desliguei/removi o shipper e não forcei restart. A prova de continuidade entre containers continua pendente do próximo deploy real do frontend.
+
+Estado observado na VPS:
+
+```bash
+docker inspect -f '{{.State.Status}}|{{.State.StartedAt}}|{{.RestartCount}}' sharebook-frontend-alloy
+docker stats --no-stream --format '{{.Name}}|{{.CPUPerc}}|{{.MemUsage}}|{{.MemPerc}}' sharebook-frontend-alloy
+docker logs --since 2026-11-13T04:52:42Z sharebook-frontend-alloy
+systemctl is-active sharebook-frontend-log-shipper.service
+systemctl is-enabled sharebook-frontend-log-shipper.service
+```
+
+Saída resumida: Alloy `running|2026-11-13T04:52:42.656941241Z|0`; stats na coleta `0.18% CPU`, `45.81 MiB` (`0.58%`); logs iniciais terminam em `Alloy is running`, sem warning/error; shipper `active` e `enabled`.
+
+O volume Loki de 24h já observado e registrado antes desta validação foi: API **44.804.761 bytes / 130.205 entries**; frontend **2.468.566 bytes / 7.278 entries**; teste **680.989 bytes / 2.282 entries** no momento da coleta. O stream de teste backfillou logs existentes desde o início do container, por isso não representa volume adicional de produção nem deve ser extrapolado como tráfego novo.
 
 **Cota e estimativa real.** O plano informado pelo Raffa é Cloud Free, com limite de 50 GB/mês para logs; a página mostrava 0 GB. A API `GET /loki/api/v1/index/stats` do próprio Loki, na janela móvel de 24 h, retornou: `sharebook-api` **44.804.761 bytes / 130.205 entries** (~44,8 MB/dia), `sharebook-frontend` **2.468.566 bytes / 7.278 entries** (~2,47 MB/dia). Extrapolação linear bruta: ~**1,42 GB/mês** para API + frontend, muito abaixo de 50 GB. O stream de teste mostrava 680.989 bytes/2.282 entradas, pois o `loki.source.docker` fez backfill dos logs já existentes do container; ele não entra na estimativa de produção e será removido antes da promoção final.
 
