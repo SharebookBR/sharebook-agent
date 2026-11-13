@@ -483,3 +483,19 @@ O volume Loki de 24h já observado e registrado antes desta validação foi: API
 | Profiles | 50 GB | 0 GB |
 
 O "0 GB" de logs **contradiz** o fato de a API e o frontend estarem enviando logs desde outubro e novembro. Pode ser atraso ou arredondamento da página de uso, mas **não foi explicado**. O OpenClaw deve estimar o volume real pelo próprio Loki (por exemplo, bytes ingeridos por dia de cada `service_name`) e registrar a estimativa, para não depender desse 0 GB. A retenção de 14 dias dos playbooks continua **não confirmada**.
+
+## Revisão de Claude sobre a instalação de teste do Alloy (2026-11-13)
+
+Revisão dos commits `ee34852` e `2c32642`. Aprovado o que foi feito; dois ajustes para a promoção.
+
+**1. Promover junto com o próximo deploy do frontend, para não duplicar logs.** O stream de teste recebeu 2.282 entradas porque o `loki.source.docker` releu os logs que o container atual já tinha. Se o Alloy for promovido para `service_name="sharebook-frontend"` com o container atual, é provável que reenvie o que o shipper Python já mandou, duplicando o histórico recente no stream de produção. Um container recém-criado começa com log vazio. Procedimento:
+- esperar o próximo deploy real do frontend (ou, se o Raffa autorizar, um redeploy deliberado em horário calmo);
+- logo depois do container novo subir, em sequência: parar o shipper Python, trocar `ALLOY_SERVICE_NAME` para `sharebook-frontend` e reiniciar o Alloy **com o diretório de posições do teste apagado**, para ele não herdar posição do container antigo;
+- conferir por LogQL que não há buraco nem duplicata na virada (contagem de `ssr_access` por minuto em volta do momento da troca);
+- só então remover o script Python e o serviço da T3 (passo 7 da T5).
+Se preferir promover antes do deploy, comparar primeiro e **medir** quantas linhas duplicam, em vez de supor.
+
+**2. `docker.sock` com `:ro` não torna a API do Docker somente leitura.** O `:ro` só impede escrita no arquivo do socket; quem o monta continua podendo chamar a API inteira (listar, criar e remover containers). A mitigação atual (`cap-drop=ALL`, `no-new-privileges`, rootfs somente leitura, imagem fixada por digest) é boa, mas não elimina o risco. Registrar como pendência de endurecimento, **não bloqueia a promoção**: colocar um proxy do socket (por exemplo `tecnativa/docker-socket-proxy`, expondo só os endpoints de containers e logs em modo leitura) entre o Alloy e o Docker. Avaliar antes de ampliar o Alloy para outros containers (fase 2).
+
+**3. Confirmado e registrado:** consumo de 0,14% de CPU e ~37 MiB; volume estimado de ~1,4 GB/mês para API e frontend contra 50 GB do plano Cloud Free (o "0 GB" da página de uso continua sem explicação).
+
