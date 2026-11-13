@@ -374,6 +374,65 @@ O token OTLP atual foi testado em memória contra o endpoint Loki de push com co
 
 **Pedido ao Raffa para continuar T5:** criar um token de Access Policy da stack Grafana Cloud com escopo `logs:write` para o tenant Loki e disponibilizá-lo somente no `.env` canônico como `GRAFANA_CLOUD_LOGS_WRITE_TOKEN` (modo 0600; não colar valor neste backlog, commit ou Telegram). Também é necessário acesso de leitura ao billing/usage, ou a informação de plano e uso mensal exibida pela conta, para registrar a cota antes da instalação. Depois disso, valido o token, instalo o Alloy isolado e sigo a dupla escrita/teste sem duplicação.
 
+##### Atualização — Caminho 1 e instalação de teste (2026-11-13 04:52 UTC)
+
+O pedido de token novo acima está **superado**: o primeiro 401 usou o *instance ID* OTLP como usuário. Repeti o push vazio com a URL e o **user ID do Loki de leitura**, mantendo o token OTLP atual somente em memória; o resultado foi **HTTP 204**. Portanto o Caminho 1 funciona e o Caminho 2 não foi necessário.
+
+Antes da instalação, o shipper Python ainda estava `active` e `enabled`, sem Alloy em execução; a reversão continua ser parar/remover o container Alloy e os arquivos em `/opt/sharebook-frontend-alloy`, mantendo/reabilitando o shipper Python. Instalei somente o coletor isolado de **teste**:
+
+- imagem estável `grafana/alloy:v1.22.0`, digest `sha256:9acc2529bc1edb7f5b2bd801dd8334ebc80c158e3a9e5526ecd7c9a273d43189`;
+- container `sharebook-frontend-alloy`, com `docker.sock` somente leitura, root filesystem somente leitura, `cap-drop=ALL`, `no-new-privileges`, restart `unless-stopped` e diretório persistente de posições;
+- credenciais em `/opt/sharebook-frontend-alloy/alloy.env`, modo `0600`; não foram exibidas nem versionadas;
+- `service_name="sharebook-frontend-alloy-test"`, preservando o shipper atual em `sharebook-frontend` e evitando duplicação no stream de produção.
+
+Configuração usada (também versionada em `playbooks/engineering/analytics/assets/alloy-frontend.alloy`; sem segredos):
+
+```alloy
+discovery.docker "frontend" {
+  host = "unix:///var/run/docker.sock"
+}
+
+discovery.relabel "frontend" {
+  targets = discovery.docker.frontend.targets
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    regex         = "/sharebook-frontend"
+    action        = "keep"
+  }
+}
+
+loki.source.docker "frontend" {
+  host       = "unix:///var/run/docker.sock"
+  targets    = discovery.relabel.frontend.output
+  forward_to = [loki.write.grafana.receiver]
+  labels = {
+    service_name           = sys.env("ALLOY_SERVICE_NAME"),
+    deployment_environment = "production",
+  }
+}
+
+loki.write "grafana" {
+  endpoint {
+    url = sys.env("GRAFANA_CLOUD_LOGS_LOKI_URL") + "/loki/api/v1/push"
+    basic_auth {
+      username = sys.env("GRAFANA_CLOUD_LOGS_WRITE_USER")
+      password = sys.env("GRAFANA_CLOUD_LOGS_WRITE_TOKEN")
+    }
+  }
+}
+```
+
+O config passou `alloy validate`; o container está `running`, sem warnings/errors no log inicial, e consumia **0,14% CPU / 36,96 MiB** na primeira leitura. A requisição controlada `alloy-frontend-validation-20261113t0453z` retornou 200 e já apareceu uma vez nos dois streams:
+
+```logql
+{service_name="sharebook-frontend"} |= "alloy-frontend-validation-20261113t0453z"
+{service_name="sharebook-frontend-alloy-test"} |= "alloy-frontend-validation-20261113t0453z"
+```
+
+A comparação completa de contagem de `ssr_access` na janela de 10 min está agendada antes de promover o rótulo. Não forcei restart do frontend; a prova de continuidade entre containers continua pendente do próximo deploy real.
+
+**Cota e estimativa real.** O plano informado pelo Raffa é Cloud Free, com limite de 50 GB/mês para logs; a página mostrava 0 GB. A API `GET /loki/api/v1/index/stats` do próprio Loki, na janela móvel de 24 h, retornou: `sharebook-api` **44.804.761 bytes / 130.205 entries** (~44,8 MB/dia), `sharebook-frontend` **2.468.566 bytes / 7.278 entries** (~2,47 MB/dia). Extrapolação linear bruta: ~**1,42 GB/mês** para API + frontend, muito abaixo de 50 GB. O stream de teste mostrava 680.989 bytes/2.282 entradas, pois o `loki.source.docker` fez backfill dos logs já existentes do container; ele não entra na estimativa de produção e será removido antes da promoção final.
+
 ## Atualização do Raffa e de Claude sobre a T5 (2026-11-13)
 
 **O token novo provavelmente não é necessário.** O Raffa lembrou que já existe credencial de escrita: a própria API envia logs ao Grafana Cloud por OTLP (`GrafanaLogs__Endpoint` e `GrafanaLogs__Headers`, formato `Authorization=Basic <base64(usuario:token)>`, ver `ShareBook.Api/Logging/GrafanaLogsConfiguration.cs` no backend). É o mesmo tipo de credencial que o shipper da T3 já usa, e o OpenClaw testou esse token no endpoint **Loki de push** e recebeu 401.
@@ -397,4 +456,3 @@ O token OTLP atual foi testado em memória contra o endpoint Loki de push com co
 | Profiles | 50 GB | 0 GB |
 
 O "0 GB" de logs **contradiz** o fato de a API e o frontend estarem enviando logs desde outubro e novembro. Pode ser atraso ou arredondamento da página de uso, mas **não foi explicado**. O OpenClaw deve estimar o volume real pelo próprio Loki (por exemplo, bytes ingeridos por dia de cada `service_name`) e registrar a estimativa, para não depender desse 0 GB. A retenção de 14 dias dos playbooks continua **não confirmada**.
-
