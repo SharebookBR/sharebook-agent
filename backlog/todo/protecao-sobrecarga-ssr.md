@@ -324,11 +324,11 @@ docker exec coolify-db psql ... 'select ... from scheduled_*_backup*_executions 
 
 Confirmações observadas: API e frontend com `swarm_replicas=1`; mount da API somente em `/app/wwwroot/Images/Books`; backup de volume mais recente com `s3_uploaded=true` e ~1,23 GB; dumps recentes com tamanhos coerentes. Não foi feita nenhuma alteração em produção nesta tarefa.
 
-#### T2b — acompanhamento do `Command Timeout=15`
+#### T2b — acompanhamento do `Command Timeout=15` (janela completa)
 
-**Observação parcial, ainda não uma noite inteira.** A janela pedida é 22:00–08:00 BRT, mas a coleta ocorreu às 01:12 BRT; portanto ela cobre somente `2026-11-13 01:00–04:12 UTC` (22:00–01:12 BRT). Não antecipei uma conclusão de manhã inteira.
+**Concluída em 2026-11-13 11:05 UTC.** A janela pós-mudança foi consultada integralmente em `2026-11-13 01:00:00Z–11:00:00Z` (22:00–08:00 BRT), comparada com `2026-11-12 01:00:00Z–11:00:00Z` (22:00–08:00 BRT). Não houve corte de rota nem job legítimo acima de 15 s; não alterei produção e não reverti o `Command Timeout`.
 
-LogQL usada nos dois recortes:
+LogQL usada nos dois recortes (consulta com os limites UTC fixos):
 
 ```logql
 {service_name="sharebook-api"} |~ "(?i)(timeout|npgsql|canceling statement|pool)"
@@ -336,10 +336,25 @@ LogQL usada nos dois recortes:
 
 | janela | resultado Loki |
 |---|---:|
-| pós-mudança parcial, 22:00–01:12 BRT | **0** linhas |
+| pós-mudança completa, 22:00–08:00 BRT | **0** linhas |
 | noite anterior, 22:00–08:00 BRT | **127** linhas, concentradas no incidente de pool de 03:26 BRT de 12/11 |
 
-Também consultei `JobHistories` sem expor detalhes de jobs. Na parte observada após a mudança, 39 execuções de `JobExecutor`, 39 de `MailSender`, 39 de `OnboardingEmailSender` e uma de `MeetupSearch` tiveram **0 falhas**. `JobExecutor` teve média de **1,96 s** e máximo de **3,30 s**, comparado à noite anterior com média de **1,88 s** e máximo de **4,13 s** (121 execuções, 0 falhas). Não há evidência de corte de rota ou job legítimo, portanto **não reverti** o `Command Timeout=15`; a reversão registrada na rodada 2 continua disponível se a janela completa mostrar problema.
+Também consultei `JobHistories`, agregando `JobName`, execuções, falhas, média e máximo de `TimeSpentSeconds`. A janela pós-mudança teve **0 falhas** em todos os jobs; os resultados completos foram:
+
+| JobName | execuções | falhas | média (s) | máximo (s) |
+|---|---:|---:|---:|---:|
+| CancelAbandonedDonations | 1 | 0 | 0,264 | 0,264 |
+| CleanupLogsTable | 1 | 0 | 0,083 | 0,083 |
+| JobExecutor | 120 | 0 | 2,139 | 5,669 |
+| MailSender | 120 | 0 | 0,936 | 4,559 |
+| MailSupressListUpdate | 1 | 0 | 1,310 | 1,310 |
+| MeetupSearch | 1 | 0 | 1,541 | 1,541 |
+| OnboardingEmailSender | 120 | 0 | 0,244 | 0,698 |
+| ReleaseScheduledBooks | 1 | 0 | 0,102 | 0,102 |
+
+Comparação direta dos jobs recorrentes com a noite anterior: `JobExecutor` 120 execuções, média **2,139 s**, máximo **5,669 s** (antes: 121, **1,883 s**, **4,128 s**); `MailSender` 120, **0,936 s**, **4,559 s** (antes: 120, **0,715 s**, **1,233 s**); `OnboardingEmailSender` 120, **0,244 s**, **0,698 s** (antes: 120, **0,257 s**, **0,760 s**). As variações de `JobExecutor` e `MailSender` continuam abaixo de 15 s e não vieram acompanhadas de erro no Loki.
+
+SQL read-only usada nas duas janelas:
 
 ```sql
 select "JobName", count(*),
@@ -350,6 +365,20 @@ where "CreationDate" >= timestamptz '2026-11-13 01:00:00+00'
   and "CreationDate" < timestamptz '2026-11-13 04:12:48+00'
 group by "JobName";
 ```
+
+Estado efetivo da connection string: a inspeção mascarada registrada após o deploy da rodada 2 continua mostrando `Pooling=true`, `Maximum Pool Size=80`, `Connection Idle Lifetime=300`, `Timeout=5` e `Command Timeout=15`; usuário e senha permaneceram mascarados e nenhum segredo foi impresso. Tentei repetir a inspeção no container `sharebook-api` nesta rodada, com saída filtrada para imprimir somente a presença/parâmetros, mas a conexão SSH da VPS expirou antes de executar o comando. Portanto não tratei essa tentativa como uma nova leitura; a evidência efetiva disponível permanece o registro mascarado da aplicação após o deploy.
+
+Comando de verificação segura tentado:
+
+```bash
+python3 playbooks/_shared/scripts/infra/vps_ssh.py --prefix VPS_SSH \
+  --cmd "docker inspect sharebook-api --format '{{range .Config.Env}}{{println .}}{{end}}' \
+  | sed -E 's/^(ConnectionStrings__PostgresConnection=).*/\\1[masked]/' \
+  | grep '^ConnectionStrings__PostgresConnection='
+# falhou antes da execução: TimeoutError na conexão SSH
+```
+
+Conclusão: **não reverter**. A reversão continua sendo restaurar a string prévia registrada na rodada 2 (sem `Timeout` nem `Command Timeout`) pelo model do Coolify e redeployar a API, caso apareça posteriormente uma consulta legítima cortada.
 
 #### T5 — Grafana Alloy para logs do frontend
 
