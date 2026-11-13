@@ -593,3 +593,32 @@ Se preferir promover antes do deploy, comparar primeiro e **medir** quantas linh
 **2. `docker.sock` com `:ro` não torna a API do Docker somente leitura.** O `:ro` só impede escrita no arquivo do socket; quem o monta continua podendo chamar a API inteira (listar, criar e remover containers). A mitigação atual (`cap-drop=ALL`, `no-new-privileges`, rootfs somente leitura, imagem fixada por digest) é boa, mas não elimina o risco. Registrar como pendência de endurecimento, **não bloqueia a promoção**: colocar um proxy do socket (por exemplo `tecnativa/docker-socket-proxy`, expondo só os endpoints de containers e logs em modo leitura) entre o Alloy e o Docker. Avaliar antes de ampliar o Alloy para outros containers (fase 2).
 
 **3. Confirmado e registrado:** consumo de 0,14% de CPU e ~37 MiB; volume estimado de ~1,4 GB/mês para API e frontend contra 50 GB do plano Cloud Free (o "0 GB" da página de uso continua sem explicação).
+
+## Evidência manual de HTTP do SSR (Claude, 2026-11-12) — complementa a validação da T4
+
+O OpenClaw observou corretamente que o teste automatizado do limitador (7/7) cobre só a classe `SsrRenderLimiter`, e que **não há teste automatizado de HTTP** para `503` + `Retry-After` nem para HIT/coalescido. A verificação abaixo foi feita **manualmente, uma vez**, contra o servidor compilado (`npm run build:ssr` e `node dist/angular/server/main.js`), com `Host: www.sharebook.com.br`. Não é automatizada nem roda em CI: serve de evidência, não de cobertura permanente.
+
+**Limite de concorrência** (`SSR_MAX_CONCURRENT_RENDERS=2`, `SSR_MAX_CONCURRENT_BOT_RENDERS=1`):
+
+| cenário | resultado |
+|---|---|
+| 6 requisições humanas em paralelo em rota sem cache | 2 passaram (200); **4 receberam 503 em ~15 ms**, com `Retry-After: 5` e `Cache-Control: no-store` |
+| 3 bots (`Googlebot/2.1`) em paralelo | 1 passou; **2 receberam 503** (teto de bot = 1) |
+| 1 bot em andamento + 1 humano ao mesmo tempo | **ambos 200** (a vaga de bot não bloqueia humano) |
+| log | uma linha `ssr_overloaded` por segundo no máximo, com `inFlight`, `peakInFlight`, `maxTotal`, `maxBots` e o último path, IP e User-Agent |
+
+**Cache e renderização degradada** (build com `apiEndpoint` apontando para uma API falsa; o `environment.prod.ts` foi restaurado depois e nada disso foi commitado):
+
+| cenário | resultado |
+|---|---|
+| API normal | `200`; 2ª requisição `X-SSR-Cache: HIT` (2,6 ms), `Cache-Control: public, max-age=1800` |
+| só `Recommendations` demora 7 s | `200` em **4,4 s**, sem o bloco, `no-store`; a 2ª requisição também foi **MISS** (não cacheou) |
+| API inteira demora 7 s | **503 em 4,5 s** com `Retry-After: 30`; a 2ª também 503 e MISS |
+| API inalcançável (status 0) | `503` (antes era 404) com `Retry-After: 30` e `no-store`; o texto da página diz "Estamos com instabilidade" |
+
+**Não coberto por essa verificação:** requisição **coalescida** (duas visitas simultâneas à mesma página fria compartilhando uma renderização); o código a trata antes de `renderSsr`, mas isso não foi demonstrado por HTTP. Para fechar o critério de forma permanente, abrir item para um **teste de fumaça HTTP automatizado** do `server.ts` (ver pendências sugeridas).
+
+## Observação de Claude sobre o resultado parcial de `Recommendations` (2026-11-13)
+
+A mediana caiu de 221,69 para 191,92 ms (p95 de 425,90 para 319,43 ms): ganho **modesto**. A estimativa inicial de "ordem de grandeza" valia para a **carga no banco** (o catálogo deixou de ser carregado a cada visita), e essa carga **não foi medida diretamente** (não há série histórica do Postgres). A latência quase não mudou porque o custo restante é **CPU na API**: em `BookRecommendationRanker.Rank`, cada cache miss ainda reconstrói os vetores tf-idf do catálogo inteiro (`BuildRawVector` e `BuildDocumentFrequency` sobre todos os candidatos). O cache por livro (10 min) só ajuda visitas repetidas; um crawler passando por livros diferentes ainda paga ~190 ms de CPU por livro. **Hipótese a confirmar** (não medida): sob rajada, o gargalo passa a ser CPU da API, e não conexões do banco. Melhoria possível, **fora do escopo de fechamento deste item**: guardar em cache os vetores já ponderados do catálogo e calcular por requisição só o vetor do livro de origem e as similaridades. Mexe na fórmula de idf (o corpus hoje inclui o livro de origem), então precisa preservar os resultados dos testes do ranker.
+
