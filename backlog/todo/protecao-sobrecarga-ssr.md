@@ -373,3 +373,28 @@ Resultado: `active`, `enabled`, script presente, nenhum Alloy.
 O token OTLP atual foi testado em memória contra o endpoint Loki de push com corpo vazio (`{"streams":[]}`), sem imprimir URL, usuário ou token, e recebeu **HTTP 401**. Ele não pode ser reutilizado pelo Alloy. As credenciais disponíveis também não dão acesso ao plano/uso mensal da conta Grafana Cloud: Loki permite consulta de logs, mas não expõe billing/usage com esses tokens. Há menção histórica ao plano Free e retenção de 14 dias nos playbooks, mas isso **não foi tratado como confirmação do plano ou da cota atual**, e volume mensal/limite não foram inventados.
 
 **Pedido ao Raffa para continuar T5:** criar um token de Access Policy da stack Grafana Cloud com escopo `logs:write` para o tenant Loki e disponibilizá-lo somente no `.env` canônico como `GRAFANA_CLOUD_LOGS_WRITE_TOKEN` (modo 0600; não colar valor neste backlog, commit ou Telegram). Também é necessário acesso de leitura ao billing/usage, ou a informação de plano e uso mensal exibida pela conta, para registrar a cota antes da instalação. Depois disso, valido o token, instalo o Alloy isolado e sigo a dupla escrita/teste sem duplicação.
+
+## Atualização do Raffa e de Claude sobre a T5 (2026-11-13)
+
+**O token novo provavelmente não é necessário.** O Raffa lembrou que já existe credencial de escrita: a própria API envia logs ao Grafana Cloud por OTLP (`GrafanaLogs__Endpoint` e `GrafanaLogs__Headers`, formato `Authorization=Basic <base64(usuario:token)>`, ver `ShareBook.Api/Logging/GrafanaLogsConfiguration.cs` no backend). É o mesmo tipo de credencial que o shipper da T3 já usa, e o OpenClaw testou esse token no endpoint **Loki de push** e recebeu 401.
+
+**Hipótese a verificar antes de pedir qualquer token novo (é hipótese, não fato):** o 401 pode vir do **usuário**, e não do token. No Grafana Cloud, o gateway OTLP usa o *instance ID* da stack como usuário do Basic Auth, enquanto o Loki usa um **user ID próprio**, outro número. Um token de access policy com `logs:write` costuma servir nos dois endpoints, mas o usuário muda. O OpenClaw já consulta o Loki para leitura (`grafana_logs.py`), então **já tem o user ID e a URL do Loki**.
+
+**Caminho 1 (preferido, mais simples):** repetir o teste de push (`{"streams":[]}`, sem imprimir segredo) usando a **URL de push do Loki + o user ID do Loki** (os mesmos da leitura) com o **token OTLP atual**. Se der 204/200, o Alloy usa `loki.write` com esses valores e **não é preciso token novo**.
+
+**Caminho 2 (se o 1 falhar):** o Alloy pode enviar pelo **mesmo gateway OTLP** que a API e o shipper já usam: `loki.source.docker` → `otelcol.receiver.loki` → `otelcol.exporter.otlphttp`, com as credenciais que já existem. Atenção: `service.name` precisa virar *resource attribute* (por exemplo com `otelcol.processor.resource`), senão o Loki não cria o rótulo `service_name`, e as consultas atuais não encontram nada. Validar com a mesma query LogQL.
+
+**Só se os dois falharem** pedir ao Raffa um token novo `logs:write`, como já descrito na resposta da rodada 3.
+
+**Plano e cota (print do Raffa, página "Current Usage", período 01/11/2026 a 30/11/2026):**
+
+| item | limite do plano | uso mostrado |
+|---|---|---|
+| Plano | **Cloud Free** | - |
+| Métricas (séries ativas) | 10 mil | 3.600 |
+| Logs | 50 GB | **0 GB** |
+| Traces | 50 GB | 0 GB |
+| Profiles | 50 GB | 0 GB |
+
+O "0 GB" de logs **contradiz** o fato de a API e o frontend estarem enviando logs desde outubro e novembro. Pode ser atraso ou arredondamento da página de uso, mas **não foi explicado**. O OpenClaw deve estimar o volume real pelo próprio Loki (por exemplo, bytes ingeridos por dia de cada `service_name`) e registrar a estimativa, para não depender desse 0 GB. A retenção de 14 dias dos playbooks continua **não confirmada**.
+
