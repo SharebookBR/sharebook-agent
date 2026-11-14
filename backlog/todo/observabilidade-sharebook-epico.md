@@ -31,6 +31,13 @@ O objetivo nao e recriar Datadog/Dynatrace inteiro. O objetivo e ter visibilidad
 
 > O Sharebook esta saudavel? Se nao esta, onde olhar primeiro?
 
+Pendencias de plano e acesso (registradas em 2026-11-14):
+
+- A pagina "Current Usage" da Grafana Cloud mostrava **0 GB de logs** apesar de API e frontend enviarem logs desde outubro; o volume real, medido pelo proprio Loki (`/loki/api/v1/index/stats`), e ~1,4 GB/mes. Explicar a diferenca (atraso ou arredondamento da pagina) antes de confiar nela para cota.
+- Retencao de logs de 14 dias dos playbooks **nao foi confirmada** no plano atual.
+- O OpenClaw **nao tem acesso de leitura ao Rollbar** (sem credencial nem API de leitura no `.env` canonico); confirmar alertas depende de e-mail. Tratar junto de `manutencao-autonoma-producao-rollbar-openclaw.md` (workstream 3).
+- Buraco de 1h21 no rotulo `service_name="sharebook-frontend"` (2026-11-13 23:20:41Z a 2026-11-14 00:42:29Z): os dados existem no rotulo `sharebook-frontend-alloy-test`; consultas antigas por `sharebook-frontend` mostram vazio nesse intervalo. Nao e perda de dados.
+
 ## Contexto atual
 
 Hoje ja temos algumas pecas importantes:
@@ -257,6 +264,28 @@ Adicionar Tempo/Grafana Cloud Traces com sampling conservador para responder ond
 ### M5 - Backup/restore observavel
 
 Criar rotina simples para verificar backups e executar restore drill periodico sem risco para producao.
+
+### M6 - Alloy fase 2: logs dos demais containers
+
+Status: nao iniciado. Decidido por Raffa e Claude em 2026-11-14 como parte deste epico (veio do fechamento de `backlog/done/protecao-sobrecarga-ssr.md`).
+
+O Alloy ja coleta o log do `sharebook-frontend` (config versionada em `playbooks/engineering/analytics/assets/alloy-frontend.alloy`, imagem `grafana/alloy` com digest fixado, container isolado).
+
+- Ampliar para os demais containers do host **exceto a API**, que ja envia logs estruturados por OTLP (coletar o stdout dela duplicaria linhas e gastaria cota).
+- Candidatos: Postgres da aplicacao, `coolify-proxy` (Traefik), importador, Coolify. O Postgres so produz log util depois de configurado (`log_min_duration_statement`, `log_lock_waits`, `pg_stat_statements`, ver workstream 6).
+- Rotulos limpos a partir dos rotulos do Coolify, nao dos nomes aleatorios dos containers.
+- **Pre-requisito de seguranca:** `proxy-docker-sock-antes-de-ampliar-alloy.md` (`docker.sock:ro` nao limita a API do Docker).
+- Antes de ligar: conferir a cota do Grafana Cloud Free (50 GB/mes de logs; uso atual medido em ~1,4 GB/mes) e decidir retencao e PII (IP e e-mail em log de aplicacao).
+- Validacao: consulta LogQL por `service_name` de cada container retorna eventos de agora; consumo do Alloy (CPU/memoria) registrado; nenhuma duplicata com o stream da API.
+
+### M7 - Alloy fase 3: metricas de container, host e Postgres
+
+Status: nao iniciado. Depende de M6 e da pergunta "o Postgres estava sem CPU as 03:26?", que hoje **nao tem resposta** porque nao existe serie historica de CPU, memoria, swap e conexoes (o incidente de 2026-11-12 e o teste de carga de 2026-11-13 mostraram esse buraco).
+
+- Avaliar, na versao instalada do Alloy, os componentes de metricas de container, do host e do Postgres; confirmar o que o `coolify-sentinel` ja coleta antes de duplicar.
+- Respeitar o limite de series ativas do plano Free (10 mil; uso medido em 3.600 em 2026-11-14) e a cardinalidade (nada de rotulo por id de container ou por requisicao).
+- Entregar ao menos: CPU e memoria por container, swap e I/O de swap do host, conexoes ativas do Postgres.
+- Validacao: dashboard minimo (M1) mostra CPU, memoria, swap e conexoes das ultimas 24 h; um teste de carga futuro tem serie para correlacionar.
 
 ## Criterios de sucesso
 
