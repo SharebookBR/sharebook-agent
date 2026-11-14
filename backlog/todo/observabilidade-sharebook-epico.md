@@ -274,7 +274,7 @@ O Alloy ja coleta o log do `sharebook-frontend` (config versionada em `playbooks
 - Ampliar para os demais containers do host **exceto a API**, que ja envia logs estruturados por OTLP (coletar o stdout dela duplicaria linhas e gastaria cota).
 - Candidatos: Postgres da aplicacao, `coolify-proxy` (Traefik), importador, Coolify. O Postgres so produz log util depois de configurado (`log_min_duration_statement`, `log_lock_waits`, `pg_stat_statements`, ver workstream 6).
 - Rotulos limpos a partir dos rotulos do Coolify, nao dos nomes aleatorios dos containers.
-- **Pre-requisito de seguranca:** `proxy-docker-sock-antes-de-ampliar-alloy.md` (`docker.sock:ro` nao limita a API do Docker).
+- **Decisao de seguranca (Raffa, 2026-11-14): sem proxy do `docker.sock`.** O item `proxy-docker-sock-antes-de-ampliar-alloy` foi **cancelado por simplicidade** (so duas pessoas cuidam do Sharebook). Risco aceito e conhecido: `docker.sock:ro` nao limita a API do Docker, entao um Alloy comprometido controlaria o Docker do host. Mitigacoes mantidas: imagem oficial `grafana/alloy` fixada por digest, `cap-drop=ALL`, `no-new-privileges`, rootfs somente leitura, credenciais 0600, container isolado. Reabrir apenas se o modelo de ameaca mudar (mais gente com acesso, Alloy exposto a rede, troca de imagem sem digest fixado).
 - Antes de ligar: conferir a cota do Grafana Cloud Free (50 GB/mes de logs; uso atual medido em ~1,4 GB/mes) e decidir retencao e PII (IP e e-mail em log de aplicacao).
 - Validacao: consulta LogQL por `service_name` de cada container retorna eventos de agora; consumo do Alloy (CPU/memoria) registrado; nenhuma duplicata com o stream da API.
 
