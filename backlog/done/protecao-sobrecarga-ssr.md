@@ -74,7 +74,7 @@ Melhor recusar rápido do que esperar 40 s. Indexação é desejável, derrubar 
 
 - `observabilidade-sharebook-epico.md`: `ssr_access` e access log do Traefik no Loki; `pg_stat_statements`, `log_min_duration_statement`, `log_lock_waits`, `track_io_timing`.
 - `cloudflare-cdn-ddos-protection.md`: rate limit na borda absorveria esse tipo de rajada antes de chegar ao SSR.
-- `pre-renderizacao-paginas-publicas.md`: solução estrutural; este item é a rede de proteção enquanto ela não existe.
+- `pre-processamento-paginas-e-recomendacoes.md`: solução estrutural; este item é a rede de proteção enquanto ela não existe.
 
 ## Pedido ao OpenClaw (somente leitura)
 
@@ -814,7 +814,7 @@ O OpenClaw observou corretamente que o teste automatizado do limitador (7/7) cob
 
 ## Observação de Claude sobre o resultado parcial de `Recommendations` (2026-11-13)
 
-A mediana caiu de 221,69 para 191,92 ms (p95 de 425,90 para 319,43 ms): ganho **modesto**. A estimativa inicial de "ordem de grandeza" valia para a **carga no banco** (o catálogo deixou de ser carregado a cada visita), e essa carga **não foi medida diretamente** (não há série histórica do Postgres). A latência quase não mudou porque o custo restante é **CPU na API**: em `BookRecommendationRanker.Rank`, cada cache miss ainda reconstrói os vetores tf-idf do catálogo inteiro (`BuildRawVector` e `BuildDocumentFrequency` sobre todos os candidatos). O cache por livro (10 min) só ajuda visitas repetidas; um crawler passando por livros diferentes ainda paga ~190 ms de CPU por livro. **Hipótese a confirmar** (não medida): sob rajada, o gargalo passa a ser CPU da API, e não conexões do banco. Registrado como item próprio, **ainda em discussão com o Raffa** (direção dele: pré-processar): `recomendacoes-pre-processadas.md`. Ideia inicial de Claude, **fora do escopo de fechamento deste item** e não decidida: guardar em cache os vetores já ponderados do catálogo e calcular por requisição só o vetor do livro de origem e as similaridades. Mexe na fórmula de idf (o corpus hoje inclui o livro de origem), então precisa preservar os resultados dos testes do ranker.
+A mediana caiu de 221,69 para 191,92 ms (p95 de 425,90 para 319,43 ms): ganho **modesto**. A estimativa inicial de "ordem de grandeza" valia para a **carga no banco** (o catálogo deixou de ser carregado a cada visita), e essa carga **não foi medida diretamente** (não há série histórica do Postgres). A latência quase não mudou porque o custo restante é **CPU na API**: em `BookRecommendationRanker.Rank`, cada cache miss ainda reconstrói os vetores tf-idf do catálogo inteiro (`BuildRawVector` e `BuildDocumentFrequency` sobre todos os candidatos). O cache por livro (10 min) só ajuda visitas repetidas; um crawler passando por livros diferentes ainda paga ~190 ms de CPU por livro. **Hipótese a confirmar** (não medida): sob rajada, o gargalo passa a ser CPU da API, e não conexões do banco. Registrado como item próprio, **ainda em discussão com o Raffa** (direção dele: pré-processar): `pre-processamento-paginas-e-recomendacoes.md`. Ideia inicial de Claude, **fora do escopo de fechamento deste item** e não decidida: guardar em cache os vetores já ponderados do catálogo e calcular por requisição só o vetor do livro de origem e as similaridades. Mexe na fórmula de idf (o corpus hoje inclui o livro de origem), então precisa preservar os resultados dos testes do ranker.
 
 ## Leitura de Claude do teste de carga de 2026-11-13 e rodada 4 (somente leitura)
 
@@ -840,7 +840,7 @@ Responder em "Respostas do OpenClaw (rodada 4)", com evidência e sem segredos. 
 
 **T10. Recomendar o limite.** Com T7 e T9, estimar um limite de renderizações simultâneas coerente com os núcleos e a memória, e dizer quanta folga sobra para a API e o Postgres na mesma máquina. Só recomendar; mudar o limite é decisão do Raffa.
 
-**Se a causa for falta de recursos da VPS**, dizer isso claramente, com o número que mostra, para o Raffa decidir entre aumentar a máquina e reduzir o trabalho do SSR (pré-renderização, ver `pre-renderizacao-paginas-publicas.md`).
+**Se a causa for falta de recursos da VPS**, dizer isso claramente, com o número que mostra, para o Raffa decidir entre aumentar a máquina e reduzir o trabalho do SSR (pré-renderização, ver `pre-processamento-paginas-e-recomendacoes.md`).
 
 ### Respostas do OpenClaw (rodada 4)
 
@@ -922,7 +922,7 @@ Não invalidei a home: o playbook exige POST autenticado que remove cache em pro
 
 Reservar aproximadamente **2 vCPUs de responsividade** para API, Postgres, Traefik, kernel e serviços residentes. Não há cálculo honesto de MiB/CPU por renderização: T9 mostrou 346–452 ms isolados, mas não preservou CPU; o frontend já tem ~803 MB RSS, OpenClaw 1,096 GiB, browser 80 MiB e swap global 2,2 GiB.
 
-A evidência aponta **contenção de recursos da VPS/API sob rajada**, não pool Postgres (máximo anterior de 2 conexões), mas não prova falta permanente de recursos: a fotografia atual tinha load 0,87 em 15 min e 3,5 GiB disponíveis. Antes de elevar o teto, usar origem externa e CPU/cgroup confiável; para reduzir o risco estrutural, decidir entre VPS maior e menos SSR via [pré-renderização](pre-renderizacao-paginas-publicas.md). Nenhuma configuração, container ou deploy foi alterado.
+A evidência aponta **contenção de recursos da VPS/API sob rajada**, não pool Postgres (máximo anterior de 2 conexões), mas não prova falta permanente de recursos: a fotografia atual tinha load 0,87 em 15 min e 3,5 GiB disponíveis. Antes de elevar o teto, usar origem externa e CPU/cgroup confiável; para reduzir o risco estrutural, decidir entre VPS maior e menos SSR via [pré-renderização](pre-processamento-paginas-e-recomendacoes.md). Nenhuma configuração, container ou deploy foi alterado.
 
 ### Respostas do OpenClaw (rodada 5)
 

@@ -32,6 +32,6 @@ Pode degradar o site se limites ou guardrails falharem; o profiling e a carga co
 ## Relações
 
 - Origem: `backlog/done/protecao-sobrecarga-ssr.md` (V1, V2 e rodada 4).
-- Capacidade e direção estrutural (pré-processar): `pre-renderizacao-paginas-publicas.md`.
+- Capacidade e direção estrutural (pré-processar): `pre-processamento-paginas-e-recomendacoes.md`.
 - Pode compartilhar a janela do teste de estresse do Postgres: `investigar-pool-conexoes-e-limite-postgres.md`.
 - A série de CPU, memória, swap e conexões vem da fase 3 do Alloy: `observabilidade-sharebook-epico.md` (M7).

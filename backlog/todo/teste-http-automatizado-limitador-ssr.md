@@ -24,4 +24,4 @@ disparar duas renderizações; passa no CI.
 ## Relações
 
 - Concluído: `backlog/done/protecao-sobrecarga-ssr.md`.
-- Estrutural: `pre-renderizacao-paginas-publicas.md`.
+- Estrutural: `pre-processamento-paginas-e-recomendacoes.md`.
