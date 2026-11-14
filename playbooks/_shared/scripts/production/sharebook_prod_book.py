@@ -243,7 +243,7 @@ def backfill_book_thumbnails(
 
     while True:
         payload = request_json(
-            f"{API_BASE}/Operations/BookThumbnails/Backfill"
+            f"{API_BASE}/Importer/BookThumbnails/Backfill"
             f"?overwrite={'true' if overwrite else 'false'}"
             f"&offset={offset}&batchSize={batch_size}",
             method="POST",
