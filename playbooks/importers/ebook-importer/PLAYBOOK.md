@@ -27,6 +27,10 @@ bash /data/workspace/sharebook-ebook-importer/cli.sh publish-once --id 1872
 
 O túnel (`pg_tunnel.py`) deve estar de pé; o wrapper não altera `.env` nem o banco.
 
+O wrapper também aponta `SHAREBOOK_PROD_PG_RO_HOST/PORT` para o túnel. Sem isso, a checagem de título repetido da triagem (`triage.prod_check`) tentava o host direto, levava `Connection refused` e seguia como "não é duplicata" em silêncio (corrigido em 2026-11-14). Se aparecer `triage.prod_check_error` no log, a trava de duplicata não rodou.
+
+Se o checkout do container não tiver credencial para `git pull`, levar commits com `git bundle create <arq> <base>..master` no Windows, copiar por SFTP + `docker cp` e rodar `git fetch <arq> master:refs/remotes/origin/master && git merge --ff-only origin/master` como `node` (com `-c safe.directory=*`). Não copiar arquivo solto para o checkout: modificação local trava o próximo pull.
+
 ## Documentos deste playbook
 
 - **`PLAYBOOK.md`** (este arquivo) — operação canônica, workflow, guardrails, hardening
@@ -492,6 +496,7 @@ Exceções existem: WAF agressivo, fluxo assinado, domínio quebrado de forma ú
 - **GitHub raw**: normalizar `github.com/.../raw/{branch}/` → `raw.githubusercontent.com` via `_normalize_github_raw_url()`
 - **GitHub repo raiz**: buscar PDF na última release via `api.github.com/repos/{repo}/releases/latest`
 - **Wayback**: modificador `if_` força entrega do binário sem toolbar HTML
+- **IRIS da OPAS/OMS (DSpace 7)**: família `dspace7_iris` para `iris.paho.org` e `iris.who.int` (`/items/<uuid>`, `/handle/<h>`, bitstream da API, link legado `/bitstream/handle/...`). O IRIS da OPAS devolve **403 ao User-Agent completo de Chrome** do `BROWSER_HEADERS` e libera o `Mozilla/5.0` curto; a página `/items/` é Angular, sem link de PDF no HTML. O resolver vai pela API REST com headers mínimos, escolhe o PDF do bundle `ORIGINAL` (português primeiro, depois o maior) e devolve `pdf_bytes`. Não devolve `dc.title`, porque o título curado da fila manda. Teste em `tests/test_dspace7_iris.py`; origem: itens 1899 e 1912, 2026-11-14. Sintoma igual em outro repositório institucional (403 só com o UA de Chrome) → testar primeiro o UA curto antes de concluir WAF.
 - **bepress**: handler dedicado `resolve_bepress_assets`
 - **Microsoft Download Center**: parsear bloco JSON da página
 - **Google Drive**: link `uc?export=download` sem `confirm=t` pode devolver página HTML (interstitial de vírus/tamanho) em vez do PDF. Usar a rota com `confirm=t` para obter o binário real
