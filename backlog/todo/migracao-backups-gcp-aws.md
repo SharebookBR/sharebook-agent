@@ -6,6 +6,10 @@ Hoje o Sharebook paga storage em dois provedores: AWS e GCP. A AWS ja e a direca
 
 Concentrar os backups na AWS reduz dispersao operacional, simplifica auditoria de custo e evita manter duas superficies de storage para o mesmo projeto.
 
+## Dependência (2026-11-14)
+
+**Fazer o restore drill antes de migrar** (`restore-drill-backups.md`, topo do backlog): migrar backups que nunca foram restaurados é carregar um risco desconhecido para outro provedor. O restore também serve de teste de aceitação da migração.
+
 ## Prioridade
 
 Baixa no curto prazo.
