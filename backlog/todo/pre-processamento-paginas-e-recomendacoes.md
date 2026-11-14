@@ -2,6 +2,8 @@
 
 > Mesclado em 2026-11-14 por decisão do Raffa: este item absorveu `pre-renderizacao-paginas-publicas.md` (que já havia absorvido o item de capacidade SSR) e `recomendacoes-pre-processadas.md`. Os dois eram a mesma direção vista de dois lados.
 
+> Também absorveu, em 2026-11-14, o item `teste-http-automatizado-limitador-ssr` (decisão do Raffa): ver "Critério de aceite: teste HTTP do servidor" abaixo.
+
 ## Estado
 
 **Direção decidida pelo Raffa: pré-processar, e não escalar a máquina para calcular tudo sob demanda.** A **forma** (como, onde, quando atualizar, com que mecanismo) **ainda será discutida com o Raffa; nada deve ser implementado antes dessa conversa.** Prioridade **baixa** até o Raffa subir.
@@ -40,6 +42,19 @@ Tema complexo (invalidação, volume do catálogo, tempo de geração, convivên
 - **Valor:** alto para SEO e estabilidade; hoje um crawler que visita muitos livros diferentes paga CPU em cada um. Esforço: alto.
 - **Risco:** HTML ou recomendações defasados em relação ao catálogo; resultados diferentes dos atuais (o ranker tem testes que protegem o comportamento, e a página pré-gerada pode servir um status velho).
 - **Validação esperada:** latência de `Recommendations` perto da de uma leitura simples; CPU da API estável durante uma rajada de livros diferentes; ranking equivalente ao atual nos casos cobertos pelos testes; escolha da forma documentada com custo e capacidade; teste externo confirma zero 500, swap controlado e recuperação; Search Console mostra tempo de resposta menor e mais páginas rastreadas por dia; zero renderização sob demanda de página de livro no `ssr_access` durante uma rajada de crawler.
+
+## Critério de aceite: teste HTTP do servidor
+
+**Quando a parte de páginas (B) reescrever o cache do `server.ts`, ela só está pronta com teste HTTP automatizado** do que hoje só foi verificado à mão (evidência manual de 2026-11-12 em `backlog/done/protecao-sobrecarga-ssr.md`, seção "Evidência manual de HTTP do SSR"):
+
+- 503 com `Retry-After: 5` acima do limite de renderizações simultâneas;
+- cache HIT que **não** ocupa vaga do limite;
+- duas visitas simultâneas à mesma página fria compartilhando **uma** renderização (coalescimento), contrato que a verificação manual **não** demonstrou por HTTP;
+- reserva de vagas para humanos quando bots inundam, com os tetos vigentes (hoje 6 total e 3 para bots).
+
+Por que aqui e não antes: este código vai ser reescrito pelo pré-processamento, então testar o cache atual significaria reescrever o teste depois. O limitador em si (a classe `SsrRenderLimiter`) já tem 7 testes unitários.
+
+**Cuidados:** o `Dockerfile` roda `npm test` antes de construir a imagem, então **um teste instável bloqueia o deploy**. Controlar relógio, usar render falso e sincronização determinística; se não der para ser determinístico, deixar fora do `npm test` do build. Os testes atuais rodam em navegador (Karma) e o `server.ts` é código de servidor Node: a forma do teste é decisão a tomar junto com a forma do pré-processamento.
 
 ## Relações
 
