@@ -1,5 +1,11 @@
 # Pipeline de capas: thumbnails locais agora; S3 + CDN depois
 
+> **Encerrado em 2026-11-14 por decisão do Raffa.**
+> - **V1 (miniaturas locais): concluída** em 2026-08-26. Resultado em produção: 2.811 miniaturas WebP, de 1,07 GB de origem para 79,6 MB; amostra da home de 47 capas de 26,27 MiB para 1,36 MiB (**-94,8%**).
+> - **V2 (S3 + CloudFront, `img.sharebook.com.br`): cancelada por simplicidade** (só duas pessoas cuidam do Sharebook). A entrega passa a ser responsabilidade da CDN de `backlog/todo/cloudflare-cdn-ddos-protection.md`, que guarda as miniaturas já servidas com cache. A V2 ficou com complexidade alta (bucket, CloudFront, certificado e DNS do subdomínio, abstração de storage, integração com o importador, migração das capas) para um ganho que a Cloudflare cobre.
+> - **O que sobrou de útil:** uma variante média da capa para a página de livro (hoje usa a original, até 4,3 MB), feita localmente, **sem S3**: ver seção C do item da Cloudflare.
+> - O texto abaixo é histórico; as etapas da V2 estão canceladas.
+
 ## Decisao de escopo — 2026-08-26
 
 A entrega foi dividida em duas fases para capturar primeiro o maior ganho com a menor complexidade:

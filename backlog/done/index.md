@@ -20,6 +20,7 @@ Itens concluídos. Raramente revisitados; a fila viva está em [`../index.md`](.
 
 ## Demais
 
+- [Pipeline de capas: thumbnails locais; S3 + CDN](pipeline-capas-s3-cdn.md) — encerrado em 2026-11-14. V1 (miniaturas WebP locais) concluída: capas da home de 26,27 MiB para 1,36 MiB (-94,8%). V2 (S3 + CloudFront) cancelada por simplicidade; a entrega fica com a CDN do item da Cloudflare.
 - [Proteção contra sobrecarga: SSR → API → Postgres](protecao-sobrecarga-ssr.md) — concluída em 2026-11-14. Após o incidente de crawler/SSR, entregou timeouts, cache, limite SSR 6/3 e logs persistentes Alloy; V2 eliminou os 500 sob carga, com pendências próprias para origem externa e pressão de swap.
 - [Missão Principal — 01 BaixeLivros Estrangeiros](01-baixelivros-estrangeiros.md)
 - [Missão — 02 BaixeLivros Literatura Brasileira](02-baixelivros-literatura-brasileira.md)

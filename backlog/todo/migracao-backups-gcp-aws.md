@@ -45,7 +45,7 @@ Migrar os backups da VPS que hoje estao no GCP para AWS, mantendo retencao, rest
 
 ## Fora de Escopo
 
-- Migrar o pipeline publico de capas para S3 + CDN; isso continua em `backlog/todo/pipeline-capas-s3-cdn.md`.
+- Migrar o pipeline publico de capas para S3 + CDN; isso foi **cancelado em 2026-11-14** (a entrega de capas fica com a CDN de `backlog/todo/cloudflare-cdn-ddos-protection.md`; ver `backlog/done/pipeline-capas-s3-cdn.md`).
 - Alterar storage de PDFs/ebooks.
 - Otimizar CDN, DDoS ou egress publico.
 

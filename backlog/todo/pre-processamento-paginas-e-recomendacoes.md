@@ -31,7 +31,7 @@ Hoje a home e a página de livro (`/livros/:slug`) têm cache SSR de 30 min em m
 
 **Reavaliar VPS maior ou mais instâncias do SSR apenas se** o teste de origem externa (`teste-carga-ssr-origem-externa.md`) mostrar que, mesmo com pré-processamento, falta capacidade. Mais instâncias usariam os núcleos parados, mas cada uma teria o seu cache em memória.
 
-**Complementos conversados em 2026-11-14, não decididos:** CDN na frente com cache longo para home e páginas de livro (o HTML já sai com `Cache-Control: public, max-age=1800`). Cuidados anotados: TTLs diferentes para e-book e livro físico (o status muda), limpeza explícita nos eventos de mudança, revalidação em segundo plano, rotas logadas fora do cache, erros e páginas degradadas com `no-store` (já é assim). Ver `cloudflare-cdn-ddos-protection.md` e `pipeline-capas-s3-cdn.md`. Para o cenário de divulgação grande (1 milhão de usuários em 8 h, ~35 usuários por segundo na média e 100 a 175 no pico), o primeiro gargalo provável é a entrega de imagens e arquivos estáticos pela própria VPS, **não medido**.
+**Complementos conversados em 2026-11-14, não decididos:** CDN na frente com cache longo para home e páginas de livro (o HTML já sai com `Cache-Control: public, max-age=1800`). Cuidados anotados: TTLs diferentes para e-book e livro físico (o status muda), limpeza explícita nos eventos de mudança, revalidação em segundo plano, rotas logadas fora do cache, erros e páginas degradadas com `no-store` (já é assim). Ver `cloudflare-cdn-ddos-protection.md` (item de alta prioridade que passou a cobrir páginas e imagens; a V2 de capas em S3 foi cancelada, ver `backlog/done/pipeline-capas-s3-cdn.md`). Para o cenário de divulgação grande (1 milhão de usuários em 8 h, ~35 usuários por segundo na média e 100 a 175 no pico), o primeiro gargalo provável é a entrega de imagens e arquivos estáticos pela própria VPS, **não medido**.
 
 ## Por que ainda não
 
@@ -61,4 +61,4 @@ Por que aqui e não antes: este código vai ser reescrito pelo pré-processament
 - Origem: `backlog/done/protecao-sobrecarga-ssr.md`.
 - Evidência de capacidade: `teste-carga-ssr-origem-externa.md`.
 - Tema geral de busca e recomendação (valor baixo na leitura atual do Raffa): `busca-e-recomendacao-sharebook/index.md`; este item trata só do custo de execução.
-- Complementos: `cloudflare-cdn-ddos-protection.md`, `pipeline-capas-s3-cdn.md`.
+- Complementos: `cloudflare-cdn-ddos-protection.md` (CDN), `backlog/done/pipeline-capas-s3-cdn.md` (V1 concluída; V2 cancelada).
