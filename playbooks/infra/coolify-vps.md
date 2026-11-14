@@ -178,6 +178,70 @@ O cache vive na memória do processo Node. A operação cobre a réplica atual d
 - Correlacionar navegação real com CPU do `coolify`.
 - Ler logs recentes de `coolify`, `coolify-proxy` e `coolify-db`.
 
+## Autópsia retrospectiva com Coolify Sentinel
+
+Use quando um incidente já passou e a pergunta é **quem pressionou a VPS**.
+O `coolify-sentinel` guarda histórico local de host e containers em
+`/data/coolify/sentinel/metrics.sqlite`; ele pode sobreviver à substituição do
+container da aplicação e, por isso, recupera uma parte importante de uma janela
+que os `docker logs` já perderam.
+
+### Ler sem expor o token
+
+O endpoint do Sentinel fica interno ao container e usa o `TOKEN` dele. Nunca
+inspecionar as envs nem copiar o token para o terminal. Execute a consulta de
+dentro do próprio container:
+
+```bash
+docker exec coolify-sentinel sh -c \
+  'curl -fsS -H "Authorization: Bearer $TOKEN" \
+  "http://127.0.0.1:8888/api/cpu/history?bucket_ms=60000"'
+```
+
+Trocar `cpu` por `memory`, `load` ou `network` para o host. Para containers,
+descobrir as chaves em `/api/containers/current` e consultar
+`/api/container/<id>/cpu/history` ou `/api/container/<id>/memory/history`.
+`bucket_ms` reduz a resposta, mas não cria precisão que não foi coletada.
+
+### Roteiro de investigação
+
+1. Converter a janela do incidente para UTC. O relato operacional costuma vir
+   em BRT; o Sentinel usa epoch/UTC.
+2. Comparar o ponto anterior, o minuto crítico e os dois minutos de recuperação
+   para host, frontend/SSR, API, Postgres e proxy.
+3. Procurar primeiro por **deltas**, não apenas pelo maior consumidor absoluto:
+   CPU, RAM usada/disponível, load e rede. Um processo pesado em repouso pode
+   ser inocente; quem saltou na janela é o candidato.
+4. Cruzar o instante com Loki/Rollbar: uma rajada de SSR pode fazer frontend e
+   API crescerem juntos, enquanto Postgres fica pressionado sem necessariamente
+   saturar toda a CPU do host.
+5. Registrar o que a série descarta e o que ela não consegue provar. Não somar
+   percentuais de CPU de containers para obter CPU do host; são medidas de
+   escopo diferente.
+
+### Exemplo que mudou o diagnóstico
+
+No incidente SSR de 2026-11-12 às 03:26 BRT, o host foi de 53% para 82,5% de
+RAM usada; frontend e API responderam por quase todo o salto (cerca de 0,9 GiB
+e 1,3 GiB, respectivamente). O host chegou a 43,8% de CPU e load-1 1,56 em
+4 vCPU, portanto não havia saturação geral de CPU. Postgres trabalhou, mas a
+série apontou uma tempestade curta SSR/API e fila de conexões, não uma VPS
+inteira travada pelo banco. OpenClaw, browser e serviços auxiliares ficaram
+estáveis naquela janela.
+
+### Limites que não permitem inventar diagnóstico
+
+- Conferir a cadência **observada** antes de concluir. Neste ambiente,
+  `sentinel_metrics_refresh_rate_seconds=10`, mas a janela histórica do
+  incidente retornou pontos de um minuto; isso descreve a onda, não os 22 s do
+  estol.
+- Sentinel traz CPU/memória por host/container, disco, rede e load, mas não
+  uma série de I/O de swap, conexões/locks/slow queries do Postgres, nem
+  correlação no Grafana Cloud.
+- A retenção local configurada é curta (7 dias). Usar para investigação rápida;
+  manter no Grafana as poucas séries necessárias para incidentes tardios:
+  swap + I/O de swap do host, conexões do Postgres e correlação com latência/5xx.
+
 ## Higiene recorrente de banco
 - Analisar slow queries em produção deve virar rotina, não só reação quando alguém já está reclamando.
 - Sem observabilidade mínima, discussão de performance vira opinião com fantasia de diagnóstico.
