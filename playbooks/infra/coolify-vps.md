@@ -253,6 +253,74 @@ Promovido dos testes V1/V2 de 2026-11-13 (`backlog/done/protecao-sobrecarga-ssr.
 - **Separar os 503 por origem** (limitador vs. degradação; ver `../engineering/frontend.md`, "Proteção contra sobrecarga do SSR") antes de ler latência.
 - Monitorar host além do app: no V2, o que parou o teste foi swap I/O; Postgres quase não trabalhou. Para autópsia depois do fato, ver a seção do Sentinel acima.
 
+## Traffic Analytics do Sentinel: quem chegou à borda
+
+Use quando a pergunta é **quem gerou a rajada**, quais URLs foram percorridas
+e se o p95/4xx/5xx já era visível no Traefik. Ele complementa Grafana/Loki:
+Sentinel explica a chegada na borda; Grafana/Loki explicam o que SSR, API e
+Postgres fizeram depois.
+
+### Consulta segura
+
+O token e a porta pertencem ao container. Não os inspecionar nem copiá-los
+para fora dele:
+
+```bash
+docker exec coolify-sentinel sh -c '
+for path in \
+  /api/traffic/overview \
+  /api/traffic/paths?limit=20 \
+  /api/traffic/breakdown/ip?limit=20 \
+  /api/traffic/breakdown/agent?limit=20 \
+  /api/traffic/breakdown/useragent?limit=20; do
+  echo "=== $path"
+  curl -fsS -H "Authorization: Bearer $TOKEN" \
+    "http://127.0.0.1:$PORT$path"
+  echo
+done'
+```
+
+Para isolar uma aplicação, trocar `/api/traffic` por
+`/api/resource/<app_uuid>/traffic`. Consultar primeiro `overview`, depois os
+breakdowns por IP/agente/User-Agent/país/referer e, por último, `paths`.
+`__other__` é um agregado Top-N: não inventar quais rotas estão nele. Para
+uma campanha específica, recorrer ao access log bruto de curta retenção em
+`/data/coolify/proxy/access.log`.
+
+### Leitura correta dos números
+
+- Chamadas **SSR -> API** que cruzam Traefik aparecem como IP de gateway
+  Docker e User-Agent Node. São tráfego interno, não visitantes. Para estimar
+  pessoas e crawlers externos, começar pelo recurso frontend e excluir essa
+  origem; para API, cruzar com Loki/Grafana.
+- IP completo está deliberadamente habilitado neste ambiente para permitir
+  bloqueio rápido em incidente. Antes de bloquear, confirmar IP, cadência,
+  paths, status e User-Agent: crawler legítimo e scanner oportunista têm
+  tratamentos muito diferentes.
+- Subdomínio dev público inevitavelmente recebe sondas de `.env`, credenciais
+  cloud e Git. Um 404 prova que o arquivo não foi entregue, mas ainda pode
+  gastar SSR/CPU e devolver HTML de fallback. Se dev não for necessário,
+  prefira pará-lo; ao reativar, decidir conscientemente se continuará público
+  ou terá controle de acesso.
+
+### Parar uma aplicação sem dessintonizar o Coolify
+
+Não usar `docker stop` isolado: o painel continua acreditando que a aplicação
+está viva. Primeiro confirmar nome/UUID e saúde; depois usar a action nativa:
+
+```bash
+docker exec coolify php artisan tinker --execute='
+$app = \App\Models\Application::where("name", "NOME-DA-APP")->firstOrFail();
+$result = app(\App\Actions\Application\StopApplication::class)->handle($app);
+if ($result) { throw new \RuntimeException($result); }
+echo $app->fresh()->status;
+'
+```
+
+Validar container alvo ausente, status `exited:*`, domínio indisponível e
+produção 200. Em 2026-11-14, isso retirou `sharebook-frontend-dev` após uma
+varredura automática de arquivos sensíveis; a produção permaneceu saudável.
+
 ## Higiene recorrente de banco
 - Analisar slow queries em produção deve virar rotina, não só reação quando alguém já está reclamando.
 - Sem observabilidade mínima, discussão de performance vira opinião com fantasia de diagnóstico.
