@@ -2,7 +2,13 @@
 
 ## Estado
 
-Prioridade 2 desde 2026-11-12, por decisão do Raffa.
+**Concluído por decisão do Raffa em 2026-11-14.** A engenharia está entregue e em produção; o que resta é **acompanhamento e rotina do dia a dia, não trabalho de backlog**:
+
+- O job quinzenal **LegacyOnboardingBackfill** segue sozinho, com até 2.000 jornadas por lote. Depois do lote 1 (12/11) restavam 20.481 contas elegíveis; o próximo lote é por volta de 27/11 e o rollout deve terminar por volta de abril de 2027 (estimativa a partir dos números abaixo). O histórico de cada lote fica no histórico do próprio job (`JobHistories`).
+- A leitura dos resultados (aberturas rastreáveis, cliques, CTR por etapa e por coorte) é feita no painel do admin, em Análises → Onboarding por e-mail.
+- Conversão depois do clique (download, pedido, doação) **não** foi medida de propósito; seria uma evolução futura, a abrir como item novo se fizer falta.
+
+Histórico: prioridade 2 desde 2026-11-12, por decisão do Raffa.
 
 ## Progresso
 
