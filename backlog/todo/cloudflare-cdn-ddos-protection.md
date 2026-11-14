@@ -48,7 +48,7 @@ O item antigo prometia "eliminar ~100% do custo de banda de e-book". **Isso não
 
 ## Dependências e ordem
 
-- Faz sentido **depois do restore drill** (`restore-drill-backups.md`, topo do backlog): é uma mudança de infraestrutura crítica, e queremos o backup comprovado antes.
+- Faz sentido **depois do restore drill** (`../done/restore-drill-backups.md`, concluído em 2026-11-14): é uma mudança de infraestrutura crítica, e queremos o backup comprovado antes.
 - Reduz bastante a importância de aumentar capacidade de renderização, mas **não resolve a cauda longa do Google** (páginas diferentes e frias, sempre renderizadas na primeira visita); isso é o `pre-processamento-paginas-e-recomendacoes.md`.
 - O teste de carga de origem externa (`teste-carga-ssr-origem-externa.md`) mede a **origem**; depois da CDN, medir também pela CDN, e entender que parte do teste passa a ser absorvida por ela.
 
@@ -76,5 +76,5 @@ O item antigo prometia "eliminar ~100% do custo de banda de e-book". **Isso não
 - `backlog/done/protecao-sobrecarga-ssr.md`: incidente e origem das medições.
 - `pre-processamento-paginas-e-recomendacoes.md`: cauda longa de páginas frias.
 - `teste-carga-ssr-origem-externa.md`: medição de capacidade.
-- `restore-drill-backups.md`: pré-requisito de segurança.
+- `../done/restore-drill-backups.md`: pré-requisito de segurança, concluído em 2026-11-14.
 - `playbooks/infra/vps-migration.md`: DNS de três camadas.

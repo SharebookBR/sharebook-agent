@@ -20,7 +20,7 @@ Aberto:
 
 - dashboard minimo formal/versionado;
 - correlacao operacional Rollbar + Grafana;
-- restore drill;
+- ~~restore drill~~ concluído em 2026-11-14 (`../done/restore-drill-backups.md`);
 - traces/Tempo, apenas quando houver pergunta operacional clara.
 
 Resolvido em 2026-10-12: `memory_search` voltou apos restart controlado do Gateway/OpenClaw. O indice e a CLI estavam saudaveis; o problema era estado velho na tool dinamica.

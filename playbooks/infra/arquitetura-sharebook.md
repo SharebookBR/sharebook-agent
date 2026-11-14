@@ -95,7 +95,7 @@ Pushes para `master` são recebidos pelo GitHub App configurado no Coolify. A ev
 
 - Bancos Sharebook e o volume de capas têm backup diário pelo Coolify; a última execução observada foi 2026-11-13 03:00 UTC e os arquivos tiveram tamanhos coerentes.
 - O backup do volume de capas estava configurado para armazenamento remoto e a última execução confirmou `s3_uploaded=true` (~1,23 GB). O destino é GCS pela interface S3-compatível do Coolify, com lifecycle de 60 dias; a migração para AWS continua apenas planejada.
-- Não há evidência versionada de um restore drill controlado concluído. Ele permanece pendente no backlog de observabilidade/migração e é condição diferente de backup `success`.
+- Restore drill concluído em 2026-11-14: banco e capas baixados do GCS e restaurados fora da VPS, sem erro e com contagens batendo com produção. Receita em `coolify-vps.md` ("Restore a partir do GCS"); resultado em `backlog/done/restore-drill-backups.md`.
 
 ## Itens antes “A confirmar” — resolução
 
@@ -106,4 +106,4 @@ Pushes para `master` são recebidos pelo GitHub App configurado no Coolify. A ev
 - [~] **Sentinel:** confirmou-se que tem socket Docker e faz push a cada minuto para a API interna do Coolify; o conjunto exato de métricas e a retenção não foram verificados.
 - [x] **Deploy:** GitHub App do Coolify para `master`; validar pela fila + container + endpoint. A duração varia e não deve ser presumida.
 - [x] **Servidores:** esta topologia de produção está em uma VPS HostGator; não foi encontrada segunda VPS de produção nesta conferência.
-- [~] **Último restore drill:** nenhuma evidência de drill concluído foi encontrada; permanece pendente, não deve ser deduzido de backups saudáveis.
+- [x] **Último restore drill:** 2026-11-14, a partir do GCS, sem erro (`backlog/done/restore-drill-backups.md`). Repetir quando a infraestrutura de backup mudar; backup saudável depois disso não prova restore.

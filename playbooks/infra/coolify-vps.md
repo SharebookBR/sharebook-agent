@@ -531,6 +531,86 @@ Ao escolher o horário novo, conferir o `crontab -l` do host: neste ambiente o `
 
 **Generalização que vale para além do Coolify**: toda rotina que se auto-atualiza reiniciando a si mesma é incompatível com o horário em que ela também executa trabalho longo. Não é bug — é agenda mal desenhada, e o default é que sejam o mesmo minuto.
 
+## Restore a partir do GCS — receita validada
+
+Primeiro restore real, feito em 2026-11-14 no Windows local do Raffa (máquina confiável, com Docker) e aprovado por ele com o site restaurado no ar. Resultado e números em `backlog/done/restore-drill-backups.md`. Serve para o drill e para o desastre real: **restaurar sempre da cópia remota**, nunca da cópia local da VPS, porque no desastre a VPS não existe.
+
+**Tempos medidos** (backups de 14/11, `sharebook` 52,6 MB, `sharebook_importer` 5,4 MB, capas 1,23 GB): download do GCS 2min29s, `pg_restore` 4 s + 1 s, extração das capas 10 s. A parte cara é baixar as capas; o banco volta em segundos.
+
+### 1. Achar os objetos
+
+O registro de execuções diz o nome; a chave no bucket é o mesmo caminho sem a barra inicial (`data/coolify/backups/...`).
+
+```
+docker exec coolify-db psql -U coolify -d coolify -At -F" | " -c "select id, created_at, status, size, s3_uploaded, database_name, filename from scheduled_database_backup_executions where database_name in ('sharebook','sharebook_importer') order by id desc limit 4"
+docker exec coolify-db psql -U coolify -d coolify -At -F" | " -c "select id, created_at, status, size, s3_uploaded, filename from scheduled_volume_backup_executions order by id desc limit 2"
+```
+
+### 2. Baixar sem tirar a credencial do Coolify
+
+Gerar URLs pré-assinadas de 30 min dentro do container `coolify` e baixar direto do GCS para a máquina de destino. A chave do bucket não sai do Coolify e o download não passa pela VPS. Script para o tinker, **sem a linha `<?php`** (pelo stdin o tinker dá `PARSE ERROR` com ela):
+
+```php
+$s = \App\Models\S3Storage::find(1);
+config(['filesystems.disks.drill' => ['driver' => 's3', 'key' => $s->key, 'secret' => $s->secret,
+    'region' => $s->region, 'bucket' => $s->bucket, 'endpoint' => $s->endpoint, 'use_path_style_endpoint' => true]]);
+$disk = \Storage::disk('drill');
+$objs = ['sharebook.dmp' => '<chave>', 'sharebook_importer.dmp' => '<chave>', 'capas.tar.gz' => '<chave>'];
+$lines = [];
+foreach ($objs as $name => $key) { $lines[] = $name . "\t" . $disk->temporaryUrl($key, now()->addMinutes(30)); }
+file_put_contents('/tmp/drill_urls.tsv', implode("\n", $lines) . "\n");
+echo "URLS_OK " . count($lines) . "\n";
+```
+
+```
+docker cp script.php coolify:/tmp/x.php && docker exec -i coolify sh -lc 'php artisan tinker < /tmp/x.php'
+docker cp coolify:/tmp/drill_urls.tsv /tmp/ && docker exec -u root coolify rm -f /tmp/x.php /tmp/drill_urls.tsv
+```
+
+Trazer o `.tsv` por SFTP, não imprimir as URLs na tela (cada uma dá acesso ao objeto por 30 min), baixar com `curl -f` e **apagar o `.tsv`**. Conferir que o tamanho baixado é idêntico ao `size` do registro. No mesmo script, `$disk->allFiles()` + `$disk->size($f)` lista o bucket para provar que o objeto existe remotamente.
+
+### 3. Restaurar o banco
+
+Mesma versão maior da produção (hoje `postgres:17-alpine`), container descartável, porta própria, só em `127.0.0.1`:
+
+```
+docker run -d --name sharebook-drill-pg -e POSTGRES_PASSWORD=<aleatória> -p 127.0.0.1:55432:5432 postgres:17-alpine
+docker cp sharebook.dmp sharebook-drill-pg:/tmp/sharebook.dmp
+docker exec sharebook-drill-pg createdb -U postgres sharebook
+docker exec sharebook-drill-pg pg_restore -U postgres -d sharebook --no-owner --no-acl /tmp/sharebook.dmp
+```
+
+O dump é formato custom (`PGDMP`). `--no-owner --no-acl` evita depender dos roles de produção. **No Git Bash, exportar `MSYS_NO_PATHCONV=1`**: sem isso o `/tmp/...` do argumento vira caminho Windows e o `pg_restore` falha com "could not open input file".
+
+**Prova do restore**: contar linhas por tabela no restore e na produção (leitura pelo `pg_tunnel.py`). As tabelas vivas andam depois do dump; a comparação que precisa bater exatamente é por corte de tempo, por exemplo `select count(*) from "Books" where "CreationDate" < '<início do dump>'`.
+
+### 4. Restaurar as capas
+
+`tar -xzf capas.tar.gz` extrai direto os arquivos (raiz = conteúdo de `Images/Books`, com `Thumbs/`). Provar com o banco: todo `Books.ImageSlug` tem arquivo, e uma amostra decodifica (`PIL.Image.open(...).load()`). Capa ausente no backup só é falha do backup se existir em produção (`https://api.sharebook.com.br/Images/Books/<slug>` 200).
+
+### 5. Subir a aplicação contra o restore (validação humana)
+
+Backend local apontando só para o banco restaurado, com SMTP, SQS, Rollbar e Grafana vazios (são vazios no `appsettings.json`), então nenhum e-mail sai para usuário real e nenhum log vai para produção:
+
+```powershell
+$env:ASPNETCORE_ENVIRONMENT="Development"; $env:ASPNETCORE_URLS="http://localhost:8000"; $env:DatabaseProvider="postgres"
+$env:ConnectionStrings__PostgresConnection="Host=127.0.0.1;Port=55432;Database=sharebook;Username=postgres;Password=<...>"
+$env:ConnectionStrings__ImporterPostgresConnection="Host=127.0.0.1;Port=55432;Database=sharebook_importer;Username=postgres;Password=<...>"
+$env:TokenConfigurations__SecretJwtKey="<aleatória, base64 de 48 bytes>"; $env:ServerSettings__BackendUrl="http://localhost:8000"; $env:ServerSettings__FrontendUrl="http://localhost:4200"
+dotnet run --no-build --no-launch-profile   # em ShareBook/ShareBook.Api, depois de dotnet build
+```
+
+- A API roda `Migrate()` na subida: altera só a cópia restaurada.
+- Em Development as capas saem de `bin/Debug/net10.0/wwwroot/Images/Books`; copiar o conteúdo extraído para lá (fora do git).
+- `dotnet restore` falhando com `NU1103` (versão estável "não encontrada") é índice local velho: `dotnet restore --no-http-cache`.
+- O único erro esperado no log é o warmup do painel GA4, sem credencial.
+
+Frontend: `npm run dev:ssr` (SSR contra `localhost:8000`, GA desligado), em http://localhost:4200. Sinal de que é o restore e não a produção: livros criados depois do dump não aparecem.
+
+### 6. Descartar
+
+O restore contém dados pessoais de usuários. Ao terminar: `docker rm -f sharebook-drill-pg`, apagar dumps, capas extraídas e a cópia em `bin/.../wwwroot/Images/Books` (voltar ao conteúdo do build), e fechar o `pg_tunnel.py`.
+
 ## Migração de VPS
 
 Playbook completo (checklist proativo, DNS de três camadas, restore do Coolify entre caixas, GitHub App source quebrando silenciosamente) vive em `playbooks/infra/vps-migration.md`. Abrir aquela playbook antes de qualquer migração de VPS ou investigação que possa ter origem numa migração passada — não duplicar aqui.

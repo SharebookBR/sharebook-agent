@@ -8,7 +8,7 @@ Concentrar os backups na AWS reduz dispersao operacional, simplifica auditoria d
 
 ## Dependência (2026-11-14)
 
-**Fazer o restore drill antes de migrar** (`restore-drill-backups.md`, topo do backlog): migrar backups que nunca foram restaurados é carregar um risco desconhecido para outro provedor. O restore também serve de teste de aceitação da migração.
+**Restore drill concluído em 2026-11-14** (`../done/restore-drill-backups.md`): os backups do GCS restauram. Repetir a mesma receita (`playbooks/infra/coolify-vps.md`, "Restore a partir do GCS") contra o destino novo é o teste de aceitação da migração.
 
 ## Prioridade
 
