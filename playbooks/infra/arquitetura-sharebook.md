@@ -1,6 +1,6 @@
 # Arquitetura do Sharebook em alto nível
 
-> **Conferido no servidor em 2026-11-13.** Esta é uma fotografia operacional; versões, containers e capacidades de observabilidade devem ser rechecados antes de uma intervenção.
+> **Conferido no servidor em 2026-11-13; limites SSR e coletor de logs atualizados pelo Dream de 2026-11-14 a partir de `backlog/done/protecao-sobrecarga-ssr.md` (rodadas 5 e 6).** Esta é uma fotografia operacional; versões, containers e capacidades de observabilidade devem ser rechecados antes de uma intervenção.
 
 Este documento explica como as peças se encaixam. Para operá-las, ver `coolify-vps.md`, `../engineering/backend.md`, `../engineering/frontend.md` e `../engineering/grafana-cloud-explorer.md`.
 
@@ -16,7 +16,7 @@ Este documento explica como as peças se encaixam. Para operá-las, ver `coolify
  │          ├── www.sharebook.com.br ──► sharebook-frontend                     │
  │          │       Angular + SSR (Node), 1 réplica, sem volume                 │
  │          │       • cache SSR em memória: home e /livros/:slug, 30 min        │
- │          │       • limite: 30 renders / 18 bots; timeout API de 4 s          │
+ │          │       • limite em prod: 6 renders / 3 bots; timeout API de 4 s    │
  │          │       • 503 e no-store para render degradado/sobrecarregado       │
  │          │                                                                    │
  │          └── api.sharebook.com.br ──► sharebook-api                          │
@@ -38,7 +38,7 @@ Este documento explica como as peças se encaixam. Para operá-las, ver `coolify
           ▼                         ▼                         ▼
    Grafana Cloud              Rollbar                  GA4 / Search Console
   métricas/logs API;          alertas de erro            audiência e SEO
-  logs SSR via shipper
+  logs SSR via Alloy
 ```
 
 O frontend usa `https://api.sharebook.com.br/api` também no bundle de produção do SSR; portanto essa chamada sai pelo domínio público e pelo Traefik, não por uma rota Docker interna.
@@ -56,7 +56,7 @@ O frontend usa `https://api.sharebook.com.br/api` também no bundle de produçã
 | Jobs | Não há container `Sharebook.Jobs`. O endpoint/serviço `JobExecutor` da API usa os repositórios EF do banco Sharebook, portanto usa `PostgresConnection`; o painel do importador usa adicionalmente `ImporterPostgresConnection` para seu banco isolado | `OperationsController`, `DatabaseConfiguration.cs`, `ImporterDashboardService.cs` |
 | Imagens | Capas em volume local: o único mount da API é `Images/Books` para `/app/wwwroot/Images/Books` | `docker inspect sharebook-api`, 2026-11-13 |
 | E-books | PDFs ficam no S3 de e-books e são servidos por URL pré-assinada; não ficam no volume de capas | `frontend.md`, script S3 compartilhado |
-| Observabilidade | API envia métricas e logs por OTLP ao Grafana Cloud. O frontend é coletado pelo shipper Python provisório; a migração para Alloy está pendente na T5 | `grafana-cloud-explorer.md`, backlog de sobrecarga |
+| Observabilidade | API envia métricas e logs por OTLP ao Grafana Cloud. O frontend é coletado por um container Grafana Alloy dedicado (coletor único desde 2026-11-14; o shipper Python foi aposentado) | `grafana-cloud-explorer.md`, `../engineering/analytics/assets/alloy-frontend.alloy`, `backlog/done/protecao-sobrecarga-ssr.md` |
 | Erros | Rollbar recebe alertas; este runtime não tem leitura autenticada da conta | incidente 2026-11-12 |
 
 ## Caminho de uma página de livro
@@ -71,9 +71,11 @@ O frontend usa `https://api.sharebook.com.br/api` também no bundle de produçã
 ## Limites relevantes
 
 - Há uma réplica de frontend e uma de API: os limites de SSR são globais no estado atual.
+- O padrão do código é 30 renders / 18 bots, mas produção roda com `SSR_MAX_CONCURRENT_RENDERS=6` e `SSR_MAX_CONCURRENT_BOT_RENDERS=3` (variáveis de runtime no Coolify, desde a rodada 5 de 2026-11-13). É redução defensiva, não capacidade provada: revisar só depois do teste de carga de origem externa (`backlog/todo/teste-carga-ssr-origem-externa.md`).
+- O SSR roda em um único processo Node (um núcleo dos 4 vCPU); a VPS tem 7,8 GiB de RAM e 4 GiB de swap, com ~2,2 GiB de swap já em uso em repouso. No teste V2, o limite que parou o ensaio foi swap I/O, não Postgres.
 - O pool Npgsql é 80 e o Postgres aceita 100 conexões. `Timeout=5` e `Command Timeout=15` foram aplicados em 2026-11-12 e ainda exigem observação dos jobs noturnos.
 - Cache de recomendações dura 10 min; cache SSR, 30 min. Essa é a janela máxima esperada de defasagem desses dados.
-- Os logs do frontend eram voláteis antes do shipper atual; ainda não devem ser tratados como mecanismo de retenção de longo prazo até a troca por Alloy.
+- Os logs do frontend chegam ao Loki pelo Alloy (Grafana Cloud Free, ~1,4 GB/mês medidos contra 50 GB do plano). Houve um buraco de 1h21 no rótulo de produção em 2026-11-13/14, com os dados no rótulo `sharebook-frontend-alloy-test`.
 
 ## Containers em execução na VPS em 2026-11-13
 

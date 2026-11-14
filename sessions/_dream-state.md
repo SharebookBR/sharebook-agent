@@ -3,6 +3,36 @@
 Checkpoint oficial da consolidação de memória do projeto.
 
 ## Último dream
+- Data: `2026-11-14`
+- Tipo: `dream semanal automatizado via scheduled task weekly-dream no Windows local, sem Raffa presente`
+- Última memória absorvida: `sessions/2026-11-13-protecao-sobrecarga-ssr-e-paineis-admin.md`
+- Total de memórias lidas: `2 memórias episódicas novas desde o checkpoint de 2026-11-08` (2026-11-12 e 2026-11-13), mais o commit `e03a6fc` (Sentinel em `coolify-vps.md`).
+
+### Consolidação produzida em 2026-11-14
+
+- Sincronização: o clone local estava 284 commits atrás; `git fetch` + `git pull --ff-only` antes de confiar no checkpoint. Sem isso, o ciclo teria partido do estado de 2026-09-25.
+- Doctor abriu com 3 achados e fechou limpo: link quebrado em `backlog/done/protecao-sobrecarga-ssr.md` (regressão por movimentação `todo/`→`done/`, corrigido) e `analytics/assets/alloy-frontend.alloy` + pasta `assets` (artefato deliberado, indexado no `analytics/PLAYBOOK.md`).
+- Fatos defasados corrigidos: `arquitetura-sharebook.md` (limite SSR em produção 6/3, Alloy coletor único) e `grafana-cloud-explorer.md` (proxy de `docker.sock` cancelado pelo Raffa; risco aceito).
+- Promoções para playbooks existentes: `frontend.md` ("Proteção contra sobrecarga do SSR"), `coolify-vps.md` ("Teste de carga em produção"), `grafana-cloud-explorer.md` (`docker restart` não relê env; Promtail EOL), `claude-code-web.md` (conferir branch de origem do clone), `openclaw.md` (fallback de `memory_search`), `AGENTS.md` (instância nova de "relato não é prova": monitor declarado inexistente).
+- Encontrabilidade: termos reais nos `INDEX.md` de infra e engineering; novo cenário de roteamento no `AGENTS.md` para sobrecarga/capacidade/teste de carga.
+- Sem playbook novo, split, merge, arquivamento ou alteração em `SOUL.md`.
+
+### Validação
+- `python playbooks/doctrine/harness-governance/scripts/dream_report.py --repo-root .`: safra de 2026-11-08 a 2026-11-13.
+- `python playbooks/doctrine/harness-governance/scripts/harness_doctor.py --root .`: 3 achados na abertura, limpo no fechamento.
+- `python -m unittest discover -s playbooks/doctrine/harness-governance/scripts -p "test_*.py"`: 32 testes aprovados.
+- `git diff --check` limpo.
+- A memória do ciclo é `sessions/2026-11-14-dream.md`.
+
+### Próximo dream
+- O checkpoint agora parte de `sessions/2026-11-13-protecao-sobrecarga-ssr-e-paineis-admin.md`.
+- A scheduled task `weekly-dream` (Windows) ainda aponta `memory/` e `skills/`; os caminhos reais são `sessions/` e `playbooks/`. Seguir os reais até o Raffa atualizar a task.
+- Observar o tamanho e a coesão de `playbooks/infra/coolify-vps.md` (ganhou Sentinel e teste de carga na mesma semana). Se continuar crescendo com incidentes, avaliar split de "investigação de incidente/capacidade" — com evidência de uso, não por estética.
+- Se o teste de carga de origem externa acontecer, conferir se a seção nova de `coolify-vps.md` foi usada e se os limites 6/3 mudaram; atualizar `arquitetura-sharebook.md` junto.
+- Heurística nova a observar: playbook escrito no meio de um item longo pode envelhecer até o fim dele; ao absorver um item `done/` grande, reler os playbooks que ele cita.
+- Preservar os open loops listados em `sessions/2026-11-14-dream.md`.
+
+## Último dream
 - Data: `2026-11-08`
 - Tipo: `dream semanal automatizado customizado via OpenClaw cron, sem Raffa presente`
 - Última memória absorvida: `sessions/2026-11-05-pre-lancamento-doacoes-e-release-badge.md`

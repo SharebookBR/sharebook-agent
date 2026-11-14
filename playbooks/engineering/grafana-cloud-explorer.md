@@ -41,9 +41,22 @@ Consultar com:
 Em uma virada de container/configuracao, comparar por minuto por ao menos 10
 min o total de `ssr_access` em `docker logs --timestamps sharebook-frontend` e
 no Loki antes de remover o coletor anterior. Nao existe monitor automatico de
-promocao ativo: a verificacao precisa ser explicitamente executada. Antes de
-ampliar Alloy a outros containers, instalar proxy de `docker.sock`; `:ro` no
-bind nao restringe a API Docker.
+promocao ativo: a verificacao precisa ser explicitamente executada.
+
+`docker.sock` montado com `:ro` nao restringe a API Docker: quem monta o socket
+pode listar, criar e remover containers. Em 2026-11-14 o Raffa cancelou o proxy
+de `docker.sock` por simplicidade (duas pessoas cuidam do Sharebook) e aceitou
+esse risco conscientemente, mantendo as mitigacoes atuais (imagem por digest,
+rootfs read-only, `cap-drop=ALL`, `no-new-privileges`). Nao reabrir o proxy
+como pre-requisito; se Alloy for ampliado a outros containers, reapresentar o
+risco ao Raffa em vez de decidir sozinho.
+
+Mudanca de variavel do Alloy (ex.: `ALLOY_SERVICE_NAME`) exige **recriar** o
+container: `docker restart` nao rele o arquivo de ambiente. Foi isso que deixou
+1h21 de logs de producao no rotulo de teste em 2026-11-13/14.
+
+Promtail chegou ao fim da vida em 2026-03-02; para novos coletores de log de
+Docker, usar Grafana Alloy.
 
 ## Segredos e variaveis
 

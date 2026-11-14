@@ -120,6 +120,18 @@ Validação mínima após mudança no fluxo: build SSR, rajada concorrente compr
 
 Log de uma linha em JSON no Express SSR (`server.ts`), por página renderizada: método, path **sem query string** (só um booleano `hasQuery`, para não vazar parâmetros nem virar ruído de UTM), status, duração, cache SSR (`MISS`/`HIT`/`COALESCED`), rota de cache, IP via proxy e user-agent truncado. Filtrar healthcheck local (`Wget` batendo a home) para não virar ruído. Foi o que transformou "suspeita de crawler" em evidência operacional real (bots identificados por nome batendo PDPs específicas) — sem esse log, a única fonte de tráfego real do SSR era `docker logs` efêmero.
 
+### Proteção contra sobrecarga do SSR
+
+Promovido do incidente de 2026-11-12 03:26 BRT (rajada ~21x o baseline vinda do SSR, 99,6% `User-Agent` node.js) e da sessão `sessions/2026-11-13-protecao-sobrecarga-ssr-e-paineis-admin.md`. Detalhe e medições em `backlog/done/protecao-sobrecarga-ssr.md`; mapa de limites em `../infra/arquitetura-sharebook.md`.
+
+- **Limite de renderizações simultâneas em `server.ts`**: excedido, responde `503` com `Retry-After: 5` em ~1 ms e loga `ssr_overloaded`. Padrão do código 30 total / 18 bots; produção roda 6 / 3 por variável de runtime no Coolify (`SSR_MAX_CONCURRENT_RENDERS`, `SSR_MAX_CONCURRENT_BOT_RENDERS`).
+- **Timeout de 4 s por GET à API, só no servidor.** Estourou ou falhou: a página fica degradada, sai com `no-store` e **não entra no cache SSR de 30 min** — cachear página degradada congela a falha por meia hora.
+- **Falha de infraestrutura não é 404.** Responder 404 quando a chamada do dado essencial falha por 5xx, timeout ou rede diz ao Google que a página não existe. Usar `503` com `Retry-After: 30` e mensagem de instabilidade; 404 só quando a API confirma que o livro não existe. Armadilha real: o `NotFoundPageComponent` sobrescrevia o 503 com 404 — testar o status final da resposta, não só o do serviço.
+- **503 com `Retry-After`, não 429**, para sobrecarga global do servidor; 429 fica reservado para um eventual limite por cliente.
+- **Ler 503 por origem antes de avaliar latência**: recusa do limitador (`Retry-After: 5`, rápida) e degradação por timeout (`Retry-After: 30`, perto de 4 s) têm perfis opostos; misturá-las num p95 só esconde as duas.
+- **`build:ssr` usa `environment.prod.ts`**, não `environment.ts`. Para testar o SSR contra uma API falsa local, o `apiEndpoint` a trocar temporariamente é o de produção.
+- O teste HTTP automatizado do limitador ainda não existe; virou critério de aceite de `backlog/todo/pre-processamento-paginas-e-recomendacoes.md`.
+
 ### SsrCacheService — escopo de módulo, não de classe
 
 **Bug crítico corrigido em 2026-06-11**: O `SsrCacheService` original declarava `private store = new Map()` como propriedade de instância. Angular Universal cria novo contexto de injeção por request → o Map morria a cada requisição → o cache nunca funcionava.

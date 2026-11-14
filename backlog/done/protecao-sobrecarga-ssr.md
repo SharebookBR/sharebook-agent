@@ -922,7 +922,7 @@ Não invalidei a home: o playbook exige POST autenticado que remove cache em pro
 
 Reservar aproximadamente **2 vCPUs de responsividade** para API, Postgres, Traefik, kernel e serviços residentes. Não há cálculo honesto de MiB/CPU por renderização: T9 mostrou 346–452 ms isolados, mas não preservou CPU; o frontend já tem ~803 MB RSS, OpenClaw 1,096 GiB, browser 80 MiB e swap global 2,2 GiB.
 
-A evidência aponta **contenção de recursos da VPS/API sob rajada**, não pool Postgres (máximo anterior de 2 conexões), mas não prova falta permanente de recursos: a fotografia atual tinha load 0,87 em 15 min e 3,5 GiB disponíveis. Antes de elevar o teto, usar origem externa e CPU/cgroup confiável; para reduzir o risco estrutural, decidir entre VPS maior e menos SSR via [pré-renderização](pre-processamento-paginas-e-recomendacoes.md). Nenhuma configuração, container ou deploy foi alterado.
+A evidência aponta **contenção de recursos da VPS/API sob rajada**, não pool Postgres (máximo anterior de 2 conexões), mas não prova falta permanente de recursos: a fotografia atual tinha load 0,87 em 15 min e 3,5 GiB disponíveis. Antes de elevar o teto, usar origem externa e CPU/cgroup confiável; para reduzir o risco estrutural, decidir entre VPS maior e menos SSR via [pré-renderização](../todo/pre-processamento-paginas-e-recomendacoes.md). Nenhuma configuração, container ou deploy foi alterado.
 
 ### Respostas do OpenClaw (rodada 5)
 

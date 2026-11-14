@@ -3,14 +3,14 @@
 Conhecimento de frontend, backend, banco, analytics, observabilidade, logs, error tracking, tags do catálogo, mecanismos de descoberta e performance técnica.
 
 ## Playbooks
-- `./frontend.md` — Angular, UI patterns, Mobile, SSR v2, `ssr_access`, crawler/bot em SSR, JWT interceptor e download de ebook (URL assinada, rate limit, clique repetido).
+- `./frontend.md` — Angular, UI patterns, Mobile, SSR v2, `ssr_access`, crawler/bot em SSR, proteção contra sobrecarga do SSR (limitador, `ssr_overloaded`, 503 com `Retry-After` em vez de 404 falso, timeout de 4 s, página degradada fora do cache), JWT interceptor e download de ebook (URL assinada, rate limit, clique repetido).
 - `./backend.md` — .NET, EF Core, migrations (Designer obrigatório, drops idempotentes, teste com drift de produção, `dotnet ef` fixado), arquitetura hexagonal, logs da API, Rollbar, `JobHistories`, `JobExecutor`, SMTP/e-mail transacional e incidentes.
 - `./tag-manager/PLAYBOOK.md` — Tags do catálogo: modelo de dados, motor mecânico, vocabulário, scripts de backfill/refinamento/verificação e endpoints.
 - `./postgres-ro/PLAYBOOK.md` — Consultas SQL seguras e exploração de dados.
 - `./postgres-slow-query-analysis/PLAYBOOK.md` — Diagnóstico e otimização de performance no banco.
-- `./analytics/PLAYBOOK.md` — GA4, GSC, SEO, Business Intelligence, Grafana/Loki e scripts de métricas/dashboards.
+- `./analytics/PLAYBOOK.md` — GA4, GSC, SEO, Business Intelligence, Grafana/Loki, scripts de métricas/dashboards e a config versionada do Grafana Alloy do frontend (`assets/alloy-frontend.alloy`).
 - `./search-console-explorer/PLAYBOOK.md` — investigação ad hoc de aquisição orgânica, comparação de períodos e oportunidades de SEO no GSC.
-- `./grafana-cloud-explorer.md` — Grafana Cloud como superfície única de investigação: Prometheus/Mimir, Loki, OTLP, métricas, logs, PromQL, LogQL, GC, active series, cardinalidade, `ClientIp`, `UserAgent` e saúde da API.
+- `./grafana-cloud-explorer.md` — Grafana Cloud como superfície única de investigação: Prometheus/Mimir, Loki, Grafana Alloy (coletor do frontend), OTLP, métricas, logs, PromQL, LogQL, GC, active series, cardinalidade, `ClientIp`, `UserAgent` e saúde da API.
 
 ## Uso
 - Ler quando a tarefa envolver implementação, diagnóstico técnico, queries, analytics, SEO técnico, observabilidade, Grafana Cloud, Prometheus/Mimir, Loki, OpenTelemetry/OTLP, PromQL, LogQL, Rollbar, logs, SSR access, crawler, bot, erro em produção, SMTP/e-mail transacional, tags do catálogo, vocabulário controlado, mecanismos de descoberta ou performance.

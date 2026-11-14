@@ -44,6 +44,8 @@ Resolução: o dono/admin da org instala o app em **https://github.com/apps/clau
 
 **Nota — sessões de task (GitHub App) recebem branch de trabalho designada pelo harness**, com instrução de nunca pushar pra outra branch sem permissão explícita. Isso vale para o trabalho da tarefa em si (código, feature, fix) — **não vale por padrão para os artefatos de continuidade do harness** (`SOUL.md`, `AGENTS.md`, `playbooks/**`, `sessions/**`).
 
+**Conferir de qual branch o clone saiu antes de ler código.** Em 2026-11-13 o clone do frontend tinha partido da `develop` e a rota `/admin/analises` pareceu ausente, embora já estivesse na `master` (a que vai para produção). Na mesma sessão, uma ref local sem `fetch` fez o agente afirmar que o push exigiria `--force`, o que era falso. Antes de concluir "não existe" ou "divergiu": `git fetch origin` e comparar contra `origin/master`.
+
 ### Merge de PR: sempre merge commit, nunca squash
 
 Ao mergear PR com `mcp__github__merge_pull_request`, passar `merge_method: "merge"`. O Raffa não gosta de squash (2026-10-18; uma sessão escolheu squash por conta própria no PR #613 do backend e ele reclamou). Não usar `squash` nem `rebase`, mesmo com a `master` linear. Se o merge já saiu errado, não reescrever a `master`: avisar o Raffa e seguir.

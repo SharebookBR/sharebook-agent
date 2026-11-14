@@ -242,6 +242,17 @@ estáveis naquela janela.
   manter no Grafana as poucas séries necessárias para incidentes tardios:
   swap + I/O de swap do host, conexões do Postgres e correlação com latência/5xx.
 
+## Teste de carga em produção
+
+Promovido dos testes V1/V2 de 2026-11-13 (`backlog/done/protecao-sobrecarga-ssr.md`). A VPS é única: um teste mal desenhado é uma queda real paga pelo Raffa e pelos visitantes.
+
+- **Só com autorização explícita do Raffa, rampa, dono presente e reversão registrada** antes de começar.
+- **Gatilhos de parada numéricos e sustentados** (limiar + janela, ex.: "swap I/O acima de X por N amostras seguidas"). Um gatilho vago parou o primeiro V2 por uma única amostra de ruído.
+- **Origem de dentro da VPS é otimista**: o gerador compete por CPU com o servidor. Preferir origem externa; se não houver, rodar com prioridade mínima e CPU fixada, e registrar a ressalva no resultado. O teste de origem externa segue aberto em `backlog/todo/teste-carga-ssr-origem-externa.md`.
+- **Probes humanos separados** durante a inundação de bots: o critério que importa é humano atendido (V2: 77/77 em 200), não só ausência de 500.
+- **Separar os 503 por origem** (limitador vs. degradação; ver `../engineering/frontend.md`, "Proteção contra sobrecarga do SSR") antes de ler latência.
+- Monitorar host além do app: no V2, o que parou o teste foi swap I/O; Postgres quase não trabalhou. Para autópsia depois do fato, ver a seção do Sentinel acima.
+
 ## Higiene recorrente de banco
 - Analisar slow queries em produção deve virar rotina, não só reação quando alguém já está reclamando.
 - Sem observabilidade mínima, discussão de performance vira opinião com fantasia de diagnóstico.

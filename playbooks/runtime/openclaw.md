@@ -22,7 +22,7 @@ OpenClaw é infraestrutura cognitiva e operacional: workspace persistente, memó
 3. Fazer sync dos quatro repositórios e ler todas as memórias episódicas do dia corrente.
 4. Ler `AGENTS.md`, este playbook e `SOUL.md` a partir do checkout efetivo.
 5. Consultar playbook, script, log, payload, banco ou estado real antes de improvisar narrativa.
-6. Para passado, decisão, preferência, pessoa ou data, usar `memory_search` quando disponível e confrontar o resultado com a fonte canônica.
+6. Para passado, decisão, preferência, pessoa ou data, usar `memory_search` quando disponível e confrontar o resultado com a fonte canônica. Se falhar (ex.: `401 invalid_jwt` do provedor de embeddings, 2026-11-12), registrar a falha como `open_loop` na memória da sessão e seguir só com fontes primárias locais (`sessions/`, `git log`, `git status`) — sem reconstituir o passado de memória do modelo.
 
 ## Preflight obrigatório após provisionamento ou upgrade
 

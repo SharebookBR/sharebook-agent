@@ -299,5 +299,9 @@ Todos em `playbooks/engineering/analytics/scripts/`. Preferir scripts existentes
 | `ga4_events_30d.py` | Panorama dos eventos rastreados nos últimos 30 dias. |
 | `ga4_search_via_pagepath.py` | Uso da busca via `/buscar/*` nos últimos 30 dias. Alternativa histórica ao evento `search` (custom dim só a partir de 04/06/2026). |
 
+## Assets
+
+- `assets/alloy-frontend.alloy` — configuração versionada (sem segredos) do container Grafana Alloy que coleta os logs `ssr_access`/`ssr_overloaded` do `sharebook-frontend` para o Loki. Coletor único do frontend desde 2026-11-14; substituiu o shipper Python `ship_docker_logs_to_otlp.py`, que perdeu 135 de 148 503 sob rajada. Operação, consulta LogQL e segredos (`/opt/sharebook-frontend-alloy/alloy.env` no host) estão em [`../grafana-cloud-explorer.md`](../grafana-cloud-explorer.md).
+
 ---
 Para instalação de novos ambientes, consulte `sharebook-agent/playbooks/engineering/analytics/BOOTSTRAP.md`.
