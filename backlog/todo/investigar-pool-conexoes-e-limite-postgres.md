@@ -47,5 +47,5 @@ Alto no teste: pode derrubar API e banco, reiniciar containers e, no pior caso, 
 - Origem: `backlog/done/protecao-sobrecarga-ssr.md` (incidente de 2026-11-12, testes de 2026-11-13, V2).
 - Depende de série de CPU, memória e conexões para correlação: `observabilidade-sharebook-epico.md` (M7).
 - `restore-drill-backups.md` (pré-requisito de segurança).
-- `teste-carga-ssr-origem-externa.md` e `pressao-memoria-swap-host-sob-inundacao.md` (testes vizinhos; podem compartilhar a mesma janela).
+- `teste-carga-ssr-origem-externa.md` (inclui a investigação de memória e swap; teste vizinho, pode compartilhar a mesma janela).
 - `Backend`: `playbooks/engineering/backend.md`, seção "Connection pool do Npgsql vs. `max_connections` do Postgres".
