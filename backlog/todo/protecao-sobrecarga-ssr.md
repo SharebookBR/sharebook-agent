@@ -401,12 +401,15 @@ Timeout=15`.
   cobertura de integração: não há teste HTTP automatizado de `503` +
   `Retry-After`, nem de HIT/coalescido; a evidência HTTP manual registrada
   anteriormente não substitui esses testes.
-- **Log de recusas em produção: não verificável** — houve 0
-  `ssr_overloaded` e 0 status 503 no tráfego observado; não ocorreu pico que
-  exercitasse a recusa.
-- **No próximo pico / meta de zero 500 por estol: não verificável** — não houve
-  rajada equivalente; a janela normal teve 0 500 e 0 erro de conexão, o que não
-  valida esse cenário.
+- **Log de recusas em produção: atendido no teste controlado V2** — o gerador
+  recebeu 62.764 recusas 503 com `Retry-After: 5`; o Alloy registrou 264
+  linhas `ssr_overloaded`, pico `peakInFlight=6` e soma de 62.537 recusas
+  agregadas. A diferença é compatível com o rate-limit do próprio log.
+- **No próximo pico / meta de zero 500 por estol: atendido no teste controlado
+  V2, com ressalva operacional** — até bot c=200 houve 0 HTTP 500, 0 erro
+  Npgsql/conexão no Loki e máximo de 16 conexões Postgres. A recuperação ficou
+  normal no primeiro minuto, mas o monitor interrompeu o restante por swap
+  intenso; isto não prova estabilidade sustentada de um pico real.
 - **Search Console: para o Raffa conferir**
 
 Conclusão: os números pós-deploy são saudáveis e melhores que o baseline, mas
@@ -1006,5 +1009,99 @@ visita lenta posterior.
 Comandos principais: `taskset -c 3 nice -n 19 ssr-v2-load`, monitor de 1 s
 por SSH com `docker stats`, `free -b`, `/proc/loadavg`, `vmstat` e
 `pg_stat_activity`. Nenhuma configuração, container ou deploy foi alterado
-pelo V2. Os critérios "Log de recusas em produção" e "No próximo pico"
-permanecem não verificáveis nesta execução abortada; o item não foi movido.
+pelo V2. Os critérios "Log de recusas em produção" e "No próximo pico" foram
+reavaliados pela retomada autorizada abaixo; o item não foi movido.
+
+#### V2 retomado do zero — monitor corrigido e resultado
+
+**Correção e teste seco.** A autorização posterior do Raffa substituiu o
+abort técnico acima: o monitor só abortaria por atividade de swap se
+`swap-in + swap-out > 1.000 KiB/s` por **10 amostras consecutivas** (além de
+swap usada inicial +300 MiB). Troquei a leitura pontual de `vmstat` por
+delta de `pswpin`/`pswpout` de `/proc/vmstat`; a coleta combinou isso, CPU e
+memória de `docker stats`, `free -b`, `/proc/loadavg`, health/restarts e
+`pg_stat_activity` em arquivo local. O teste seco de 60 s, com o site em
+repouso, não disparou: 43 amostras úteis, swap-in máximo **6,4 KiB/s** e
+swap-out máximo **0 KiB/s**. Portanto o `si=4` isolado da tentativa anterior
+não voltou a produzir falso positivo.
+
+Antes da carga: frontend/API `healthy`, ambos 0 restarts; Alloy `running`, 0
+restarts; limites confirmados no container sem listar os demais envs:
+`SSR_MAX_CONCURRENT_RENDERS=6` e `SSR_MAX_CONCURRENT_BOT_RENDERS=3`. Home
+200 em 55 ms, PDP 200 em 664 ms; memória usada 3.445.518.336 bytes, swap
+2.312.376.320 bytes e load 1,20 / 1,09 / 1,09. A origem continuou sendo a
+própria VPS, pela URL pública, limitação registrada; o gerador Go usou
+`nice -n 19 taskset -c 3`, GETs públicos de PDP/tag/categoria do sitemap e
+taxa global máxima de 500 req/s (abaixo do teto de 2.000).
+
+Comandos principais (sem segredos):
+
+```bash
+# 60 s de monitor em repouso e, depois, monitor durante a rodada
+python3 codex-temp/ssr_v2_monitor_live.py monitor.csv stop 60
+nice -n 19 taskset -c 3 codex-temp/ssr-v2-load requests.jsonl stop \
+  https://www.sharebook.com.br/sitemap.xml
+
+# Loki, após a janela
+{service_name="sharebook-frontend-alloy-test"} |= "ssr_overloaded"
+{service_name="sharebook-api"} |~ "(?i)(responded 500|NpgsqlException|connection to database|connection pool|canceling statement|timeout)"
+```
+
+O roteiro completou humano c=3/6/12/24, bot c=5/15/50, bot c=200 por 30 s e
+iniciou a recuperação. O monitor então acionou **de verdade** às
+`2026-11-14T00:02:53.868Z`: `si=1.091,1 KiB/s` e `so=5.541,1 KiB/s`, após 10
+amostras consecutivas acima do limiar. A geração parou e não foi repetida. O
+pico de swap usada foi 2.598.834.176 bytes, aumento de 286.720.000 bytes
+(~273,4 MiB), portanto abaixo do gatilho independente de +300 MiB. CPU do
+host chegou a 98,4%, mas não por 30 amostras consecutivas; Postgres chegou a
+16 conexões totais/0 ativas; frontend/API permaneceram `healthy`, sem restart.
+O arquivo preservado de amostras é
+`codex-temp/ssr-v2-run/20261113T2350Z/monitor.csv` (767 linhas; não
+versionado).
+
+| etapa | HTTP 200 | 503, `Retry-After: 5` | p95 do 503 | observação |
+|---|---:|---:|---:|---|
+| humano c=3 | 212 | 0 | — | p95 200: 1.369,44 ms |
+| humano c=6 | 174 | 0 | — | p95 200: 2.868,59 ms |
+| humano c=12 | 3.418 | 13.240 | 16,91 ms | teto total exercitado |
+| humano c=24 | 4.850 | 12.641 | 114,75 ms | teto total exercitado |
+| bot c=5 | 4.955 | 10.494 | 4,68 ms | limite de bot exercitado |
+| bot c=15 | 6.729 | 10.506 | 105,57 ms | probe humano separado |
+| bot c=50 | 7.467 | 9.997 | 168,67 ms | probe/cache ativos |
+| bot c=200 (30 s) | 4.131 | 5.886 | 202,55 ms | etapa extrema concluída |
+
+Foram 95.115 respostas: **32.351 HTTP 200, 62.764 HTTP 503 e 0 outros/erros
+de cliente**. Todos os 503 observados eram `Retry-After: 5`; não houve
+`Retry-After: 30` (503 de degradação). Assim, a meta de p95 <300 ms das
+recusas do limitador foi atendida inclusive na etapa c=200. A consulta Loki da
+API retornou **0** linhas de HTTP 500, Npgsql, pool, conexão ou timeout; o
+monitor também viu 0 em cada amostra. Isto contrasta com o teste anterior:
+148 503 (100 por degradação), 12 HTTP 500 e p95 de Slug/Recommendations de
+7,06 s/21,5 s. O p95 exato dessas duas rotas nesta V2 não é verificável: a
+consulta LogQL de `quantile_over_time` atingiu o limite de 500 séries; não
+substituí isso por uma estimativa.
+
+As 77 sondas humanas durante bot c=5/15/50/200 foram **77 HTTP 200**, p95
+**1.720,92 ms**, portanto abaixo de 5 s e evidência da reserva de vaga. A PDP
+de cache teve 1 MISS inicial de 1.859,76 ms e, depois, 324 HITs 200: p50
+27,12 ms, p95 203,88 ms e p99 416,38 ms. Foram 2.398 URLs únicas e 30.798
+respostas HIT: o teste aqueceu/preencheu significativamente o cache SSR, mas
+não há uma invalidação nem uma primeira visita pós-teste comparável para
+afirmar que ela ficou mais lenta. Na recuperação, os primeiros 60 s tiveram
+12/12 HTTP 200, p95 524,02 ms e máximo 608,08 ms; sem restart. O restante dos
+3 min foi interrompido pelo gatilho real de swap.
+
+O Alloy recebeu os eventos no label ainda **`sharebook-frontend-alloy-test`**:
+264 linhas `ssr_overloaded`, soma `rejectedSinceLastLog=62.537` e todos os
+`peakInFlight=6`. A diferença de 227 contra as 62.764 recusas do gerador é
+esperada do rate-limit/agregação do log. O seletor
+`service_name="sharebook-frontend"` não retornou as linhas desta janela, apesar
+da promoção manual registrada na rodada 5; não alterei configuração durante o
+teste. Isso revela uma pendência de rótulo/virada a corrigir fora desta rodada.
+
+**Critérios V2:** recusa rápida atendida; degradação 503/30 atendida (0);
+zero 500/Npgsql e Postgres <80 atendido (0 e máximo 16); reserva humana
+atendida; HIT em milissegundos atendido; `ssr_overloaded` no teto 6 atendido;
+recuperação no primeiro minuto atendida, porém a observação completa foi
+interrompida pelo gatilho real de swap. O item continua em `backlog/todo` e
+não foi movido para `done`.
