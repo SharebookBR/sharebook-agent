@@ -13,9 +13,37 @@ Playbook para investigar Grafana Cloud no Sharebook sem vazar segredos. Este e o
 
 - A API `sharebook-api` exporta metricas OpenTelemetry via OTLP direto para Grafana Cloud.
 - A API `sharebook-api` envia logs Serilog via OTLP para Grafana Cloud Logs/Loki quando `GrafanaLogs__Endpoint` e `GrafanaLogs__Headers` estao configuradas no ambiente da aplicacao.
+- O frontend `sharebook-frontend` envia `ssr_access` e `ssr_overloaded` por um
+  container Grafana Alloy dedicado. O seletor de producao e
+  `service_name="sharebook-frontend"`; `sharebook-frontend-alloy-test` foi
+  apenas o rótulo da validacao inicial.
 - Request logs usam `service_name="sharebook-api"` e carregam `ClientIp` e `UserAgent` como labels/metadata.
 - Health checks bem-sucedidos (`/api/Operations/Ping`, `/hc`, `/health`) sao suprimidos do sink normal por design; falhas continuam relevantes.
 - Nao ha Collector local nesta POC. Nao assumir Tempo/traces sem validar no stack.
+
+## Logs SSR do frontend via Alloy
+
+Desde 2026-11-14, Alloy e o unico coletor do frontend. A configuracao sem
+segredo esta versionada em
+`playbooks/engineering/analytics/assets/alloy-frontend.alloy`; os valores
+ficam exclusivamente em `/opt/sharebook-frontend-alloy/alloy.env` (0600) no
+host. O container usa imagem por digest, rootfs somente leitura,
+`cap-drop=ALL`, `no-new-privileges`, tmpfs restrito e diretorio persistente de
+posicoes.
+
+Consultar com:
+
+```logql
+{service_name="sharebook-frontend"} |= "ssr_access"
+{service_name="sharebook-frontend"} |= "ssr_overloaded"
+```
+
+Em uma virada de container/configuracao, comparar por minuto por ao menos 10
+min o total de `ssr_access` em `docker logs --timestamps sharebook-frontend` e
+no Loki antes de remover o coletor anterior. Nao existe monitor automatico de
+promocao ativo: a verificacao precisa ser explicitamente executada. Antes de
+ampliar Alloy a outros containers, instalar proxy de `docker.sock`; `:ro` no
+bind nao restringe a API Docker.
 
 ## Segredos e variaveis
 

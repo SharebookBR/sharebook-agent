@@ -39,6 +39,11 @@ Hoje ja temos algumas pecas importantes:
 - **Grafana Cloud Logs / Loki**: request logs da API publicados via OTLP e consultaveis por Loki API. Usar `playbooks/engineering/grafana-cloud-explorer.md` e `scripts/observability/grafana_logs.py`.
 - **Rollbar**: error tracking da aplicacao, stack traces e agrupamento de erros.
 - **Logs locais na VPS**: `docker logs`, incluindo `ssr_access` do frontend, ainda uteis para investigar crawler, IP, rota e user-agent do SSR.
+- **Alloy do frontend**: desde 2026-11-14, fonte persistente de
+  `ssr_access`/`ssr_overloaded` em Loki sob `service_name="sharebook-frontend"`.
+  A configuracao sem segredo esta em
+  `playbooks/engineering/analytics/assets/alloy-frontend.alloy`; o shipper
+  Python provisório foi removido depois de virada sem perda nem duplicata.
 - **GA4 e Search Console**: sinais de produto, SEO e comportamento organico. Search Console usa a mesma credencial de service account do GA4.
 - **Coolify + GCP bucket**: backups de bancos e volume `sharebook-wwwroot` configurados e enviados para GCS.
 - **Git/backlog/harness**: capacidade de transformar achados em tarefa, patch, deploy e validacao.
@@ -151,6 +156,13 @@ Ainda falta amadurecer:
 Atualizacao 2026-10-11: o gatilho aconteceu (restart do container apagou os logs da janela de um incidente do Rollbar). Primeira fatia entregue so para a API, sem infra nova: sink OTLP do Serilog direto para Grafana Cloud Logs, com `ClientIp` e `UserAgent` em todo log da requisicao. Ver `playbooks/engineering/backend.md`, secao "Onde estao os logs". Pendente: `ssr_access` do frontend, e access log do Traefik (hoje desligado).
 
 Atualizacao 2026-11-12: o incidente de 03:26 BRT (ver `protecao-sobrecarga-ssr.md`) mostrou o custo dessas lacunas: nao foi possivel identificar o bot nem reconstruir consultas lentas, locks ou conexoes do minuto. Acrescentar ao pendente: `pg_stat_statements`, `log_min_duration_statement` (ex: 1s), `log_lock_waits=on` e `track_io_timing=on` no Postgres; e uma metrica ou log de **requisicoes simultaneas em andamento** na API e no SSR (o limite de concorrencia do SSR ja registra recusas e pico no log do container).
+
+Atualizacao 2026-11-14: Alloy substituiu o shipper Python no frontend. No V2,
+ele reteve todas as recusas observadas pelo cliente, enquanto o script antigo
+havia perdido eventos sob rajada. A promocao final recriou o container para
+reler o arquivo 0600; a comparacao de 10 min deu 48 `ssr_access` no Docker e
+48 no Loki, sem buraco/duplicata. Antes de coletar outros containers ou
+Postgres, fechar o item proprio de proxy do `docker.sock`.
 
 ### 7. Crawlers, SEO e trafego nao humano
 

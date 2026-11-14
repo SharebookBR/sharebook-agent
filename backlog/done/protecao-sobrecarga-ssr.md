@@ -2,7 +2,11 @@
 
 ## Estado
 
-**Aberto em 2026-11-12, decisões tomadas pelo Raffa na mesma sessão.**
+**Concluído em 2026-11-14.** Aberto em 2026-11-12 após crawler + SSR
+on-demand causar erros de API; entregou limites SSR 6/3, timeout e degradação
+correta, cache/timeout da API e logs persistentes Alloy. O V2 eliminou HTTP
+500/Npgsql sob carga, com follow-ups separados para origem externa, pressão de
+swap, capacidade estrutural, hardening do socket, restore e testes HTTP.
 
 | fatia | situação |
 |---|---|
@@ -1105,3 +1109,95 @@ atendida; HIT em milissegundos atendido; `ssr_overloaded` no teto 6 atendido;
 recuperação no primeiro minuto atendida, porém a observação completa foi
 interrompida pelo gatilho real de swap. O item continua em `backlog/todo` e
 não foi movido para `done`.
+
+### Respostas do OpenClaw (rodada 7)
+
+#### Correção final do Alloy e validação da virada
+
+Às `2026-11-14T00:42:29Z`, `docker inspect` (somente a variável solicitada)
+mostrou `ALLOY_SERVICE_NAME=sharebook-frontend-alloy-test`. O arquivo 0600 já
+continha `sharebook-frontend`: `docker restart` não relê `--env-file` de
+container existente. Antes da mudança, Alloy estava `running`, 0 restarts,
+imagem pinada em `grafana/alloy@sha256:9acc2529bc1edb7f5b2bd801dd8334ebc80c158e3a9e5526ecd7c9a273d43189`,
+rootfs read-only, `cap-drop=ALL`, `no-new-privileges`, tmpfs restrito,
+`restart=unless-stopped`, socket Docker e posições em
+`/opt/sharebook-frontend-alloy/data`.
+
+Recriei somente o container com a mesma imagem/opções, preservando as posições.
+O anterior foi parado e renomeado como rollback imediato; o novo subiu
+`running`, 0 restarts, com `ALLOY_SERVICE_NAME=sharebook-frontend`. O rótulo de
+produção ficou sem dados de `2026-11-13T23:20:41Z` a `2026-11-14T00:42:29Z`:
+**1 h 21 min 48 s**. Até a correção os dados chegaram no rótulo de teste;
+depois, LogQL confirmou novos `ssr_access` em produção:
+
+```logql
+{service_name="sharebook-frontend"} |= "ssr_access"
+```
+
+Comparei `docker logs --timestamps` do frontend e Loki por minuto na janela
+`00:42:29Z`–`00:52:29Z`, filtrando `event="ssr_access"`:
+
+| minuto UTC | Docker | Loki |
+|---|---:|---:|
+| 00:42 | 2 | 2 |
+| 00:43 | 1 | 1 |
+| 00:44 | 3 | 3 |
+| 00:45 | 10 | 10 |
+| 00:46 | 3 | 3 |
+| 00:47 | 3 | 3 |
+| 00:48 | 13 | 13 |
+| 00:49 | 1 | 1 |
+| 00:50 | 6 | 6 |
+| 00:51 | 4 | 4 |
+| 00:52 | 2 | 2 |
+| **total** | **48** | **48** |
+
+Não houve buraco nem duplicata. A configuração secret-free versionada é
+`playbooks/engineering/analytics/assets/alloy-frontend.alloy`; credenciais e
+rótulo ficam exclusivamente no arquivo remoto 0600.
+
+#### Observação limpa e retirada do shipper
+
+Na janela de 30 min após a correção (`00:42:29Z`–`01:12:29Z`), frontend, API e
+Alloy ficaram saudáveis/running, todos com 0 restarts. LogQL não retornou HTTP
+500, Npgsql/pool/conexão/timeout, `ssr_access` 503 ou `ssr_overloaded`. Snapshot
+final: frontend **325,4 MiB**, API **297,1 MiB**, Alloy **221,1 MiB**; swap caiu
+de **2.473.988.096** para **2.428.637.184 bytes**. A amostra final de 6 s teve
+4 KiB de swap-in e 5 KiB de swap-out no total (máximos 4/5 KiB/s). Não existe
+série histórica de swap para afirmar cada segundo da janela: esse limite fica
+explícito, sem inventar ausência de I/O.
+
+Como virada e observação passaram, removi o shipper provisório: `systemctl
+disable --now`, unit e diretório 0600 confirmados ausentes. O script
+versionado `playbooks/engineering/analytics/scripts/ship_docker_logs_to_otlp.py`
+também foi removido. Reversão: restaurar script/unit do Git, recriar o arquivo
+0600 a partir do `.env` canônico, `daemon-reload` e `enable --now`; se preciso,
+parar Alloy e restaurar o rótulo de teste. O monitor de promoção da rodada 3
+**não existe**: não há unit, cron, script ou job OpenClaw ativo.
+
+#### Fechamento
+
+O incidente de 2026-11-12 teve 94 HTTP 500 e 127 erros EF/pool por SSR
+on-demand sob rajada. Entraram timeout SSR/API, cache de recomendações,
+timeouts Npgsql, limite SSR e logs persistentes Alloy. No teste 30/18 houve
+148 respostas 503 (100 por degradação), 12 HTTP 500/Npgsql e latência severa.
+No V2 6/3: 62.764 recusas com `Retry-After: 5` (pior p95 **202,55 ms**), zero
+503/30, zero 500/Npgsql, Postgres máximo 16 conexões e 77/77 probes humanos
+200 (p95 **1,721 s**). Limitações: o V2 saiu da própria VPS e, ao fim, houve
+10 s de swap I/O acima de 1 MiB/s (última amostra 1.091,1/5.541,1 KiB/s).
+Essas lacunas e os follow-ups restantes viraram itens próprios; este item é
+movido para `done`.
+
+```bash
+docker inspect sharebook-frontend-alloy  # variável/estado, sem outros envs
+docker logs --timestamps --since ... --until ... sharebook-frontend
+systemctl disable --now sharebook-frontend-log-shipper.service
+docker stats --no-stream sharebook-frontend sharebook-api sharebook-frontend-alloy
+free -b; vmstat 1 6
+```
+
+```logql
+{service_name="sharebook-frontend"} |= "ssr_access"
+{service_name="sharebook-frontend"} |= "ssr_overloaded"
+{service_name="sharebook-api"} |~ "(?i)(responded 500|NpgsqlException|connection to database|connection pool|canceling statement|timeout)"
+```
