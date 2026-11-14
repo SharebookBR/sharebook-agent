@@ -29,6 +29,10 @@ O que já joga a favor: o HTML público da home e das páginas de livro **já sa
 - [ ] **Limpeza explícita** nos eventos de mudança (livro aprovado, status alterado, removido), junto do endpoint interno que já limpa o cache do SSR (`/_internal/ssr-cache/invalidate`).
 - [ ] Avaliar **revalidação em segundo plano** (servir a versão velha enquanto atualiza); **suporte no plano gratuito não confirmado**.
 - [ ] Páginas que não podem ser guardadas: `/panel`, `/admin`, `/myaccount`, `/api`, qualquer resposta com `Set-Cookie`, e todo `no-store` (erros 404, 503 e páginas degradadas).
+- [ ] **Telemetria dos e-mails de onboarding** (conferido no código do backend em 2026-11-14, `OnboardingTrackingController`): o pixel de abertura é `GET /o/open/{token}` e o clique é `GET /o/click/{token}/{cta}`, ambos no host da API e **sob o caminho `/o/`, não sob `/api`**. Então uma exclusão de `/api` **não os cobre**. Situação de cada um:
+  - **Pixel (`/o/open/...`):** já responde `Cache-Control: no-store, no-cache, max-age=0`, e uma CDN que respeita a origem não o guarda.
+  - **Clique (`/o/click/...`):** responde um `302` **sem** `Cache-Control`. Uma regra ampla de "guardar tudo" no host da API, ou a regra de cache de `302` prevista para o download de e-book, **poderia guardá-lo**. Prevenir com uma regra de bypass para `/o/*` e, como defesa extra, `Cache-Control: no-store` na resposta do clique (mudança de uma linha no backend).
+  - **Impacto provável é baixo** (hipótese, não testada): cada e-mail tem um token próprio e o sistema registra só a **primeira** abertura e o **primeiro** clique, então cache por URL quase não distorceria a contagem. Mesmo assim vale a regra, porque é barato e evita um erro difícil de diagnosticar.
 
 ### C. Imagens
 - [ ] Cache das capas e miniaturas (`/Images/Books/...`). A URL tem versão (`ImageVersion`), então dá para usar cache longo.
@@ -64,6 +68,7 @@ O item antigo prometia "eliminar ~100% do custo de banda de e-book". **Isso não
 - Search Console sem queda de páginas indexadas nem de rastreamento do Googlebot nos dias seguintes.
 - Regra de download limita um abuso simulado, sem afetar um usuário normal.
 - Registro e e-mail (SPF/DKIM) continuam funcionando depois do DNS.
+- Abrir um e-mail de onboarding de teste e clicar no botão depois do cache ligado: o painel (Análises → Onboarding) continua registrando a abertura e o clique, e o redirect leva ao destino certo.
 
 ## Relações
 
