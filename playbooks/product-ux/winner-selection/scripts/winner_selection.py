@@ -121,6 +121,9 @@ FAMILY_DESCRIPTION_NAME_RE = re.compile(
     r"(?i)(?:\b(?:filh[oa]s?|crianç[ae]s?|príncipe|princesa|bebê)\b[^,.\n]{0,60},\s*(?:o|a)\s+)"
     r"[A-ZÀ-Ý][\wÀ-ÿ'’-]*(?:\s+[A-ZÀ-Ý][\wÀ-ÿ'’-]*){0,3}"
 )
+TRAVEL_LOCATION_RE = re.compile(
+    r"(?i)\b(?:me\s+)?desloco\s+de\s+[^,.()\n]{1,80}\s+para\s+[^,.()\n]{1,80}"
+)
 FAMILY_NAME_RE = re.compile(r"\b[A-ZÀ-Ý][\wÀ-ÿ'’-]+\s+(?=de\s+\d{1,3}\b)")
 REGIONAL_IDENTITY_RE = re.compile(
     r"(?i)\bjovem\s+escritora\s+[a-zà-ÿ'’-]+"
@@ -171,6 +174,7 @@ def sanitize_request_text(text: str) -> str:
     sanitized = SOU_UNSUPPORTED_NAME_RE.sub("sou [identidade removida]", sanitized)
     sanitized = CHILD_NAME_RE.sub("[familiar removido]", sanitized)
     sanitized = FAMILY_DESCRIPTION_NAME_RE.sub("[familiar removido]", sanitized)
+    sanitized = TRAVEL_LOCATION_RE.sub("me desloco entre [localidades removidas]", sanitized)
     sanitized = FAMILY_NAME_RE.sub("[familiar removido] ", sanitized)
     sanitized = REGIONAL_IDENTITY_RE.sub("jovem escritora [localidade removida]", sanitized)
     sanitized = PUBLISHED_WORKS_RE.sub("[obras publicadas removidas].", sanitized)
@@ -455,6 +459,10 @@ def self_test() -> int:
         (
             "Meu filho querido, o Nome Exemplo, também gosta de ler.",
             ["Nome Exemplo"],
+        ),
+        (
+            "Me desloco de Cidade Exemplo para Outra Cidade para estudar.",
+            ["Cidade Exemplo", "Outra Cidade"],
         ),
     ]
     for sample, forbidden in samples:
