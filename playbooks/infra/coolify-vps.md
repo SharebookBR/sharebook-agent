@@ -248,10 +248,13 @@ Promovido dos testes V1/V2 de 2026-11-13 (`backlog/done/protecao-sobrecarga-ssr.
 
 - **Só com autorização explícita do Raffa, rampa, dono presente e reversão registrada** antes de começar.
 - **Gatilhos de parada numéricos e sustentados** (limiar + janela, ex.: "swap I/O acima de X por N amostras seguidas"). Um gatilho vago parou o primeiro V2 por uma única amostra de ruído.
-- **Origem de dentro da VPS é otimista**: o gerador compete por CPU com o servidor. Preferir origem externa; se não houver, rodar com prioridade mínima e CPU fixada, e registrar a ressalva no resultado. O teste de origem externa segue aberto em `backlog/todo/teste-carga-ssr-origem-externa.md`.
+- **Origem de dentro da VPS é otimista**: o gerador compete por CPU com o servidor. Preferir origem externa; se não houver, rodar com prioridade mínima e CPU fixada, e registrar a ressalva no resultado. O teste de origem externa foi feito em 2026-11-14 (`backlog/done/teste-carga-ssr-origem-externa.md`).
 - **Probes humanos separados** durante a inundação de bots: o critério que importa é humano atendido (V2: 77/77 em 200), não só ausência de 500.
 - **Separar os 503 por origem** (limitador vs. degradação; ver `../engineering/frontend.md`, "Proteção contra sobrecarga do SSR") antes de ler latência.
 - Monitorar host além do app: no V2, o que parou o teste foi swap I/O; Postgres quase não trabalhou. Para autópsia depois do fato, ver a seção do Sentinel acima.
+- **Ferramentas prontas** em `playbooks/_shared/scripts/infra/load_test/` (roteiro do V2, gatilhos, monitor por container via cgroup v2, status e análise). Começar sempre por `lt_run.py <dir> --seco` (60 s só de monitor): em repouso esta VPS já tem picos isolados de swap I/O de até 5–7 MiB/s, então gatilho de amostra única é falso positivo garantido.
+- **A banda da origem vira o teto antes do servidor.** Em 2026-11-14, de uma conexão de ~8,3 MB/s, a etapa bot c=200 recebeu 9,4 MB/s e empatou entre 6/3 e 12/6: a fila foi no cliente. Registrar MB/s por etapa (o `lt_analyze.py` faz) e, para c=200 de verdade, usar origem na nuvem.
+- **Trocar variável de runtime para um teste**: pelo model do Coolify (`EnvironmentVariable`, nunca SQL cru) e aplicar com `queue_application_deployment(..., commit: <SHA de 40>, restart_only: true, no_questions_asked: true)`, o mesmo do botão Restart: recria o container com a mesma imagem, ~30 s, e **esvazia o cache SSR**. Esperar `healthy` e uma PDP 200 antes de gerar carga (logo após o restart o proxy responde 503). Combinar com o Raffa, antes de começar, se a configuração do teste volta ou fica.
 
 ## Traffic Analytics do Sentinel: quem chegou à borda
 

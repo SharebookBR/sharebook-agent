@@ -40,12 +40,12 @@ Alto no teste: pode derrubar API e banco, reiniciar containers e, no pior caso, 
 - Curva de vazão e latência por tamanho de pool e por número de conexões, com as séries brutas guardadas.
 - Recomendação escrita de `Maximum Pool Size`, `Minimum Pool Size`, `Timeout` e `Command Timeout`, com o dado que a sustenta.
 - Resposta explícita à hipótese do cancelamento da consulta (confirmada, refutada ou não verificável).
-- Depois de aplicar qualquer mudança: repetir o teste de `teste-carga-ssr-origem-externa.md` e comparar com o V2 (zero 500, recusas rápidas, humanos atendidos).
+- Depois de aplicar qualquer mudança: repetir o teste de `../done/teste-carga-ssr-origem-externa.md` (scripts em `playbooks/_shared/scripts/infra/load_test/`) e comparar com o resultado de 2026-11-14 (zero 500, recusas rápidas, humanos atendidos).
 
 ## Relações
 
 - Origem: `backlog/done/protecao-sobrecarga-ssr.md` (incidente de 2026-11-12, testes de 2026-11-13, V2).
 - Depende de série de CPU, memória e conexões para correlação: `observabilidade-sharebook-epico.md` (M7).
 - `../done/restore-drill-backups.md` (pré-requisito de segurança, concluído em 2026-11-14).
-- `teste-carga-ssr-origem-externa.md` (inclui a investigação de memória e swap; teste vizinho, pode compartilhar a mesma janela).
+- `../done/teste-carga-ssr-origem-externa.md` (concluído em 2026-11-14; o Postgres não passou de 16 conexões sob 12/6 e de 12 sob 6/3).
 - `Backend`: `playbooks/engineering/backend.md`, seção "Connection pool do Npgsql vs. `max_connections` do Postgres".

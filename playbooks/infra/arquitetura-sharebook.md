@@ -71,7 +71,7 @@ O frontend usa `https://api.sharebook.com.br/api` também no bundle de produçã
 ## Limites relevantes
 
 - Há uma réplica de frontend e uma de API: os limites de SSR são globais no estado atual.
-- O padrão do código é 30 renders / 18 bots, mas produção roda com `SSR_MAX_CONCURRENT_RENDERS=6` e `SSR_MAX_CONCURRENT_BOT_RENDERS=3` (variáveis de runtime no Coolify, desde a rodada 5 de 2026-11-13). É redução defensiva, não capacidade provada: revisar só depois do teste de carga de origem externa (`backlog/todo/teste-carga-ssr-origem-externa.md`).
+- O padrão do código é 30 renders / 18 bots, mas produção roda com `SSR_MAX_CONCURRENT_RENDERS=6` e `SSR_MAX_CONCURRENT_BOT_RENDERS=3` (variáveis de runtime no Coolify, desde a rodada 5 de 2026-11-13). Confirmado pelo teste de origem externa de 2026-11-14 (`backlog/done/teste-carga-ssr-origem-externa.md`): 12/6 não aumentou a vazão e piorou a latência de todos; **6/3 fica por decisão do Raffa**. O teto é ~3 páginas novas por segundo (um núcleo do Node).
 - O SSR roda em um único processo Node (um núcleo dos 4 vCPU); a VPS tem 7,8 GiB de RAM e 4 GiB de swap, com ~2,2 GiB de swap já em uso em repouso. No teste V2, o limite que parou o ensaio foi swap I/O, não Postgres.
 - O pool Npgsql é 80 e o Postgres aceita 100 conexões. `Timeout=5` e `Command Timeout=15` foram aplicados em 2026-11-12 e ainda exigem observação dos jobs noturnos.
 - Cache de recomendações dura 10 min; cache SSR, 30 min. Essa é a janela máxima esperada de defasagem desses dados.
