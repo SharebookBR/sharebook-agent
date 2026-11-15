@@ -99,6 +99,28 @@ INSTITUTION_ACRONYM_RE = re.compile(
     r"(?i:\b(?:universidade|faculdade|colégio|escola|instituição)\s+(?:d[aeo]\s+)?)"
     r"[A-Z]{2,}\b"
 )
+INSTITUTION_CAMPUS_RE = re.compile(
+    r"(?i)\b(?:if[a-z]{1,8}|instituto federal)\s+campus\s+[^,.()\n]{1,80}"
+)
+BRAZILIAN_STATE_AFTER_REMOVED_LOCATION_RE = re.compile(
+    r"(?i)(\[localidade removida\],\s*)"
+    r"(?:acre|alagoas|amapá|amazonas|bahia|ceará|distrito federal|espírito santo|"
+    r"goiás|maranhão|mato grosso|mato grosso do sul|minas gerais|pará|paraíba|paraná|"
+    r"pernambuco|piauí|rio de janeiro|rio grande do norte|rio grande do sul|rondônia|"
+    r"roraima|santa catarina|são paulo|sergipe|tocantins)\b"
+)
+SOU_UNSUPPORTED_NAME_RE = re.compile(
+    r"(?i:\b(?:eu\s+)?sou\s+)[A-ZÀ-Ý][\wÀ-ÿ'’-]*(?:\s+[A-ZÀ-Ý][\wÀ-ÿ'’-]*){0,3}"
+    r"(?=\s*[,.;!?…]|\s+(?:e|mas|que|tenho|gosto|conheci|comecei|estou|moro)\b)"
+)
+CHILD_NAME_RE = re.compile(
+    r"(?i)(?:\b(?:filh[oa]s?|crianç[ae]s?|autista)\s+(?:o|a)\s+)"
+    r"[A-ZÀ-Ý][\wÀ-ÿ'’-]*(?:\s+[A-ZÀ-Ý][\wÀ-ÿ'’-]*){0,3}"
+)
+FAMILY_DESCRIPTION_NAME_RE = re.compile(
+    r"(?i)(?:\b(?:filh[oa]s?|crianç[ae]s?|príncipe|princesa|bebê)\b[^,.\n]{0,60},\s*(?:o|a)\s+)"
+    r"[A-ZÀ-Ý][\wÀ-ÿ'’-]*(?:\s+[A-ZÀ-Ý][\wÀ-ÿ'’-]*){0,3}"
+)
 FAMILY_NAME_RE = re.compile(r"\b[A-ZÀ-Ý][\wÀ-ÿ'’-]+\s+(?=de\s+\d{1,3}\b)")
 REGIONAL_IDENTITY_RE = re.compile(
     r"(?i)\bjovem\s+escritora\s+[a-zà-ÿ'’-]+"
@@ -144,6 +166,11 @@ def sanitize_request_text(text: str) -> str:
     )
     sanitized = NAMED_LOCATION_RE.sub("moro em [localidade removida]", sanitized)
     sanitized = INSTITUTION_ACRONYM_RE.sub("[instituição removida]", sanitized)
+    sanitized = INSTITUTION_CAMPUS_RE.sub("[instituição removida]", sanitized)
+    sanitized = BRAZILIAN_STATE_AFTER_REMOVED_LOCATION_RE.sub(r"\1[localidade removida]", sanitized)
+    sanitized = SOU_UNSUPPORTED_NAME_RE.sub("sou [identidade removida]", sanitized)
+    sanitized = CHILD_NAME_RE.sub("[familiar removido]", sanitized)
+    sanitized = FAMILY_DESCRIPTION_NAME_RE.sub("[familiar removido]", sanitized)
     sanitized = FAMILY_NAME_RE.sub("[familiar removido] ", sanitized)
     sanitized = REGIONAL_IDENTITY_RE.sub("jovem escritora [localidade removida]", sanitized)
     sanitized = PUBLISHED_WORKS_RE.sub("[obras publicadas removidas].", sanitized)
@@ -412,6 +439,22 @@ def self_test() -> int:
             "Obras publicadas: Título A. Títulos conhecidos: Título B. "
             "A saga escrita por Rick é referência.",
             ["pernambucana", "Título A", "Título B"],
+        ),
+        (
+            "Sou Nome Exemplo, conheci o projeto e gosto de ler.",
+            ["Nome Exemplo"],
+        ),
+        (
+            "Estudo no IFZZ campus Cidade Exemplo e gosto de suspense.",
+            ["IFZZ", "Cidade Exemplo"],
+        ),
+        (
+            "Moro em [localidade removida], Pernambuco e adoro livros.",
+            ["Pernambuco"],
+        ),
+        (
+            "Meu filho querido, o Nome Exemplo, também gosta de ler.",
+            ["Nome Exemplo"],
         ),
     ]
     for sample, forbidden in samples:
