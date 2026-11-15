@@ -3,6 +3,27 @@
 Checkpoint oficial da consolidação de memória do projeto.
 
 ## Último dream
+- Data: `2026-11-15`
+- Tipo: `dream semanal automatizado customizado via OpenClaw cron, sem Raffa presente`
+- Última memória absorvida: `sessions/2026-11-15-pool-conexoes-reteste-80-90.md`
+- Total de memórias lidas: `3 memórias episódicas novas desde o checkpoint de 2026-11-13`.
+
+### Consolidação produzida em 2026-11-15
+
+- O repositório foi sincronizado com `git fetch origin && git pull --ff-only origin master` antes da leitura confiável do checkpoint.
+- O Doctor abriu com 3 achados nos artefatos deliberados de `playbooks/_shared/scripts/infra/pg_pool_test/`: `README.md`, `pg_pool_monitor.py` e `pg_pool_probe.mjs` não estavam explicitamente listados no `playbooks/_shared/PLAYBOOK.md`. A família e o índice já eram referenciados; o `PLAYBOOK.md` foi completado com a função de cada artefato.
+- Doctor fechou limpo; a suíte da governança terminou com 32 testes aprovados e `git diff --check` limpo.
+- Nenhuma playbook nova, split, merge, arquivamento, poda ou alteração em `SOUL.md`. Os candidatos metodológicos do reteste de pool permanecem candidatos até haver recorrência.
+- Pool 80 permanece aplicado; pool 90 foi rejeitado no reteste misto c=200. A repetição externa, a cadeia de timeout/cancelamento e o cancelamento SSR continuam `open_loops`.
+- A memória episódica deste ciclo é `sessions/2026-11-15-dream-semanal-governanca.md`.
+
+### Próximo dream
+
+- Repetir o cenário do pool a partir de origem externa antes de endurecer a heurística como regra durável.
+- Preservar os loops humanos e operacionais de `sessions/2026-11-15-dream-semanal-governanca.md` e dos ciclos anteriores.
+- Observar se `playbooks/infra/coolify-vps.md` continua crescendo com incidentes de capacidade antes de avaliar split.
+
+## Último dream
 - Data: `2026-11-14`
 - Tipo: `dream semanal automatizado via scheduled task weekly-dream no Windows local, sem Raffa presente`
 - Última memória absorvida: `sessions/2026-11-13-protecao-sobrecarga-ssr-e-paineis-admin.md`
