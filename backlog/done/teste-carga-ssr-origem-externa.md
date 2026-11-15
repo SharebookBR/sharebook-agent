@@ -38,10 +38,10 @@ Sondas humanas 124/124 HTTP 200, mas p95 de 3,2 s (2,1 s com 6/3). Zero erro. **
 
 **Parte B (memória e swap):** nas duas rodadas, swap usado **+0 MiB** e nunca 2 s seguidos de swap I/O acima de 1 MiB/s; picos isolados (até 7,6 MiB/s) aparecem igual com o site em repouso (teste seco: 3 de 53 amostras acima de 1 MiB/s, sempre isoladas). Conclusão: **a tempestade de swap do V2 veio do gerador rodando dentro da VPS**, não do site. Os 2,4–2,6 GiB de swap em repouso são páginas paradas, que não se mexeram sob carga: gateway do OpenClaw ~344 MiB, Coolify ~274 MiB, Stalwart ~230 MiB, Claude Code dentro do OpenClaw ~212 MiB, API ~189 MiB, `fwupd` ~129 MiB. **Não é preciso tirar o OpenClaw da VPS por causa da carga do site.** Achado novo: o **cache SSR** levou o frontend de ~250 MiB a **1,7 GiB** e não devolve memória (1,63 GiB depois do teste); a RAM disponível do host foi de 4,2 a 2,5 GiB.
 
-**Em aberto (decisão de comportamento em pico, discutida com o Raffa sem conclusão):**
+**Desdobramentos (2026-11-14):**
 
-- O 503 imediato é ótimo para robô (`Retry-After`), mas para pessoa o navegador não tenta de novo: ela vê erro. Proposta: fila curta só para humanos (esperar até ~3 s por uma vaga antes do 503), mantendo 6 montagens simultâneas.
-- Alavancas que sobem o teto: mais processos Node (usar 2–3 dos 4 núcleos, mas cada um com seu cache de até 1,6 GiB: exige limitar ou compartilhar o cache), Cloudflare na frente (`../todo/cloudflare-cdn-ddos-protection.md`) e pré-processamento (`../todo/pre-processamento-paginas-e-recomendacoes.md`).
+- ~~Fila curta só para humanos (esperar até ~3 s por uma vaga antes do 503)~~: **descartada pelo Raffa em 2026-11-14**, sem interesse.
+- Alavancas que sobem o teto: mais processos Node (**virou item próprio, depois da Cloudflare: `../todo/ssr-multiplos-processos-node.md`**) (usar 2–3 dos 4 núcleos, mas cada um com seu cache de até 1,6 GiB: exige limitar ou compartilhar o cache), Cloudflare na frente (`../todo/cloudflare-cdn-ddos-protection.md`) e pré-processamento (`../todo/pre-processamento-paginas-e-recomendacoes.md`).
 - Medir bot c=200 com origem de mais banda (nuvem).
 
 ---

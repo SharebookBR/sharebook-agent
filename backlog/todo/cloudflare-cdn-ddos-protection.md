@@ -8,8 +8,8 @@
 
 Conta do cenário discutido (1 milhão de usuários em 8 horas): ~35 usuários por segundo na média e 100 a 175 no pico, ou ~100 a 500 páginas por segundo. O que temos hoje:
 
-- renderização **nova** de página: ~3 a 4 por segundo no máximo (medido de dentro da VPS; limite 6/3 é defensivo);
-- páginas em cache no próprio servidor: capacidade **não medida**;
+- renderização **nova** de página: ~3 por segundo no máximo, confirmado de fora da VPS em 2026-11-14; 12/6 não aumentou, então 6/3 fica;
+- páginas em cache no próprio servidor: **~180 por segundo medidas em 2026-11-14**, limitadas pela banda da origem do teste, não pelo servidor (`../done/teste-carga-ssr-origem-externa.md`);
 - o primeiro gargalo provável numa divulgação grande é a **entrega de imagens e arquivos estáticos pela própria VPS**, sem CDN (hipótese, **não medida**);
 - uma VPS, uma instância de cada coisa.
 
@@ -77,4 +77,5 @@ O item antigo prometia "eliminar ~100% do custo de banda de e-book". **Isso não
 - `pre-processamento-paginas-e-recomendacoes.md`: cauda longa de páginas frias.
 - `../done/teste-carga-ssr-origem-externa.md`: medição de capacidade (concluído em 2026-11-14).
 - `../done/restore-drill-backups.md`: pré-requisito de segurança, concluído em 2026-11-14.
+- `ssr-multiplos-processos-node.md`: vem logo depois; depende deste item para tirar o cache de páginas do frontend.
 - `playbooks/infra/vps-migration.md`: DNS de três camadas.
