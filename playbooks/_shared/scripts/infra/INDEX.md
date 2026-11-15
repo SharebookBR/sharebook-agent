@@ -8,5 +8,6 @@ Utilitarios transversais de infraestrutura usados por varios playbooks.
 - `pg_tunnel.py` — tunel SSH para Postgres remoto sem abrir a porta 5432 publicamente.
 - `preflight_runtime.py` — diagnostica/corrige dependencias locais esperadas para operacoes do agente.
 - `load_test/` — teste de carga SSR controlado (roteiro do V2): `lt_run.py` orquestra monitor + gerador e aplica os gatilhos de parada; `lt_monitor.py` roda no host (1 s; RAM/swap/CPU por container via cgroup v2); `lt_gen.mjs` gera a carga (Node, sem dependências); `lt_status.py` e `lt_analyze.py` resumem. Uso e resultados em `playbooks/infra/coolify-vps.md` ("Teste de carga em produção") e `backlog/done/teste-carga-ssr-origem-externa.md`.
+- `pg_pool_test/` — rampa HTTP contra `Book/Slug` e `Book/Recommendations` para calibrar Npgsql/Postgres, com monitor de 1 s de sessões, CPU, memória e swap. O teste só começa com janela e backup confirmados; uso e limitações em `pg_pool_test/README.md` e resultados no item de pool do backlog.
 - `sweep_secrets.py` — varredura de segredos por valor e padrao antes de commits sensiveis.
 - `openclaw_telegram_send.py` — envio operacional pelo Telegram configurado no OpenClaw.

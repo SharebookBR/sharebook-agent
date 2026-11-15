@@ -1,0 +1,6 @@
+{"type":"meta","started_at":"2026-11-15T00:53:08.014Z","levels":[5,20,50,100,200],"duration_s":15,"timeout_ms":20000}
+{"type":"phase","started_at":"2026-11-15T00:53:08.016Z","concurrency":5,"duration_s":15.02,"requests":4019,"ok":4019,"rps":267.5,"bytes":29234845,"status":{"200":4019},"errors":{},"p50_ms":9.9,"p95_ms":75.2,"p99_ms":86.1,"max_ms":233.6}
+{"type":"phase","started_at":"2026-11-15T00:53:23.045Z","concurrency":20,"duration_s":15.12,"requests":5470,"ok":5470,"rps":361.8,"bytes":39796985,"status":{"200":5470},"errors":{},"p50_ms":42.5,"p95_ms":112,"p99_ms":284.1,"max_ms":659.2}
+{"type":"phase","started_at":"2026-11-15T00:53:38.169Z","concurrency":50,"duration_s":15.11,"requests":4620,"ok":4620,"rps":305.7,"bytes":33612810,"status":{"200":4620},"errors":{},"p50_ms":146.2,"p95_ms":302.8,"p99_ms":408.5,"max_ms":795.1}
+{"type":"phase","started_at":"2026-11-15T00:53:53.286Z","concurrency":100,"duration_s":15.25,"requests":4096,"ok":4096,"rps":268.7,"bytes":29800448,"status":{"200":4096},"errors":{},"p50_ms":334.9,"p95_ms":605.2,"p99_ms":874.7,"max_ms":1007.4}
+{"type":"phase","started_at":"2026-11-15T00:54:08.535Z","concurrency":200,"duration_s":15.4,"requests":3946,"ok":3946,"rps":256.2,"bytes":28709123,"status":{"200":3946},"errors":{},"p50_ms":774.8,"p95_ms":1201.1,"p99_ms":1723.4,"max_ms":2316}
