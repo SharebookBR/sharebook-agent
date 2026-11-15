@@ -1,8 +1,9 @@
 # Investigar pool de conexões e limite real do Postgres
 
-> **Em execução — primeira rodada em 2026-11-15.** A API ficou com
-> `Maximum Pool Size=60`; é a configuração provisória vencedora enquanto falta
-> repetir a prova por uma origem realmente externa e repetir o teste SSR.
+> **Em execução — rodadas em 2026-11-15.** A API ficou com
+> `Maximum Pool Size=80`. A curva inicial 40/60/80 não escolhia corretamente o
+> teto; o reteste direto posterior rejeitou 90 sob carga mista. Ainda falta uma
+> prova de origem externa para declarar o número como calibrado.
 
 ## Resultado inicial — 2026-11-15
 
@@ -19,7 +20,7 @@ requisições, todas HTTP 200, sem timeout e sem `NpgsqlException`.
 | --- | --- | --- | --- | --- |
 | 80 (anterior) | 403 / 95 ms | 374 / 536 ms | 80 | maior vazão, mas toma 80 dos 97 slots de aplicação e os mantém ociosos por 300 s |
 | 40 | 362 / 112 ms | 269 / 605 ms | 40 | folga excelente, mas fila aparece cedo demais |
-| 60 (repetição estável) | 369 / 104 ms | 297 / 504 ms | 60 | compromisso atual: preserva 37 slots e não criou erro nem reinício |
+| 60 (repetição estável) | 369 / 104 ms | 297 / 504 ms | 60 | candidato inicial; interpretação como vencedor foi supersedida pelo reteste 80/90 abaixo |
 
 O joelho não é um colapso súbito do Postgres: acima de 20–50 concorrentes a
 vazão já deixa de crescer e a latência sobe; em 200, todos os pools pioram.
@@ -27,27 +28,52 @@ No pool 80 a API abriu **exatamente 80 conexões** e as manteve em `ClientRead`;
 isso reproduz o risco concreto do limite anterior. O Postgres chegou a usar
 CPU, mas não houve 5xx, deadlock nem reinício.
 
+### Reteste decisivo: 80 versus 90
+
+A primeira curva respondia apenas como o pool se comportava sob gerador no
+próprio host; ela **não** demonstrava que 60 era melhor que 80. Repetimos então
+um teste direto contra a API, em c=200 por 15 s, alternando `Book/Slug` e
+`Book/Recommendations` de 50 livros distintos, com host, API e Postgres
+monitorados por segundo.
+
+| pool | resultado | leitura |
+| --- | --- | --- |
+| 80 | 549/549 HTTP 200; p95 9,94 s; Postgres chegou a 82 sessões totais (pool de 80 + monitor); zero erro/restart | degrada, mas recupera e atende tudo |
+| 90 | 133 HTTP 200, 117 HTTP 500 e 31 timeouts no cliente; p95 25,24 s; API chegou a 629 MiB | rejeitado: `OpenNewConnector` do Npgsql expirou ao abrir conectores; os 500 chegaram em ~19–21 s |
+
+O Postgres não era o componente exaurido no 90 (CPU máxima ~27%, memória
+~380 MiB); o host chegou a 100% CPU nos dois ensaios, sem pressão de RAM ou
+swap sustentada. No 90 o monitor não chegou a observar 90 sessões porque as
+aberturas começaram a expirar antes. O gerador continuou no mesmo host da VPS:
+isso impede tratar a vazão absoluta como capacidade de Internet, mas a falha
+comparativa do 90 sob o mesmo roteiro é sinal suficiente para não deixá-lo em
+produção.
+
 ### Decisões tomadas
 
-- `Maximum Pool Size=60` ficou aplicado em produção via model criptografado do
-  Coolify e redeploy limpo da API. API saudável e `Ping` 200 após a troca.
+- `Maximum Pool Size=80` ficou aplicado em produção via model criptografado do
+  Coolify e redeploy limpo da API após o reteste. API saudável e `Ping` 200.
+- Não usar 90: mais admissões não produziram falha rápida; sob o mix pesado
+  produziram 500 e respostas de até ~26 s. Investigar a cadeia que faz
+  `Timeout=5` aparecer ao usuário após ~20 s (retries/cancelamento) é pendência
+  separada.
 - `Minimum Pool Size` continua no padrão 0: ainda não há evidência de que
   pré-manter conexões reduza o primeiro pico mais do que custa em slots ociosos.
 - `Timeout=5`, `Command Timeout=15` e `Connection Idle Lifetime=300` ficam
   iguais; o teste não encontrou timeout. O tempo ocioso de 300 s explica por
   que um pico deixa o pool cheio mesmo depois de a carga acabar.
-- `max_connections=100` continua; com 3 slots superuser, o pool 60 deixa 37
-  conexões para operações, jobs e diagnóstico.
+- `max_connections=100` continua; com 3 slots superuser, o pool 80 deixa 17
+  conexões normais para administração e consumidores externos. Os jobs rodam
+  no processo da API e usam o mesmo `PostgresConnection`, portanto disputam o
+  próprio pool, não uma reserva externa.
 
 ### Limitações e próxima prova
 
 O gerador rodou no mesmo host da VPS, então CPU, swap e vazão absoluta não são
-medida limpa da Internet. A conclusão sobre o **teto de conexões** é válida
-(o banco atingiu 40/60/80 exatamente conforme o pool); a escolha de 60 é
-prudente, mas ainda provisória até repetir a curva de origem externa e o
-roteiro SSR V2. Não existe `pg_stat_statements` nem slow query log ativo, por
-isso esta primeira rodada mede o caminho inteiro, não atribui milissegundos a
-uma SQL agregada.
+medida limpa da Internet. O reteste torna 80 mais defensável que 90, não prova
+que 80 seja um ótimo universal; manter a repetição externa e o roteiro SSR V2.
+Não existe `pg_stat_statements` nem slow query log ativo, por isso esta rodada
+mede o caminho inteiro, não atribui milissegundos a uma SQL agregada.
 
 A hipótese do cancelamento foi **confirmada no código para esses endpoints**:
 `BookController` não recebe nem propaga `CancellationToken` e as consultas EF
@@ -60,7 +86,7 @@ chamar isso de correção concluída.
 
 Descobrir, com dados, qual configuração do pool de conexões da API e qual limite do Postgres fazem sentido para esta VPS (4 vCPU, 7,8 GiB de RAM), em vez de manter números herdados.
 
-Hoje o pool está em `Maximum Pool Size=80`, com `max_connections=100` no Postgres, `Connection Idle Lifetime=300`, `Timeout=5` e `Command Timeout=15`. **O 80 provavelmente nunca foi calibrado: é um valor herdado/estimado** (o playbook de backend só registra a regra de deixar margem sobre o `max_connections`). `Minimum Pool Size` não está definido (padrão 0).
+Hoje o pool está em `Maximum Pool Size=80`, com `max_connections=100` no Postgres, `Connection Idle Lifetime=300`, `Timeout=5` e `Command Timeout=15`. O 80 deixou de ser apenas herdado: passou no reteste direto contra 90, mas segue sem calibração externa. `Minimum Pool Size` não está definido (padrão 0).
 
 A decisão sai de medição. Perguntas a responder:
 

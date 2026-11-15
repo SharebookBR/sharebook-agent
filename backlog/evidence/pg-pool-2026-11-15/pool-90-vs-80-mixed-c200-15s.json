@@ -1,0 +1,5021 @@
+{
+  "concurrency": 200,
+  "duration_s": 15,
+  "requests": 281,
+  "rps": 18.7,
+  "status": {
+    "200": 133,
+    "500": 117,
+    "0": 31
+  },
+  "errors": {
+    "TimeoutError": 31
+  },
+  "p50_ms": 19777.1,
+  "p95_ms": 25244.2,
+  "p99_ms": 25783.5,
+  "max_ms": 26192.8,
+  "stop_reason": null,
+  "monitor": [
+    {
+      "t": 1794723136.414,
+      "cpu": 31.1,
+      "mem_used": 3831193600,
+      "mem_avail": 4495138816,
+      "swap_used": 2203422720,
+      "si_kibs": 63.9,
+      "so_kibs": 0.0,
+      "load1": 4.28,
+      "c": {
+        "sharebook-api": [
+          150286336,
+          0,
+          35.1
+        ],
+        "sharebook-frontend": [
+          373735424,
+          16707584,
+          2.5
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          79306752,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          749568,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          129622016,
+          1691648,
+          0.2
+        ],
+        "coolify-sentinel": [
+          51417088,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45985792,
+          7229440,
+          0.4
+        ],
+        "coolify": [
+          209719296,
+          285401088,
+          0.5
+        ],
+        "coolify-db": [
+          77066240,
+          23928832,
+          3.1
+        ],
+        "coolify-redis": [
+          9162752,
+          2596864,
+          0.5
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1362345984,
+          388112384,
+          1.2
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106913792,
+          823721984,
+          3.9
+        ],
+        "simula-plus-api": [
+          37253120,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210583552,
+          173436928,
+          0.2
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          238198784,
+          8695808,
+          0.0
+        ]
+      },
+      "pg": [
+        4,
+        1
+      ],
+      "top": {
+        "rss": [
+          [
+            "openclaw-gatewa",
+            1418640,
+            636272640,
+            311373824
+          ],
+          [
+            "dockerd",
+            809,
+            555020288,
+            63197184
+          ],
+          [
+            "MainThread",
+            3243730,
+            382521344,
+            16707584
+          ],
+          [
+            "claude",
+            1433083,
+            301252608,
+            54300672
+          ],
+          [
+            "dotnet",
+            201066,
+            257486848,
+            0
+          ],
+          [
+            "stalwart",
+            2100497,
+            182923264,
+            173432832
+          ],
+          [
+            "postgres",
+            2141,
+            130248704,
+            1908736
+          ],
+          [
+            "postgres",
+            2142,
+            127115264,
+            1929216
+          ],
+          [
+            "traefik",
+            2172165,
+            104116224,
+            1691648
+          ],
+          [
+            "codex",
+            2759044,
+            98816000,
+            10186752
+          ]
+        ],
+        "swap": [
+          [
+            "openclaw-gatewa",
+            1418640,
+            636272640,
+            311373824
+          ],
+          [
+            "stalwart",
+            2100497,
+            182923264,
+            173432832
+          ],
+          [
+            "fwupd",
+            3885470,
+            7946240,
+            137740288
+          ],
+          [
+            "chromium",
+            153813,
+            31182848,
+            78848000
+          ],
+          [
+            "dockerd",
+            809,
+            555020288,
+            63197184
+          ],
+          [
+            "claude",
+            1433083,
+            301252608,
+            54300672
+          ],
+          [
+            "chromium",
+            154047,
+            11231232,
+            52695040
+          ],
+          [
+            "selkies",
+            153675,
+            5582848,
+            38977536
+          ],
+          [
+            "dotnet",
+            369947,
+            29630464,
+            35123200
+          ],
+          [
+            "chromium",
+            154003,
+            9891840,
+            34082816
+          ]
+        ]
+      },
+      "health": {
+        "sharebook-frontend": "healthy 0 2026-11-15T00:12:33.309368399Z",
+        "sharebook-api": "healthy 0 2026-11-15T06:11:20.417857351Z"
+      },
+      "api_err": 0
+    },
+    {
+      "t": 1794723137.573,
+      "cpu": 15.9,
+      "mem_used": 3851030528,
+      "mem_avail": 4475301888,
+      "swap_used": 2203422720,
+      "si_kibs": 13.8,
+      "so_kibs": 0.0,
+      "load1": 3.94,
+      "c": {
+        "sharebook-api": [
+          152891392,
+          0,
+          29.3
+        ],
+        "sharebook-frontend": [
+          373735424,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          79306752,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          749568,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          129818624,
+          1691648,
+          2.9
+        ],
+        "coolify-sentinel": [
+          51417088,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          209719296,
+          285401088,
+          0.3
+        ],
+        "coolify-db": [
+          77066240,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9146368,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1362362368,
+          388112384,
+          1.5
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106913792,
+          823721984,
+          1.5
+        ],
+        "simula-plus-api": [
+          37253120,
+          73637888,
+          0.1
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210735104,
+          173436928,
+          1.5
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          238358528,
+          8695808,
+          3.5
+        ]
+      }
+    },
+    {
+      "t": 1794723138.575,
+      "cpu": 5.8,
+      "mem_used": 3840339968,
+      "mem_avail": 4485992448,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 3.94,
+      "c": {
+        "sharebook-api": [
+          152629248,
+          0,
+          0.2
+        ],
+        "sharebook-frontend": [
+          373723136,
+          16707584,
+          0.2
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          79306752,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          749568,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          129835008,
+          1691648,
+          0.1
+        ],
+        "coolify-sentinel": [
+          51417088,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          209723392,
+          285401088,
+          0.3
+        ],
+        "coolify-db": [
+          77066240,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9146368,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1369841664,
+          388112384,
+          11.4
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          107155456,
+          823721984,
+          1.8
+        ],
+        "simula-plus-api": [
+          37253120,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.1
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210739200,
+          173436928,
+          3.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          238198784,
+          8695808,
+          0.0
+        ]
+      },
+      "pg": [
+        4,
+        1
+      ]
+    },
+    {
+      "t": 1794723139.63,
+      "cpu": 13.8,
+      "mem_used": 3815141376,
+      "mem_avail": 4511191040,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 3.94,
+      "c": {
+        "sharebook-api": [
+          154574848,
+          0,
+          28.9
+        ],
+        "sharebook-frontend": [
+          373723136,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          79306752,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          749568,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          129847296,
+          1691648,
+          0.1
+        ],
+        "coolify-sentinel": [
+          51417088,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          209719296,
+          285401088,
+          4.5
+        ],
+        "coolify-db": [
+          77066240,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9146368,
+          2596864,
+          2.3
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1369571328,
+          388112384,
+          1.1
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          107147264,
+          823721984,
+          1.4
+        ],
+        "simula-plus-api": [
+          37253120,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210739200,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          238198784,
+          8695808,
+          2.5
+        ]
+      }
+    },
+    {
+      "t": 1794723140.632,
+      "cpu": 39.2,
+      "mem_used": 3830484992,
+      "mem_avail": 4495847424,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 3.94,
+      "c": {
+        "sharebook-api": [
+          155488256,
+          0,
+          22.2
+        ],
+        "sharebook-frontend": [
+          373723136,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          80068608,
+          11206656,
+          2.2
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          749568,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          134057984,
+          1691648,
+          1.0
+        ],
+        "coolify-sentinel": [
+          51417088,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          209719296,
+          285401088,
+          0.3
+        ],
+        "coolify-db": [
+          77066240,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9146368,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1384812544,
+          388112384,
+          123.6
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106909696,
+          823721984,
+          1.3
+        ],
+        "simula-plus-api": [
+          37253120,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210739200,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          238198784,
+          8695808,
+          0.0
+        ]
+      },
+      "pg": [
+        4,
+        1
+      ]
+    },
+    {
+      "t": 1794723141.706,
+      "cpu": 99.5,
+      "mem_used": 3868151808,
+      "mem_avail": 4458180608,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 3.94,
+      "c": {
+        "sharebook-api": [
+          156045312,
+          0,
+          8.1
+        ],
+        "sharebook-frontend": [
+          374554624,
+          16707584,
+          2.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          80068608,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          749568,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          130080768,
+          1691648,
+          1.7
+        ],
+        "coolify-sentinel": [
+          51417088,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45723648,
+          7229440,
+          0.3
+        ],
+        "coolify": [
+          209715200,
+          285401088,
+          0.3
+        ],
+        "coolify-db": [
+          77070336,
+          23928832,
+          2.5
+        ],
+        "coolify-redis": [
+          9146368,
+          2596864,
+          0.3
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1416695808,
+          388112384,
+          356.9
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106909696,
+          823721984,
+          3.2
+        ],
+        "simula-plus-api": [
+          37253120,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210735104,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          238198784,
+          8695808,
+          2.5
+        ]
+      },
+      "top": {
+        "rss": [
+          [
+            "openclaw-gatewa",
+            1418640,
+            636272640,
+            311373824
+          ],
+          [
+            "dockerd",
+            809,
+            555151360,
+            63197184
+          ],
+          [
+            "MainThread",
+            3243730,
+            383348736,
+            16707584
+          ],
+          [
+            "claude",
+            1433083,
+            301248512,
+            54300672
+          ],
+          [
+            "dotnet",
+            201066,
+            263528448,
+            0
+          ],
+          [
+            "stalwart",
+            2100497,
+            183013376,
+            173428736
+          ],
+          [
+            "postgres",
+            2141,
+            130248704,
+            1908736
+          ],
+          [
+            "postgres",
+            2142,
+            127115264,
+            1929216
+          ],
+          [
+            "codex",
+            2759044,
+            105992192,
+            10186752
+          ],
+          [
+            "traefik",
+            2172165,
+            104611840,
+            1691648
+          ]
+        ],
+        "swap": [
+          [
+            "openclaw-gatewa",
+            1418640,
+            636272640,
+            311373824
+          ],
+          [
+            "stalwart",
+            2100497,
+            183013376,
+            173428736
+          ],
+          [
+            "fwupd",
+            3885470,
+            7946240,
+            137740288
+          ],
+          [
+            "chromium",
+            153813,
+            31182848,
+            78848000
+          ],
+          [
+            "dockerd",
+            809,
+            555151360,
+            63197184
+          ],
+          [
+            "claude",
+            1433083,
+            301248512,
+            54300672
+          ],
+          [
+            "chromium",
+            154047,
+            11231232,
+            52695040
+          ],
+          [
+            "selkies",
+            153675,
+            5582848,
+            38977536
+          ],
+          [
+            "dotnet",
+            369947,
+            29630464,
+            35123200
+          ],
+          [
+            "chromium",
+            154003,
+            9891840,
+            34082816
+          ]
+        ]
+      },
+      "health": {
+        "sharebook-frontend": "healthy 0 2026-11-15T00:12:33.309368399Z",
+        "sharebook-api": "healthy 0 2026-11-15T06:11:20.417857351Z"
+      },
+      "api_err": 0
+    },
+    {
+      "t": 1794723142.828,
+      "cpu": 99.8,
+      "mem_used": 3918073856,
+      "mem_avail": 4408258560,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 10.99,
+      "c": {
+        "sharebook-api": [
+          156053504,
+          0,
+          4.2
+        ],
+        "sharebook-frontend": [
+          374923264,
+          16707584,
+          2.3
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          80068608,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          749568,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          131223552,
+          1691648,
+          7.9
+        ],
+        "coolify-sentinel": [
+          51417088,
+          2101248,
+          2.2
+        ],
+        "sharebook-frontend-alloy": [
+          45723648,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          209715200,
+          285401088,
+          0.3
+        ],
+        "coolify-db": [
+          77070336,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9146368,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          3.8
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1451880448,
+          388112384,
+          356.3
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106909696,
+          823721984,
+          1.4
+        ],
+        "simula-plus-api": [
+          37253120,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210735104,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          238198784,
+          8695808,
+          1.9
+        ]
+      },
+      "pg": [
+        4,
+        2
+      ]
+    },
+    {
+      "t": 1794723143.957,
+      "cpu": 98.9,
+      "mem_used": 3962806272,
+      "mem_avail": 4363526144,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 10.99,
+      "c": {
+        "sharebook-api": [
+          156119040,
+          0,
+          2.6
+        ],
+        "sharebook-frontend": [
+          369942528,
+          16707584,
+          20.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          80068608,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          749568,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          131792896,
+          1691648,
+          6.9
+        ],
+        "coolify-sentinel": [
+          51519488,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45723648,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          209715200,
+          285401088,
+          0.4
+        ],
+        "coolify-db": [
+          77070336,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9146368,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1481502720,
+          388112384,
+          311.5
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106909696,
+          823721984,
+          1.7
+        ],
+        "simula-plus-api": [
+          37253120,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210735104,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          238211072,
+          8695808,
+          27.0
+        ]
+      }
+    },
+    {
+      "t": 1794723144.959,
+      "cpu": 98.8,
+      "mem_used": 3981578240,
+      "mem_avail": 4344754176,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 10.99,
+      "c": {
+        "sharebook-api": [
+          156520448,
+          0,
+          8.8
+        ],
+        "sharebook-frontend": [
+          369942528,
+          16707584,
+          0.2
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          80068608,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          749568,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          131547136,
+          1691648,
+          4.9
+        ],
+        "coolify-sentinel": [
+          51519488,
+          2101248,
+          1.0
+        ],
+        "sharebook-frontend-alloy": [
+          45723648,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          209719296,
+          285401088,
+          7.0
+        ],
+        "coolify-db": [
+          77070336,
+          23928832,
+          1.2
+        ],
+        "coolify-redis": [
+          9596928,
+          2596864,
+          3.6
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1511333888,
+          388112384,
+          329.8
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106909696,
+          823721984,
+          1.3
+        ],
+        "simula-plus-api": [
+          37253120,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210735104,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          240865280,
+          8695808,
+          2.7
+        ]
+      },
+      "pg": [
+        5,
+        1
+      ]
+    },
+    {
+      "t": 1794723146.06,
+      "cpu": 99.3,
+      "mem_used": 4034158592,
+      "mem_avail": 4292173824,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 10.99,
+      "c": {
+        "sharebook-api": [
+          166977536,
+          0,
+          32.6
+        ],
+        "sharebook-frontend": [
+          369942528,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          80826368,
+          11206656,
+          2.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          749568,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          131735552,
+          1691648,
+          37.5
+        ],
+        "coolify-sentinel": [
+          51519488,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45723648,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          210153472,
+          285401088,
+          3.1
+        ],
+        "coolify-db": [
+          77082624,
+          23928832,
+          1.0
+        ],
+        "coolify-redis": [
+          9953280,
+          2596864,
+          0.6
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1539690496,
+          388112384,
+          295.9
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106909696,
+          823721984,
+          1.1
+        ],
+        "simula-plus-api": [
+          37253120,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210735104,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          258174976,
+          8695808,
+          9.6
+        ]
+      }
+    },
+    {
+      "t": 1794723147.062,
+      "cpu": 100.0,
+      "mem_used": 4141461504,
+      "mem_avail": 4184870912,
+      "swap_used": 2203422720,
+      "si_kibs": 8.0,
+      "so_kibs": 0.0,
+      "load1": 11.87,
+      "c": {
+        "sharebook-api": [
+          176308224,
+          0,
+          49.1
+        ],
+        "sharebook-frontend": [
+          370774016,
+          16707584,
+          2.3
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          80826368,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          749568,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          110555136,
+          1691648,
+          49.9
+        ],
+        "coolify-sentinel": [
+          51523584,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45723648,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          210153472,
+          285401088,
+          0.2
+        ],
+        "coolify-db": [
+          77082624,
+          23928832,
+          2.3
+        ],
+        "coolify-redis": [
+          9953280,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1561006080,
+          388112384,
+          252.1
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106909696,
+          823721984,
+          3.5
+        ],
+        "simula-plus-api": [
+          37253120,
+          73637888,
+          0.1
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210735104,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          306786304,
+          8695808,
+          16.5
+        ]
+      },
+      "pg": [
+        32,
+        1
+      ],
+      "top": {
+        "rss": [
+          [
+            "openclaw-gatewa",
+            1418640,
+            636284928,
+            311365632
+          ],
+          [
+            "dockerd",
+            809,
+            561897472,
+            63197184
+          ],
+          [
+            "MainThread",
+            3243730,
+            379592704,
+            16707584
+          ],
+          [
+            "claude",
+            1433083,
+            301248512,
+            54300672
+          ],
+          [
+            "dotnet",
+            201066,
+            292048896,
+            0
+          ],
+          [
+            "python3",
+            204122,
+            225935360,
+            0
+          ],
+          [
+            "stalwart",
+            2100497,
+            182992896,
+            173428736
+          ],
+          [
+            "postgres",
+            2141,
+            130248704,
+            1908736
+          ],
+          [
+            "postgres",
+            2142,
+            127115264,
+            1929216
+          ],
+          [
+            "codex",
+            2759044,
+            105979904,
+            10186752
+          ]
+        ],
+        "swap": [
+          [
+            "openclaw-gatewa",
+            1418640,
+            636284928,
+            311365632
+          ],
+          [
+            "stalwart",
+            2100497,
+            182992896,
+            173428736
+          ],
+          [
+            "fwupd",
+            3885470,
+            7946240,
+            137740288
+          ],
+          [
+            "chromium",
+            153813,
+            31182848,
+            78848000
+          ],
+          [
+            "dockerd",
+            809,
+            561897472,
+            63197184
+          ],
+          [
+            "claude",
+            1433083,
+            301248512,
+            54300672
+          ],
+          [
+            "chromium",
+            154047,
+            11231232,
+            52695040
+          ],
+          [
+            "selkies",
+            153675,
+            5582848,
+            38977536
+          ],
+          [
+            "dotnet",
+            369947,
+            29630464,
+            35123200
+          ],
+          [
+            "chromium",
+            154003,
+            9891840,
+            34082816
+          ]
+        ]
+      },
+      "health": {
+        "sharebook-frontend": "healthy 0 2026-11-15T00:12:33.309368399Z",
+        "sharebook-api": "healthy 0 2026-11-15T06:11:20.417857351Z"
+      },
+      "api_err": 0
+    },
+    {
+      "t": 1794723148.284,
+      "cpu": 99.6,
+      "mem_used": 4206166016,
+      "mem_avail": 4120166400,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 11.87,
+      "c": {
+        "sharebook-api": [
+          194285568,
+          0,
+          50.8
+        ],
+        "sharebook-frontend": [
+          370761728,
+          16707584,
+          0.1
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          80826368,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          749568,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          110882816,
+          1691648,
+          28.6
+        ],
+        "coolify-sentinel": [
+          51523584,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45723648,
+          7229440,
+          0.1
+        ],
+        "coolify": [
+          210153472,
+          285401088,
+          0.3
+        ],
+        "coolify-db": [
+          77082624,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9953280,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1590190080,
+          388112384,
+          294.0
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106909696,
+          823721984,
+          1.2
+        ],
+        "simula-plus-api": [
+          37253120,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          327024640,
+          8695808,
+          7.4
+        ]
+      }
+    },
+    {
+      "t": 1794723149.286,
+      "cpu": 25.7,
+      "mem_used": 4256477184,
+      "mem_avail": 4069855232,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 11.87,
+      "c": {
+        "sharebook-api": [
+          220508160,
+          0,
+          50.0
+        ],
+        "sharebook-frontend": [
+          370761728,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          80826368,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          749568,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          111747072,
+          1691648,
+          13.8
+        ],
+        "coolify-sentinel": [
+          51523584,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45723648,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          210198528,
+          285401088,
+          4.2
+        ],
+        "coolify-db": [
+          77082624,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9953280,
+          2596864,
+          2.5
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1591529472,
+          388112384,
+          11.9
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106909696,
+          823721984,
+          1.2
+        ],
+        "simula-plus-api": [
+          37253120,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.1
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          338747392,
+          8695808,
+          5.0
+        ]
+      },
+      "pg": [
+        41,
+        1
+      ]
+    },
+    {
+      "t": 1794723150.336,
+      "cpu": 17.6,
+      "mem_used": 4274524160,
+      "mem_avail": 4051808256,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 11.87,
+      "c": {
+        "sharebook-api": [
+          229634048,
+          0,
+          50.2
+        ],
+        "sharebook-frontend": [
+          370757632,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          81612800,
+          11206656,
+          2.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          749568,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          111738880,
+          1691648,
+          0.1
+        ],
+        "coolify-sentinel": [
+          51523584,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45723648,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          210149376,
+          285401088,
+          0.2
+        ],
+        "coolify-db": [
+          77082624,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9953280,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1591619584,
+          388112384,
+          2.7
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106909696,
+          823721984,
+          1.2
+        ],
+        "simula-plus-api": [
+          37253120,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          341008384,
+          8695808,
+          5.4
+        ]
+      }
+    },
+    {
+      "t": 1794723151.339,
+      "cpu": 34.4,
+      "mem_used": 4312240128,
+      "mem_avail": 4014092288,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 11.87,
+      "c": {
+        "sharebook-api": [
+          256339968,
+          0,
+          49.5
+        ],
+        "sharebook-frontend": [
+          371589120,
+          16707584,
+          2.2
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          81592320,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          749568,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          112078848,
+          1691648,
+          5.0
+        ],
+        "coolify-sentinel": [
+          51523584,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45723648,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          210149376,
+          285401088,
+          0.3
+        ],
+        "coolify-db": [
+          77082624,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9953280,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1592344576,
+          388112384,
+          46.8
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106909696,
+          823721984,
+          3.5
+        ],
+        "simula-plus-api": [
+          37253120,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          364957696,
+          8695808,
+          17.1
+        ]
+      },
+      "pg": [
+        51,
+        1
+      ]
+    },
+    {
+      "t": 1794723152.432,
+      "cpu": 42.5,
+      "mem_used": 4359053312,
+      "mem_avail": 3967279104,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 10.92,
+      "c": {
+        "sharebook-api": [
+          286842880,
+          0,
+          47.9
+        ],
+        "sharebook-frontend": [
+          371589120,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          81592320,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          749568,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          113430528,
+          1691648,
+          6.4
+        ],
+        "coolify-sentinel": [
+          51523584,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.7
+        ],
+        "coolify": [
+          210149376,
+          285401088,
+          0.2
+        ],
+        "coolify-db": [
+          77082624,
+          23928832,
+          2.1
+        ],
+        "coolify-redis": [
+          9953280,
+          2596864,
+          0.3
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1593397248,
+          388112384,
+          69.9
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106913792,
+          823721984,
+          1.3
+        ],
+        "simula-plus-api": [
+          37253120,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          396980224,
+          8695808,
+          21.2
+        ]
+      },
+      "top": {
+        "rss": [
+          [
+            "openclaw-gatewa",
+            1418640,
+            636284928,
+            311365632
+          ],
+          [
+            "dockerd",
+            809,
+            562593792,
+            63197184
+          ],
+          [
+            "dotnet",
+            201066,
+            395837440,
+            0
+          ],
+          [
+            "MainThread",
+            3243730,
+            380420096,
+            16707584
+          ],
+          [
+            "claude",
+            1433083,
+            301252608,
+            54300672
+          ],
+          [
+            "python3",
+            204122,
+            255365120,
+            0
+          ],
+          [
+            "stalwart",
+            2100497,
+            182992896,
+            173428736
+          ],
+          [
+            "postgres",
+            2141,
+            130248704,
+            1908736
+          ],
+          [
+            "postgres",
+            2142,
+            127115264,
+            1929216
+          ],
+          [
+            "codex",
+            2759044,
+            105930752,
+            10186752
+          ]
+        ],
+        "swap": [
+          [
+            "openclaw-gatewa",
+            1418640,
+            636284928,
+            311365632
+          ],
+          [
+            "stalwart",
+            2100497,
+            182992896,
+            173428736
+          ],
+          [
+            "fwupd",
+            3885470,
+            7946240,
+            137740288
+          ],
+          [
+            "chromium",
+            153813,
+            31182848,
+            78848000
+          ],
+          [
+            "dockerd",
+            809,
+            562593792,
+            63197184
+          ],
+          [
+            "claude",
+            1433083,
+            301252608,
+            54300672
+          ],
+          [
+            "chromium",
+            154047,
+            11231232,
+            52695040
+          ],
+          [
+            "selkies",
+            153675,
+            5582848,
+            38977536
+          ],
+          [
+            "dotnet",
+            369947,
+            29630464,
+            35123200
+          ],
+          [
+            "chromium",
+            154003,
+            9891840,
+            34082816
+          ]
+        ]
+      },
+      "health": {
+        "sharebook-frontend": "healthy 0 2026-11-15T00:12:33.309368399Z",
+        "sharebook-api": "healthy 0 2026-11-15T06:11:20.417857351Z"
+      },
+      "api_err": 0
+    },
+    {
+      "t": 1794723153.529,
+      "cpu": 24.5,
+      "mem_used": 4400189440,
+      "mem_avail": 3926142976,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 10.92,
+      "c": {
+        "sharebook-api": [
+          292028416,
+          0,
+          49.9
+        ],
+        "sharebook-frontend": [
+          371589120,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          81592320,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          749568,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          113750016,
+          1691648,
+          2.3
+        ],
+        "coolify-sentinel": [
+          51523584,
+          2101248,
+          2.1
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          210149376,
+          285401088,
+          0.3
+        ],
+        "coolify-db": [
+          77082624,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9953280,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1593405440,
+          388112384,
+          6.1
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106909696,
+          823721984,
+          1.9
+        ],
+        "simula-plus-api": [
+          37515264,
+          73637888,
+          2.7
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          2.8
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          396980224,
+          8695808,
+          0.0
+        ]
+      },
+      "pg": [
+        57,
+        1
+      ]
+    },
+    {
+      "t": 1794723154.588,
+      "cpu": 26.8,
+      "mem_used": 4402503680,
+      "mem_avail": 3923828736,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 10.92,
+      "c": {
+        "sharebook-api": [
+          293048320,
+          0,
+          51.2
+        ],
+        "sharebook-frontend": [
+          371589120,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          81592320,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          749568,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          113520640,
+          1691648,
+          0.1
+        ],
+        "coolify-sentinel": [
+          51544064,
+          2101248,
+          0.2
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          210141184,
+          285401088,
+          4.3
+        ],
+        "coolify-db": [
+          77107200,
+          23928832,
+          0.6
+        ],
+        "coolify-redis": [
+          9953280,
+          2596864,
+          2.3
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1593405440,
+          388112384,
+          0.9
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106909696,
+          823721984,
+          1.5
+        ],
+        "simula-plus-api": [
+          37314560,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          398196736,
+          8695808,
+          4.6
+        ]
+      }
+    },
+    {
+      "t": 1794723155.59,
+      "cpu": 16.9,
+      "mem_used": 4409602048,
+      "mem_avail": 3916730368,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 10.92,
+      "c": {
+        "sharebook-api": [
+          321982464,
+          0,
+          49.9
+        ],
+        "sharebook-frontend": [
+          371589120,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          82354176,
+          11206656,
+          2.2
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          749568,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          113532928,
+          1691648,
+          0.1
+        ],
+        "coolify-sentinel": [
+          51523584,
+          2101248,
+          0.6
+        ],
+        "sharebook-frontend-alloy": [
+          45989888,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          210141184,
+          285401088,
+          0.3
+        ],
+        "coolify-db": [
+          77107200,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9662464,
+          2596864,
+          0.5
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1593417728,
+          388112384,
+          0.9
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106905600,
+          823721984,
+          1.8
+        ],
+        "simula-plus-api": [
+          37314560,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          398196736,
+          8695808,
+          0.0
+        ]
+      },
+      "pg": [
+        59,
+        1
+      ]
+    },
+    {
+      "t": 1794723156.653,
+      "cpu": 18.2,
+      "mem_used": 4445712384,
+      "mem_avail": 3880620032,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 10.92,
+      "c": {
+        "sharebook-api": [
+          362127360,
+          0,
+          51.4
+        ],
+        "sharebook-frontend": [
+          372424704,
+          16707584,
+          2.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          82354176,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          765952,
+          8192,
+          0.1
+        ],
+        "coolify-proxy": [
+          113565696,
+          1691648,
+          0.2
+        ],
+        "coolify-sentinel": [
+          51523584,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.4
+        ],
+        "coolify": [
+          210141184,
+          285401088,
+          0.2
+        ],
+        "coolify-db": [
+          77107200,
+          23928832,
+          2.4
+        ],
+        "coolify-redis": [
+          9662464,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1593425920,
+          388112384,
+          2.1
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106905600,
+          823721984,
+          3.3
+        ],
+        "simula-plus-api": [
+          37314560,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          397287424,
+          8695808,
+          2.8
+        ]
+      }
+    },
+    {
+      "t": 1794723157.655,
+      "cpu": 15.4,
+      "mem_used": 4466630656,
+      "mem_avail": 3859701760,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 10.13,
+      "c": {
+        "sharebook-api": [
+          388190208,
+          0,
+          50.0
+        ],
+        "sharebook-frontend": [
+          372424704,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          82354176,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          765952,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          113602560,
+          1691648,
+          2.4
+        ],
+        "coolify-sentinel": [
+          51523584,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.1
+        ],
+        "coolify": [
+          210141184,
+          285401088,
+          0.3
+        ],
+        "coolify-db": [
+          77107200,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9662464,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1593425920,
+          388112384,
+          0.9
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106913792,
+          823721984,
+          1.4
+        ],
+        "simula-plus-api": [
+          37314560,
+          73637888,
+          0.1
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          395198464,
+          8695808,
+          0.6
+        ]
+      },
+      "pg": [
+        58,
+        1
+      ],
+      "top": {
+        "rss": [
+          [
+            "openclaw-gatewa",
+            1418640,
+            636284928,
+            311365632
+          ],
+          [
+            "dockerd",
+            809,
+            559603712,
+            63197184
+          ],
+          [
+            "dotnet",
+            201066,
+            493297664,
+            0
+          ],
+          [
+            "MainThread",
+            3243730,
+            381251584,
+            16707584
+          ],
+          [
+            "claude",
+            1433083,
+            301252608,
+            54300672
+          ],
+          [
+            "python3",
+            204122,
+            255393792,
+            0
+          ],
+          [
+            "stalwart",
+            2100497,
+            182992896,
+            173428736
+          ],
+          [
+            "postgres",
+            2141,
+            130248704,
+            1908736
+          ],
+          [
+            "postgres",
+            2142,
+            127115264,
+            1929216
+          ],
+          [
+            "codex",
+            2759044,
+            105930752,
+            10186752
+          ]
+        ],
+        "swap": [
+          [
+            "openclaw-gatewa",
+            1418640,
+            636284928,
+            311365632
+          ],
+          [
+            "stalwart",
+            2100497,
+            182992896,
+            173428736
+          ],
+          [
+            "fwupd",
+            3885470,
+            7946240,
+            137740288
+          ],
+          [
+            "chromium",
+            153813,
+            31178752,
+            78848000
+          ],
+          [
+            "dockerd",
+            809,
+            559603712,
+            63197184
+          ],
+          [
+            "claude",
+            1433083,
+            301252608,
+            54300672
+          ],
+          [
+            "chromium",
+            154047,
+            11231232,
+            52695040
+          ],
+          [
+            "selkies",
+            153675,
+            5582848,
+            38977536
+          ],
+          [
+            "dotnet",
+            369947,
+            29638656,
+            35115008
+          ],
+          [
+            "chromium",
+            154003,
+            9891840,
+            34082816
+          ]
+        ]
+      },
+      "health": {
+        "sharebook-frontend": "healthy 0 2026-11-15T00:12:33.309368399Z",
+        "sharebook-api": "healthy 0 2026-11-15T06:11:20.417857351Z"
+      },
+      "api_err": 26
+    },
+    {
+      "t": 1794723158.795,
+      "cpu": 17.9,
+      "mem_used": 4497829888,
+      "mem_avail": 3828502528,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 10.13,
+      "c": {
+        "sharebook-api": [
+          410710016,
+          0,
+          48.4
+        ],
+        "sharebook-frontend": [
+          372420608,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          82354176,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          765952,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          113610752,
+          1691648,
+          0.0
+        ],
+        "coolify-sentinel": [
+          51523584,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          210141184,
+          285401088,
+          0.3
+        ],
+        "coolify-db": [
+          77107200,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9662464,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1593438208,
+          388112384,
+          1.2
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106909696,
+          823721984,
+          1.4
+        ],
+        "simula-plus-api": [
+          37314560,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.1
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          387801088,
+          8695808,
+          4.1
+        ]
+      }
+    },
+    {
+      "t": 1794723159.797,
+      "cpu": 20.1,
+      "mem_used": 4495474688,
+      "mem_avail": 3830857728,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 10.13,
+      "c": {
+        "sharebook-api": [
+          432918528,
+          0,
+          49.8
+        ],
+        "sharebook-frontend": [
+          372658176,
+          16707584,
+          3.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          82354176,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          765952,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          113856512,
+          1691648,
+          0.4
+        ],
+        "coolify-sentinel": [
+          51523584,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          210141184,
+          285401088,
+          4.6
+        ],
+        "coolify-db": [
+          77107200,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9662464,
+          2596864,
+          2.8
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1593356288,
+          388112384,
+          1.1
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106909696,
+          823721984,
+          1.8
+        ],
+        "simula-plus-api": [
+          37314560,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          384106496,
+          8695808,
+          1.7
+        ]
+      },
+      "pg": [
+        56,
+        1
+      ]
+    },
+    {
+      "t": 1794723160.872,
+      "cpu": 19.5,
+      "mem_used": 4516818944,
+      "mem_avail": 3809513472,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 10.13,
+      "c": {
+        "sharebook-api": [
+          454860800,
+          0,
+          51.2
+        ],
+        "sharebook-frontend": [
+          372658176,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          67145728,
+          11206656,
+          8.1
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          765952,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          118403072,
+          1691648,
+          1.0
+        ],
+        "coolify-sentinel": [
+          51523584,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          210141184,
+          285401088,
+          0.3
+        ],
+        "coolify-db": [
+          77107200,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9662464,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1593360384,
+          388112384,
+          0.9
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106909696,
+          823721984,
+          1.3
+        ],
+        "simula-plus-api": [
+          37314560,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          374771712,
+          8695808,
+          5.5
+        ]
+      }
+    },
+    {
+      "t": 1794723161.874,
+      "cpu": 19.2,
+      "mem_used": 4520235008,
+      "mem_avail": 3806097408,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 10.13,
+      "c": {
+        "sharebook-api": [
+          469516288,
+          0,
+          49.7
+        ],
+        "sharebook-frontend": [
+          373493760,
+          16707584,
+          2.1
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          67145728,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          765952,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          113958912,
+          1691648,
+          1.3
+        ],
+        "coolify-sentinel": [
+          51523584,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.3
+        ],
+        "coolify": [
+          210141184,
+          285401088,
+          0.3
+        ],
+        "coolify-db": [
+          77111296,
+          23928832,
+          2.6
+        ],
+        "coolify-redis": [
+          9662464,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1593368576,
+          388112384,
+          1.3
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106909696,
+          823721984,
+          3.3
+        ],
+        "simula-plus-api": [
+          37314560,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          365441024,
+          8695808,
+          2.7
+        ]
+      },
+      "pg": [
+        54,
+        1
+      ]
+    },
+    {
+      "t": 1794723162.931,
+      "cpu": 18.1,
+      "mem_used": 4536209408,
+      "mem_avail": 3790123008,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 9.39,
+      "c": {
+        "sharebook-api": [
+          487079936,
+          0,
+          48.5
+        ],
+        "sharebook-frontend": [
+          373489664,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          67141632,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          765952,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          113954816,
+          1691648,
+          0.1
+        ],
+        "coolify-sentinel": [
+          51527680,
+          2101248,
+          2.4
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.3
+        ],
+        "coolify": [
+          210141184,
+          285401088,
+          0.3
+        ],
+        "coolify-db": [
+          77111296,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9666560,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1591001088,
+          388112384,
+          7.0
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106909696,
+          823721984,
+          1.4
+        ],
+        "simula-plus-api": [
+          37314560,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          358395904,
+          8695808,
+          4.1
+        ]
+      },
+      "top": {
+        "rss": [
+          [
+            "openclaw-gatewa",
+            1418640,
+            636284928,
+            311365632
+          ],
+          [
+            "dotnet",
+            201066,
+            592699392,
+            0
+          ],
+          [
+            "dockerd",
+            809,
+            559603712,
+            63197184
+          ],
+          [
+            "MainThread",
+            3243730,
+            382300160,
+            16707584
+          ],
+          [
+            "claude",
+            1433083,
+            301252608,
+            54300672
+          ],
+          [
+            "python3",
+            204122,
+            255422464,
+            0
+          ],
+          [
+            "stalwart",
+            2100497,
+            182992896,
+            173428736
+          ],
+          [
+            "postgres",
+            2141,
+            130248704,
+            1908736
+          ],
+          [
+            "postgres",
+            2142,
+            127115264,
+            1929216
+          ],
+          [
+            "codex",
+            2759044,
+            102670336,
+            10186752
+          ]
+        ],
+        "swap": [
+          [
+            "openclaw-gatewa",
+            1418640,
+            636284928,
+            311365632
+          ],
+          [
+            "stalwart",
+            2100497,
+            182992896,
+            173428736
+          ],
+          [
+            "fwupd",
+            3885470,
+            7946240,
+            137740288
+          ],
+          [
+            "chromium",
+            153813,
+            31178752,
+            78848000
+          ],
+          [
+            "dockerd",
+            809,
+            559603712,
+            63197184
+          ],
+          [
+            "claude",
+            1433083,
+            301252608,
+            54300672
+          ],
+          [
+            "chromium",
+            154047,
+            11231232,
+            52695040
+          ],
+          [
+            "selkies",
+            153675,
+            5582848,
+            38977536
+          ],
+          [
+            "dotnet",
+            369947,
+            29638656,
+            35115008
+          ],
+          [
+            "chromium",
+            154003,
+            9891840,
+            34082816
+          ]
+        ]
+      },
+      "health": {
+        "sharebook-frontend": "healthy 0 2026-11-15T00:12:33.309368399Z",
+        "sharebook-api": "healthy 0 2026-11-15T06:11:20.417857351Z"
+      },
+      "api_err": 322
+    },
+    {
+      "t": 1794723164.031,
+      "cpu": 23.8,
+      "mem_used": 4529397760,
+      "mem_avail": 3796934656,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 9.39,
+      "c": {
+        "sharebook-api": [
+          504774656,
+          0,
+          49.3
+        ],
+        "sharebook-frontend": [
+          374784000,
+          16707584,
+          11.5
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          67141632,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          765952,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          114892800,
+          1691648,
+          0.4
+        ],
+        "coolify-sentinel": [
+          51523584,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.3
+        ],
+        "coolify": [
+          210141184,
+          285401088,
+          0.4
+        ],
+        "coolify-db": [
+          77111296,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9662464,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1584578560,
+          388112384,
+          10.7
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106905600,
+          823721984,
+          1.4
+        ],
+        "simula-plus-api": [
+          37314560,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          358789120,
+          8695808,
+          0.2
+        ]
+      },
+      "pg": [
+        51,
+        1
+      ]
+    },
+    {
+      "t": 1794723165.089,
+      "cpu": 28.5,
+      "mem_used": 4556107776,
+      "mem_avail": 3770224640,
+      "swap_used": 2203422720,
+      "si_kibs": 18.9,
+      "so_kibs": 0.0,
+      "load1": 9.39,
+      "c": {
+        "sharebook-api": [
+          512327680,
+          0,
+          51.7
+        ],
+        "sharebook-frontend": [
+          374784000,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          67141632,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          765952,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          116035584,
+          1691648,
+          3.1
+        ],
+        "coolify-sentinel": [
+          51527680,
+          2101248,
+          1.1
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          210145280,
+          285401088,
+          3.9
+        ],
+        "coolify-db": [
+          77111296,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9453568,
+          2596864,
+          3.3
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1584705536,
+          388112384,
+          9.1
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106913792,
+          823721984,
+          1.1
+        ],
+        "simula-plus-api": [
+          37314560,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          358780928,
+          8695808,
+          5.3
+        ]
+      }
+    },
+    {
+      "t": 1794723166.091,
+      "cpu": 22.7,
+      "mem_used": 4492070912,
+      "mem_avail": 3834261504,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 9.39,
+      "c": {
+        "sharebook-api": [
+          523452416,
+          0,
+          50.0
+        ],
+        "sharebook-frontend": [
+          374784000,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          67866624,
+          11206656,
+          2.5
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          765952,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          116707328,
+          1691648,
+          1.4
+        ],
+        "coolify-sentinel": [
+          51527680,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          210145280,
+          285401088,
+          0.2
+        ],
+        "coolify-db": [
+          77111296,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9367552,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1584320512,
+          388112384,
+          22.2
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106913792,
+          823721984,
+          1.4
+        ],
+        "simula-plus-api": [
+          37314560,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          298053632,
+          8695808,
+          7.9
+        ]
+      },
+      "pg": [
+        21,
+        1
+      ]
+    },
+    {
+      "t": 1794723167.15,
+      "cpu": 28.2,
+      "mem_used": 4482555904,
+      "mem_avail": 3843776512,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 9.12,
+      "c": {
+        "sharebook-api": [
+          546811904,
+          0,
+          50.3
+        ],
+        "sharebook-frontend": [
+          375615488,
+          16707584,
+          2.2
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          67866624,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          765952,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          117293056,
+          1691648,
+          2.7
+        ],
+        "coolify-sentinel": [
+          51527680,
+          2101248,
+          0.2
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.3
+        ],
+        "coolify": [
+          210145280,
+          285401088,
+          0.3
+        ],
+        "coolify-db": [
+          77107200,
+          23928832,
+          2.7
+        ],
+        "coolify-redis": [
+          9105408,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1584246784,
+          388112384,
+          13.7
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106913792,
+          823721984,
+          3.4
+        ],
+        "simula-plus-api": [
+          37314560,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          264966144,
+          8695808,
+          19.7
+        ]
+      }
+    },
+    {
+      "t": 1794723168.154,
+      "cpu": 22.5,
+      "mem_used": 4485083136,
+      "mem_avail": 3841249280,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 9.12,
+      "c": {
+        "sharebook-api": [
+          584593408,
+          0,
+          51.1
+        ],
+        "sharebook-frontend": [
+          375615488,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          67866624,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          765952,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          117325824,
+          1691648,
+          0.9
+        ],
+        "coolify-sentinel": [
+          51527680,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          210145280,
+          285401088,
+          0.2
+        ],
+        "coolify-db": [
+          77107200,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9105408,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1584054272,
+          388112384,
+          7.0
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          107003904,
+          823721984,
+          1.4
+        ],
+        "simula-plus-api": [
+          37314560,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          2.4
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          231276544,
+          8695808,
+          22.6
+        ]
+      },
+      "pg": [
+        2,
+        1
+      ],
+      "top": {
+        "rss": [
+          [
+            "dotnet",
+            201066,
+            690720768,
+            0
+          ],
+          [
+            "openclaw-gatewa",
+            1418640,
+            636477440,
+            311365632
+          ],
+          [
+            "dockerd",
+            809,
+            559620096,
+            63197184
+          ],
+          [
+            "MainThread",
+            3243730,
+            384417792,
+            16707584
+          ],
+          [
+            "claude",
+            1433083,
+            301252608,
+            54300672
+          ],
+          [
+            "python3",
+            204122,
+            255623168,
+            0
+          ],
+          [
+            "stalwart",
+            2100497,
+            182992896,
+            173428736
+          ],
+          [
+            "postgres",
+            2141,
+            130248704,
+            1908736
+          ],
+          [
+            "postgres",
+            2142,
+            127115264,
+            1929216
+          ],
+          [
+            "codex",
+            2759044,
+            98750464,
+            10186752
+          ]
+        ],
+        "swap": [
+          [
+            "openclaw-gatewa",
+            1418640,
+            636477440,
+            311365632
+          ],
+          [
+            "stalwart",
+            2100497,
+            182992896,
+            173428736
+          ],
+          [
+            "fwupd",
+            3885470,
+            7946240,
+            137740288
+          ],
+          [
+            "chromium",
+            153813,
+            31178752,
+            78848000
+          ],
+          [
+            "dockerd",
+            809,
+            559620096,
+            63197184
+          ],
+          [
+            "claude",
+            1433083,
+            301252608,
+            54300672
+          ],
+          [
+            "chromium",
+            154047,
+            11231232,
+            52695040
+          ],
+          [
+            "selkies",
+            153675,
+            5582848,
+            38977536
+          ],
+          [
+            "dotnet",
+            369947,
+            29638656,
+            35115008
+          ],
+          [
+            "chromium",
+            154003,
+            9891840,
+            34082816
+          ]
+        ]
+      },
+      "health": {
+        "sharebook-frontend": "healthy 0 2026-11-15T00:12:33.309368399Z",
+        "sharebook-api": "healthy 0 2026-11-15T06:11:20.417857351Z"
+      },
+      "api_err": 643
+    },
+    {
+      "t": 1794723169.302,
+      "cpu": 19.8,
+      "mem_used": 4526383104,
+      "mem_avail": 3799949312,
+      "swap_used": 2203422720,
+      "si_kibs": 3.5,
+      "so_kibs": 0.0,
+      "load1": 9.12,
+      "c": {
+        "sharebook-api": [
+          620748800,
+          0,
+          48.0
+        ],
+        "sharebook-frontend": [
+          375615488,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          67866624,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          765952,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          117321728,
+          1691648,
+          1.9
+        ],
+        "coolify-sentinel": [
+          51527680,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          210145280,
+          285401088,
+          0.3
+        ],
+        "coolify-db": [
+          77107200,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9367552,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1584050176,
+          388112384,
+          2.1
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106913792,
+          823721984,
+          1.6
+        ],
+        "simula-plus-api": [
+          37314560,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.1
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          231276544,
+          8695808,
+          2.2
+        ]
+      }
+    },
+    {
+      "t": 1794723170.304,
+      "cpu": 17.5,
+      "mem_used": 4545433600,
+      "mem_avail": 3780898816,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 9.12,
+      "c": {
+        "sharebook-api": [
+          636837888,
+          0,
+          50.2
+        ],
+        "sharebook-frontend": [
+          375615488,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          72806400,
+          11206656,
+          0.8
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          765952,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          117321728,
+          1691648,
+          0.2
+        ],
+        "coolify-sentinel": [
+          51527680,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          210145280,
+          285401088,
+          4.8
+        ],
+        "coolify-db": [
+          77107200,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9105408,
+          2596864,
+          2.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1584054272,
+          388112384,
+          1.0
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106917888,
+          823721984,
+          1.6
+        ],
+        "simula-plus-api": [
+          37314560,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          231276544,
+          8695808,
+          0.0
+        ]
+      },
+      "pg": [
+        2,
+        1
+      ]
+    },
+    {
+      "t": 1794723171.377,
+      "cpu": 22.4,
+      "mem_used": 4473733120,
+      "mem_avail": 3852599296,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 9.12,
+      "c": {
+        "sharebook-api": [
+          649408512,
+          0,
+          50.8
+        ],
+        "sharebook-frontend": [
+          375615488,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          68595712,
+          11206656,
+          1.3
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          765952,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          117305344,
+          1691648,
+          0.4
+        ],
+        "coolify-sentinel": [
+          51527680,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          210145280,
+          285401088,
+          0.2
+        ],
+        "coolify-db": [
+          77107200,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9105408,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1484357632,
+          388112384,
+          8.6
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106917888,
+          823721984,
+          3.2
+        ],
+        "simula-plus-api": [
+          37314560,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          245788672,
+          8695808,
+          8.5
+        ]
+      }
+    },
+    {
+      "t": 1794723172.379,
+      "cpu": 18.5,
+      "mem_used": 4478029824,
+      "mem_avail": 3848302592,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 8.55,
+      "c": {
+        "sharebook-api": [
+          650117120,
+          0,
+          50.1
+        ],
+        "sharebook-frontend": [
+          376446976,
+          16707584,
+          2.5
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          68595712,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          765952,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          117305344,
+          1691648,
+          0.1
+        ],
+        "coolify-sentinel": [
+          51527680,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.4
+        ],
+        "coolify": [
+          210145280,
+          285401088,
+          0.3
+        ],
+        "coolify-db": [
+          77111296,
+          23928832,
+          2.5
+        ],
+        "coolify-redis": [
+          9105408,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          90402816,
+          14520320,
+          1.5
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1479323648,
+          388112384,
+          3.3
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106917888,
+          823721984,
+          1.4
+        ],
+        "simula-plus-api": [
+          37314560,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          245788672,
+          8695808,
+          0.0
+        ]
+      },
+      "pg": [
+        8,
+        1
+      ]
+    },
+    {
+      "t": 1794723173.436,
+      "cpu": 10.5,
+      "mem_used": 4477124608,
+      "mem_avail": 3849207808,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 8.55,
+      "c": {
+        "sharebook-api": [
+          652460032,
+          0,
+          9.1
+        ],
+        "sharebook-frontend": [
+          376446976,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          68595712,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          765952,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          117309440,
+          1691648,
+          2.1
+        ],
+        "coolify-sentinel": [
+          51531776,
+          2101248,
+          2.3
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          210145280,
+          285401088,
+          0.3
+        ],
+        "coolify-db": [
+          77111296,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9105408,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.8
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1479376896,
+          388112384,
+          4.0
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106913792,
+          823721984,
+          1.2
+        ],
+        "simula-plus-api": [
+          37314560,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          245788672,
+          8695808,
+          2.5
+        ]
+      },
+      "top": {
+        "rss": [
+          [
+            "dotnet",
+            201066,
+            758718464,
+            0
+          ],
+          [
+            "openclaw-gatewa",
+            1418640,
+            636477440,
+            311365632
+          ],
+          [
+            "dockerd",
+            809,
+            559632384,
+            63193088
+          ],
+          [
+            "MainThread",
+            3243730,
+            385249280,
+            16707584
+          ],
+          [
+            "claude",
+            1433083,
+            301252608,
+            54300672
+          ],
+          [
+            "stalwart",
+            2100497,
+            182992896,
+            173428736
+          ],
+          [
+            "python3",
+            204122,
+            158253056,
+            0
+          ],
+          [
+            "postgres",
+            2141,
+            130248704,
+            1908736
+          ],
+          [
+            "postgres",
+            2142,
+            127115264,
+            1929216
+          ],
+          [
+            "codex",
+            2759044,
+            98750464,
+            10186752
+          ]
+        ],
+        "swap": [
+          [
+            "openclaw-gatewa",
+            1418640,
+            636477440,
+            311365632
+          ],
+          [
+            "stalwart",
+            2100497,
+            182992896,
+            173428736
+          ],
+          [
+            "fwupd",
+            3885470,
+            7946240,
+            137740288
+          ],
+          [
+            "chromium",
+            153813,
+            31178752,
+            78848000
+          ],
+          [
+            "dockerd",
+            809,
+            559632384,
+            63193088
+          ],
+          [
+            "claude",
+            1433083,
+            301252608,
+            54300672
+          ],
+          [
+            "chromium",
+            154047,
+            11231232,
+            52695040
+          ],
+          [
+            "selkies",
+            153675,
+            5582848,
+            38977536
+          ],
+          [
+            "dotnet",
+            369947,
+            29638656,
+            35115008
+          ],
+          [
+            "chromium",
+            154003,
+            9891840,
+            34082816
+          ]
+        ]
+      },
+      "health": {
+        "sharebook-frontend": "healthy 0 2026-11-15T00:12:33.309368399Z",
+        "sharebook-api": "healthy 0 2026-11-15T06:11:20.417857351Z"
+      },
+      "api_err": 21
+    },
+    {
+      "t": 1794723174.537,
+      "cpu": 6.6,
+      "mem_used": 4497412096,
+      "mem_avail": 3828920320,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 8.55,
+      "c": {
+        "sharebook-api": [
+          654618624,
+          0,
+          1.3
+        ],
+        "sharebook-frontend": [
+          376446976,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          68595712,
+          11206656,
+          0.0
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          765952,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          117309440,
+          1691648,
+          0.0
+        ],
+        "coolify-sentinel": [
+          51548160,
+          2101248,
+          0.1
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.2
+        ],
+        "coolify": [
+          210145280,
+          285401088,
+          0.4
+        ],
+        "coolify-db": [
+          77111296,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9117696,
+          2596864,
+          2.2
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1481023488,
+          388112384,
+          5.0
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106913792,
+          823721984,
+          1.4
+        ],
+        "simula-plus-api": [
+          37257216,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          245788672,
+          8695808,
+          0.0
+        ]
+      },
+      "pg": [
+        8,
+        1
+      ]
+    },
+    {
+      "t": 1794723175.64,
+      "cpu": 54.8,
+      "mem_used": 4725407744,
+      "mem_avail": 3600924672,
+      "swap_used": 2203422720,
+      "si_kibs": 0.0,
+      "so_kibs": 0.0,
+      "load1": 8.55,
+      "c": {
+        "sharebook-api": [
+          659423232,
+          0,
+          51.1
+        ],
+        "sharebook-frontend": [
+          376446976,
+          16707584,
+          0.0
+        ],
+        "pwwrreeh1cecuit1lgl7jdjp-20261114T231734": [
+          69320704,
+          11206656,
+          2.1
+        ],
+        "coolify-proxy-error-pages": [
+          876544,
+          32768,
+          0.0
+        ],
+        "coolify-proxy-logrotate": [
+          765952,
+          8192,
+          0.0
+        ],
+        "coolify-proxy": [
+          117309440,
+          1691648,
+          0.1
+        ],
+        "coolify-sentinel": [
+          51527680,
+          2101248,
+          0.5
+        ],
+        "sharebook-frontend-alloy": [
+          45727744,
+          7229440,
+          0.1
+        ],
+        "coolify": [
+          210145280,
+          285401088,
+          4.1
+        ],
+        "coolify-db": [
+          77111296,
+          23928832,
+          0.0
+        ],
+        "coolify-redis": [
+          9367552,
+          2596864,
+          0.4
+        ],
+        "filebrowser-ndcmccwn9wpfzuyqw2ilxpfk": [
+          85676032,
+          14520320,
+          0.0
+        ],
+        "openclaw-uj0tkohotwrp4epy0leaz28z": [
+          1700761600,
+          388112384,
+          132.8
+        ],
+        "browser-uj0tkohotwrp4epy0leaz28z": [
+          106913792,
+          823721984,
+          1.6
+        ],
+        "simula-plus-api": [
+          37257216,
+          73637888,
+          0.0
+        ],
+        "pegasus-core-api": [
+          39583744,
+          76910592,
+          0.0
+        ],
+        "stalwart-guyiwjaysuyrw6fleb9a3bci": [
+          210685952,
+          173436928,
+          0.0
+        ],
+        "fgsgwsckccgk8sccc4gg0gg0": [
+          245788672,
+          8695808,
+          3.1
+        ]
+      }
+    }
+  ]
+}
