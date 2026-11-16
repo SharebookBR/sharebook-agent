@@ -1,6 +1,6 @@
 ---
 name: physical-book-importer
-description: Cadastra livros físicos no Sharebook usando foto da capa, pesquisa de contexto, frete explícito e API de produção. Use quando o usuário quiser importar ou cadastrar livros impressos, montar sinopses editoriais com base em fontes públicas confiáveis, aprovar os livros em produção e transformar atritos do fluxo em melhorias permanentes.
+description: Cadastra livros físicos no Sharebook usando foto da capa, pesquisa de contexto, frete explícito e API de produção. Use quando o usuário quiser importar ou cadastrar livros impressos, montar sinopses editoriais com base em fontes públicas confiáveis e transformar atritos do fluxo em melhorias permanentes.
 ---
 
 # Sharebook Physical Book Importer
@@ -14,8 +14,8 @@ Cadastrar livro físico é parecido com ebook, mas não igual. Este playbook exi
 3. Escrever sinopse de vitrine com no mínimo 3 parágrafos, sexy, tom envolvente e sem inventar fatos que a pesquisa não sustenta.
 4. Em sessão manual de PowerShell, se houver vários cadastros seguidos, rodar `python C:\Repos\SHAREBOOK\sharebook-agent\playbooks\_shared\scripts\production\sharebook_refresh_token.py` para renovar o token (o `sharebook_prod_login.ps1` está quebrado — módulo `sharebook_prod_auth` ausente).
 5. Antes de cadastrar, consultar `GET /api/Category` e confirmar que a categoria escolhida é folha (`children` vazio). Em caso de homônimo, usar sempre `--category-id`.
-6. Cadastrar com `C:\Repos\SHAREBOOK\sharebook-agent\playbooks\_shared\scripts\production\sharebook_prod_book.py create --type Printed --freight-option ... --approve`, preferindo `--synopsis-file` em UTF-8.
-7. Validar o retorno publicado com `find-many` ou pelo próprio payload do script. Livro agendado (passo seguinte) não aparece em `find-many`/busca pública: conferir `status: Scheduled` e `releaseDate` no payload e abrir a PDP.
+6. Cadastrar com `C:\Repos\SHAREBOOK\sharebook-agent\playbooks\_shared\scripts\production\sharebook_prod_book.py create --type Printed --freight-option ...`, preferindo `--synopsis-file` em UTF-8.
+7. Validar o retorno com `find-many` ou pelo próprio payload do script. A aprovação e o agendamento são operações do ciclo de vida: seguir `../../operational/book-lifecycle/PLAYBOOK.md` antes de publicar ou programar abertura.
 8. Reflita sobre as fricções nessa sessão e fique a vontade pra melhorar essa playbook ou scripts.
 
 ## Regras
@@ -28,7 +28,7 @@ Cadastrar livro físico é parecido com ebook, mas não igual. Este playbook exi
 - Usar a própria foto da capa do livro como imagem, salvo orientação contrária do usuário.
 - Livro físico exige `--freight-option`. Se o usuário disser que paga para todo o Brasil, usar `Country`.
 - Não exigir PDF nem tentar forçar o fluxo de ebook em livro impresso.
-- **Pré-lançamento (livro "Em breve")**: para agendar a abertura das solicitações, aprovar com `--release-date YYYY-MM-DD` (data do dia da abertura, fuso de São Paulo). Só vale junto com `--approve` e em livro físico. Data futura = `Scheduled`, fora da vitrine comum, sem e-mail à pessoa doadora até a liberação; o job `ReleaseScheduledBooks` (7h) libera no dia. Sem a flag, ou com data de hoje/passada, o livro vai direto para `Available`, como sempre. Backlog e calendário: `backlog/done/pre-lancamento-livros-fisicos.md`. Não existe tela nem comando para reagendar: errou a data, falar com o Raffa.
+- **Pré-lançamento (livro "Em breve")**: depois do cadastro, o agendamento é uma operação de ciclo de vida. Seguir `../../operational/book-lifecycle/PLAYBOOK.md` para aprovar com `--release-date YYYY-MM-DD`, confirmar `Scheduled` e validar a abertura. Não existe tela nem comando para reagendar: errou a data, falar com o Raffa.
 - Gate de categoria obrigatório: não cadastrar físico em categoria-pai quando houver subcategorias; usar sempre categoria folha (`--category-id`), especialmente em árvores com homônimo (`Drama`, `Aventura` etc.).
 - No estado atual do catálogo, tratar `Ficção`, `Tecnologia` e `Drama` como categorias-pai (proibidas como destino final).
 - A sinopse final deve ter no mínimo 3 parágrafos e vender a leitura sem virar fanfic.
@@ -44,7 +44,7 @@ Cadastrar livro físico é parecido com ebook, mas não igual. Este playbook exi
   - Para físico, usar `create --type Printed --freight-option ...`.
   - Para ebook, usar `create --type Eletronic --pdf-path ...`.
   - Aceita `--synopsis` ou `--synopsis-file`.
-  - `--release-date YYYY-MM-DD` em `create`/`update` (com `--approve`) e em `approve`: agenda o livro físico como "Em breve".
+  - `--release-date YYYY-MM-DD` em `approve`: agenda o livro físico como "Em breve". A decisão e a validação da aprovação vivem em `../../operational/book-lifecycle/PLAYBOOK.md`.
   - `find-many --pairs-file` é útil para validar vários cadastros com um único login.
 - `C:\Repos\SHAREBOOK\sharebook-agent\playbooks\_shared\scripts\production\sharebook_refresh_token.py`
   - Renova `SHAREBOOK_PROD_ACCESS_TOKEN`, salva no `.env` automaticamente.
@@ -68,8 +68,7 @@ python C:\Repos\SHAREBOOK\sharebook-agent\playbooks\_shared\scripts\production\s
   --category-id "<ID_CATEGORIA_FOLHA>" `
   --freight-option Country `
   --synopsis-file "C:\Repos\SHAREBOOK\codex-temp\<slug>\synopsis.txt" `
-  --image-path "C:\Users\raffa\Downloads\<foto-da-capa.jpeg>" `
-  --approve
+  --image-path "C:\Users\raffa\Downloads\<foto-da-capa.jpeg>"
 ```
 
 ## Referências

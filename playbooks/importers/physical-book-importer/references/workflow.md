@@ -6,8 +6,8 @@
 4. Confirmar com o usuário o alcance do frete quando isso não estiver explícito. Em geral o Raffa paga o frete pro Brasil.
 5. Em PowerShell manual, se houver vários cadastros seguidos, renovar o token com `python C:\Repos\SHAREBOOK\sharebook-agent\playbooks\_shared\scripts\production\sharebook_refresh_token.py`. Não usar `sharebook_prod_login.ps1`: o módulo de autenticação esperado por ele está ausente.
 6. Escrever a sinopse em arquivo UTF-8.
-7. Cadastrar com `playbooks/_shared/scripts/production/sharebook_prod_book.py create --type Printed --freight-option ... --approve`.
-8. Validar o cadastro final com o retorno do script ou `find-many`.
+7. Cadastrar com `playbooks/_shared/scripts/production/sharebook_prod_book.py create --type Printed --freight-option ...`.
+8. Validar o cadastro final com o retorno do script ou `find-many`. Para aprovar ou agendar, seguir `../../../operational/book-lifecycle/PLAYBOOK.md`.
 9. Converter toda dor recorrente em melhoria concreta do playbook ou dos scripts.
 
 ## Fricções reais já validadas
@@ -17,4 +17,4 @@
 - Foto da capa sozinha nem sempre basta para escrever sinopse forte sem inventar. Pesquisa pública é parte do fluxo, não perfumaria.
 - Se a pesquisa pública for fraca, usar formulações honestas e prudentes em vez de preencher lacunas com imaginação.
 - Em Windows, texto longo com acento direto na CLI continua sendo uma má ideia. Usar `--synopsis-file`.
-- O cadastro só está completo quando a página pública, imagem, categoria folha, frete, sinopse e aprovação estão coerentes. Não recriar passos de intermediário aposentados para "completar" livro físico.
+- O cadastro só está completo quando imagem, categoria folha, frete e sinopse estão coerentes. Publicação, aprovação e demais mudanças de estado pertencem ao ciclo operacional.

@@ -1,6 +1,6 @@
-# Família de Playbooks — Importers e Curadoria Operacional
+# Família de Playbooks — Importação e Criação de Livros
 
-Fluxos de ingestão, triagem, preparo editorial, tradução, PDFs, categorias e publicação no catálogo.
+Fluxos de entrada e criação de livros: ingestão, triagem, preparo editorial, tradução, PDFs, categorias e publicação no catálogo.
 
 ## Playbooks
 
@@ -8,13 +8,14 @@ Fluxos de ingestão, triagem, preparo editorial, tradução, PDFs, categorias e 
 - `./sharebook-pdf-typesetting/PLAYBOOK.md` — Baseline editorial de miolo PDF Sharebook em 4:5; leitura obrigatória para preparo editorial de sources Project Gutenberg com tradução e PDF final.
 - `./illustrated-edition/PLAYBOOK.md` — Edição ilustrada de livro traduzido: uma prancha por capítulo gerada por IA de imagem, escolha de cenas delegada ao agente, prompts um de cada vez, lobo de referência, legenda "criado com IA", assets no job e PDF com pranchas.
 - `./daily-triage-recovery/PLAYBOOK.md` — Recorte diário da triagem: analisar itens processados hoje, recuperar `source_blocked`, decidir rejeição limpa, rejeição editorial posterior ou hardening.
-- `./physical-book-importer/PLAYBOOK.md` — Cadastro, doação, importação e validação de livros físicos em produção.
+- `./physical-book-importer/PLAYBOOK.md` — Cadastro, importação e preparo de livros físicos em produção.
 - `./category-organizer/PLAYBOOK.md` — Gestão, taxonomia e hierarquia de categorias.
 - `./escrever-livros/PLAYBOOK.md` — Produção editorial de Originals, manuscritos, PDFs, capas autorais e assets de obras novas. Inclui a linha **Vida Real** (livros de divulgação/não ficção): página de posição, verificação de fontes (Crossref/PubMed), `references.md`, `revisao-factual`, sinopse em modo clique e as lições de escrita (definir uma vez, ajuda profissional em um lugar só, sem meta-hedges). Também: leitura obrigatória antes de escrever, autonomia, posição editorial, PDF v1 com a página institucional canônica de Originals. Teste da versão confiante (revisão). Também: persona de voz por livro e `voz.md` (modelo em `references/voz-template.md`), fonte de vez em quando, primeira pessoa, direção de arte das pranchas (uma cena, uma piada, três segundos), tema sensível de saúde e a linha do que o livro afirma. Termos: Vida Real, não ficção, divulgação científica, manuscrito, referências, burnout, saúde, tom, voz, persona, medo de se posicionar, reposição hormonal, pranchas, ilustração de livro. Também: narradora com nome, público específico sem explicar o recorte, causos compostos (histórias de pessoas reais com nomes e datas trocados), sexo sugestivo e não gráfico, frase-ponte entre capítulo e prancha, cânone visual a partir da capa, estilo de ilustração por livro (cartaz de salão, lápis de cor).
 
 ## Uso
 
-- Ler quando a tarefa envolver fila, triagem, preparo editorial, tradução, Project Gutenberg, publicação, categorias, taxonomia, livro físico, doação física, frete, Originals, manuscritos, PDF ou produção de ativos do catálogo.
+- Ler quando a tarefa envolver fila, triagem, preparo editorial, tradução, Project Gutenberg, publicação, categorias, taxonomia, cadastro de livro físico, frete, Originals, manuscritos, PDF ou produção de ativos do catálogo.
+- Para aprovação, rejeição, cancelamento, pessoa ganhadora, envio ou rastreio de um livro já existente, abrir `../operational/INDEX.md`.
 - Quando a tarefa também decidir quais títulos, sources ou categorias merecem prioridade, ler antes `../product-ux/catalog-strategy/PLAYBOOK.md`.
 - Para qualquer coisa relacionada à fila de importação de ebooks: abrir `./ebook-importer/PLAYBOOK.md` — ela contém tudo.
 - Para preparo editorial de source Project Gutenberg com tradução/PDF final, abrir também `./sharebook-pdf-typesetting/PLAYBOOK.md` antes de validar ou gerar o PDF.

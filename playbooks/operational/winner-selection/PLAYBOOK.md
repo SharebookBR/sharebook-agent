@@ -1,11 +1,11 @@
 ---
 name: winner-selection
-description: Triar anonimamente solicitações de livros físicos, montar shortlist auditável, apoiar a decisão manual do doador e registrar a pessoa ganhadora pela API oficial do Sharebook. Use quando Raffa pedir ajuda para escolher ganhador(a) de uma doação.
+description: Triar anonimamente solicitações de livros físicos, montar shortlist auditável, apoiar a decisão manual da pessoa doadora e registrar a pessoa ganhadora pela API oficial do Sharebook. Use quando Raffa pedir ajuda para escolher uma pessoa ganhadora de uma doação.
 ---
 
 # Sharebook Winner Selection
 
-Escolha humana assistida por critérios, com anonimato até a decisão final.
+Escolha humana assistida por critérios, com anonimato até a decisão final. Este é um fluxo de operação de doações: conduz uma decisão já existente no produto, sem redefinir sua interface ou identidade.
 
 ## Invariantes
 
@@ -65,6 +65,12 @@ O critério é binário. Quantidade doada não aumenta a nota, para não transfo
 
 Não descontar pontos. Usar somente como desempate entre candidatos com a mesma pontuação, favorecendo quem recebeu menos livros.
 
+### Qualidade mínima para shortlist
+
+Extensão não é mérito: texto bonito ou longo não soma pontos. Mas a solicitação precisa sustentar a escolha com motivação pessoal minimamente desenvolvida e conexão específica com a obra. Uma linha que só declara interesse, cita a sinopse ou promete repassar o livro não entra na shortlist.
+
+Brevidade não desclassifica por si só, desde que traga evidência suficiente para uma escolha humana. Não usar contagem de palavras nem transformar essa porta de entrada em prêmio para verborragia.
+
 ## Workflow
 
 1. Obter a URL ou slug do livro.
@@ -72,7 +78,7 @@ Não descontar pontos. Usar somente como desempate entre candidatos com a mesma 
 3. Preparar solicitações anonimizadas:
 
 ```powershell
-python C:\Repos\SHAREBOOK\sharebook-agent\playbooks\product-ux\winner-selection\scripts\winner_selection.py prepare --slug "<SLUG>"
+python C:\Repos\SHAREBOOK\sharebook-agent\playbooks\operational\winner-selection\scripts\winner_selection.py prepare --slug "<SLUG>"
 ```
 
 4. Conferir se a saída não contém identificadores residuais antes de apresentá-la. Se encontrar um, interromper a avaliação e corrigir o sanitizador.
@@ -88,7 +94,7 @@ python C:\Repos\SHAREBOOK\sharebook-agent\playbooks\product-ux\winner-selection\
     apelido na saída preparada e registrar sem expor o código na conversa:
 
 ```powershell
-python C:\Repos\SHAREBOOK\sharebook-agent\playbooks\product-ux\winner-selection\scripts\winner_selection.py choose --slug "<SLUG>" --code "<CODIGO>" --confirm
+python C:\Repos\SHAREBOOK\sharebook-agent\playbooks\operational\winner-selection\scripts\winner_selection.py choose --slug "<SLUG>" --code "<CODIGO>" --confirm
 ```
 
 13. Só declarar conclusão após o script confirmar:
@@ -105,4 +111,4 @@ python C:\Repos\SHAREBOOK\sharebook-agent\playbooks\product-ux\winner-selection\
 
 ## Terminologia
 
-Usar **solicitação**, **doador(a)** e **ganhador(a)** em texto visível, conforme `../voice-glossary/PLAYBOOK.md`.
+Usar **solicitação**, **pessoa doadora** e **pessoa ganhadora** em texto visível, conforme `../../product-ux/voice-glossary/PLAYBOOK.md`.
