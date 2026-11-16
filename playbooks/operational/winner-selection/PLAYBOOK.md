@@ -21,6 +21,7 @@ Escolha humana assistida por critérios, com anonimato até a decisão final. Es
 - Escrita bonita não ganha ponto extra. Texto dramático não prova veracidade. Não usar detector de IA como evidência.
 - A pontuação faz triagem; a decisão final é manual e pertence ao doador.
 - Registrar a escolha pela API oficial. Nunca alterar o ganhador diretamente no banco.
+- **Autorização permanente do Raffa:** quando ele declarar um apelido anônimo como pessoa ganhadora, isso já autoriza o registro oficial. Não pedir uma segunda confirmação redundante; executar, validar o estado final e comunicar o resultado.
 
 ## Critérios padrão
 
@@ -88,7 +89,7 @@ python C:\Repos\SHAREBOOK\sharebook-agent\playbooks\operational\winner-selection
 8. Entregar ao doador somente apelido anônimo do Sharebook, texto anonimizado, notas,
    total, evidências e incertezas relevantes. Manter o `selectionCode` fora da conversa.
 9. Ajudar a comparar finalistas sem revelar identidade. Recalcular apenas se um critério mudar por princípio, nunca para justificar preferência posterior.
-10. Após o doador declarar o apelido anônimo vencedor, pedir autorização explícita separada para registrar a escolha.
+10. Após o Raffa declarar o apelido anônimo vencedor, tratar a declaração como autorização para registrar. Para qualquer outra pessoa doadora, pedir autorização explícita antes da mutação.
 11. Avisar que a escolha oficial atualiza todos os pedidos e dispara as notificações normais.
 12. Com autorização, localizar internamente o `selectionCode` correspondente ao
     apelido na saída preparada e registrar sem expor o código na conversa:
@@ -102,6 +103,7 @@ python C:\Repos\SHAREBOOK\sharebook-agent\playbooks\operational\winner-selection
    - livro em `WaitingSend`;
    - solicitação vencedora em `Donated`;
    - zero solicitações em `WaitingAction`.
+14. Após o registro confirmado, fornecer ao Raffa um texto curto, amigável e comemorativo, em primeira pessoa, para ele notificar a pessoa ganhadora.
 
 ## Falhas e mutações ambíguas
 
