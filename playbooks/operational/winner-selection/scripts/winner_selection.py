@@ -135,6 +135,10 @@ PUBLISHED_WORKS_RE = re.compile(
 SIGNATURE_RE = re.compile(
     r"(?im)(^\s*(?:Com carinho(?: e gratidão)?|Atenciosamente)[,]?\s*\n)\s*[^\n]+$"
 )
+TRAILING_BARE_NAME_RE = re.compile(
+    r"(?m)(?:\n|\A)\s*[A-ZÀ-Ý][\wÀ-ÿ'’-]*"
+    r"(?:\s+(?:[A-ZÀ-Ý][\wÀ-ÿ'’-]*|d[aeos]|e)){1,5}\s*\Z"
+)
 
 
 def opaque_code(book_id: str, user_id: str) -> str:
@@ -179,6 +183,7 @@ def sanitize_request_text(text: str) -> str:
     sanitized = REGIONAL_IDENTITY_RE.sub("jovem escritora [localidade removida]", sanitized)
     sanitized = PUBLISHED_WORKS_RE.sub("[obras publicadas removidas].", sanitized)
     sanitized = SIGNATURE_RE.sub(r"\1[assinatura removida]", sanitized)
+    sanitized = TRAILING_BARE_NAME_RE.sub("\n[assinatura removida]", sanitized)
     sanitized = re.sub(r"[ \t]+\n", "\n", sanitized)
     sanitized = re.sub(r"\n{3,}", "\n\n", sanitized)
     return sanitized.strip()
@@ -463,6 +468,10 @@ def self_test() -> int:
         (
             "Me desloco de Cidade Exemplo para Outra Cidade para estudar.",
             ["Cidade Exemplo", "Outra Cidade"],
+        ),
+        (
+            "Agradeço pela atenção.\nNome Exemplo Sobrenome",
+            ["Nome Exemplo Sobrenome"],
         ),
     ]
     for sample, forbidden in samples:
