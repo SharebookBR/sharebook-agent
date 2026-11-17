@@ -22,6 +22,7 @@
 13. **[Busca e recomendação](todo/busca-e-recomendacao-sharebook/index.md)** — valor baixo na leitura atual do Raffa. A v1 útil já está publicada com busca lexical e recomendações pragmáticas; tolerância a erro, embeddings, re-ranking e personalização ficam no fim da fila até dados reais provarem dor relevante.
 14. **[Segunda vitrine transversal](todo/segunda-vitrine-transversal.md)** — decidir só depois de 30 dias de dados de **Amores Perigosos**; cruzar desempenho real, profundidade do catálogo em português e coerência editorial antes de escolher o tema.
 15. **[Pré-processamento: recomendações e páginas públicas](todo/pre-processamento-paginas-e-recomendacoes.md)** — direção decidida pelo Raffa em 2026-11-14: pré-processar, em vez de escalar a máquina para calcular sob demanda (mesclou pré-renderização, recomendações pré-processadas e o item de capacidade SSR). A forma ainda será discutida; prioridade baixa até o Raffa subir. Alto valor para SEO e estabilidade, esforço alto.
+16. **[Captação de investimento recorrente](todo/captacao-investimento-recorrente.md)** — tema aberto pelo Raffa em 2026-11-17, **só para endereçar, sem execução agora e sem pressa**. Objetivo: patrocínio mensal de empresas, via associação sem fins lucrativos. Posição na fila a definir pelo Raffa. Valor potencialmente altíssimo (sustenta todo o resto), esforço alto e dependente de jurídico.
 
 ### ✅ Concluídos
 
