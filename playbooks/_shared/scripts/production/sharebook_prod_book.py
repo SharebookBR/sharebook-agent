@@ -189,8 +189,42 @@ def find_exact_book_admin(
     return candidates[0]
 
 
+def search_admin_books(token: str, criteria: str) -> list[dict[str, Any]]:
+    """Busca por texto na listagem administrativa, inclusive livros pendentes."""
+    normalized_criteria = normalize_loose_title(criteria)
+    if not normalized_criteria:
+        raise SystemExit("Informe um criterio de busca nao vazio.")
+
+    matches = [
+        item
+        for item in get_books(token)
+        if normalized_criteria in normalize_loose_title(item.get("title"))
+        or normalized_criteria in normalize_loose_title(item.get("author"))
+    ]
+    return sorted(matches, key=lambda item: item.get("creationDate") or "", reverse=True)
+
+
 def delete_book(token: str, book_id: str) -> Any:
     return request_json(f"{API_BASE}/Book/{book_id}", method="DELETE", headers=auth_headers(token))
+
+
+def add_admin_note(token: str, book_id: str, note: str) -> dict[str, Any]:
+    """Acrescenta um comentário administrativo e devolve o livro antes e depois."""
+    before = get_book_by_id(token, book_id)
+    if not before:
+        raise SystemExit(f"Livro nao encontrado para comentario administrativo. ID: {book_id}")
+
+    response = request_json(
+        f"{API_BASE}/Book/AddAdminNotes",
+        method="POST",
+        body={"BookId": book_id, "AdminNotes": note},
+        headers=auth_headers(token),
+    )
+
+    after = get_book_by_id(token, book_id)
+    if not after:
+        raise SystemExit(f"Livro nao encontrado apos comentario administrativo. ID: {book_id}")
+    return {"book_before": before, "response": response, "book": after}
 
 
 RELEASE_DATE_HELP = (
@@ -411,6 +445,20 @@ def build_parser() -> argparse.ArgumentParser:
     find_parser.add_argument("--author", required=True)
     find_parser.add_argument("--type", choices=["Printed", "Eletronic"])
 
+    find_admin_parser = sub.add_parser(
+        "find-admin",
+        help="Buscar livro por titulo e autor na listagem administrativa, incluindo pendentes.",
+    )
+    find_admin_parser.add_argument("--title", required=True)
+    find_admin_parser.add_argument("--author", required=True)
+    find_admin_parser.add_argument("--type", choices=["Printed", "Eletronic"])
+
+    search_admin_parser = sub.add_parser(
+        "search-admin",
+        help="Buscar por texto na listagem administrativa, incluindo pendentes.",
+    )
+    search_admin_parser.add_argument("--criteria", required=True)
+
     find_many_parser = sub.add_parser("find-many", help="Buscar varios livros com um unico login.")
     find_many_parser.add_argument(
         "--pairs-file",
@@ -422,6 +470,10 @@ def build_parser() -> argparse.ArgumentParser:
 
     delete_parser = sub.add_parser("delete", help="Deletar livro por id.")
     delete_parser.add_argument("--id", required=True)
+
+    admin_note_parser = sub.add_parser("add-admin-note", help="Adicionar comentario administrativo a um livro.")
+    admin_note_parser.add_argument("--id", required=True)
+    admin_note_parser.add_argument("--note", required=True)
 
     approve_parser = sub.add_parser("approve", help="Aprovar livro por id.")
     approve_parser.add_argument("--id", required=True)
@@ -508,6 +560,10 @@ def main() -> int:
     def execute_with_token(token: str) -> Any:
         if args.command == "find":
             return find_exact_book(token, args.title, args.author, book_type=args.type)
+        if args.command == "find-admin":
+            return find_exact_book_admin(token, args.title, args.author, book_type=args.type)
+        if args.command == "search-admin":
+            return search_admin_books(token, args.criteria)
         if args.command == "find-many":
             pairs = json.loads(read_utf8_text(args.pairs_file))
             if not isinstance(pairs, list):
@@ -517,6 +573,8 @@ def main() -> int:
             return get_categories(token)
         if args.command == "delete":
             return delete_book(token, args.id)
+        if args.command == "add-admin-note":
+            return add_admin_note(token, args.id, args.note)
         if args.command == "approve":
             return approve_book(token, args.id, parse_release_date(args.release_date))
         if args.command == "backfill-thumbnails":
