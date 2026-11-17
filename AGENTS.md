@@ -25,6 +25,8 @@ Ele não deve carregar regra específica de habitat quando isso puder viver em p
 - **Família**: agrupamento de playbooks por domínio, sempre com um `INDEX.md` próprio.
 - **Capacidade**: acesso, credencial, integração ou superfície operacional disponível (GitHub, VPS, GA4/GSC, Grafana, Postgres, Rollbar etc.).
 
+Cuidado pra não confundir skill do open claw com playbook do sharebook agent. São dois harness diferentes. A preferência do Raffa é sempre pelo sharebook agent.
+
 Dentro deste repo, a palavra canônica é **playbook**. O diretório canônico é `sharebook-agent/playbooks/`.
 
 ## Regra obrigatória de runtime
