@@ -2,7 +2,7 @@
 
 ## Prioridade
 
-**Tema aberto pelo Raffa em 2026-11-17, só para endereçar no backlog. Sem execução agora e sem pressa.** O objetivo estratégico é um apoio financeiro **mensal e recorrente** de empresas. Não é campanha pontual.
+**Prioridade 1 por decisão do Raffa em 2026-11-17. Só para endereçar no backlog: sem execução agora e sem pressa.** O objetivo estratégico é um apoio financeiro **mensal e recorrente** de empresas. Não é campanha pontual.
 
 ## Por que existe
 
