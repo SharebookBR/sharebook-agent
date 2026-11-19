@@ -1,4 +1,4 @@
-# Piloto PIX — livros em movimento
+# Piloto de vaquinha — livros em movimento
 
 ## Estado
 
@@ -23,28 +23,13 @@ Antes de publicar, definir explicitamente a conta titular, prazo, destino de um 
 
 ## Escopo
 
-### PIX rastreável e automático
+### Campanha pronta, sem integração
 
-- Integrar provedor de pagamentos com PIX por API; primeira recomendação: Mercado Pago.
-- Criar cobrança individual para R$ 1, R$ 5, R$ 10, R$ 30 ou valor livre, retornando QR Code e copia-e-cola.
-- Receber o webhook de pagamento no backend.
-- Verificar assinatura do webhook e consultar a API do provedor antes de registrar valor como confirmado.
-- Processar eventos de modo idempotente: uma cobrança nunca pode somar duas vezes.
-- Guardar credenciais somente como segredo de infraestrutura, nunca no browser, Git ou Telegram.
-
-### Estado público na Home
-
-- Inserir uma faixa discreta logo abaixo do hero; não pop-up e não vaquinha genérica.
-- Mostrar o efeito, não um total solto:
-
-  > **3 livros em movimento**  
-  > R$ 12 de R$ 30 para o próximo  
-  > Cada R$ 30 confirmados coloca um exemplar usado e seu frete no caminho de quem o solicitou.  
-  > **[Colocar o próximo livro em movimento]**
-
-- A barra usa exclusivamente pagamentos confirmados pelo provedor.
-- Exibir progresso agregado, sem dados de contribuidores ou solicitantes.
-- Atualizar após a confirmação sem intervenção manual.
+- Publicar a campanha em uma plataforma brasileira consolidada de vaquinha; primeira recomendação: **Vakinha**.
+- Usar a página, o checkout PIX, a barra de progresso e a confirmação de pagamento nativos da plataforma.
+- Não integrar API de pagamentos, webhook, banco de contribuições nem faixa de progresso na Home do Sharebook.
+- O Sharebook apenas aponta para a campanha e publica atualizações de compra e envio depois dos blocos fechados.
+- Guardar acessos à conta da campanha fora do browser público, Git ou Telegram.
 
 ### Distribuição: WhatsApp e mídias sociais
 
@@ -55,13 +40,14 @@ Isto é parte do experimento, não divulgação posterior.
 
   > Um livro usado custa R$ 10. Com o frete, são R$ 30 para ele sair da internet e chegar a alguém que já o pediu. A comunidade consegue colocar o próximo livro em movimento?
 
-- Todos os CTAs apontam para a mesma página/âncora, com parâmetros de origem para atribuir contribuições a WhatsApp, Instagram etc.
+- Todos os CTAs apontam para a mesma campanha. Usar links distintos por canal para medir ao menos cliques; se a plataforma oferecer atribuição de contribuições, registrar também esse dado, sem depender dele.
 - Comunicar blocos fechados, compras e livros encaminhados, sem identificar pessoas beneficiadas.
 - Registrar peça, data, canal e resultado: a distribuição também é evidência para a decisão de produto.
 
 ## Fora de escopo
 
 - Implementar a Lista de Desejos v1.
+- Integração própria de pagamentos, webhook, conciliação automatizada ou barra de campanha na Home.
 - Compra, repasse ou marketplace automáticos.
 - Disparo pela base de e-mail enquanto a fila de onboarding é drenada.
 - Expor dados pessoais, valores individuais ou chaves PIX de contribuidores.
@@ -70,9 +56,9 @@ Isto é parte do experimento, não divulgação posterior.
 
 ### Produto e operação
 
-- Um PIX confirmado chega à barra sem intervenção manual e sem contagem duplicada.
-- A origem de cada contribuição pode ser atribuída pelo menos ao canal.
-- Existe auditoria privada de contribuição, confirmação, bloco de R$ 30, compra e atendimento.
+- A plataforma confirma os PIX e atualiza a própria barra sem intervenção manual.
+- Há links distintos e métricas de clique por canal; atribuição de contribuição é complementar, não requisito.
+- Existe registro privado dos blocos de R$ 30, da compra e do atendimento.
 
 ### Hipótese
 
@@ -84,12 +70,12 @@ Isto é parte do experimento, não divulgação posterior.
 
 | Risco | Proteção |
 |---|---|
-| Soma errada ou pagamento forjado | Webhook assinado, consulta canônica ao provedor e idempotência por cobrança. |
-| QR estático impede conciliação | Uma cobrança rastreável por contribuição. |
+| Integração virar produto antes de haver evidência | A plataforma de vaquinha é dona do checkout, da confirmação e da barra no piloto. |
+| Taxa ou regra da plataforma reduzir o valor útil | Definir meta e regra de blocos já considerando taxa e repasse líquido. |
 | Campanha vaga | Regra pública de R$ 30 por exemplar + frete e prova posterior de compra/envio. |
 | Exposição de pessoas | Progresso agregado; dados individuais ficam no fluxo privado necessário. |
 | Saldo sem propósito | Destino do excedente e do bloco incompleto definido antes de publicar. |
 
 ## Próximo passo bloqueante
 
-Raffa escolhe e habilita a conta titular do provedor. Com uma conta Mercado Pago apta, implementar a integração mínima: API, webhook, estado da campanha, faixa na Home e checkout.
+Raffa escolhe a conta titular e cria a campanha na Vakinha, com a meta, a regra de excedente, o prazo e o destino de um bloco incompleto já públicos. Depois, produzimos as peças para WhatsApp e mídias sociais.
