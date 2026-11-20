@@ -4,6 +4,8 @@
 
 **Top 1 do backlog por decisão do Raffa em 2026-11-19.**
 
+**Lançado em 2026-11-19.** A campanha pública está em [Vakinha — Doe um livro](https://www.vakinha.com.br/vaquinha/doe-um-livro), com capa aprovada e divulgação inicial feita por WhatsApp. Agora o experimento entra em janela de observação: não ampliar produto nem integração antes da leitura dos dados.
+
 Primeiro experimento de mobilização comunitária para uma solicitação concreta de livro físico. Não substitui nem antecipa a Lista de Desejos v1, que continua sob responsabilidade do Josué; produz a evidência para decidir como ela deve evoluir.
 
 ## Hipótese
@@ -19,7 +21,7 @@ O experimento mede mobilização financeira comunitária, não a disponibilidade
 - Regra pública: cada bloco de R$ 30 **confirmado** viabiliza o próximo exemplar para uma solicitação elegível, pela ordem/curadoria já administrada pelo Sharebook.
 - Excedente: não é saldo abstrato; abre o próximo livro em movimento.
 
-Antes de publicar, definir explicitamente a conta titular, prazo, destino de um bloco incompleto, regra de compra/envio e política de estorno se a operação ficar impossível.
+A campanha usa meta de R$ 150. O valor líquido, depois das taxas da plataforma, define quantos exemplares podem de fato ser comprados e enviados; a comunicação não promete um número fixo de livros sem essa confirmação.
 
 ## Escopo
 
@@ -76,6 +78,13 @@ Isto é parte do experimento, não divulgação posterior.
 | Exposição de pessoas | Progresso agregado; dados individuais ficam no fluxo privado necessário. |
 | Saldo sem propósito | Destino do excedente e do bloco incompleto definido antes de publicar. |
 
-## Próximo passo bloqueante
+## Próximo passo: decisão go/no-go
 
-Raffa escolhe a conta titular e cria a campanha na Vakinha, com a meta, a regra de excedente, o prazo e o destino de um bloco incompleto já públicos. Depois, produzimos as peças para WhatsApp e mídias sociais.
+Em **2026-12-05 às 00:51 UTC** (2026-12-04 às 21:51 em Brasília), avaliar o piloto com Raffa e decidir **go/no-go da Lista de Desejos**. Levar para a conversa:
+
+- valor bruto e líquido arrecadado, quantidade de contribuições e blocos de R$ 30 efetivamente viabilizados;
+- cliques, canais e peças que trouxeram participação, dentro do que a Vakinha e os links permitirem medir;
+- esforço real de compra, envio e prestação de contas;
+- se a resposta valida mobilização comunitária suficiente para justificar uma Lista de Desejos — ou se indica que a hipótese precisa de outro corte.
+
+Até essa decisão, a Lista de Desejos continua pertencendo ao Josué e não entra em implementação por este piloto.
