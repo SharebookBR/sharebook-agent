@@ -74,7 +74,7 @@ Brevidade não desclassifica por si só, desde que traga evidência suficiente p
 
 ## Workflow
 
-1. Obter a URL ou slug do livro.
+1. Obter a URL, o slug exato ou o ID do livro. Se o pedido vier apenas pelo título — ou se houver títulos/edições duplicados — inventariar os registros candidatos e confirmar ID, data, status e total de solicitações antes de preparar a shortlist. Nunca inferir o slug a partir do título.
 2. Discutir e congelar critérios, pesos, tamanho desejado da shortlist e desempates.
 3. Preparar solicitações anonimizadas:
 
