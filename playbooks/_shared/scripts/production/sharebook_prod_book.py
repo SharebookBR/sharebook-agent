@@ -257,6 +257,21 @@ def approve_book(token: str, book_id: str, release_date: str | None = None) -> A
     )
 
 
+def reject_book(token: str, book_id: str, reason: str) -> Any:
+    """Reprova uma doação pendente e registra o motivo para a pessoa doadora."""
+    normalized_reason = reason.strip()
+    if not normalized_reason:
+        raise SystemExit("Informe um motivo não vazio para a reprovação.")
+    if len(normalized_reason) > 2000:
+        raise SystemExit("O motivo da reprovação pode ter no máximo 2000 caracteres.")
+    return request_json(
+        f"{API_BASE}/Book/Reject/{book_id}",
+        method="POST",
+        body={"Reason": normalized_reason},
+        headers=auth_headers(token),
+    )
+
+
 def backfill_book_thumbnails(
     token: str,
     overwrite: bool = False,
@@ -479,6 +494,10 @@ def build_parser() -> argparse.ArgumentParser:
     approve_parser.add_argument("--id", required=True)
     approve_parser.add_argument("--release-date", help=RELEASE_DATE_HELP)
 
+    reject_parser = sub.add_parser("reject", help="Reprovar doação pendente por id.")
+    reject_parser.add_argument("--id", required=True)
+    reject_parser.add_argument("--reason", required=True)
+
     backfill_parser = sub.add_parser(
         "backfill-thumbnails",
         help="Gerar thumbnails WebP ausentes para as capas existentes.",
@@ -577,6 +596,8 @@ def main() -> int:
             return add_admin_note(token, args.id, args.note)
         if args.command == "approve":
             return approve_book(token, args.id, parse_release_date(args.release_date))
+        if args.command == "reject":
+            return reject_book(token, args.id, args.reason)
         if args.command == "backfill-thumbnails":
             return backfill_book_thumbnails(token, args.overwrite, args.batch_size)
         if args.command == "create":
