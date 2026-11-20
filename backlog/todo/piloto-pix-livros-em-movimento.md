@@ -4,7 +4,7 @@
 
 **Top 1 do backlog por decisão do Raffa em 2026-11-19.**
 
-**Lançado em 2026-11-19.** A campanha pública está em [Vakinha — Doe um livro](https://www.vakinha.com.br/vaquinha/doe-um-livro), com capa aprovada e divulgação inicial feita por WhatsApp. Agora o experimento entra em janela de observação: não ampliar produto nem integração antes da leitura dos dados.
+**Lançado em 2026-11-19.** A campanha pública está em [Vakinha — Doe um livro](https://www.vakinha.com.br/vaquinha/doe-um-livro), com capa aprovada e divulgação inicial feita por WhatsApp. A Home também divulga a campanha como canal próprio mensurável; não há integração de pagamentos nem mudança do checkout antes da leitura dos dados.
 
 Primeiro experimento de mobilização comunitária para uma solicitação concreta de livro físico. Não substitui nem antecipa a Lista de Desejos v1, que continua sob responsabilidade do Josué; produz a evidência para decidir como ela deve evoluir.
 
@@ -29,8 +29,9 @@ A campanha usa meta de R$ 150. O valor líquido, depois das taxas da plataforma,
 
 - Publicar a campanha em uma plataforma brasileira consolidada de vaquinha; primeira recomendação: **Vakinha**.
 - Usar a página, o checkout PIX, a barra de progresso e a confirmação de pagamento nativos da plataforma.
-- Não integrar API de pagamentos, webhook, banco de contribuições nem faixa de progresso na Home do Sharebook.
+- Não integrar API de pagamentos, webhook, banco de contribuições nem a barra de progresso financeira da Vakinha na Home do Sharebook.
 - O Sharebook apenas aponta para a campanha e publica atualizações de compra e envio depois dos blocos fechados.
+- A Home exibe a campanha no primeiro slide do hero, com CTA externo e UTM próprio (`sharebook / hero / livros-em-movimento`), para medir esse canal sem confundi-lo com WhatsApp e mídias sociais.
 - Guardar acessos à conta da campanha fora do browser público, Git ou Telegram.
 
 ### Distribuição: WhatsApp e mídias sociais
@@ -49,7 +50,7 @@ Isto é parte do experimento, não divulgação posterior.
 ## Fora de escopo
 
 - Implementar a Lista de Desejos v1.
-- Integração própria de pagamentos, webhook, conciliação automatizada ou barra de campanha na Home.
+- Integração própria de pagamentos, webhook, conciliação automatizada ou barra financeira de campanha na Home.
 - Compra, repasse ou marketplace automáticos.
 - Disparo pela base de e-mail enquanto a fila de onboarding é drenada.
 - Expor dados pessoais, valores individuais ou chaves PIX de contribuidores.
