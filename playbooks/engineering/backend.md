@@ -171,6 +171,20 @@ catch (SmtpCommandException ex) when (ex.Message.Contains("Ratelimit"))
 - **Queue depth**: logar profundidade da fila ao retomar o envio — visível em `/admin/jobs` sem precisar de frontend novo.
 - O interruptor deve ser **global** (IMemoryCache), pois o rate limit é da conta inteira, não por mensagem.
 
+## Reputação de entrega — sinais que não podem ser confundidos
+
+Aceite SMTP, fila drenando, autenticação SPF/DKIM/DMARC e consultas pontuais a
+DNSBLs demonstram saúde operacional e higiene básica; não demonstram entrega na
+caixa de entrada. Inbox placement exige telemetria dos provedores (por exemplo,
+Google Postmaster Tools e Microsoft SNDS) e acompanhamento de bounces por
+provedor.
+
+Para um SMTP próprio recente, manter cadência estável e gradual antes de
+aumentar volume. Uma fila saudável ou capacidade técnica disponível não é
+evidência suficiente para acelerar o envio. Registrar semanalmente volume,
+sucesso, soft/hard bounces, rejeições e tendência da fila, sem classificar a
+reputação como plenamente comprovada apenas por aceite SMTP.
+
 ## ImplicitUsings
 
 Habilitado em todos os projetos desde 2026-06-01. Arquivos novos não precisam de `using System;`, `using System.Collections.Generic;`, `using System.Linq;`, `using System.Threading.Tasks;` etc.

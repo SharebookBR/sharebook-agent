@@ -3,6 +3,26 @@
 Checkpoint oficial da consolidação de memória do projeto.
 
 ## Último dream
+- Data: `2026-11-22`
+- Tipo: `dream semanal automatizado customizado via OpenClaw cron, sem Raffa presente`
+- Última memória absorvida: `sessions/2026-11-20-saude-e-reputacao-stalwart.md`
+- Total de memórias lidas: `4 memórias episódicas novas desde o checkpoint de 2026-11-15`.
+
+### Consolidação produzida em 2026-11-22
+
+- O clone foi sincronizado antes da leitura confiável do checkpoint. O caminho legado `skills/doctrine/harness-governance` não existe; foram usados os scripts canônicos em `playbooks/doctrine/harness-governance`.
+- O Harness Doctor abriu e fechou limpo, sem achados acionáveis.
+- Promovidas duas heurísticas para playbooks existentes: comunicação após escolhas concorridas em `winner-selection` e distinção entre saúde SMTP e inbox placement, com cadência gradual, em `engineering/backend`.
+- Não houve nova playbook, split, merge, arquivamento, poda ou alteração em `SOUL.md`.
+- Loops de direitos autorais, decisão da Lista de Desejos, autorização das pessoas selecionadas, telemetria de reputação e `memory_search` dinâmico permanecem abertos por dependerem de Raffa, de terceiros ou de evidência externa.
+
+### Validação
+
+- Doctor final limpo.
+- Suíte da governança aprovada e `git diff --check` limpo.
+- Memória episódica: `sessions/2026-11-22-dream-semanal-governanca.md`.
+
+## Último dream
 - Data: `2026-11-15`
 - Tipo: `dream semanal automatizado customizado via OpenClaw cron, sem Raffa presente`
 - Última memória absorvida: `sessions/2026-11-15-pool-conexoes-reteste-80-90.md`

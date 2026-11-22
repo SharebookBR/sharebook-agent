@@ -72,6 +72,14 @@ Extensão não é mérito: texto bonito ou longo não soma pontos. Mas a solicit
 
 Brevidade não desclassifica por si só, desde que traga evidência suficiente para uma escolha humana. Não usar contagem de palavras nem transformar essa porta de entrada em prêmio para verborragia.
 
+### Comunicação após escolhas concorridas
+
+Quando a fila for especialmente disputada, a mensagem à pessoa ganhadora pode
+reconhecer que a escolha foi difícil e explicar, em uma frase concreta, por que
+o pedido se destacou. Isso é contexto humano, não pontuação adicional: não
+transformar a justificativa em template obrigatório, ranking público ou métrica
+de sofrimento.
+
 ## Workflow
 
 1. Obter a URL, o slug exato ou o ID do livro. Se o pedido vier apenas pelo título — ou se houver títulos/edições duplicados — inventariar os registros candidatos e confirmar ID, data, status e total de solicitações antes de preparar a shortlist. Nunca inferir o slug a partir do título.
