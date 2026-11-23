@@ -184,7 +184,7 @@ def main() -> int:
     tmp_dir = args.tmp_dir or resolve_runtime_path(
         values.get("SHAREBOOK_IMPORTER_TMP_DIR"), importer_dir / "var" / "tmp"
     )
-    prepare_cover = agent_dir / "scripts" / "covers" / "prepare_cover.py"
+    prepare_cover = agent_dir / "playbooks" / "product-ux" / "cover-direction" / "scripts" / "prepare_cover.py"
     if not prepare_cover.exists():
         raise SystemExit(f"prepare_cover.py não encontrado: {prepare_cover}")
 
