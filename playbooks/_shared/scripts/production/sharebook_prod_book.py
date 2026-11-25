@@ -228,13 +228,13 @@ def add_admin_note(token: str, book_id: str, note: str) -> dict[str, Any]:
 
 
 RELEASE_DATE_HELP = (
-    "Data de liberacao YYYY-MM-DD (fuso de Sao Paulo). Futura = livro fisico fica 'Em breve' "
+    "Data de liberacao YYYY-MM-DD (fuso de Sao Paulo). Futura = livro fica 'Em breve' "
     "(Scheduled) e o job das 7h libera no dia. Vazia = disponivel ao aprovar."
 )
 
 
 def parse_release_date(value: str | None) -> str | None:
-    """Valida YYYY-MM-DD (data em São Paulo). A API aceita só livro físico e só data futura agenda."""
+    """Valida YYYY-MM-DD (data em São Paulo). Data futura agenda livro físico ou digital."""
     if not value:
         return None
     try:
@@ -244,7 +244,7 @@ def parse_release_date(value: str | None) -> str | None:
 
 
 def approve_book(token: str, book_id: str, release_date: str | None = None) -> Any:
-    """Aprova o livro. Com release_date futura, o livro físico fica Scheduled ("Em breve") até a data;
+    """Aprova o livro. Com release_date futura, o livro fica Scheduled ("Em breve") até a data;
     sem data (ou data de hoje/passada), vai direto para Available."""
     body: dict[str, Any] = {"ChooseDate": None}
     if release_date:

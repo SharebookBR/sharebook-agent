@@ -35,7 +35,7 @@ Este playbook conduz mutações operacionais de um livro ou de sua doação. Cad
 python C:\Repos\SHAREBOOK\sharebook-agent\playbooks\_shared\scripts\production\sharebook_prod_book.py approve --id "<ID>"
 ```
 
-4. Para livro físico com abertura futura, usar `--release-date YYYY-MM-DD` junto da aprovação. Confirmar `Scheduled` e a data no retorno; sem data futura, confirmar `Available`.
+4. Para livro físico ou digital com abertura futura, usar `--release-date YYYY-MM-DD` junto da aprovação. Confirmar `Scheduled` e a data no retorno; sem data futura, confirmar `Available`.
 5. Validar a transição pelo payload ou uma consulta oficial. Só então comunicar a conclusão.
 
 ## Rejeição, cancelamento, envio e entrega
